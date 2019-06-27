@@ -1,0 +1,18 @@
+{
+  "name": "@dw/dw-select",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dw-select.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lit-element": "^2.2.0",
+    "@dw/material-styles": "github:DreamworldSolutions/material-styles#^1.0.0"
+  },
+  "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^2.2.10"
+  }
+}
