@@ -12,6 +12,7 @@ class DwSelect extends LitElement {
     :host {
       display: block;
       box-sizing: border-box;
+      width: 250px;
     }
     :host([invalid]) .label {
       color: red;

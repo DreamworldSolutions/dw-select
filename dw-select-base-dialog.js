@@ -54,7 +54,7 @@ export class DwSelectBaseDialog extends LitElement {
 
   refit() {
     if(this.mobileMode) {
-      this.style.maxHeight = 'none';
+      this.style.height = 'auto';
       this.style.top = '0px';
       this.style.bottom = '0px';
       this.style.left = '0px';
@@ -63,14 +63,14 @@ export class DwSelectBaseDialog extends LitElement {
       return;
     }
 
-    this.style.maxHeight = 'none';
+    this.style.height = 'auto';
     let dropdownHeight = this.offsetHeight;
     let dropdownWidth = this.offsetWidth;
     let winHeight = window.innerHeight;
     let maxHeight = Math.min(dropdownHeight, winHeight);
 
     if(!this.positionTarget) {
-      this.style.maxHeight = maxHeight + 'px';
+      this.style.height = maxHeight + 'px';
       this.style.top = '50%';
       this.style.bottom = 'initial';
       this.style.left = '50%';
@@ -126,9 +126,9 @@ export class DwSelectBaseDialog extends LitElement {
     this.style.transform = 'none';
     
     if(!alignTop) {
-      this.style.maxHeight = (maxHeight - top) + 'px';
+      this.style.height = (maxHeight - top) + 'px';
     } else {
-      this.style.maxHeight = (maxHeight - bottom) + 'px';
+      this.style.height = (maxHeight - bottom) + 'px';
     }
   }
 

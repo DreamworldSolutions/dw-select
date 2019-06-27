@@ -17,7 +17,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
           flex-direction: column;
           outline: none;
           z-index: 9;
-          width: 200px;
+          width: var(--dw-select-dialog-width, 250px);
         }
         :host([opened]) {
           display: flex;
@@ -45,6 +45,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
           flex: 1;
           overflow-y: auto;
           overflow-x: hidden;
+          min-height: 50px;
         }
         .items {
           padding: 8px 0px;
