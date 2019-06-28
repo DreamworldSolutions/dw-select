@@ -214,8 +214,10 @@ export class DwSelectBaseDialog extends LitElement {
       return;
     }
 
+    let scrollEl = this.shadowRoot.querySelector('#scroller');
+
     let insideScroll = path.find((itemEl) => {
-      return itemEl === this;
+      return itemEl === scrollEl;
     });
 
     if(!insideScroll) {
