@@ -6,23 +6,42 @@ export class DwSelectItem extends LitElement {
   static get styles() {
     return css`
       :host {
-        box-sizing: border-box;
+        display: flex;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        flex-direction: row;
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
         align-items: center;
-        min-height: 48px;
-        padding: 0px 16px;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        box-sizing: border-box;
         cursor: pointer;
+        padding: 0px 16px;
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 400;
+        min-height: var(--dw-select-item-height, 48px);
+        color: var(--primary-text-color, rgba(0,0,0,0.87));
       }
+
       :host(:hover) {
-        background: #f3f3f3;
+        background: var(--dw-select-item-hover-color, rgba(0,0,0,0.06));
       }
+
+      .content {
+        flex: 1;
+        -ms-flex: 1 1 0.000000001px;
+        -webkit-flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       .check-icon {
         height: 24px;
         width: 24px;
-      }
-      svg {
-        height: 100%;
-        width: 100%;
-        fill: green;
+        fill: var(--primary-color, #5AB983);
       }
     `;
   } 
@@ -56,7 +75,7 @@ export class DwSelectItem extends LitElement {
 
   render() {
     return html`
-      <div>${this._getName(this.item, this.itemLabel)}</div>
+      <div class="content">${this._getName(this.item, this.itemLabel)}</div>
       <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>
     `;
   }

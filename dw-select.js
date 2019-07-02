@@ -12,39 +12,80 @@ class DwSelect extends LitElement {
     :host {
       display: block;
       box-sizing: border-box;
-      width: 250px;
+      width: var(--dw-select-width, 250px);
     }
-    :host([invalid]) .label {
-      color: red;
+
+    :host([invalid]) .main-container #dropdownContainer .label {
+      color: var(--error-color, #D50000);
     }
-    :host([invalid]) .dropdown {
-      border-color: red;
+
+    :host([invalid]) .main-container #dropdownContainer .dropdown-input {
+      border-bottom: 2px solid var(--error-color, #D50000);
     }
-    .down-arrow {
-      height: 16px;
-      width: 16px;
-      padding: 0px 4px;
-    }
-    .dropdown {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 0px;
-      border-bottom: 1px solid #585858;
-    }
-    .label {
-      font-size: 14px;
-    }
-    .placeholder {
-      color: gray;
-    }
-    .error-message {
-      color: red;
-      font-size: 12px;
-    }
-    .container {
+
+    .main-container #dropdownContainer {
+      outline: none;
+      font-weight: 500;
+      padding-bottom: 4px;
       cursor: pointer;
+    }
+
+    .main-container #dropdownContainer .label {
+      font-size: 12px;
+      color: var(--secondary-text-color, rgba(0,0,0,0.54));
+      line-height: 16px;
+      padding-top: 16px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .main-container  #dropdownContainer .dropdown-input .expand-more-icon {
+      padding: 0px 4px;
+      width: var(--dw-select-expand-more-icon-width, 24px);
+      height: var(--dw-select-expand-more-icon-height, 24px);
+      fill: var(--dw-select-expand-more-icon-color, rgba(0,0,0,0.54));
+    }
+
+    .main-container #dropdownContainer .dropdown-input {
+      display: flex;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      flex-direction: row;
+      -ms-flex-direction: row;
+      -webkit-flex-direction: row;
+      align-items: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      justify-content: space-between;
+      -ms-flex-pack: space-between;
+      -webkit-justify-content: space-between;
+      border-bottom: 1px solid var(--dw-select-border-color,  rgba(0,0,0,0.12));
+    }
+
+    .main-container #dropdownContainer .dropdown-input .value-container {
+      padding: 8px 0px 6px 0px;
+      font-size: 16px;
+      line-height: 16px;
+      overflow: hidden;
+    }
+
+    .main-container #dropdownContainer .dropdown-input .value-container .value {
+      color: var(--primary-color, rgba(0,0,0,0.87));
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .main-container #dropdownContainer .dropdown-input .value-container .placeholder {
+      color: var(--disabled-color, rgba(0,0,0,0.38));
+    }
+
+    .error-message {
+      color: var(--error-color, #D50000);
+      font-size: 12px;
+      line-height: 16px;
+      padding-bottom: 4px;
     }
     `;
   }
@@ -269,17 +310,18 @@ class DwSelect extends LitElement {
     let selectedText = this._computeSelectedItemsText(this.items, this.value, this.itemLabel, this.itemValue);
 
     return html`
-      <div class="container" @click="${this._onClick}">
-        <div id="positionTarget" tabindex="0">
+      <div class="main-container" @click="${this._onClick}">
+        <div id="dropdownContainer" tabindex="0">
           <div class="label">
             <div>${this.label}</div>
           </div>
-          <div class="dropdown">
-            <div class="value-container">
-              ${!selectedText ? html`<div class="placeholder">${this.placeholder}</div>`
+          <div class="dropdown-input">
+             <div class="value-container">
+              ${!selectedText ? 
+                    html`<div class="placeholder">${this.placeholder}</div>`
                     : html`<div class="value">${selectedText}</div>`}
-            </div>
-            <div class="down-arrow">${this._getDropDownArrowIcon()}</div>
+              </div>
+            <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
           </div>
         </div>
         ${this.invalid ? html`
@@ -327,7 +369,7 @@ class DwSelect extends LitElement {
 
   firstUpdated(changedProps){
     super.updated(changedProps);
-    this._positionTarget = this.shadowRoot.getElementById('positionTarget');
+    this._positionTarget = this.shadowRoot.getElementById('dropdownContainer');
   }
 
   connectedCallback() {

@@ -10,7 +10,7 @@ class SelectDemo extends LitElement {
           box-sizing: border-box
         }
         dw-select {
-          width: 150px;
+          --dw-select-width: 150px;
         }
       `
     ];

@@ -2,7 +2,7 @@ import { html, css } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import { cache } from 'lit-html/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
-import { backIcon } from './dw-select-icons';
+import { backIcon, clearIcon } from './dw-select-icons';
 import './dw-select-item';
 
 class DwSelectDialog extends DwSelectBaseDialog {
@@ -13,57 +13,213 @@ class DwSelectDialog extends DwSelectBaseDialog {
         :host {
           display: none;
           box-sizing: border-box;
-          background: #fff;
+          background: var(--primary-background-color, #FFFFFF);
           flex-direction: column;
+          -ms-flex-direction: column;
+          -webkit-flex-direction: column;
           outline: none;
           z-index: 9;
-          width: var(--dw-select-dialog-width, 250px);
+          width: var(--dw-select-dialog-width, 280px);
         }
+
         :host([opened]) {
+          display: -ms-flexbox;
+          display: -webkit-flex;
           display: flex;
         }
+
         :host([mobile-mode]) {
           width: 100%;
         }
-        :host([scrolled-down]) #scroller{
-          box-shadow: 0px -10px 5px #888;
+
+        :host([scrolled-down]) .footer {
+          box-shadow:  0 -1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
-        :host([scrolled-up]) #scroller{
-          box-shadow: 0px 10px 5px #888
+
+        :host([scrolled-down][scrolled-up]) .header {
+          box-shadow: 0 1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
-        :host([scrolled-down][scrolled-up]) #scroller{
-          box-shadow: 0px 10px 5px #888, 0px -10px 5px #888;
-        }
-        .dialog-header {
+
+        .header .dialog-header {
           display: flex;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          flex-direction: row;
+          -ms-flex-direction: row;
+          -webkit-flex-direction: row;
           align-items: center;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
+          min-height: var(--dw-select-dialog-header-hegiht, 48px);
+          padding: 0px 24px 0px 16px;
         }
-        .dialog-header .title {
+
+        .header .dialog-header .title {
           flex: 1;
+          padding-left: 32px;
+          font-weight: 400;
+          font-size: 16px; 
+          color: var(--primary-text-color, rgba(0,0,0,0.87));
+          line-height: 16px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
-        .content {
+
+        .header .dialog-header .back-icon {
+          height: var(--dw-select-back-icon-width, 24px);
+          width: var(--dw-select-back-icon-height, 24px);
+          fill: var(--secondary-text-color, rgba(0,0,0,0.54));
+          cursor: pointer;
+          outline: none;
+        }
+
+        .header .dialog-header .count {
+          background-color: var(--primary-color, #5AB983);
+          color: var(--light-theme-background-color, #FFFFFF);
+          line-height: 20px;
+          border-radius: 50%;
+          min-width: 18px;
+          height: 18px;
+          font-weight: 500;
+          padding: 5px;
+          text-align: center;
+        }
+
+        .header .border {
+          border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+        }
+
+        .header .input-container { 
+          padding: 8px;
+          position: relative;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+        }
+
+        .header .input-container input {
+          height: var(--dw-select-input-height, 48px);
+          width: var(--dw-delect-input-width, 100%);
+          border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+          border-radius: 2px;
+          color: var(--secondary-text-color, rgba(0,0,0,0.54));
+          text-indent: 16px;
+          outline: none;
+          box-sizing: border-box;
+        }
+
+        .header .input-container input::placeholder {
+          color: var(--disabled-color,rgba(0,0,0,0.26));
+        }
+
+        .header .input-container .hidden,
+        .header .input-container.hidden {
+          display: none;
+        }
+
+        .header .input-container .clear-text-icon {
+          position: absolute;
+          top: 25px;
+          right: 24px;
+          width: var(--dw-select-clear-icon-width, 18px);
+          height: var(--dw-select-clear-icon-height, 18px);
+          fill: var(--secondary-text-color, rgba(0,0,0,0.54));
+          cursor: pointer;
+        }
+
+        .main-content {
           flex: 1;
           overflow-y: auto;
           overflow-x: hidden;
           min-height: 50px;
         }
-        .items {
-          padding: 8px 0px;
-        }
-        .item {
+
+        .main-content .selection-action-buttons {
+          height: 48px;
+          margin-top: 8px;
           display: flex;
+          display: -ms-flexbox;
+          display: -webkit-flex;
           flex-direction: row;
+          -ms-flex-direction: row;
+          -webkit-flex-direction: row;
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 500;
         }
-        .item.kb-highlighted {
-          background: lightblue;
+
+        .main-content .selection-action-buttons button { 
+          color: var(--primary-color, #5AB983);
+          text-transform: uppercase;
+          background: var(--light-theme-background-color, #FFFFFF);
+          border: none;
+          outline: none;
+          cursor: pointer;
         }
-        .hidden {
-          display: none;
+
+        .main-content .selection-action-buttons button::-moz-focus-inner {
+          border: 0;
         }
-        .back-icon {
-          height: 24px;
-          width: 24px;
-          padding: 8px;
+
+        .main-content .selection-action-buttons :first-child { 
+          padding: 0px 18px 0px 24px;
+        }
+
+        .main-content .items-container .group-label {
+          display: flex;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          flex-direction: column;
+          -ms-flex-direction: column;
+          -webkit-flex-direction: column;
+          -ms-flex-pack: center;
+          -webkit-justify-content: center;
+          justify-content: center;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 24px;
+          color: var(--secondary-text-color, rgba(0,0,0,0.54));
+          height: var(--dw-select-group-label-height, 48px);
+          padding-left: 16px;
+        }
+
+        .main-content .items-container  .item.kb-highlighted {
+          background: var(--light-primary-color, rgba(90,185,131,0.16));
+        }
+
+        .footer {
+          display: flex;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          flex-direction: column;
+          -ms-flex-direction: column;
+          -webkit-flex-direction: column;
+          align-items: center;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
+          padding: 10px 0px;
+          width: 100%;
+        }
+
+        .footer button {
+          height: 36px;
+          border-radius: 2px;
+          text-transform: uppercase;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          background: var(--primary-color, #5AB983);
+          color: var(--light-theme-background-color, #FFFFFF);
+          width: var(--dw-select-apply-button-width, 232px);
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 500;
+          text-align: center;
+        }
+        
+        .footer button[disabled] {
+          background: var(--dw-select-apply-button-disable-color,  rgba(0,0,0,0.26));
         }
       `
     ];
@@ -296,27 +452,29 @@ class DwSelectDialog extends DwSelectBaseDialog {
             <div class="back-icon" @click=${this._backClicked} tabindex="0" @keydown=${this._onBackBtnKeyDown}>${this._getBackIcon()}</div>
             <div class="title">${this.dialogTitle}</div>
             ${!this.singleSelect ? html`
-              <div class="count">${this._value.length}</div>
+              ${this._value.length ? html `<div class="count">${this._value.length}</div>` : html ``}
             ` : ''}
           </div>
+          <div class="border"></div>
         ` : ''}
-        <div class="filter ${this.allowFilter ? '' : 'hidden'}">
+        <div class="input-container ${this.allowFilter ? '' : 'hidden'}">
           <input
             id="filter"
             type="text"
             .placeholder=${this.filterPlaceholder}
-            @input=${this._inputChanged} .value=${this._filterQuery} />
-          <div class="clear-text-icon ${this._filteredApplied ? '' : 'hidden'}" @click=${this._clearFilter}>Clear</div>
+            @input=${this._inputChanged} 
+            .value=${this._filterQuery} />
+          <div class="clear-text-icon ${this._filteredApplied ? '' : 'hidden'}" @click=${this._clearFilter}>${this._getClearIcon()}</div>
         </div>
       </div>
-      <div id="scroller" class="content">
+      <div id="scroller" class="main-content">
         ${!this.singleSelect ? html`
           <div class="selection-action-buttons">
-            <button @click=${this._selectAllClicked}>Select all</button>
-            <button @click=${this._resetClicked}>Reset</button>
+            <button class="select-button" @click=${this._selectAllClicked}>Select all</button>
+            <button  @click=${this._resetClicked}>Reset</button>
           </div>
         ` : ''}
-        <div class="items">
+        <div class="items-container">
           ${repeat(items, this._valueKeyGenerator, (item, index) => html`
             ${this._renderItem({
               item,
@@ -524,6 +682,10 @@ class DwSelectDialog extends DwSelectBaseDialog {
 
   _getBackIcon() {
     return backIcon;
+  }
+
+  _getClearIcon(){
+    return clearIcon;
   }
 
   _resetKbHighlightIndex() {
