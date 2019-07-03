@@ -51,12 +51,12 @@ class DwSelectDialog extends DwSelectBaseDialog {
           -ms-flex-align: center;
           -webkit-align-items: center;
           min-height: var(--dw-select-dialog-header-hegiht, 48px);
-          padding: 0px 24px 0px 16px;
+          padding: 0px 24px 0px 8px;
         }
 
         .header .dialog-header .title {
           flex: 1;
-          padding-left: 32px;
+          padding-left: 24px;
           font-weight: 400;
           font-size: 16px; 
           color: var(--primary-text-color, rgba(0,0,0,0.87));
@@ -72,6 +72,12 @@ class DwSelectDialog extends DwSelectBaseDialog {
           fill: var(--secondary-text-color, rgba(0,0,0,0.54));
           cursor: pointer;
           outline: none;
+          padding: 8px;
+        }
+
+        .header .dialog-header .back-icon:focus { 
+          background: var(--dw-select-back-icon-ripple-color, rgb(33, 33, 33, 0.2));
+          border-radius: 50%;
         }
 
         .header .dialog-header .count {
@@ -147,6 +153,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
           font-size: 14px;
           line-height: 20px;
           font-weight: 500;
+          padding-left: 16px;
         }
 
         .main-content .selection-action-buttons button { 
@@ -156,14 +163,20 @@ class DwSelectDialog extends DwSelectBaseDialog {
           border: none;
           outline: none;
           cursor: pointer;
+          border-radius: 2px;
+          padding: 0px 8px;
+        }
+
+        .main-content .selection-action-buttons button:hover {
+          background: var(--dw-select-button-hover-color, rgba(90,185,131,0.16));
+        }
+
+        .main-content .selection-action-buttons button:focus{
+          background: var(--dw-select-button-focus-color, rgba(90,185,131,0.16));
         }
 
         .main-content .selection-action-buttons button::-moz-focus-inner {
           border: 0;
-        }
-
-        .main-content .selection-action-buttons :first-child { 
-          padding: 0px 18px 0px 24px;
         }
 
         .main-content .items-container .group-label {
@@ -207,7 +220,6 @@ class DwSelectDialog extends DwSelectBaseDialog {
           border-radius: 2px;
           text-transform: uppercase;
           border: none;
-          outline: none;
           cursor: pointer;
           background: var(--primary-color, #5AB983);
           color: var(--light-theme-background-color, #FFFFFF);
@@ -502,7 +514,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
     return html`
       ${model.group ? html`<div class="group-label">${model.group}</div>` : ''}
       <dw-select-item
-        class="${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
+        class="item ${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
         .selected=${model.selected}
