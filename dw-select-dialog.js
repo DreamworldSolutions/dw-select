@@ -221,6 +221,10 @@ class DwSelectDialog extends DwSelectBaseDialog {
         .footer button[disabled] {
           background: var(--dw-select-apply-button-disable-color,  rgba(0,0,0,0.26));
         }
+
+        .main-content .items-container dw-select-item.hidden {
+          display: none;
+        }
       `
     ];
   }
@@ -498,7 +502,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
     return html`
       ${model.group ? html`<div class="group-label">${model.group}</div>` : ''}
       <dw-select-item
-        class="item ${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
+        class="${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
         .selected=${model.selected}
