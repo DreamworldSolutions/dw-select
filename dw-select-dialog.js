@@ -143,13 +143,15 @@ class DwSelectDialog extends DwSelectBaseDialog {
 
         .main-content .selection-action-buttons {
           height: 48px;
-          margin-top: 8px;
           display: flex;
           display: -ms-flexbox;
           display: -webkit-flex;
           flex-direction: row;
           -ms-flex-direction: row;
           -webkit-flex-direction: row;
+          align-items: center;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
           font-size: 14px;
           line-height: 20px;
           font-weight: 500;
@@ -165,6 +167,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
           cursor: pointer;
           border-radius: 2px;
           padding: 0px 8px;
+          height: 35px;
         }
 
         .main-content .selection-action-buttons button:hover {
@@ -1068,12 +1071,8 @@ class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _computeApplyBtnDisabled() {
-    if(this.singleSelect) {
-      return false;
-    }
-
     if(!this._value || !this._value.length){
-      this._applyDisabled = false;
+      this._applyDisabled = true;
       return;
     }
 
