@@ -1068,8 +1068,12 @@ class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _computeApplyBtnDisabled() {
+    if(this.singleSelect) {
+      return false;
+    }
+
     if(!this._value || !this._value.length){
-      this._applyDisabled = true;
+      this._applyDisabled = false;
       return;
     }
 
