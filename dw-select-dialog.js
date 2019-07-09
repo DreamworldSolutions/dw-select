@@ -3,23 +3,44 @@ import { repeat } from 'lit-html/directives/repeat';
 import { cache } from 'lit-html/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
 import { backIcon, clearIcon } from './dw-select-icons';
+
+import { Typography } from '@dw/material-styles/typography'
 import './dw-select-item';
 
 class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
     return [
       super.styles,
+      Typography,
       css`
         :host {
+          --dw-select-bg-color: var(--primary-background-color);
+          --dw-select-title-color: var(--primary-text-color);
+          --dw-select-back-icon-color: var(--secondary-text-color);
+          --dw-select-count-bg-color: var(--primary-color);
+          --dw-select-count-color: var(--light-theme-background-color);
+          --dw-select-divider-color: var(--light-theme-divider-color);
+          --dw-select-input-border-color: var(--light-theme-divider-color);
+          --dw-select-input-color: var(--secondary-text-color);
+          --dw-select-input-placeholder-color: var(--disabled-text-color);
+          --dw-select-clear-icon-fill-color: var(--secondary-text-color);
+          --dw-select-selection-btn-color: var(--primary-color);
+          --dw-select-selection-action-btn-bg-color: var(--light-theme-background-color);
+          --dw-select-group-label-color: var(--secondary-text-color);
+          --dw-select-button-hover-color: var(--light-primary-color);
+          --dw-select-button-focus-color: var(--light-primary-color);
+          --dw-select-kb-highlighted-bg-color: var(--light-primary-color);
+          --dw-select-apply-button-bg-color: var(--primary-color);
+          --dw-select-apply-button-color: var(--light-theme-background-color);
           display: none;
           box-sizing: border-box;
-          background: var(--primary-background-color, #FFFFFF);
+          background: var(--dw-select-bg-color);
           flex-direction: column;
           -ms-flex-direction: column;
           -webkit-flex-direction: column;
           outline: none;
           z-index: 9;
-          width: var(--dw-select-dialog-width, 280px);
+          width: var(--dw-select-width, 250px);
         }
 
         :host([opened]) {
@@ -50,17 +71,14 @@ class DwSelectDialog extends DwSelectBaseDialog {
           align-items: center;
           -ms-flex-align: center;
           -webkit-align-items: center;
-          min-height: var(--dw-select-dialog-header-hegiht, 48px);
+          min-height: var(--dw-select-header-hegiht, 48px);
           padding: 0px 24px 0px 8px;
         }
 
         .header .dialog-header .title {
           flex: 1;
           padding-left: 24px;
-          font-weight: 400;
-          font-size: 16px; 
-          color: var(--primary-text-color, rgba(0,0,0,0.87));
-          line-height: 16px;
+          color: var(--dw-select-title-color);
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
@@ -69,7 +87,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
         .header .dialog-header .back-icon {
           height: var(--dw-select-back-icon-width, 24px);
           width: var(--dw-select-back-icon-height, 24px);
-          fill: var(--secondary-text-color, rgba(0,0,0,0.54));
+          fill: var(--dw-select-back-icon-color);
           cursor: pointer;
           outline: none;
           padding: 8px;
@@ -81,42 +99,38 @@ class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         .header .dialog-header .count {
-          background-color: var(--primary-color, #5AB983);
-          color: var(--light-theme-background-color, #FFFFFF);
+          background-color: var(--dw-select-count-bg-color);
+          color: var(--dw-select-count-color);
           line-height: 20px;
           border-radius: 50%;
           min-width: 18px;
           height: 18px;
-          font-weight: 500;
           padding: 5px;
           text-align: center;
         }
 
         .header .border {
-          border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+          border-bottom: 1px solid var(--dw-select-divider-color);
         }
 
         .header .input-container { 
           padding: 8px;
           position: relative;
-          font-weight: 400;
-          font-size: 14px;
-          line-height: 20px;
         }
 
         .header .input-container input {
           height: var(--dw-select-input-height, 48px);
           width: var(--dw-delect-input-width, 100%);
-          border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+          border: 1px solid var(--dw-select-input-border-color);
           border-radius: 2px;
-          color: var(--secondary-text-color, rgba(0,0,0,0.54));
+          color: var(--dw-select-input-color);
           text-indent: 16px;
           outline: none;
           box-sizing: border-box;
         }
 
         .header .input-container input::placeholder {
-          color: var(--disabled-color,rgba(0,0,0,0.26));
+          color: var(--dw-select-input-placeholder-color);
         }
 
         .header .input-container .hidden,
@@ -130,7 +144,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
           right: 24px;
           width: var(--dw-select-clear-icon-width, 18px);
           height: var(--dw-select-clear-icon-height, 18px);
-          fill: var(--secondary-text-color, rgba(0,0,0,0.54));
+          fill: var(--dw-select-clear-icon-fill-color);
           cursor: pointer;
         }
 
@@ -152,30 +166,28 @@ class DwSelectDialog extends DwSelectBaseDialog {
           align-items: center;
           -ms-flex-align: center;
           -webkit-align-items: center;
-          font-size: 14px;
-          line-height: 20px;
-          font-weight: 500;
           padding-left: 16px;
         }
 
         .main-content .selection-action-buttons button { 
-          color: var(--primary-color, #5AB983);
+          color: var(--dw-select-selection-btn-color);
           text-transform: uppercase;
-          background: var(--light-theme-background-color, #FFFFFF);
+          background: var(--dw-select-selection-action-btn-bg-color);
           border: none;
           outline: none;
           cursor: pointer;
           border-radius: 2px;
-          padding: 0px 8px;
           height: 35px;
         }
-
+        .select-button {
+          margin-right: 8px;
+        }
         .main-content .selection-action-buttons button:hover {
-          background: var(--dw-select-button-hover-color, rgba(90,185,131,0.16));
+          background: var(--dw-select-button-hover-color);
         }
 
         .main-content .selection-action-buttons button:focus{
-          background: var(--dw-select-button-focus-color, rgba(90,185,131,0.16));
+          background: var(--dw-select-button-focus-color);
         }
 
         .main-content .selection-action-buttons button::-moz-focus-inner {
@@ -192,16 +204,13 @@ class DwSelectDialog extends DwSelectBaseDialog {
           -ms-flex-pack: center;
           -webkit-justify-content: center;
           justify-content: center;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 24px;
-          color: var(--secondary-text-color, rgba(0,0,0,0.54));
+          color: var(--dw-select-group-label-color);
           height: var(--dw-select-group-label-height, 48px);
           padding-left: 16px;
         }
 
         .main-content .items-container  .item.kb-highlighted {
-          background: var(--light-primary-color, rgba(90,185,131,0.16));
+          background: var(--dw-select-kb-highlighted-bg-color);
         }
 
         .footer {
@@ -224,12 +233,9 @@ class DwSelectDialog extends DwSelectBaseDialog {
           text-transform: uppercase;
           border: none;
           cursor: pointer;
-          background: var(--primary-color, #5AB983);
-          color: var(--light-theme-background-color, #FFFFFF);
+          background: var(--dw-select-apply-button-bg-color);
+          color: var(--dw-select-apply-button-color);
           width: var(--dw-select-apply-button-width, 232px);
-          font-size: 14px;
-          line-height: 20px;
-          font-weight: 500;
           text-align: center;
         }
         
@@ -469,9 +475,9 @@ class DwSelectDialog extends DwSelectBaseDialog {
         ${!this.noHeader ? html`
           <div class="dialog-header">
             <div class="back-icon" @click=${this._backClicked} tabindex="0" @keydown=${this._onBackBtnKeyDown}>${this._getBackIcon()}</div>
-            <div class="title">${this.dialogTitle}</div>
+            <div class="title headline6">${this.dialogTitle}</div>
             ${!this.singleSelect ? html`
-              ${this._value.length ? html `<div class="count">${this._value.length}</div>` : html ``}
+              ${this._value.length ? html `<div class="count subtitle2">${this._value.length}</div>` : html ``}
             ` : ''}
           </div>
           <div class="border"></div>
@@ -480,6 +486,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
           <input
             id="filter"
             type="text"
+            class="body2"
             .placeholder=${this.filterPlaceholder}
             @input=${this._inputChanged} 
             .value=${this._filterQuery} />
@@ -489,8 +496,8 @@ class DwSelectDialog extends DwSelectBaseDialog {
       <div id="scroller" class="main-content">
         ${!this.singleSelect ? html`
           <div class="selection-action-buttons">
-            <button class="select-button" @click=${this._selectAllClicked}>Select all</button>
-            <button  @click=${this._resetClicked}>Reset</button>
+            <button class="select-button button" @click=${this._selectAllClicked}>Select all</button>
+            <button class="button" @click=${this._resetClicked}>Reset</button>
           </div>
         ` : ''}
         <div class="items-container">
@@ -507,7 +514,7 @@ class DwSelectDialog extends DwSelectBaseDialog {
       </div>
       ${!this.singleSelect ? html`
         <div class="footer">
-          <button @click=${this._applyClicked} .disabled=${this._applyDisabled} @keydown=${this._onApplyBtnKeyDown}>Apply</button>
+          <button class="button" @click=${this._applyClicked} .disabled=${this._applyDisabled} @keydown=${this._onApplyBtnKeyDown}>Apply</button>
         </div>
       ` : ''}
     `;
@@ -515,9 +522,9 @@ class DwSelectDialog extends DwSelectBaseDialog {
 
   _renderItem(model) {
     return html`
-      ${model.group ? html`<div class="group-label">${model.group}</div>` : ''}
+      ${model.group ? html`<div class="group-label subtitle2">${model.group}</div>` : ''}
       <dw-select-item
-        class="item ${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
+        class="item body1 ${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
         .selected=${model.selected}

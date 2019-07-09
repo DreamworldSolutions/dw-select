@@ -22,7 +22,7 @@ export class DwSelectItem extends LitElement {
         line-height: 16px;
         font-weight: 400;
         min-height: var(--dw-select-item-height, 48px);
-        color: var(--primary-text-color, rgba(0,0,0,0.87));
+        color: var(--dw-select-item-color);
       }
 
       :host(:hover) {
@@ -41,7 +41,7 @@ export class DwSelectItem extends LitElement {
       .check-icon {
         height: 24px;
         width: 24px;
-        fill: var(--primary-color, #5AB983);
+        fill: var(--dw-select-check-icon);
       }
     `;
   } 

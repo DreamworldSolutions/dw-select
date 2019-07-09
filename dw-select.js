@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { dropdownArrowIcon } from './dw-select-icons';
+import { Typography } from '@dw/material-styles/typography'
 import './dw-select-dialog';
 
 /**
@@ -8,43 +9,44 @@ import './dw-select-dialog';
 class DwSelect extends LitElement {
 
   static get styles() {
-    return css`
+    return [Typography, css`
     :host {
       display: block;
       box-sizing: border-box;
       width: var(--dw-select-width, 250px);
+      --dw-select-error-color: var(--error-color);
+      --dw-select-error-color: var(--error-color);
+      --dw-select-label-color: var(--secondary-text-color);
+      --dw-select-expand-more-icon-color: var(--light-theme-secondary-color);
+      --dw-select-border-color: var(--light-theme-divider-color);
+      --dw-select-value-color: var(--primary-text-color);
+      --dw-select-placeholder-color: var(--light-theme-disabled-color);
+      --dw-error-message-color: var(--error-color);
     }
 
     :host([invalid]) .main-container #dropdownContainer .label {
-      color: var(--error-color, #D50000);
+      color: var(--dw-select-error-color);
     }
 
     :host([invalid]) .main-container #dropdownContainer .dropdown-input {
-      border-bottom: 2px solid var(--error-color, #D50000);
+      border-bottom: 2px solid var(--dw-select-error-color);
     }
 
     .main-container #dropdownContainer {
       outline: none;
-      font-weight: 500;
       padding-bottom: 4px;
       cursor: pointer;
     }
 
     .main-container #dropdownContainer .label {
-      font-size: 12px;
-      color: var(--secondary-text-color, rgba(0,0,0,0.54));
-      line-height: 16px;
-      padding-top: 16px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+      color: var(--dw-select-label-color);
     }
 
     .main-container  #dropdownContainer .dropdown-input .expand-more-icon {
       padding: 0px 4px;
       width: var(--dw-select-expand-more-icon-width, 24px);
       height: var(--dw-select-expand-more-icon-height, 24px);
-      fill: var(--dw-select-expand-more-icon-color, rgba(0,0,0,0.54));
+      fill: var(--dw-select-expand-more-icon-color);
     }
 
     .main-container #dropdownContainer .dropdown-input {
@@ -60,34 +62,30 @@ class DwSelect extends LitElement {
       justify-content: space-between;
       -ms-flex-pack: space-between;
       -webkit-justify-content: space-between;
-      border-bottom: 1px solid var(--dw-select-border-color,  rgba(0,0,0,0.12));
+      border-bottom: 1px solid var(--dw-select-border-color);
     }
 
     .main-container #dropdownContainer .dropdown-input .value-container {
       padding: 8px 0px 6px 0px;
-      font-size: 16px;
-      line-height: 16px;
       overflow: hidden;
     }
 
     .main-container #dropdownContainer .dropdown-input .value-container .value {
-      color: var(--primary-color, rgba(0,0,0,0.87));
+      color: var(--dw-select-value-color);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .main-container #dropdownContainer .dropdown-input .value-container .placeholder {
-      color: var(--disabled-color, rgba(0,0,0,0.38));
+      color: var(--dw-select-placeholder-color);
     }
 
     .error-message {
-      color: var(--error-color, #D50000);
-      font-size: 12px;
-      line-height: 16px;
+      color: var(--dw-error-message-color);
       padding-bottom: 4px;
     }
-    `;
+    `];
   }
 
   /**
@@ -312,20 +310,20 @@ class DwSelect extends LitElement {
     return html`
       <div class="main-container" @click="${this._onClick}">
         <div id="dropdownContainer" tabindex="0">
-          <div class="label">
+          <div class="label caption">
             <div>${this.label}</div>
           </div>
           <div class="dropdown-input">
              <div class="value-container">
               ${!selectedText ? 
-                    html`<div class="placeholder">${this.placeholder}</div>`
-                    : html`<div class="value">${selectedText}</div>`}
+                    html`<div class="placeholder field">${this.placeholder}</div>`
+                    : html`<div class="value field">${selectedText}</div>`}
               </div>
             <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
           </div>
         </div>
         ${this.invalid ? html`
-          <div class="error-message">${this.errorMessage}</div>
+          <div class="error-message caption">${this.errorMessage}</div>
         ` : ''}
       </div>
       ${this._dropdownRendered ? this._renderSelectDialog() : ''}

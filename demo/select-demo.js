@@ -1,16 +1,15 @@
 import { LitElement, html, css } from 'lit-element';
 import '../dw-select';
+import {materialStyles} from'@dw/material-styles/material-styles';
 
 class SelectDemo extends LitElement {
   static get styles() {
     return [
+      materialStyles,
       css`
         :host {
           display: inline-block;
           box-sizing: border-box
-        }
-        dw-select {
-          --dw-select-width: 150px;
         }
       `
     ];
