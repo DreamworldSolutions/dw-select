@@ -6,6 +6,8 @@ export class DwSelectItem extends LitElement {
   static get styles() {
     return css`
       :host {
+        --dw-select-item-color: var(--primary-text-color);
+        --dw-select-check-icon: var(--primary-color);
         display: flex;
         display: -ms-flexbox;
         display: -webkit-flex;
