@@ -472,16 +472,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
     return html`
       <div class="header">
-        ${!this.noHeader ? html`
-          <div class="dialog-header">
-            <div class="back-icon" @click=${this._backClicked} tabindex="0" @keydown=${this._onBackBtnKeyDown}>${this._getBackIcon()}</div>
-            <div class="title headline6">${this.dialogTitle}</div>
-            ${!this.singleSelect ? html`
-              ${this._value.length ? html `<div class="count subtitle2">${this._value.length}</div>` : html ``}
-            ` : ''}
-          </div>
-          <div class="border"></div>
-        ` : ''}
+        ${!this.noHeader ? html` ${this._renderDialogHeader()} ` : ''}
         <div class="input-container ${this.allowFilter ? '' : 'hidden'}">
           <input
             id="filter"
@@ -512,12 +503,31 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           `)}
         </div>
       </div>
+      ${this._renderFooter()}
+    `;
+  }
+
+  _renderFooter(){
+    return html `
       ${!this.singleSelect ? html`
         <div class="footer">
           <button class="button" @click=${this._applyClicked} .disabled=${this._applyDisabled} @keydown=${this._onApplyBtnKeyDown}>Apply</button>
         </div>
       ` : ''}
-    `;
+    `
+  }
+
+  _renderDialogHeader(){
+    return html `
+      <div class="dialog-header">
+        <div class="back-icon" @click=${this._backClicked} tabindex="0" @keydown=${this._onBackBtnKeyDown}>${this._getBackIcon()}</div>
+        <div class="title headline6">${this.dialogTitle}</div>
+        ${!this.singleSelect ? html`
+          ${this._value.length ? html `<div class="count subtitle2">${this._value.length}</div>` : html ``}
+        ` : ''}
+      </div>
+      <div class="border"></div>
+    `
   }
 
   _renderItem(model) {
