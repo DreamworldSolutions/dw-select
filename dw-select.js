@@ -40,6 +40,7 @@ export class DwSelect extends LitElement {
 
     .main-container #dropdownContainer .label {
       color: var(--dw-select-label-color);
+      padding-top: 4px;
     }
 
     .main-container  #dropdownContainer .dropdown-input .expand-more-icon {
@@ -72,6 +73,7 @@ export class DwSelect extends LitElement {
 
     .main-container #dropdownContainer .dropdown-input .value-container .value {
       color: var(--dw-select-value-color);
+      padding-top: 4px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

@@ -346,6 +346,22 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        * Output property. True when user scrolled up in items overflow
        */
       scrolledUp: { type: Boolean, reflect: true, attribute: 'scrolled-up' },
+
+      /**
+       * Input property. Label for select all button
+       */
+      selectAllBtnLabel: { type: String},
+
+      /**
+       * Input property. Label for Reset button
+       */
+      resetBtnLabel: {type: String},
+
+      /**
+       * Input property. Label for apply button
+       */
+      applyBtnLabel: {type: String},
+
       /**
        * Sorted items based on groupBy.
        * Template loop is written on this property.
@@ -397,6 +413,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        * Keyboard highlighted index
        */
       _kbHighlightedIndex: { type: Boolean }
+      
     };
   }
 
@@ -424,6 +441,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this._groupByIndexMap = {};
     this._kbHighlightedIndex = 0;
     this.dialogTitle = 'Select';
+    this.selectAllBtnLabel= 'Select all';
+    this.resetBtnLabel='Reset';
+    this.applyBtnLabel='Apply';
   }
 
   /**
@@ -487,8 +507,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       <div id="scroller" class="main-content">
         ${!this.singleSelect ? html`
           <div class="selection-action-buttons">
-            <button class="select-button button" @click=${this._selectAllClicked}>Select all</button>
-            <button class="button" @click=${this._resetClicked}>Reset</button>
+            <button class="select-button button" @click=${this._selectAllClicked}>${this.selectAllBtnLabel}</button>
+            <button class="button" @click=${this._resetClicked}>${this.resetBtnLabel}</button>
           </div>
         ` : ''}
         <div class="items-container">
@@ -511,7 +531,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     return html `
       ${!this.singleSelect ? html`
         <div class="footer">
-          <button class="button" @click=${this._applyClicked} .disabled=${this._applyDisabled} @keydown=${this._onApplyBtnKeyDown}>Apply</button>
+          <button class="button" @click=${this._applyClicked} .disabled=${this._applyDisabled} @keydown=${this._onApplyBtnKeyDown}>${this.applyBtnLabel}</button>
         </div>
       ` : ''}
     `
@@ -1088,8 +1108,12 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _computeApplyBtnDisabled() {
+    if(this.singleSelect) {
+      return false;
+    }
+
     if(!this._value || !this._value.length){
-      this._applyDisabled = true;
+      this._applyDisabled = false;
       return;
     }
 
