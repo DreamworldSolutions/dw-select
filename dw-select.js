@@ -6,7 +6,7 @@ import './dw-select-dialog';
 /**
  * Trigger for `dw-select-dialog`
  */
-class DwSelect extends LitElement {
+export class DwSelect extends LitElement {
 
   static get styles() {
     return [Typography, css`

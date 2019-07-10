@@ -7,7 +7,7 @@ import { backIcon, clearIcon } from './dw-select-icons';
 import { Typography } from '@dw/material-styles/typography'
 import './dw-select-item';
 
-class DwSelectDialog extends DwSelectBaseDialog {
+export class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
     return [
       super.styles,
