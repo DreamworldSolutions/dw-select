@@ -1,6 +1,6 @@
 {
   "name": "@dw/dw-select",
-  "version": "1.0.0",
+  "version": "1.0.0-SNAPSHOT-2",
   "description": "",
   "main": "dw-select.js",
   "scripts": {
@@ -13,6 +13,6 @@
     "@dw/material-styles": "github:DreamworldSolutions/material-styles#master"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.2.10",
+    "@webcomponents/webcomponentsjs": "^2.2.10"
   }
 }
