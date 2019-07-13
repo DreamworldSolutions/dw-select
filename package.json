@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lit-element": "^2.2.0",
-    "@dw/material-styles": "github:DreamworldSolutions/material-styles#master"
+    "@dw/material-styles": "github:DreamworldSolutions/material-styles#feature-material-styles"
   },
   "devDependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10"

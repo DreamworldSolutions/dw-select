@@ -53,6 +53,7 @@ export class DwSelectBaseDialog extends LitElement {
   }
 
   refit() {
+    this.style.height = 'auto';
     let dropdownHeight = this.offsetHeight;
     let dropdownWidth = this.offsetWidth;
     let winHeight = window.innerHeight;
@@ -67,10 +68,12 @@ export class DwSelectBaseDialog extends LitElement {
       return;
     }
 
-    this.style.height = 'auto';
-
     if(!this.positionTarget) {
-      this.style.height = Math.min(dropdownHeight, winHeight) + 'px';
+      let height = Math.min(dropdownHeight, winHeight);
+      if(this.vOffset) {
+        height = height - this.vOffset;
+      }
+      this.style.height = height + 'px';
       this.style.top = '50%';
       this.style.bottom = 'initial';
       this.style.left = '50%';
