@@ -32,6 +32,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           --dw-select-kb-highlighted-bg-color: var(--light-primary-color);
           --dw-select-apply-button-bg-color: var(--primary-color);
           --dw-select-apply-button-color: var(--light-theme-background-color);
+          --dw-select-item-color: var(--primary-text-color);
+          --dw-select-check-icon: var(--primary-color);
           display: none;
           box-sizing: border-box;
           background: var(--dw-select-bg-color);
