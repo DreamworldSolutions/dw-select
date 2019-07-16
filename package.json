@@ -1,6 +1,6 @@
 {
   "name": "@dw/dw-select",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dw-select.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lit-element": "^2.2.0",
-    "@dw/material-styles": "github:DreamworldSolutions/material-styles#^1.0.0"
+    "@dw/material-styles": "github:DreamworldSolutions/material-styles#semver:^1.0.0"
   },
   "devDependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10"

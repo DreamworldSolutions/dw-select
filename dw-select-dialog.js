@@ -1114,8 +1114,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       return false;
     }
 
-    if(!this._value || !this._value.length){
-      this._applyDisabled = false;
+    if((!this.value || !this.value.length) && (!this._value || !this._value.length)) {
+      this._applyDisabled = true;
       return;
     }
 
