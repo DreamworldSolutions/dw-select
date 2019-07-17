@@ -709,6 +709,30 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
+  _addResizeEventListeners(){
+    this._removeResizeEventListeners();
+    this._resize = this.debounce(() => {
+      this.refit();
+    }, 500);
+
+    window.addEventListener('resize', this._resize);
+  }
+
+  _removeResizeEventListeners(){
+    window.removeEventListener('resize', this._resize);
+  }
+
+  debounce(func, delay) {
+    let debounceTimer;
+
+    return function() { 
+    let context = this;
+    let args = arguments;
+       clearTimeout(debounceTimer) 
+       debounceTimer  = setTimeout(() => func.apply(context, args), delay) 
+    } 
+  };
+
   _onBackBtnKeyDown(e) {
     var keyCode = e.keyCode || e.which;
     
@@ -730,12 +754,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     super._onOpened();
     this._addKeyEventListeners();
     this._addScrollEventListeners();
+    this._addResizeEventListeners();
   }
 
   _onClosed() {
     super._onClosed();
     this._removeKeyEventListeners();
     this._removeScrollEventListeners();
+    this._removeResizeEventListeners();
   }
 
   _getBackIcon() {
