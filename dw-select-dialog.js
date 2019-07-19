@@ -446,6 +446,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this.selectAllBtnLabel= 'Select all';
     this.resetBtnLabel='Reset';
     this.applyBtnLabel='Apply';
+    this._resize = this.debounce(() => {
+      this.refit();
+    }, 500);
   }
 
   /**
@@ -711,10 +714,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   _addResizeEventListeners(){
     this._removeResizeEventListeners();
-    this._resize = this.debounce(() => {
-      this.refit();
-    }, 500);
-
     window.addEventListener('resize', this._resize);
   }
 
