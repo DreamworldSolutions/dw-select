@@ -365,6 +365,16 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       applyBtnLabel: {type: String},
 
       /**
+       * Input property. hide selectAll button
+       */
+      hideSelectAllBtn : { type: Boolean },
+
+      /**
+       * Input property. hide reset button
+       */
+      hideResetBtn : { type: Boolean },
+
+      /**
        * Sorted items based on groupBy.
        * Template loop is written on this property.
        */
@@ -446,6 +456,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this.selectAllBtnLabel= 'Select all';
     this.resetBtnLabel='Reset';
     this.applyBtnLabel='Apply';
+    this.hideResetBtn = false;
+    this.hideSelectAllBtn = false;
+    this._resize = this.debounce(() => {
+      this.refit();
+    }, 500);
   }
 
   /**
@@ -508,10 +523,12 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       </div>
       <div id="scroller" class="main-content">
         ${!this.singleSelect ? html`
-          <div class="selection-action-buttons">
-            <button class="select-button button" @click=${this._selectAllClicked}>${this.selectAllBtnLabel}</button>
-            <button class="button" @click=${this._resetClicked}>${this.resetBtnLabel}</button>
-          </div>
+          ${this.hideSelectAllBtn && this.hideResetBtn ? html `` : html`
+            <div class="selection-action-buttons">
+              ${this.hideSelectAllBtn ? html `` : html `<button class="select-button button" @click=${this._selectAllClicked}>${this.selectAllBtnLabel}</button>`}
+              ${this.hideResetBtn ? html `` : html `<button class="button" @click=${this._resetClicked}>${this.resetBtnLabel}</button>`}
+            </div>
+          `}
         ` : ''}
         <div class="items-container">
           ${repeat(items, this._valueKeyGenerator, (item, index) => html`
@@ -612,6 +629,12 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     if(this.opened && (changedProps.has('items') || changedProps.has('opened'))) {
       this._refitPending = false;
       this.refit();
+
+      if(this.mobileMode){
+        setTimeout(() => {
+          this.refit();
+        });
+      }
     }
 
     if(this.opened && (changedProps.has('items') || changedProps.has('_filterQuery')|| changedProps.has('opened'))) {
@@ -709,6 +732,26 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
+  _addResizeEventListeners(){
+    this._removeResizeEventListeners();
+    window.addEventListener('resize', this._resize);
+  }
+
+  _removeResizeEventListeners(){
+    window.removeEventListener('resize', this._resize);
+  }
+
+  debounce(func, delay) {
+    let debounceTimer;
+
+    return function() { 
+    let context = this;
+    let args = arguments;
+       clearTimeout(debounceTimer) 
+       debounceTimer  = setTimeout(() => func.apply(context, args), delay) 
+    } 
+  };
+
   _onBackBtnKeyDown(e) {
     var keyCode = e.keyCode || e.which;
     
@@ -730,12 +773,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     super._onOpened();
     this._addKeyEventListeners();
     this._addScrollEventListeners();
+    this._addResizeEventListeners();
   }
 
   _onClosed() {
     super._onClosed();
     this._removeKeyEventListeners();
     this._removeScrollEventListeners();
+    this._removeResizeEventListeners();
   }
 
   _getBackIcon() {

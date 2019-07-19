@@ -238,6 +238,17 @@ export class DwSelect extends LitElement {
        * - `itemValue` Path for the value of the item.
        */
       selectedItemsText: Object,
+
+      /**
+       * Input property. hide selectAll button
+       */
+      hideSelectAllBtn : { type: Boolean },
+
+      /**
+       * Input property. hide reset button
+       */
+      hideResetBtn : { type: Boolean },
+
       /**
        * The element that should be used to position the element
        */
@@ -263,6 +274,8 @@ export class DwSelect extends LitElement {
     this.vAlign = 'top';
     this.filterPlaceholder = '';
     this.items = [];
+    this.hideResetBtn = false;
+    this.hideSelectAllBtn = false;
   }
 
   /**
@@ -354,6 +367,8 @@ export class DwSelect extends LitElement {
         .groupByOrder=${this.groupByOrder}
         .groupText=${this.groupText}
         .dialogTitle=${this.dialogTitle}
+        .hideSelectAllBtn="${this.hideSelectAllBtn}"
+        .hideResetBtn="${this.hideResetBtn}"
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
       ></dw-select-dialog>
