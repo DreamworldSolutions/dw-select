@@ -1,6 +1,6 @@
 {
   "name": "@dw/dw-select",
-  "version": "1.0.5",
+  "version": "1.0.5-SNAPSHOT",
   "description": "",
   "main": "dw-select.js",
   "scripts": {

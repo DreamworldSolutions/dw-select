@@ -253,6 +253,18 @@ export class DwSelect extends LitElement {
        * The element that should be used to position the element
        */
       _positionTarget: Object,
+       /**
+       * By default, Show all/Reset buttons are not sticky
+       * When true, Show all/Reset button are sticky when user scroll items
+       */
+      stickySelectionButtons: { type: Boolean },
+
+      /**
+       * default value is left
+       * Possible value - 'left', 'right'
+       */
+      selectionButtonsAlign: { type: String },
+
       _dropdownRendered: Boolean
     };
   }
@@ -276,6 +288,8 @@ export class DwSelect extends LitElement {
     this.items = [];
     this.hideResetBtn = false;
     this.hideSelectAllBtn = false;
+    this.stickySelectionButtons = false;
+    this.selectionButtonsAlign = 'left';
   }
 
   /**
@@ -369,6 +383,8 @@ export class DwSelect extends LitElement {
         .dialogTitle=${this.dialogTitle}
         .hideSelectAllBtn="${this.hideSelectAllBtn}"
         .hideResetBtn="${this.hideResetBtn}"
+        .stickySelectionButtons="${this.stickySelectionButtons}"
+        .selectionButtonsAlign="${this.selectionButtonsAlign}"
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
       ></dw-select-dialog>
