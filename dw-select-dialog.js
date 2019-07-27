@@ -157,7 +157,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           min-height: 50px;
         }
 
-        .main-content .selection-action-buttons {
+        .selection-action-buttons {
           height: 48px;
           display: flex;
           display: -ms-flexbox;
@@ -168,10 +168,16 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           align-items: center;
           -ms-flex-align: center;
           -webkit-align-items: center;
-          padding-left: 16px;
+          padding: 0px 16px;
         }
 
-        .main-content .selection-action-buttons button { 
+        :host([selection-buttons-align=right]) .selection-action-buttons {
+          -ms-flex-pack: end;
+          -webkit-justify-content: flex-end;
+          justify-content: flex-end;
+        }
+
+        .selection-action-buttons button { 
           color: var(--dw-select-selection-btn-color);
           text-transform: uppercase;
           background: var(--dw-select-selection-action-btn-bg-color);
@@ -184,15 +190,15 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .select-button {
           margin-right: 8px;
         }
-        .main-content .selection-action-buttons button:hover {
+        .selection-action-buttons button:hover {
           background: var(--dw-select-button-hover-color);
         }
 
-        .main-content .selection-action-buttons button:focus{
+        .selection-action-buttons button:focus{
           background: var(--dw-select-button-focus-color);
         }
 
-        .main-content .selection-action-buttons button::-moz-focus-inner {
+        .selection-action-buttons button::-moz-focus-inner {
           border: 0;
         }
 
@@ -424,8 +430,18 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       /**
        * Keyboard highlighted index
        */
-      _kbHighlightedIndex: { type: Boolean }
-      
+      _kbHighlightedIndex: { type: Boolean },
+     /**
+       * By default, Show all/Reset buttons are not sticky
+       * When true, Show all/Reset button are sticky when user scroll items
+       */
+      stickySelectionButtons: { type: Boolean },
+
+       /**
+       * default value is left
+       * Possible value - 'left', 'right'
+       */
+      selectionButtonsAlign: { type: String, reflect: true, attribute: 'selection-buttons-align' }
     };
   }
 
@@ -461,6 +477,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this._resize = this.debounce(() => {
       this.refit();
     }, 500);
+    this.stickySelectionButtons = false;
+    this.selectionButtonsAlign = 'left';
   }
 
   /**
@@ -521,15 +539,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           <div class="clear-text-icon ${this._filteredApplied ? '' : 'hidden'}" @click=${this._clearFilter}>${this._getClearIcon()}</div>
         </div>
       </div>
+      ${this.stickySelectionButtons ? html `${this._renderSelectAllAndResetBtn()}` : html ``}
       <div id="scroller" class="main-content">
-        ${!this.singleSelect ? html`
-          ${this.hideSelectAllBtn && this.hideResetBtn ? html `` : html`
-            <div class="selection-action-buttons">
-              ${this.hideSelectAllBtn ? html `` : html `<button class="select-button button" @click=${this._selectAllClicked}>${this.selectAllBtnLabel}</button>`}
-              ${this.hideResetBtn ? html `` : html `<button class="button" @click=${this._resetClicked}>${this.resetBtnLabel}</button>`}
-            </div>
-          `}
-        ` : ''}
+        ${this.stickySelectionButtons ? html `` : html `${this._renderSelectAllAndResetBtn()}`}
         <div class="items-container">
           ${repeat(items, this._valueKeyGenerator, (item, index) => html`
             ${this._renderItem({
@@ -544,6 +556,19 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       </div>
       ${this._renderFooter()}
     `;
+  }
+
+  _renderSelectAllAndResetBtn(){
+    return html `
+      ${!this.singleSelect ? html`
+        ${this.hideSelectAllBtn && this.hideResetBtn ? html `` : html`
+          <div class="selection-action-buttons">
+            ${this.hideSelectAllBtn ? html `` : html `<button class="select-button button" @click=${this._selectAllClicked}>${this.selectAllBtnLabel}</button>`}
+            ${this.hideResetBtn ? html `` : html `<button class="button" @click=${this._resetClicked}>${this.resetBtnLabel}</button>`}
+          </div>
+        `}
+      ` : ''}
+    `
   }
 
   _renderFooter(){

@@ -250,9 +250,28 @@ export class DwSelect extends LitElement {
       hideResetBtn : { type: Boolean },
 
       /**
+       * Input property.
+       * When true, Show dialog in full screen even if items are very less in mobile mode
+       * Default value: false
+       */
+      alwaysFullScreenInMobile: Boolean,
+
+      /**
        * The element that should be used to position the element
        */
       _positionTarget: Object,
+       /**
+       * By default, Show all/Reset buttons are not sticky
+       * When true, Show all/Reset button are sticky when user scroll items
+       */
+      stickySelectionButtons: { type: Boolean },
+
+      /**
+       * default value is left
+       * Possible value - 'left', 'right'
+       */
+      selectionButtonsAlign: { type: String },
+
       _dropdownRendered: Boolean
     };
   }
@@ -276,6 +295,9 @@ export class DwSelect extends LitElement {
     this.items = [];
     this.hideResetBtn = false;
     this.hideSelectAllBtn = false;
+    this.stickySelectionButtons = false;
+    this.selectionButtonsAlign = 'left';
+    this.alwaysFullScreenInMobile = false;
   }
 
   /**
@@ -368,7 +390,10 @@ export class DwSelect extends LitElement {
         .groupText=${this.groupText}
         .dialogTitle=${this.dialogTitle}
         .hideSelectAllBtn="${this.hideSelectAllBtn}"
+        .alwaysFullScreenInMobile=${this.alwaysFullScreenInMobile}
         .hideResetBtn="${this.hideResetBtn}"
+        .stickySelectionButtons="${this.stickySelectionButtons}"
+        .selectionButtonsAlign="${this.selectionButtonsAlign}"
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
       ></dw-select-dialog>

@@ -39,7 +39,13 @@ export class DwSelectBaseDialog extends LitElement {
        * Input property. The vertical offset in pixels. Negtaive numbers allowed.
        * Default value: 0
        */
-      vOffset: Number
+      vOffset: Number,
+      /**
+       * Input property.
+       * When true, Show dialog in full screen even if items are very less in mobile mode
+       * Default value: false
+       */
+      alwaysFullScreenInMobile: Boolean
     };
   }
 
@@ -59,8 +65,14 @@ export class DwSelectBaseDialog extends LitElement {
     let winHeight = window.innerHeight;
     
     if(this.mobileMode) {
-      this.style.height = Math.min(dropdownHeight, winHeight) + 'px';
-      this.style.top = 'auto';
+      if(this.alwaysFullScreenInMobile) {
+        this.style.height = 'auto';
+        this.style.top = '0px';
+      } else {
+        this.style.height = Math.min(dropdownHeight, winHeight) + 'px';
+        this.style.top = 'auto';
+      }
+      
       this.style.bottom = '0px';
       this.style.left = '0px';
       this.style.right = '0px';
