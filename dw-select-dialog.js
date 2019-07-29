@@ -478,6 +478,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       this.refit();
     }, 500);
     this.stickySelectionButtons = false;
+    this.selectionButtonsAlign = 'left';
   }
 
   /**
