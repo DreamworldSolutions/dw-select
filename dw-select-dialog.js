@@ -1112,6 +1112,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     // Allow to deselect only if multi select is enabled
     if(!this.singleSelect) {
       this.deselectByItem(item);
+    } else {
+      this.close();
     }
   }
 
