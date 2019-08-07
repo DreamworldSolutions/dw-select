@@ -41,7 +41,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -ms-flex-direction: column;
           -webkit-flex-direction: column;
           outline: none;
-          z-index: 9;
+          z-index: 100;
           width: var(--dw-select-width, 250px);
         }
 
@@ -49,6 +49,60 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           display: -ms-flexbox;
           display: -webkit-flex;
           display: flex;
+        }
+
+        :host([opened][mobile-mode]) {
+          animation-name: slideUpAnimation;
+          -webkit-animation-name: slideUpAnimation;
+          -moz-animation-name: slideUpAnimation;
+          -o-animation-name: slideUpAnimation;
+          animation-duration: 500ms;
+          -webkit-animation-duration: 500ms;
+          -moz-animation-duration: 500ms;
+          -o-animation-duration: 500ms;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-timing-function: ease-in-out;
+          -moz-animation-timing-function: ease-in-out;
+          -o-animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          -webkit-animation-fill-mode: forwards;
+          -moz-animation-fill-mode: forwards;
+          -o-animation-fill-mode: forwards;
+        }
+
+        :host(:not([mobile-mode])[opened]) {
+          -webkit-animation-name: fadeIn;
+          animation-name: fadeIn;
+          -moz-animation-name: fadeIn;
+          -o-animation-name: fadeIn;
+          -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-timing-function: ease-in-out;
+          -moz-animation-timing-function: ease-in-out;
+          -o-animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          -webkit-animation-fill-mode: forwards;
+          -moz-animation-fill-mode: forwards;
+          -o-animation-fill-mode: forwards;
+        }
+
+        @-webkit-keyframes slideUpAnimation {
+          0% {bottom: -750px;opacity: 0;}
+          100%{opacity: 1;bottom: 0px;}
+        }
+        @keyframes slideUpAnimation  {
+          0% {bottom: -750px;opacity: 0;}
+          100%{opacity: 1;bottom: 0px;}
+        }
+
+        @-webkit-keyframes fadeIn {
+          0% {opacity: 0;}
+          100% {opacity: 1;}
+        }
+        @keyframes fadeIn {
+          0% {opacity: 0;}
+          100% {opacity: 1;}
         }
 
         :host([mobile-mode]) {

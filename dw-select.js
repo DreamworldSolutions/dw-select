@@ -87,6 +87,22 @@ export class DwSelect extends LitElement {
       color: var(--dw-error-message-color);
       padding-bottom: 4px;
     }
+
+    #overlay {
+      position: fixed;
+      display: none;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-color: var(--overlay-color, rgba(0,0,0,0.4));
+      overflow: hidden;
+      width: 100%; 
+      height: 100%;
+      z-index: 99;
+      cursor: pointer;
+    }
+
+    :host([overlay]) #overlay {
+      display:block;
+    }
     `];
   }
 
@@ -136,7 +152,7 @@ export class DwSelect extends LitElement {
       /**
        * Input + Output property. True if the dropdown is open, false otherwise.
        */
-      opened: Boolean,
+      opened: { type: Boolean, reflect: true },
       /**
        * Input property. The orientation against which to align the menu dropdown horizontally relative to the dropdown trigger.
        * Possible values: "left", "right"
@@ -272,6 +288,12 @@ export class DwSelect extends LitElement {
        */
       selectionButtonsAlign: { type: String },
 
+      /**
+       * Default value is `false`.
+       * When true, Show overlay, otherwise hide overlay.
+       */
+      _overlay: { type: Boolean, reflect: true,  attribute: 'overlay'},
+
       _dropdownRendered: Boolean
     };
   }
@@ -280,7 +302,6 @@ export class DwSelect extends LitElement {
     super();
     this.opened = false;
     this.singleSelect = false;
-    this._dropdownRendered = false;
     this.allowFilter = false;
     this.required = false;
     this.invalid = false;
@@ -298,6 +319,10 @@ export class DwSelect extends LitElement {
     this.stickySelectionButtons = false;
     this.selectionButtonsAlign = 'left';
     this.alwaysFullScreenInMobile = false;
+    this.iconSize = 24;
+    
+    this._dropdownRendered = false;
+    this._overlay = false;
   }
 
   /**
@@ -345,6 +370,7 @@ export class DwSelect extends LitElement {
     let selectedText = this._computeSelectedItemsText(this.items, this.value, this.itemLabel, this.itemValue);
 
     return html`
+      <div id="overlay"></div>
       <div class="main-container" @click="${this._onClick}">
         <div id="dropdownContainer" tabindex="0">
           <div class="label caption">
@@ -471,6 +497,7 @@ export class DwSelect extends LitElement {
   _openedChanged(e) {
     this.opened = e.detail.opened;
     this._triggerOpenedChange();
+    this._mobileModeOverlay();
   }
 
   _triggerOpenedChange() {
@@ -489,6 +516,24 @@ export class DwSelect extends LitElement {
       }
     });
     this.dispatchEvent(invalidChangeEvent);
+  }
+
+  /**
+   * Show overlay in modile mode when dialog is opend.
+   * Close overlay when dialog is closed.
+   * @protected
+   */
+  _mobileModeOverlay() {
+    let self = this;
+    self._overlay = false;
+    if(!self.mobileMode || !self.opened) {
+      return;
+    }
+
+    //Show dropdown using animation, So overlay show after some time because remove a jerk.
+    window.setTimeout(()=> {
+      self._overlay = true;
+    }, 100);
   }
 
   _computeSelectedItemsText(items, value, itemLabel, itemValue) {
