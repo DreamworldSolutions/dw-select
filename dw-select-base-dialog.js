@@ -97,7 +97,7 @@ export class DwSelectBaseDialog extends LitElement {
     let clientRect = this.positionTarget.getBoundingClientRect();
     let left, top, bottom;
     let alignTop = this._hasNoEnoughBottomSpace(clientRect);
-    
+
     if(!alignTop) {
       if(this.vAlign === 'bottom') {
         top = clientRect.top + clientRect.height;
@@ -135,7 +135,7 @@ export class DwSelectBaseDialog extends LitElement {
       this.style.bottom = bottom + 'px';
       this.style.top = 'initial';
     }
-    
+
     this.style.left = left + 'px';
     this.style.right = 'initial';
     this.style.transform = 'none';

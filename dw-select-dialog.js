@@ -42,7 +42,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -webkit-flex-direction: column;
           outline: none;
           z-index: 100;
-          width: var(--dw-select-width, 250px);
+          width: var(--dw-select-dialog-width, 250px);
         }
 
         :host([opened]) {
@@ -657,6 +657,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .itemValue=${this.itemValue}
         .selected=${model.selected}
         .item=${model.item}
+        .disabled=${model.item.disabled}
+        .disabledTooltip=${model.item.disabledTooltip}
+        .icon=${model.item.icon}
+        .iconSize=${this.iconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
     `;
@@ -955,7 +959,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   _onEnterKeyDown(e) {
     let item = this._items[this._kbHighlightedIndex];
-
     if(item) {
       this._toggleItem(item);
     }
@@ -1158,6 +1161,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _toggleItem(item) {
+    if(item.disabled) {
+      return;
+    }
+
     if(!this.isItemSelected(item)){
       this.selectByItem(item);
       return;

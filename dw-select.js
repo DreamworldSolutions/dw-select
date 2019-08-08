@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { dropdownArrowIcon } from './dw-select-icons';
-import { Typography } from '@dw/material-styles/typography'
+import { Typography } from '@dw/material-styles/typography';
+import { getIcon } from 'icons';
 import './dw-select-dialog';
 
 /**
@@ -24,6 +25,49 @@ export class DwSelect extends LitElement {
       --dw-error-message-color: var(--error-color);
     }
 
+    :host([trigger-icon]), :host([trigger-label]), :host([custom-trigger]) {
+      width: var(--dw-select-width, auto);
+    }
+
+    :host([trigger-icon]) .main-container #dropdownContainer, 
+    :host([trigger-label]) .main-container #dropdownContainer, 
+    .main-container #dropdownContainer .trigger-icon, 
+    .main-container #dropdownContainer .trigger-label {
+      display: flex;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      flex-direction: row;
+      -ms-flex-direction: row;
+      -webkit-flex-direction: row;
+      align-items: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      box-sizing: border-box;
+    }
+
+    .main-container #dropdownContainer .trigger-icon, .main-container #dropdownContainer .trigger-label {
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+    }
+
+    .main-container #dropdownContainer .trigger-icon {
+      height: var(--dw-select-trigger-icon-height, 36px);
+      width: var(--dw-select-trigger-icon-width, 36px);
+      fill: var(--dw-select-trigger-icon-fill-color);
+      margin: var(--dw-select-trigger-icon-margin, 0px);
+      padding: var(--dw-select-trigger-icon-padding, 0px);
+    }
+
+    .main-container #dropdownContainer .trigger-label {
+      text-transform: var(--dw-select-trigger-label-text-transform, initial);
+      width: var(--dw-select-trigger-label-width, auto);
+      height: var(--dw-select-trigger-label-height, 36px);
+      fill: var(--dw-select-trigger-label-color);
+      margin: var(--dw-select-trigger-label-margin, 0px);
+      padding: var(--dw-select-trigger-label-padding, 8px);
+    }
+
     :host([invalid]) .main-container #dropdownContainer .label {
       color: var(--dw-select-error-color);
     }
@@ -34,7 +78,8 @@ export class DwSelect extends LitElement {
 
     .main-container #dropdownContainer {
       outline: none;
-      padding-bottom: 4px;
+      padding: var(--dw-select-dropdown-container-padding, 0px 0px 4px 0px);
+      margin: var(--dw-select-dropdown-container-margin, 0px);
       cursor: pointer;
     }
 
@@ -273,6 +318,29 @@ export class DwSelect extends LitElement {
       alwaysFullScreenInMobile: Boolean,
 
       /**
+       * Input property.
+       * When `true`, Remove defualt trigger element
+       * Provide your custom trigger element as a slot.
+       */
+      customTrigger: {type: Boolean, reflect: true, attribute: 'custom-trigger'},
+
+      /**
+       * Input property.
+       * Remove default trigger element.
+       * Passed as a icon name like `navigation.more_vert`.
+       * New trigger element as a icon. 
+       */
+      triggerIcon: {type: String, reflect: true, attribute: 'trigger-icon'},
+
+      /**
+       * Input property.
+       * Remove default trigger element.
+       * Passed as a label like `Create`.
+       * New trigger element as a label.
+       */
+      triggerLabel: {type: String, reflect: true, attribute: 'trigger-label'},
+
+      /**
        * The element that should be used to position the element
        */
       _positionTarget: Object,
@@ -367,28 +435,9 @@ export class DwSelect extends LitElement {
       this._dropdownRendered = true;
     }
 
-    let selectedText = this._computeSelectedItemsText(this.items, this.value, this.itemLabel, this.itemValue);
-
     return html`
       <div id="overlay"></div>
-      <div class="main-container" @click="${this._onClick}">
-        <div id="dropdownContainer" tabindex="0">
-          <div class="label caption">
-            <div>${this.label}</div>
-          </div>
-          <div class="dropdown-input">
-             <div class="value-container">
-              ${!selectedText ? 
-                    html`<div class="placeholder field">${this.placeholder}</div>`
-                    : html`<div class="value field">${selectedText}</div>`}
-              </div>
-            <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
-          </div>
-        </div>
-        ${this.invalid ? html`
-          <div class="error-message caption">${this.errorMessage}</div>
-        ` : ''}
-      </div>
+      ${this._renderTriggerElement()}
       ${this._dropdownRendered ? this._renderSelectDialog() : ''}
     `;
   }
@@ -423,6 +472,19 @@ export class DwSelect extends LitElement {
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
       ></dw-select-dialog>
+    `;
+  }
+  
+  _renderTriggerElement() {
+    return html `
+      <div class="main-container" @click="${this._onClick}">
+        <div id="dropdownContainer" tabindex="0">
+          ${this._getTriggerElement()}
+        </div>
+        ${(!this.customTrigger && !this.triggerIcon && !this.triggerLabel && this.invalid)? html `
+          <div class="error-message caption">${this.errorMessage}</div>
+        `: html ``}
+      </div>
     `;
   }
 
@@ -477,6 +539,72 @@ export class DwSelect extends LitElement {
 
   _getDropDownArrowIcon() {
     return dropdownArrowIcon;
+  }
+
+  /**
+   * @returns Trigger element based on `customTrigger`, `triggerIcon`, and `triggerLabel` property.
+   * @protected
+   */
+  _getTriggerElement() {
+    if(this.customTrigger) {
+      return html `
+        <slot></slot>
+      `;
+    }
+
+    if(this.triggerIcon || this.triggerLabel) {
+      return html `
+        ${this._getTriggerIcon()}
+        ${this._getTriggerLabel()}
+      `;
+    }
+
+    return html `${this._getDefaultTriggerElement()}`;
+  }
+
+  /**
+   * @returns Trigger icon element.
+   * @protected
+   */
+  _getTriggerIcon() {
+    if(this.triggerIcon) {
+      return html `<div class="trigger-icon " ?hidden="${!getIcon(this.triggerIcon)}">${getIcon(this.triggerIcon)}</div>`
+    }
+
+    return html ``;
+  }
+
+  /**
+   * @returns Trigger label element.
+   * @protected
+   */
+  _getTriggerLabel() {
+    if(this.triggerLabel) {
+      return html `<div class="trigger-label">${this.triggerLabel}</div>`
+    }
+
+    return html ``;
+  }
+
+  /**
+   * @returns Default trigger element.
+   * @protected
+   */
+  _getDefaultTriggerElement() {
+    let selectedText = this._computeSelectedItemsText(this.items, this.value, this.itemLabel, this.itemValue);
+    return html `
+      <div class="label caption">
+        <div>${this.label}</div>
+      </div>
+      <div class="dropdown-input">
+        <div class="value-container">
+          ${!selectedText ? 
+                html`<div class="placeholder field">${this.placeholder}</div>`
+                : html`<div class="value field">${selectedText}</div>`}
+        </div>
+        <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
+      </div>
+    `;
   }
 
   _onClick() {
