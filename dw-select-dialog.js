@@ -435,6 +435,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       hideResetBtn : { type: Boolean },
 
       /**
+       * Input property. item icon size.
+       */
+      iconSize: Number,
+
+      /**
        * Sorted items based on groupBy.
        * Template loop is written on this property.
        */

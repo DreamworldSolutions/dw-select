@@ -234,6 +234,12 @@ export class DwSelect extends LitElement {
        * Input property. Path for the value of the item. If items is an array of objects, the itemValue: is used to fetch the string value for the selected item.
        */
       itemValue: String,
+
+      /**
+       * Input property. drop down item icon size.
+       */
+      iconSize: Number,
+
       /**
        * Input property. Allows user to filter items by typing query.
        * Default value: false
@@ -448,6 +454,7 @@ export class DwSelect extends LitElement {
         .items=${this.items}
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
+        .iconSize=${this.iconSize}
         .positionTarget=${this._positionTarget}
         .noHeader=${this.noHeader}
         .mobileMode=${this.mobileMode}

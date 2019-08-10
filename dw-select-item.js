@@ -124,7 +124,12 @@ export class DwSelectItem extends LitElement {
       /**
        * Input property. Show icon for item.
        */
-      icon: { type: String }
+      icon: { type: String },
+
+      /**
+       * Input property. Represent icon size.
+       */
+      iconSize: { tyep: Number }
     };
   }
 
@@ -136,8 +141,8 @@ export class DwSelectItem extends LitElement {
   render() {
     return html`
       <div class="container" title=${this._getToolTipText()}>
-        <div class="icon" ?hidden="${!getIcon(this.icon)}">
-          ${getIcon(this.icon)}
+        <div class="icon" ?hidden="${!this.icon}">
+          ${getIcon(this.icon, this.iconSize)}
         </div>
         <div class="content">${this._getName(this.item, this.itemLabel)}</div>
         <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>
