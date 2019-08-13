@@ -194,6 +194,14 @@ export class DwSelect extends LitElement {
        * Input property. A full set of items to filter the visible options from. The items can be of either String or Object type.
        */
       items: Array,
+
+      /**
+       * Input property. Disabled item with message.
+       * Proxy to `dw-select-dialog` element.
+       * e.g. {'DELETE': 'User has no write permission'}.
+       */
+      disabledItems: Object,
+
       /**
        * Input + Output property. True if the dropdown is open, false otherwise.
        */
@@ -452,6 +460,7 @@ export class DwSelect extends LitElement {
     return html`
       <dw-select-dialog
         .items=${this.items}
+        .disabledItems=${this.disabledItems}
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
         .iconSize=${this.iconSize}

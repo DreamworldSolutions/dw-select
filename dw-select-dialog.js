@@ -339,6 +339,13 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        * Input property. A full set of items to filter the visible options from. The items can be of either String or Object type.
        */
       items: { type: Array },
+
+      /**
+       * Input property. Disabled item with message.
+       * e.g. {'DELETE': 'User has no write permission'}.
+       */
+      disabledItems: { type: Object },
+
       /**
        * Input + Output property. True if the dropdown is open, false otherwise.
        */
@@ -607,6 +614,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
               item,
               index,
               selected: this.isItemSelected(item),
+              disabled: this.isItemDisabled(this.disabledItems, item),
+              disabledTooltip: this.getDisabledItemTooltip(this.disabledItems, item),
               hidden: this._isItemFilteredOut(index),
               kbHighlighted: this._isItemKBHighlighted(index),
               group: groupLabelFinder(index, this._isItemFilteredOut(index))})}
@@ -662,8 +671,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .itemValue=${this.itemValue}
         .selected=${model.selected}
         .item=${model.item}
-        .disabled=${model.item.disabled}
-        .disabledTooltip=${model.item.disabledTooltip}
+        .disabled=${model.disabled}
+        .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
         .iconSize=${this.iconSize}
         @click=${(e) => this._itemClicked(e, model)}>
@@ -742,6 +751,31 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       return true;
     }
     return false;
+  }
+
+  /**
+   * @param {Object} disabledItems
+   * @param {*} item
+   * @returns {Boolean} `true` when item is disabled, `false` otherwise.
+   * @public
+   */
+  isItemDisabled(disabledItems, item){
+    let value = this._valueKeyGenerator(item) || this._emptyValue;
+    if(disabledItems && disabledItems[value]) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * @param {Object} disabledItems
+   * @param {*} item
+   * @returns {String} Disabled item tooltip.
+   * @public
+   */
+  getDisabledItemTooltip(disabledItems, item){
+    let value = this._valueKeyGenerator(item) || this._emptyValue;
+    return disabledItems && disabledItems[value] || '';
   }
 
   selectByItem(item) {
