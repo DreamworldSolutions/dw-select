@@ -1,7 +1,7 @@
 {
-  "name": "@dw/dw-select",
-  "version": "1.0.8",
-  "description": "",
+  "name": "@dreamworld/dw-select",
+  "version": "1.1.0",
+  "description": "Mobile-first, Single/Multiple select/auto-complete solution in material design style.",
   "main": "dw-select.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lit-element": "^2.2.0",
-    "@dw/material-styles": "github:DreamworldSolutions/material-styles#semver:^1.0.0",
+    "@dw/material-styles": "^1.0.1",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {
