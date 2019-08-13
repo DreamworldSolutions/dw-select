@@ -613,9 +613,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
             ${this._renderItem({
               item,
               index,
-              selected: this.isItemSelected(item),
-              disabled: this.isItemDisabled(this.disabledItems, item),
-              disabledTooltip: this.getDisabledItemTooltip(this.disabledItems, item),
+              selected: this._isItemSelected(item),
+              disabled: this._isItemDisabled(this.disabledItems, item),
+              disabledTooltip: this._getDisabledItemTooltip(this.disabledItems, item),
               hidden: this._isItemFilteredOut(index),
               kbHighlighted: this._isItemKBHighlighted(index),
               group: groupLabelFinder(index, this._isItemFilteredOut(index))})}
@@ -744,10 +744,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
-  isItemSelected(item){
+  _isItemSelected(item){
     let value = this._valueKeyGenerator(item) || this._emptyValue;
 
-    if(this._selectedMap[value]) {
+    return (this._selectedMap[value]) {
       return true;
     }
     return false;
@@ -759,12 +759,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
    * @returns {Boolean} `true` when item is disabled, `false` otherwise.
    * @public
    */
-  isItemDisabled(disabledItems, item){
+  _isItemDisabled(disabledItems, item){
     let value = this._valueKeyGenerator(item) || this._emptyValue;
-    if(disabledItems && disabledItems[value]) {
-      return true;
-    }
-    return false;
+    return (disabledItems && disabledItems[value]) ? true : false;
   }
 
   /**
@@ -773,14 +770,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
    * @returns {String} Disabled item tooltip.
    * @public
    */
-  getDisabledItemTooltip(disabledItems, item){
+  _getDisabledItemTooltip(disabledItems, item){
     let value = this._valueKeyGenerator(item) || this._emptyValue;
     return disabledItems && disabledItems[value] || '';
   }
 
   selectByItem(item) {
     // already selected
-    if(this.isItemSelected(item)) {
+    if(this._isItemSelected(item)) {
       return;
     }
 
@@ -811,7 +808,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       throw new Error('deselectByItem is not supported when singleSelect=true');
     }
     // already deselected
-    if(!this.isItemSelected(item)) {
+    if(!this._isItemSelected(item)) {
       return;
     }
 
@@ -1204,7 +1201,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       return;
     }
 
-    if(!this.isItemSelected(item)){
+    if(!this._isItemSelected(item)){
       this.selectByItem(item);
       return;
     }
