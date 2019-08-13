@@ -41,14 +41,68 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -ms-flex-direction: column;
           -webkit-flex-direction: column;
           outline: none;
-          z-index: 9;
-          width: var(--dw-select-width, 250px);
+          z-index: 100;
+          width: var(--dw-select-dialog-width, 250px);
         }
 
         :host([opened]) {
           display: -ms-flexbox;
           display: -webkit-flex;
           display: flex;
+        }
+
+        :host([opened][mobile-mode]) {
+          animation-name: slideUpAnimation;
+          -webkit-animation-name: slideUpAnimation;
+          -moz-animation-name: slideUpAnimation;
+          -o-animation-name: slideUpAnimation;
+          animation-duration: 500ms;
+          -webkit-animation-duration: 500ms;
+          -moz-animation-duration: 500ms;
+          -o-animation-duration: 500ms;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-timing-function: ease-in-out;
+          -moz-animation-timing-function: ease-in-out;
+          -o-animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          -webkit-animation-fill-mode: forwards;
+          -moz-animation-fill-mode: forwards;
+          -o-animation-fill-mode: forwards;
+        }
+
+        :host(:not([mobile-mode])[opened]) {
+          -webkit-animation-name: fadeIn;
+          animation-name: fadeIn;
+          -moz-animation-name: fadeIn;
+          -o-animation-name: fadeIn;
+          -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-timing-function: ease-in-out;
+          -moz-animation-timing-function: ease-in-out;
+          -o-animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          -webkit-animation-fill-mode: forwards;
+          -moz-animation-fill-mode: forwards;
+          -o-animation-fill-mode: forwards;
+        }
+
+        @-webkit-keyframes slideUpAnimation {
+          0% {bottom: -750px;opacity: 0;}
+          100%{opacity: 1;bottom: 0px;}
+        }
+        @keyframes slideUpAnimation  {
+          0% {bottom: -750px;opacity: 0;}
+          100%{opacity: 1;bottom: 0px;}
+        }
+
+        @-webkit-keyframes fadeIn {
+          0% {opacity: 0;}
+          100% {opacity: 1;}
+        }
+        @keyframes fadeIn {
+          0% {opacity: 0;}
+          100% {opacity: 1;}
         }
 
         :host([mobile-mode]) {
@@ -285,6 +339,13 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        * Input property. A full set of items to filter the visible options from. The items can be of either String or Object type.
        */
       items: { type: Array },
+
+      /**
+       * Input property. Disabled item with message.
+       * e.g. {'DELETE': 'User has no write permission'}.
+       */
+      disabledItems: { type: Object },
+
       /**
        * Input + Output property. True if the dropdown is open, false otherwise.
        */
@@ -379,6 +440,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        * Input property. hide reset button
        */
       hideResetBtn : { type: Boolean },
+
+      /**
+       * Input property. item icon size.
+       */
+      iconSize: Number,
 
       /**
        * Sorted items based on groupBy.
@@ -547,7 +613,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
             ${this._renderItem({
               item,
               index,
-              selected: this.isItemSelected(item),
+              selected: this._isItemSelected(item),
+              disabled: this._isItemDisabled(this.disabledItems, item),
+              disabledTooltip: this._getDisabledItemTooltip(this.disabledItems, item),
               hidden: this._isItemFilteredOut(index),
               kbHighlighted: this._isItemKBHighlighted(index),
               group: groupLabelFinder(index, this._isItemFilteredOut(index))})}
@@ -603,6 +671,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .itemValue=${this.itemValue}
         .selected=${model.selected}
         .item=${model.item}
+        .disabled=${model.disabled}
+        .disabledTooltip=${model.disabledTooltip}
+        .icon=${model.item.icon}
+        .iconSize=${this.iconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
     `;
@@ -672,18 +744,40 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
-  isItemSelected(item){
+  _isItemSelected(item){
     let value = this._valueKeyGenerator(item) || this._emptyValue;
 
-    if(this._selectedMap[value]) {
+    return (this._selectedMap[value]) {
       return true;
     }
     return false;
   }
 
+  /**
+   * @param {Object} disabledItems
+   * @param {*} item
+   * @returns {Boolean} `true` when item is disabled, `false` otherwise.
+   * @public
+   */
+  _isItemDisabled(disabledItems, item){
+    let value = this._valueKeyGenerator(item) || this._emptyValue;
+    return (disabledItems && disabledItems[value]) ? true : false;
+  }
+
+  /**
+   * @param {Object} disabledItems
+   * @param {*} item
+   * @returns {String} Disabled item tooltip.
+   * @public
+   */
+  _getDisabledItemTooltip(disabledItems, item){
+    let value = this._valueKeyGenerator(item) || this._emptyValue;
+    return disabledItems && disabledItems[value] || '';
+  }
+
   selectByItem(item) {
     // already selected
-    if(this.isItemSelected(item)) {
+    if(this._isItemSelected(item)) {
       return;
     }
 
@@ -714,7 +808,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       throw new Error('deselectByItem is not supported when singleSelect=true');
     }
     // already deselected
-    if(!this.isItemSelected(item)) {
+    if(!this._isItemSelected(item)) {
       return;
     }
 
@@ -901,7 +995,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   _onEnterKeyDown(e) {
     let item = this._items[this._kbHighlightedIndex];
-
     if(item) {
       this._toggleItem(item);
     }
@@ -1104,7 +1197,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _toggleItem(item) {
-    if(!this.isItemSelected(item)){
+    if(item.disabled) {
+      return;
+    }
+
+    if(!this._isItemSelected(item)){
       this.selectByItem(item);
       return;
     }

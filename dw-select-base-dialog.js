@@ -135,7 +135,7 @@ export class DwSelectBaseDialog extends LitElement {
       this.style.bottom = bottom + 'px';
       this.style.top = 'initial';
     }
-    
+
     this.style.left = left + 'px';
     this.style.right = 'initial';
     this.style.transform = 'none';
