@@ -81,6 +81,7 @@ export class DwSelectItem extends LitElement {
       
 
       .check-icon {
+        display: var(--dw-select-item-check-icon-display, block);
         -ms-flex: none;
         -webkit-flex: none;
         flex: none;
