@@ -747,10 +747,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   _isItemSelected(item){
     let value = this._valueKeyGenerator(item) || this._emptyValue;
 
-    return (this._selectedMap[value]) {
-      return true;
-    }
-    return false;
+    return Boolean(this._selectedMap[value]);
   }
 
   /**

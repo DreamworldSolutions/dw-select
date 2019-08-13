@@ -1,6 +1,6 @@
 {
   "name": "@dreamworld/dw-select",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Mobile-first, Single/Multiple select/auto-complete solution in material design style.",
   "main": "dw-select.js",
   "scripts": {
