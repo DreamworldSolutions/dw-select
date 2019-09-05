@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lit-element": "^2.2.0",
-    "@dw/material-styles": "^1.0.1",
+    "@dreamworld/material-styles": "1.0.1",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {
