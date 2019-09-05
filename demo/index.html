@@ -12,12 +12,35 @@
         padding: 0px;
         background: #f3f3f3;
         font-family: 'Roboto';
+        height: 100%;
+        width: 100%;
+        margin-top: 32px;
+      }
+
+      select-demo {
+        margin: 0px 24px 24px 24px;
+      }
+
+      h2 {
+        margin: 6px 24px !important;
       }
     </style>
   </head>
   <body>
-    <select-demo  style="position: relative; top: 500px; left: 40px;" allow-filter group-by="type"></select-demo>
-    <select-demo  style="position: relative; top: 400px; left: 150px;" single-select value="id2" h-align="right" v-align="bottom"></select-demo>
+    <h2>Multi select with filter</h2>
+    <select-demo  allow-filter group-by="type"></select-demo>
+    
+    <h2>Single select</h2>
+    <select-demo  single-select value="id2" h-align="right" v-align="bottom"></select-demo>
+
+    <h2>Trigger icon</h2>
+    <select-demo  triggerIcon="more_vert" single-select value="id2"></select-demo>
+
+    <h2>Trigger label</h2>
+    <select-demo  triggerLabel="Select" single-select value="id2"></select-demo>
+
+    <h2>Trigger label and icon</h2>
+    <select-demo  triggerLabel="select" triggerIcon="expand_more" single-select value="id2"></select-demo>
 
     <div style="height: 1000px;"></div>
     <noscript>

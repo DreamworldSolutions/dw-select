@@ -2,9 +2,9 @@ import { html, css } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import { cache } from 'lit-html/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
-import { backIcon, clearIcon } from './dw-select-icons';
 
 import { Typography } from '@dw/material-styles/typography'
+import '@dreamworld/dw-icon-button/dw-icon-button';
 import './dw-select-item';
 
 export class DwSelectDialog extends DwSelectBaseDialog {
@@ -23,7 +23,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           --dw-select-input-border-color: var(--light-theme-divider-color);
           --dw-select-input-color: var(--secondary-text-color);
           --dw-select-input-placeholder-color: var(--disabled-text-color);
-          --dw-select-clear-icon-fill-color: var(--secondary-text-color);
+          --dw-select-clear-icon-color: var(--secondary-text-color);
           --dw-select-selection-btn-color: var(--primary-color);
           --dw-select-selection-action-btn-bg-color: var(--light-theme-background-color);
           --dw-select-group-label-color: var(--secondary-text-color);
@@ -133,7 +133,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
         .header .dialog-header .title {
           flex: 1;
-          padding-left: 24px;
+          padding-left: 4px;
           color: var(--dw-select-title-color);
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -141,17 +141,23 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         .header .dialog-header .back-icon {
-          height: var(--dw-select-back-icon-width, 24px);
-          width: var(--dw-select-back-icon-height, 24px);
-          fill: var(--dw-select-back-icon-color);
-          cursor: pointer;
           outline: none;
-          padding: 8px;
         }
 
-        .header .dialog-header .back-icon:focus { 
-          background: var(--dw-select-back-icon-ripple-color, rgb(33, 33, 33, 0.2));
-          border-radius: 50%;
+        .header .dialog-header .back-icon dw-icon-button {
+          --dw-icon-color: var(--dw-select-back-icon-color, var(--dw-icon-color-on-light));
+          --dw-icon-color-active: var(--dw-select-back-icon-color-active, var(--dw-icon-color-active-on-light));
+          --dw-icon-color-disabled: var(--dw-select-back-icon-color-disabled, var(--dw-icon-color-disabled-on-light));
+          --mdc-theme-on-surface: var(--dw-select-back-icon-ripple-color, #000);
+          --dw-icon-button-padding: var(--dw-select-back-icon-padding, 8px);
+          outline: none;
+        }
+
+        :host([dark]) .header .dialog-header .back-icon dw-icon-button {
+          --dw-icon-color: var(--dw-select-back-icon-color, var(--dw-icon-color-on-dark));
+          --dw-icon-color-active: var(--dw-select-back-icon-color-active, var(--dw-icon-color-active-on-dark));
+          --dw-icon-color-disabled: var(--dw-select-back-icon-color-disabled, var(--dw-icon-color-disabled-on-dark));
+          --mdc-theme-on-surface: var(--dw-select-back-icon-ripple-color, var(--dw-icon-color-on-dark));
         }
 
         .header .dialog-header .count {
@@ -180,7 +186,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           border: 1px solid var(--dw-select-input-border-color);
           border-radius: 2px;
           color: var(--dw-select-input-color);
-          text-indent: 16px;
+          padding: 0px 40px 0px 16px;
           outline: none;
           box-sizing: border-box;
         }
@@ -196,12 +202,24 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
         .header .input-container .clear-text-icon {
           position: absolute;
-          top: 25px;
-          right: 24px;
-          width: var(--dw-select-clear-icon-width, 18px);
-          height: var(--dw-select-clear-icon-height, 18px);
-          fill: var(--dw-select-clear-icon-fill-color);
-          cursor: pointer;
+          top: 16px;
+          right: 16px;
+        }
+
+        .header .input-container .clear-text-icon dw-icon-button {
+          --dw-icon-color: var(--dw-select-clear-icon-color, var(--dw-icon-color-on-light));
+          --dw-icon-color-active: var(--dw-select-clear-icon-color-active, var(--dw-icon-color-active-on-light));
+          --dw-icon-color-disabled: var(--dw-select-clear-icon-color-disabled, var(--dw-icon-color-disabled-on-light));
+          --mdc-theme-on-surface: var(--dw-select-clear-icon-ripple-color, #000);
+          --dw-icon-button-padding: var(--dw-select-clear-icon-padding, 4px);
+          outline: none;
+        }
+
+        :host([dark]) .header .input-container .clear-text-icon dw-icon-button {
+          --dw-icon-color: var(--dw-select-clear-icon-color, var(--dw-icon-color-on-dark));
+          --dw-icon-color-active: var(--dw-select-clear-icon-color-active, var(--dw-icon-color-active-on-dark));
+          --dw-icon-color-disabled: var(--dw-select-clear-icon-color-disabled, var(--dw-icon-color-disabled-on-dark));
+          --mdc-theme-on-surface: var(--dw-select-clear-icon-ripple-color, var(--dw-icon-color-on-dark));
         }
 
         .main-content {
@@ -900,11 +918,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _getBackIcon() {
-    return backIcon;
+    return html `<dw-icon-button icon="arrow_back"></dw-icon-button>`;
   }
 
   _getClearIcon(){
-    return clearIcon;
+    return html `<dw-icon-button icon="cancel"></dw-icon-button>`;
   }
 
   _resetKbHighlightIndex() {

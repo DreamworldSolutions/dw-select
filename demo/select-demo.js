@@ -9,7 +9,14 @@ class SelectDemo extends LitElement {
       css`
         :host {
           display: inline-block;
-          box-sizing: border-box
+          box-sizing: border-box;
+          --dw-icon-color-active-on-light: #c11e5c;
+          --dw-icon-color-on-light: rgba(0, 0, 0, .54);
+          --dw-icon-color-disabled-on-light: rgba(0, 0, 0, .38);
+
+          --dw-icon-color-active-on-dark: rgba(255, 255, 255, 1);
+          --dw-icon-color-on-dark: rgba(255, 255, 255, 1);
+          --dw-icon-color-disabled-on-dark: rgba(255, 255, 255, .50);
         }
       `
     ];
@@ -18,6 +25,8 @@ class SelectDemo extends LitElement {
   static get properties() {
     return {
       items: { type: Array },
+      triggerIcon: {type: String},
+      triggerLabel: {type: String},
       value: { type: String },
       singleSelect: { type: Boolean, reflect: true, attribute:'single-select'},
       itemLabel: { type: String },
@@ -76,6 +85,8 @@ class SelectDemo extends LitElement {
        itemLabel="name"
        label="Account"
        required
+       .triggerIcon=${this.triggerIcon}
+       .triggerLabel=${this.triggerLabel}
        .dialogTitle=${'Select account'}
        .filterPlaceholder=${'Search account'}
        placeholder="Select account"

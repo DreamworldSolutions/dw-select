@@ -1,7 +1,8 @@
 import { LitElement, html, css } from 'lit-element';
 import { dropdownArrowIcon } from './dw-select-icons';
 import { Typography } from '@dw/material-styles/typography';
-import { getIcon } from 'icons';
+import '@dreamworld/dw-icon-button/dw-icon-button';
+import '@dreamworld/dw-ripple/dw-ripple.js';
 import './dw-select-dialog';
 
 /**
@@ -43,6 +44,7 @@ export class DwSelect extends LitElement {
       -ms-flex-align: center;
       -webkit-align-items: center;
       box-sizing: border-box;
+      position:relative;
     }
 
     .main-container #dropdownContainer .trigger-icon, .main-container #dropdownContainer .trigger-label {
@@ -51,19 +53,33 @@ export class DwSelect extends LitElement {
       justify-content: center;
     }
 
-    .main-container #dropdownContainer .trigger-icon {
-      height: var(--dw-select-trigger-icon-height, 36px);
-      width: var(--dw-select-trigger-icon-width, 36px);
-      fill: var(--dw-select-trigger-icon-fill-color);
+    :host([trigger-icon][trigger-label]) {
+      --dw-select-trigger-icon-ripple-color: none;
+    }
+
+    .main-container #dropdownContainer .trigger-icon dw-icon-button {
+      --dw-icon-color: var(--dw-select-trigger-icon-color, var(--dw-icon-color-on-light));
+      --dw-icon-color-active: var(--dw-select-trigger-icon-color-active, var(--dw-icon-color-active-on-light));
+      --dw-icon-color-disabled: var(--dw-select-trigger-icon-color-disabled, var(--dw-icon-color-disabled-on-light));
+      --mdc-theme-on-surface: var(--dw-select-trigger-icon-ripple-color, #000);
+      height: var(--dw-select-trigger-icon-height, 48px);
+      width: var(--dw-select-trigger-icon-width, 48px);
       margin: var(--dw-select-trigger-icon-margin, 0px);
       padding: var(--dw-select-trigger-icon-padding, 0px);
+    }
+
+    :host([dark]) .main-container #dropdownContainer .trigger-icon dw-icon-button {
+      --dw-icon-color: var(--dw-select-trigger-icon-color, var(--dw-icon-color-on-dark));
+      --dw-icon-color-active: var(--dw-select-trigger-icon-color-active, var(--dw-icon-color-active-on-dark));
+      --dw-icon-color-disabled: var(--dw-select-trigger-icon-color-disabled, var(--dw-icon-color-disabled-on-dark));
+      --mdc-theme-on-surface: var(--dw-select-trigger-icon-ripple-color, var(--dw-icon-color-on-dark));
     }
 
     .main-container #dropdownContainer .trigger-label {
       text-transform: var(--dw-select-trigger-label-text-transform, initial);
       width: var(--dw-select-trigger-label-width, auto);
-      height: var(--dw-select-trigger-label-height, 36px);
-      fill: var(--dw-select-trigger-label-color);
+      height: var(--dw-select-trigger-label-height, 48px);
+      color: var(--dw-select-trigger-label-color);
       margin: var(--dw-select-trigger-label-margin, 0px);
       padding: var(--dw-select-trigger-label-padding, 8px);
     }
@@ -572,6 +588,7 @@ export class DwSelect extends LitElement {
       return html `
         ${this._getTriggerIcon()}
         ${this._getTriggerLabel()}
+        ${(this.triggerIcon && !this.triggerLabel)? '': html `<dw-ripple></dw-ripple>`}
       `;
     }
 
@@ -584,7 +601,7 @@ export class DwSelect extends LitElement {
    */
   _getTriggerIcon() {
     if(this.triggerIcon) {
-      return html `<div class="trigger-icon " ?hidden="${!getIcon(this.triggerIcon)}">${getIcon(this.triggerIcon)}</div>`
+      return html `<div class="trigger-icon"><dw-icon-button icon=${this.triggerIcon} iconSize="${32}"></dw-icon-button></div>`
     }
 
     return html ``;
@@ -620,6 +637,7 @@ export class DwSelect extends LitElement {
         </div>
         <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
       </div>
+      <dw-ripple></dw-ripple>
     `;
   }
 
