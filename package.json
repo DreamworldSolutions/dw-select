@@ -1,6 +1,6 @@
 {
   "name": "@dreamworld/dw-select",
-  "version": "1.2.0",
+  "version": "0.0.0-development",
   "description": "Mobile-first, Single/Multiple select/auto-complete solution in material design style.",
   "main": "dw-select.js",
   "scripts": {
@@ -14,6 +14,10 @@
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.2.10"
+    "@webcomponents/webcomponentsjs": "^2.2.10",
+    "semantic-release": "beta"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
