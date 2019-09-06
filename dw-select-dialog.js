@@ -149,7 +149,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           --dw-icon-color-active: var(--dw-select-back-icon-color-active, var(--dw-icon-color-active-on-light));
           --dw-icon-color-disabled: var(--dw-select-back-icon-color-disabled, var(--dw-icon-color-disabled-on-light));
           --mdc-theme-on-surface: var(--dw-select-back-icon-ripple-color, #000);
-          --dw-icon-button-padding: var(--dw-select-back-icon-padding, 8px);
+          height: var(--dw-select-back-icon-height, 40px);
+          width: var(--dw-select-back-icon-width, 40px);
+          padding: var(--dw-select-back-icon-padding, 0px);
           outline: none;
         }
 
@@ -211,7 +213,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           --dw-icon-color-active: var(--dw-select-clear-icon-color-active, var(--dw-icon-color-active-on-light));
           --dw-icon-color-disabled: var(--dw-select-clear-icon-color-disabled, var(--dw-icon-color-disabled-on-light));
           --mdc-theme-on-surface: var(--dw-select-clear-icon-ripple-color, #000);
-          --dw-icon-button-padding: var(--dw-select-clear-icon-padding, 4px);
+          height: var(--dw-select-clear-icon-height, 32px);
+          width: var(--dw-select-clear-icon-width, 32px);
+          padding: var(--dw-select-clear-icon-padding, 0px);
           outline: none;
         }
 
