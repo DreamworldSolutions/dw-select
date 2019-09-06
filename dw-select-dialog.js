@@ -716,7 +716,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       this._triggerOpenedChange();
     }
 
-    if(this.opened && (changedProps.has('_kbHighlightedIndex') || changedProps.has('opened'))) {
+    //Scroll Keyboard highlighted item into view when dialog is opened and Keyboard highlighted index is changed and current mode is not mobile .
+    if(!this.mobileMode && this.opened && (changedProps.has('_kbHighlightedIndex') || changedProps.has('opened'))) {
       let itemEl = this.shadowRoot.querySelectorAll('.item')[this._kbHighlightedIndex];
       if(itemEl) {
         itemEl.scrollIntoView(false);
