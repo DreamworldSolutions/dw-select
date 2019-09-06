@@ -4,7 +4,7 @@ import { cache } from 'lit-html/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
 import { backIcon, clearIcon } from './dw-select-icons';
 
-import { Typography } from '@dw/material-styles/typography'
+import { Typography } from '@dreamworld/material-styles/typography'
 import './dw-select-item';
 
 export class DwSelectDialog extends DwSelectBaseDialog {

@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { dropdownArrowIcon } from './dw-select-icons';
-import { Typography } from '@dw/material-styles/typography';
+import { Typography } from '@dreamworld/material-styles/typography';
 import { getIcon } from 'icons';
 import './dw-select-dialog';
 

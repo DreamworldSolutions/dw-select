@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import '../dw-select';
-import {materialStyles} from'@dw/material-styles/material-styles';
+import {materialStyles} from '@dreamworld/material-styles/material-styles';
 
 class SelectDemo extends LitElement {
   static get styles() {
