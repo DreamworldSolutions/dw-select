@@ -11,8 +11,8 @@
   "dependencies": {
     "@dreamworld/dw-icon-button": "^1.0.0",
     "@dreamworld/dw-ripple": "^1.0.0",
+    "@dreamworld/material-styles": "^1.1.0",
     "lit-element": "^2.2.0",
-    "@dw/material-styles": "1.0.1",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {

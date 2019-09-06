@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { dropdownArrowIcon } from './dw-select-icons';
-import { Typography } from '@dw/material-styles/typography';
+import { Typography } from '@dreamworld/material-styles/typography';
 import '@dreamworld/dw-icon-button/dw-icon-button';
 import '@dreamworld/dw-ripple/dw-ripple.js';
 import './dw-select-dialog';
@@ -108,7 +108,7 @@ export class DwSelect extends LitElement {
       padding: 0px 4px;
       width: var(--dw-select-expand-more-icon-width, 24px);
       height: var(--dw-select-expand-more-icon-height, 24px);
-      fill: var(--dw-select-expand-more-icon-color);
+      fill: var(--dw-select-expand-more-icon-color, var(--dw-icon-color));
     }
 
     .main-container #dropdownContainer .dropdown-input {

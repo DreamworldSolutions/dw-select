@@ -1,15 +1,15 @@
 import { LitElement, html, css } from 'lit-element';
 import '../dw-select';
-import {materialStyles} from'@dw/material-styles/material-styles';
 
 class SelectDemo extends LitElement {
   static get styles() {
     return [
-      materialStyles,
       css`
         :host {
           display: inline-block;
           box-sizing: border-box;
+          --dw-select-bg-color: #fff;
+          --primary-background-color: #fff;
           --dw-icon-color-active-on-light: #c11e5c;
           --dw-icon-color-on-light: rgba(0, 0, 0, .54);
           --dw-icon-color-disabled-on-light: rgba(0, 0, 0, .38);

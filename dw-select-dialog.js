@@ -3,7 +3,7 @@ import { repeat } from 'lit-html/directives/repeat';
 import { cache } from 'lit-html/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
 
-import { Typography } from '@dw/material-styles/typography'
+import { Typography } from '@dreamworld/material-styles/typography'
 import '@dreamworld/dw-icon-button/dw-icon-button';
 import './dw-select-item';
 
