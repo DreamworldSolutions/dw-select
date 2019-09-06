@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { checkIcon } from './dw-select-icons';
-// import { getIcon } from 'icons';
+import { getIcon } from 'icons';
 
 export class DwSelectItem extends LitElement {
   
@@ -143,6 +143,7 @@ export class DwSelectItem extends LitElement {
     return html`
       <div class="container" title=${this._getToolTipText()}>
         <div class="icon" ?hidden="${!this.icon}">
+          ${getIcon(this.icon, this.iconSize)}
         </div>
         <div class="content">${this._getName(this.item, this.itemLabel)}</div>
         <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>

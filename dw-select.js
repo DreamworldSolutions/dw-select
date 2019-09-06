@@ -68,7 +68,7 @@ export class DwSelect extends LitElement {
       padding: var(--dw-select-trigger-icon-padding, 0px);
     }
 
-    :host([dark]) .main-container #dropdownContainer .trigger-icon dw-icon-button {
+    :host([dark-theme]) .main-container #dropdownContainer .trigger-icon dw-icon-button {
       --dw-icon-color: var(--dw-select-trigger-icon-color, var(--dw-icon-color-on-dark));
       --dw-icon-color-active: var(--dw-select-trigger-icon-color-active, var(--dw-icon-color-active-on-dark));
       --dw-icon-color-disabled: var(--dw-select-trigger-icon-color-disabled, var(--dw-icon-color-disabled-on-dark));

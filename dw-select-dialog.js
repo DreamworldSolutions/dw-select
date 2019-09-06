@@ -155,7 +155,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           outline: none;
         }
 
-        :host([dark]) .header .dialog-header .back-icon dw-icon-button {
+        :host([dark-theme]) .header .dialog-header .back-icon dw-icon-button {
           --dw-icon-color: var(--dw-select-back-icon-color, var(--dw-icon-color-on-dark));
           --dw-icon-color-active: var(--dw-select-back-icon-color-active, var(--dw-icon-color-active-on-dark));
           --dw-icon-color-disabled: var(--dw-select-back-icon-color-disabled, var(--dw-icon-color-disabled-on-dark));
@@ -219,7 +219,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           outline: none;
         }
 
-        :host([dark]) .header .input-container .clear-text-icon dw-icon-button {
+        :host([dark-theme]) .header .input-container .clear-text-icon dw-icon-button {
           --dw-icon-color: var(--dw-select-clear-icon-color, var(--dw-icon-color-on-dark));
           --dw-icon-color-active: var(--dw-select-clear-icon-color-active, var(--dw-icon-color-active-on-dark));
           --dw-icon-color-disabled: var(--dw-select-clear-icon-color-disabled, var(--dw-icon-color-disabled-on-dark));
