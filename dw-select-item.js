@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { checkIcon } from './dw-select-icons';
-import { getIcon } from 'icons';
-
+import '@dreamworld/dw-icon/dw-icon';
 export class DwSelectItem extends LitElement {
   
   static get styles() {
@@ -143,7 +142,7 @@ export class DwSelectItem extends LitElement {
     return html`
       <div class="container" title=${this._getToolTipText()}>
         <div class="icon" ?hidden="${!this.icon}">
-          ${getIcon(this.icon, this.iconSize)}
+          <dw-icon name="${this.icon}" size="${this.iconSize}"></dw-icon>
         </div>
         <div class="content">${this._getName(this.item, this.itemLabel)}</div>
         <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>

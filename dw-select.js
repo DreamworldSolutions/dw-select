@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { dropdownArrowIcon } from './dw-select-icons';
 import { Typography } from '@dreamworld/material-styles/typography';
-import { getIcon } from 'icons';
+import '@dreamworld/dw-icon/dw-icon';
 import './dw-select-dialog';
 
 /**
@@ -584,7 +584,9 @@ export class DwSelect extends LitElement {
    */
   _getTriggerIcon() {
     if(this.triggerIcon) {
-      return html `<div class="trigger-icon " ?hidden="${!getIcon(this.triggerIcon)}">${getIcon(this.triggerIcon)}</div>`
+      return html`<div class="trigger-icon ">
+        <dw-icon name="${this.triggerIcon}"></dw-icon>
+      </div>`
     }
 
     return html ``;
