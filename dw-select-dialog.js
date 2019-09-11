@@ -1214,19 +1214,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   _itemClicked(e, model) {
     this._toggleItem(model.item);
-    this._triggerAction();
-  }
-
-  /**
-   * Triggers `action` event on `dw-select-item` click.
-   */ 
-  _triggerAction() {
-    let actionEvent = new CustomEvent('action', {
-      detail: {
-        value: this.value,
-      }
-    });
-    this.dispatchEvent(actionEvent);
   }
 
   _setFocuAfterItemOpen() {
