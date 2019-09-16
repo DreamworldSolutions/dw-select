@@ -5,8 +5,8 @@ jobs:
       - image: circleci/node:lts
     steps:
       - checkout
-      - run: echo "Running release-snapshot job"
-      - run: npm install
+      - run: yarn install --production=true --flat --non-ineractive
+      - run: yarn install --production=false --non-interactive
       - run:
           name: Deploy
           command: |
@@ -18,7 +18,8 @@ jobs:
       - image: circleci/node:lts
     steps:
       - checkout
-      - run: npm install
+      - run: yarn install --production=true --flat --non-ineractive
+      - run: yarn install --production=false --non-interactive
       - run: echo "Running release job"
       - run:
           name: Deploy
@@ -41,3 +42,4 @@ workflows:
               branches:
                 only:
                   - master
+
