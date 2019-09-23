@@ -10,13 +10,29 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lit-element": "^2.2.0",
+    "@dreamworld/dw-button": "^1.0.6",
+    "@dreamworld/dw-form": "^1.0.2",
+    "@dreamworld/dw-icon": "^1.1.0",
+    "@dreamworld/dw-icon-button": "^1.1.2",
     "@dreamworld/material-styles": "1.0.1",
+    "lit-element": "^2.2.0",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "semantic-release": "beta"
+    "semantic-release": "16.0.0-beta.23"
+  },
+  "resolutions": {
+    "@material/mwc-base": "0.7.0",
+    "@material/base": "3.1.0",
+    "@material/feature-targeting": "3.1.0",
+    "@material/ripple": "3.2.0",
+    "@material/theme": "3.1.0",
+    "@material/animation": "3.1.0",
+    "@material/dom": "3.1.0",
+    "@semantic-release/npm": "5.2.0-beta.5",
+    "@material/mwc-ripple": "0.7.1",
+    "@dreamworld/dw-icon": "1.1.0"
   },
   "publishConfig": {
     "access": "public"

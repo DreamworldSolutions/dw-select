@@ -1,13 +1,15 @@
 import { LitElement, html, css } from 'lit-element';
-import { dropdownArrowIcon } from './dw-select-icons';
 import { Typography } from '@dreamworld/material-styles/typography';
-import { getIcon } from 'icons';
 import './dw-select-dialog';
+import '@dreamworld/dw-icon';
+import '@dreamworld/dw-icon-button';
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element'; 
+import '@dreamworld/dw-button';
 
 /**
  * Trigger for `dw-select-dialog`
  */
-export class DwSelect extends LitElement {
+export class DwSelect extends DwFormElement(LitElement) {
 
   static get styles() {
     return [Typography, css`
@@ -51,21 +53,18 @@ export class DwSelect extends LitElement {
       justify-content: center;
     }
 
-    .main-container #dropdownContainer .trigger-icon {
-      height: var(--dw-select-trigger-icon-height, 36px);
-      width: var(--dw-select-trigger-icon-width, 36px);
-      fill: var(--dw-select-trigger-icon-fill-color);
-      margin: var(--dw-select-trigger-icon-margin, 0px);
-      padding: var(--dw-select-trigger-icon-padding, 0px);
+    .main-container #dropdownContainer dw-icon-button.trigger-icon {
+      --dw-icon-color: var(--dw-select-trigger-icon-color, #000);
     }
 
     .main-container #dropdownContainer .trigger-label {
-      text-transform: var(--dw-select-trigger-label-text-transform, initial);
       width: var(--dw-select-trigger-label-width, auto);
       height: var(--dw-select-trigger-label-height, 36px);
-      fill: var(--dw-select-trigger-label-color);
-      margin: var(--dw-select-trigger-label-margin, 0px);
-      padding: var(--dw-select-trigger-label-padding, 8px);
+    }
+
+    .main-container #dropdownContainer .trigger-icon-label dw-icon {
+      margin-right: 8px;
+      --dw-icon-color: var(--dw-select-trigger-icon-color);
     }
 
     :host([invalid]) .main-container #dropdownContainer .label {
@@ -88,13 +87,11 @@ export class DwSelect extends LitElement {
       padding-top: 4px;
     }
 
-    .main-container  #dropdownContainer .dropdown-input .expand-more-icon {
+    .main-container  #dropdownContainer .dropdown-input dw-icon { 
+      --dw-icon-color: var(--dw-select-expand-more-icon-color);
       padding: 0px 4px;
-      width: var(--dw-select-expand-more-icon-width, 24px);
-      height: var(--dw-select-expand-more-icon-height, 24px);
-      fill: var(--dw-select-expand-more-icon-color);
     }
-
+  
     .main-container #dropdownContainer .dropdown-input {
       display: flex;
       display: -ms-flexbox;
@@ -148,6 +145,15 @@ export class DwSelect extends LitElement {
     :host([overlay]) #overlay {
       display:block;
     }
+
+    :host([readOnly]) .main-container #dropdownContainer {
+      cursor: default;
+    }
+
+    :host([readOnly]) .main-container #dropdownContainer .label,
+    :host([readOnly]) .main-container #dropdownContainer .dropdown-input {
+      opacity: 0.6;
+    }
     `];
   }
 
@@ -182,6 +188,12 @@ export class DwSelect extends LitElement {
        * Input property. The label for this element.
        */
       label: String,
+
+      /**
+       * name of element
+       */
+      name: String,
+
       /**
        * Input property. A placeholder string in addition to the label.
        */
@@ -376,6 +388,36 @@ export class DwSelect extends LitElement {
        */
       _overlay: { type: Boolean, reflect: true,  attribute: 'overlay'},
 
+      /**
+       * default iconsize is 24
+       */
+      backIconSize: { type: String }, 
+
+      /**
+       * default iconsize is 18
+       */
+      clearIconSize: { type: String },
+
+      /**
+       * default iconsize is 24
+       */
+      dropdownIconSize: { type: String },
+
+      /**
+       * `true` show dropdown as readonly
+       */
+      readOnly: { type: Boolean, reflect: true },
+
+      /**
+       * size trigger icon
+       */
+      triggerIconSize: { type: Number },
+
+      /**
+       * size trigger icon container
+       */
+      triggerButtonSize: { type: Number },
+
       _dropdownRendered: Boolean
     };
   }
@@ -405,15 +447,20 @@ export class DwSelect extends LitElement {
     
     this._dropdownRendered = false;
     this._overlay = false;
+    this.dropdownIconSize = 24;
+    this.backIconSize = 24;
+    this.clearIconSize = 18;
+    this.readOnly = false;
   }
 
   /**
    * Show the dropdown content
    */
   open() {
-    if(this.opened){
+    if(this.opened || this.readOnly){
       return;
     }
+
     this.opened = true;
   }
 
@@ -487,6 +534,8 @@ export class DwSelect extends LitElement {
         .selectionButtonsAlign="${this.selectionButtonsAlign}"
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
+        .backIconSize="${this.backIconSize}"
+        .clearIconSize="${this.clearIconSize}"
       ></dw-select-dialog>
     `;
   }
@@ -554,7 +603,12 @@ export class DwSelect extends LitElement {
   }
 
   _getDropDownArrowIcon() {
-    return dropdownArrowIcon;
+    return html `
+      <dw-icon 
+        .size="${this.dropdownIconSize}" 
+        name="arrow_drop_down" >
+      </dw-icon>
+    `
   }
 
   /**
@@ -568,14 +622,37 @@ export class DwSelect extends LitElement {
       `;
     }
 
-    if(this.triggerIcon || this.triggerLabel) {
+    if(this.triggerIcon && this.triggerLabel) {
       return html `
-        ${this._getTriggerIcon()}
-        ${this._getTriggerLabel()}
+        ${this._getTriggerIconWithLabel()}
       `;
     }
 
+    if(this.triggerIcon){
+      return html `
+        ${this._getTriggerIcon()}
+    `;
+    }
+
+    if(this.triggerLabel){
+      return html `
+        ${this._getTriggerLabel()}
+    `;
+    }
+
     return html `${this._getDefaultTriggerElement()}`;
+  }
+
+  /**
+   * @returns Trigger icon and label.
+   * @protected
+   */
+  _getTriggerIconWithLabel(){
+    return html `
+      <dw-button class="trigger-icon-label">
+        <dw-icon .size="${this.triggerIconSize}" name="${this.triggerIcon}"></dw-icon> 
+        ${this.triggerLabel}
+      </dw-button>`
   }
 
   /**
@@ -584,7 +661,16 @@ export class DwSelect extends LitElement {
    */
   _getTriggerIcon() {
     if(this.triggerIcon) {
-      return html `<div class="trigger-icon " ?hidden="${!getIcon(this.triggerIcon)}">${getIcon(this.triggerIcon)}</div>`
+      return html `
+        <dw-icon-button
+          .buttonSize="${this.triggerButtonSize}"
+          class="trigger-icon"
+          ?hidden="${!this.triggerIcon}"
+          .iconSize="${this.triggerIconSize}"
+          ?disabled="${this.readOnly}"
+          icon="${this.triggerIcon}">
+        </dw-icon-button>
+      `
     }
 
     return html ``;
@@ -596,7 +682,7 @@ export class DwSelect extends LitElement {
    */
   _getTriggerLabel() {
     if(this.triggerLabel) {
-      return html `<div class="trigger-label">${this.triggerLabel}</div>`
+      return html `<dw-button class="trigger-label" .label="${this.triggerLabel}"></dw-button>`
     }
 
     return html ``;
@@ -618,12 +704,16 @@ export class DwSelect extends LitElement {
                 html`<div class="placeholder field">${this.placeholder}</div>`
                 : html`<div class="value field">${selectedText}</div>`}
         </div>
-        <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
+       ${this._getDropDownArrowIcon()}
       </div>
     `;
   }
 
   _onClick() {
+    if(this.readOnly){
+      return;
+    }
+
     this.opened = !this.opened;
   }
 
