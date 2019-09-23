@@ -5,7 +5,7 @@ import { DwSelectBaseDialog } from './dw-select-base-dialog';
 
 import { Typography } from '@dreamworld/material-styles/typography'
 import './dw-select-item';
-import '@dreamworld/dw-icon-button'; 
+import '@dreamworld/dw-icon-button';
 
 export class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
