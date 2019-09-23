@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit-element';
-import { dropdownArrowIcon } from './dw-select-icons';
 import { Typography } from '@dreamworld/material-styles/typography';
-import { getIcon } from 'icons';
 import './dw-select-dialog';
+import '@dreamworld/dw-icon';
+import '@dreamworld/dw-icon-button';
 
 /**
  * Trigger for `dw-select-dialog`
@@ -51,12 +51,9 @@ export class DwSelect extends LitElement {
       justify-content: center;
     }
 
-    .main-container #dropdownContainer .trigger-icon {
-      height: var(--dw-select-trigger-icon-height, 36px);
-      width: var(--dw-select-trigger-icon-width, 36px);
-      fill: var(--dw-select-trigger-icon-fill-color);
-      margin: var(--dw-select-trigger-icon-margin, 0px);
-      padding: var(--dw-select-trigger-icon-padding, 0px);
+    .main-container #dropdownContainer dw-icon-button {
+      --dw-icon-button-padding: 6px;
+      --dw-icon-color: var(--dw-select-trigger-icon-fill-color);
     }
 
     .main-container #dropdownContainer .trigger-label {
@@ -88,13 +85,11 @@ export class DwSelect extends LitElement {
       padding-top: 4px;
     }
 
-    .main-container  #dropdownContainer .dropdown-input .expand-more-icon {
+    .main-container  #dropdownContainer .dropdown-input dw-icon { 
+      --dw-icon-color: var(--dw-select-expand-more-icon-color);
       padding: 0px 4px;
-      width: var(--dw-select-expand-more-icon-width, 24px);
-      height: var(--dw-select-expand-more-icon-height, 24px);
-      fill: var(--dw-select-expand-more-icon-color);
     }
-
+  
     .main-container #dropdownContainer .dropdown-input {
       display: flex;
       display: -ms-flexbox;
@@ -376,6 +371,21 @@ export class DwSelect extends LitElement {
        */
       _overlay: { type: Boolean, reflect: true,  attribute: 'overlay'},
 
+      /**
+       * default iconsize is 24
+       */
+      backIconSize: { type: String }, 
+
+      /**
+       * default iconsize is 18
+       */
+      clearIconSize: { type: String },
+
+      /**
+       * default iconsize is 24
+       */
+      dropdownIconSize: { type: String },
+
       _dropdownRendered: Boolean
     };
   }
@@ -405,6 +415,7 @@ export class DwSelect extends LitElement {
     
     this._dropdownRendered = false;
     this._overlay = false;
+    this.dropdownIconSize = 24;
   }
 
   /**
@@ -487,6 +498,8 @@ export class DwSelect extends LitElement {
         .selectionButtonsAlign="${this.selectionButtonsAlign}"
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
+        .backIconSize="${this.backIconSize}"
+        .clearIconSize="${this.clearIconSize}"
       ></dw-select-dialog>
     `;
   }
@@ -554,7 +567,12 @@ export class DwSelect extends LitElement {
   }
 
   _getDropDownArrowIcon() {
-    return dropdownArrowIcon;
+    return html `
+      <dw-icon 
+        .size="${this.dropdownIconSize}" 
+        name="arrow_drop_down" >
+      </dw-icon>
+    `
   }
 
   /**
@@ -584,7 +602,13 @@ export class DwSelect extends LitElement {
    */
   _getTriggerIcon() {
     if(this.triggerIcon) {
-      return html `<div class="trigger-icon " ?hidden="${!getIcon(this.triggerIcon)}">${getIcon(this.triggerIcon)}</div>`
+      return html `
+        <dw-icon-button
+          class="trigger-icon"
+          ?hidden="${!this.triggerIcon}"
+          icon="${this.triggerIcon}">
+        </dw-icon-button>
+      `
     }
 
     return html ``;
@@ -618,7 +642,7 @@ export class DwSelect extends LitElement {
                 html`<div class="placeholder field">${this.placeholder}</div>`
                 : html`<div class="value field">${selectedText}</div>`}
         </div>
-        <div class="expand-more-icon">${this._getDropDownArrowIcon()}</div>
+       ${this._getDropDownArrowIcon()}
       </div>
     `;
   }

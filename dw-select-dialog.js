@@ -2,10 +2,10 @@ import { html, css } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import { cache } from 'lit-html/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
-import { backIcon, clearIcon } from './dw-select-icons';
 
 import { Typography } from '@dreamworld/material-styles/typography'
 import './dw-select-item';
+import '@dreamworld/dw-icon-button';
 
 export class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
@@ -140,18 +140,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           overflow: hidden;
         }
 
-        .header .dialog-header .back-icon {
-          height: var(--dw-select-back-icon-width, 24px);
-          width: var(--dw-select-back-icon-height, 24px);
-          fill: var(--dw-select-back-icon-color);
-          cursor: pointer;
-          outline: none;
-          padding: 8px;
-        }
-
-        .header .dialog-header .back-icon:focus { 
-          background: var(--dw-select-back-icon-ripple-color, rgb(33, 33, 33, 0.2));
-          border-radius: 50%;
+        .header .dialog-header dw-icon-button {
+          --dw-icon-button-padding: 8px;
+          --dw-icon-color: var(--dw-select-back-icon-color);
         }
 
         .header .dialog-header .count {
@@ -198,9 +189,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           position: absolute;
           top: 25px;
           right: 24px;
-          width: var(--dw-select-clear-icon-width, 18px);
-          height: var(--dw-select-clear-icon-height, 18px);
-          fill: var(--dw-select-clear-icon-fill-color);
+          --dw-icon-button-padding: 0px;
+          --dw-icon-color: var(--dw-select-clear-icon-fill-color);
           cursor: pointer;
         }
 
@@ -503,11 +493,21 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        */
       stickySelectionButtons: { type: Boolean },
 
-       /**
+      /**
        * default value is left
        * Possible value - 'left', 'right'
        */
-      selectionButtonsAlign: { type: String, reflect: true, attribute: 'selection-buttons-align' }
+      selectionButtonsAlign: { type: String, reflect: true, attribute: 'selection-buttons-align' },
+
+      /**
+       * default iconsize is 24
+       */
+      backIconSize: { type: String }, 
+
+      /**
+       * default iconsize is 18
+       */
+      clearIconSize: { type: String }
     };
   }
 
@@ -545,6 +545,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }, 500);
     this.stickySelectionButtons = false;
     this.selectionButtonsAlign = 'left';
+    this.backIconSize = 24;
+    this.clearIconSize = 18;
   }
 
   /**
@@ -602,7 +604,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
             .placeholder=${this.filterPlaceholder}
             @input=${this._inputChanged} 
             .value=${this._filterQuery} />
-          <div class="clear-text-icon ${this._filteredApplied ? '' : 'hidden'}" @click=${this._clearFilter}>${this._getClearIcon()}</div>
+            ${this._getClearIcon()}
         </div>
       </div>
       ${this.stickySelectionButtons ? html `${this._renderSelectAllAndResetBtn()}` : html ``}
@@ -652,7 +654,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   _renderDialogHeader(){
     return html `
       <div class="dialog-header">
-        <div class="back-icon" @click=${this._backClicked} tabindex="0" @keydown=${this._onBackBtnKeyDown}>${this._getBackIcon()}</div>
+        ${this._getBackIcon()}
         <div class="title headline6">${this.dialogTitle}</div>
         ${!this.singleSelect ? html`
           ${this._value.length ? html `<div class="count subtitle2">${this._value.length}</div>` : html ``}
@@ -901,11 +903,25 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _getBackIcon() {
-    return backIcon;
+    return html `
+      <dw-icon-button 
+        .iconSize="${this.backIconSize}" 
+        icon="arrow_back" 
+        @click=${this._backClicked}
+        @keydown=${this._onBackBtnKeyDown}>
+      </dw-icon-button>
+    `
   }
 
   _getClearIcon(){
-    return clearIcon;
+    return html `
+      <dw-icon-button 
+        .iconSize="${this.clearIconSize}" 
+        icon="cancel" 
+        class="clear-text-icon ${this._filteredApplied ? '' : 'hidden'}"
+        @click=${this._clearFilter}>
+      </dw-icon-button>
+    `
   }
 
   _resetKbHighlightIndex() {
