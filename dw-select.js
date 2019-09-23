@@ -416,6 +416,8 @@ export class DwSelect extends LitElement {
     this._dropdownRendered = false;
     this._overlay = false;
     this.dropdownIconSize = 24;
+    this.backIconSize = 24;
+    this.clearIconSize = 18;
   }
 
   /**
