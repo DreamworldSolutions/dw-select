@@ -3,7 +3,7 @@ import { Typography } from '@dreamworld/material-styles/typography';
 import './dw-select-dialog';
 import '@dreamworld/dw-icon';
 import '@dreamworld/dw-icon-button';
-import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element'; 
 
 /**
  * Trigger for `dw-select-dialog`
