@@ -3,11 +3,12 @@ import { Typography } from '@dreamworld/material-styles/typography';
 import './dw-select-dialog';
 import '@dreamworld/dw-icon';
 import '@dreamworld/dw-icon-button';
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 
 /**
  * Trigger for `dw-select-dialog`
  */
-export class DwSelect extends LitElement {
+export class DwSelect extends DwFormElement(LitElement) {
 
   static get styles() {
     return [Typography, css`
@@ -177,6 +178,12 @@ export class DwSelect extends LitElement {
        * Input property. The label for this element.
        */
       label: String,
+
+      /**
+       * name of element
+       */
+      name: String,
+
       /**
        * Input property. A placeholder string in addition to the label.
        */
