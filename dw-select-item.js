@@ -40,6 +40,7 @@ export class DwSelectItem extends LitElement {
         box-sizing: border-box;
         padding: var(--dw-select-item-padding, 0px 16px);
         min-height: var(--dw-select-item-height, 48px);
+        overflow: hidden; 
       }
 
       :host(:hover) {
