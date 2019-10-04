@@ -52,9 +52,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       justify-content: center;
     }
 
-    .main-container #dropdownContainer dw-icon-button {
-      --dw-icon-button-padding: 6px;
-      --dw-icon-color: var(--dw-select-trigger-icon-fill-color);
+    .main-container #dropdownContainer dw-icon-button.trigger-icon {
+      --dw-icon-button-padding: var(--dw-select-trigger-icon-padding, 0px);
+      --dw-icon-color: var(--dw-select-trigger-icon-fill-color, #000);
+      height: var(--dw-select-trigger-icon-height, 36px);
+      width: var(--dw-select-trigger-icon-width, 36px);
+      margin: var(--dw-select-trigger-icon-margin, 0px);
     }
 
     .main-container #dropdownContainer .trigger-label {
@@ -615,12 +618,25 @@ export class DwSelect extends DwFormElement(LitElement) {
         <dw-icon-button
           class="trigger-icon"
           ?hidden="${!this.triggerIcon}"
-          icon="${this.triggerIcon}">
+          icon="${this._getIconName()}">
         </dw-icon-button>
       `
     }
 
     return html ``;
+  }
+
+  _getIconName(){
+    if(!this.triggerIcon) {
+     return '';
+    }
+    
+    let aIcon = this.triggerIcon.split('.');
+    if(aIcon.length > 0) {
+     return aIcon[1];
+    }
+    
+    return this.triggerIcon;
   }
 
   /**
