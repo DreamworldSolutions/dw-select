@@ -156,11 +156,11 @@ export class DwSelectItem extends LitElement {
 
   _getIconName(){
     if(!this.icon) {
-    return '';
+      return '';
     }
     
     let aIcon = this.icon.split('.');
-    if(aIcon.length > 0) {
+    if(aIcon.length > 1) {
     return aIcon[1];
     }
     

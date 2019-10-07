@@ -632,7 +632,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
     
     let aIcon = this.triggerIcon.split('.');
-    if(aIcon.length > 0) {
+    if(aIcon.length > 1) {
      return aIcon[1];
     }
     
