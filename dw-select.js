@@ -687,6 +687,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.validate();
   }
 
+  /**
+   * It's **protected** method. So, child-class can override this to do the custom work when dialog is opened or closed.
+   * Though, child-class should invoke super class's method, before/after doing custom work.
+   */
   _openedChanged(e) {
     this.opened = e.detail.opened;
     this._triggerOpenedChange();
