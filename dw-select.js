@@ -147,6 +147,15 @@ export class DwSelect extends DwFormElement(LitElement) {
     :host([overlay]) #overlay {
       display:block;
     }
+
+    :host([readOnly]) .main-container #dropdownContainer {
+      cursor: default;
+    }
+
+    :host([readOnly]) .main-container #dropdownContainer .label,
+    :host([readOnly]) .main-container #dropdownContainer .dropdown-input {
+      opacity: 0.6;
+    }
     `];
   }
 
@@ -396,6 +405,11 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       dropdownIconSize: { type: String },
 
+      /**
+       * `true` show dropdown as readonly
+       */
+      readOnly: { type: Boolean, reflect: true },
+
       _dropdownRendered: Boolean
     };
   }
@@ -428,15 +442,17 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.dropdownIconSize = 24;
     this.backIconSize = 24;
     this.clearIconSize = 18;
+    this.readOnly = false;
   }
 
   /**
    * Show the dropdown content
    */
   open() {
-    if(this.opened){
+    if(this.opened || this.readOnly){
       return;
     }
+
     this.opened = true;
   }
 
@@ -618,6 +634,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         <dw-icon-button
           class="trigger-icon"
           ?hidden="${!this.triggerIcon}"
+          ?disabled="${this.readOnly}"
           icon="${this._getIconName()}">
         </dw-icon-button>
       `
@@ -673,6 +690,10 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onClick() {
+    if(this.readOnly){
+      return;
+    }
+
     this.opened = !this.opened;
   }
 
