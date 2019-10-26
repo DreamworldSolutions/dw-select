@@ -4,6 +4,7 @@ import './dw-select-dialog';
 import '@dreamworld/dw-icon';
 import '@dreamworld/dw-icon-button';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element'; 
+import '@dreamworld/dw-button';
 
 /**
  * Trigger for `dw-select-dialog`
@@ -53,20 +54,17 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     .main-container #dropdownContainer dw-icon-button.trigger-icon {
-      --dw-icon-button-padding: var(--dw-select-trigger-icon-padding, 0px);
-      --dw-icon-color: var(--dw-select-trigger-icon-fill-color, #000);
-      height: var(--dw-select-trigger-icon-height, 36px);
-      width: var(--dw-select-trigger-icon-width, 36px);
-      margin: var(--dw-select-trigger-icon-margin, 0px);
+      --dw-icon-color: var(--dw-select-trigger-icon-color, #000);
     }
 
     .main-container #dropdownContainer .trigger-label {
-      text-transform: var(--dw-select-trigger-label-text-transform, initial);
       width: var(--dw-select-trigger-label-width, auto);
       height: var(--dw-select-trigger-label-height, 36px);
-      fill: var(--dw-select-trigger-label-color);
-      margin: var(--dw-select-trigger-label-margin, 0px);
-      padding: var(--dw-select-trigger-label-padding, 8px);
+    }
+
+    .main-container #dropdownContainer .trigger-icon-label dw-icon {
+      margin-right: 8px;
+      --dw-icon-color: var(--dw-select-trigger-icon-color);
     }
 
     :host([invalid]) .main-container #dropdownContainer .label {
@@ -410,6 +408,16 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       readOnly: { type: Boolean, reflect: true },
 
+      /**
+       * size trigger icon
+       */
+      triggerIconSize: { type: Number },
+
+      /**
+       * size trigger icon container
+       */
+      triggerButtonSize: { type: Number },
+
       _dropdownRendered: Boolean
     };
   }
@@ -614,14 +622,37 @@ export class DwSelect extends DwFormElement(LitElement) {
       `;
     }
 
-    if(this.triggerIcon || this.triggerLabel) {
+    if(this.triggerIcon && this.triggerLabel) {
       return html `
-        ${this._getTriggerIcon()}
-        ${this._getTriggerLabel()}
+        ${this._getTriggerIconWithLabel()}
       `;
     }
 
+    if(this.triggerIcon){
+      return html `
+        ${this._getTriggerIcon()}
+    `;
+    }
+
+    if(this.triggerLabel){
+      return html `
+        ${this._getTriggerLabel()}
+    `;
+    }
+
     return html `${this._getDefaultTriggerElement()}`;
+  }
+
+  /**
+   * @returns Trigger icon and label.
+   * @protected
+   */
+  _getTriggerIconWithLabel(){
+    return html `
+      <dw-button class="trigger-icon-label">
+        <dw-icon .size="${this.triggerIconSize}" name="${this.triggerIcon}"></dw-icon> 
+        ${this.triggerLabel}
+      </dw-button>`
   }
 
   /**
@@ -632,8 +663,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     if(this.triggerIcon) {
       return html `
         <dw-icon-button
+          .buttonSize="${this.triggerButtonSize}"
           class="trigger-icon"
           ?hidden="${!this.triggerIcon}"
+          .iconSize="${this.triggerIconSize}"
           ?disabled="${this.readOnly}"
           icon="${this._getIconName()}">
         </dw-icon-button>
@@ -662,7 +695,7 @@ export class DwSelect extends DwFormElement(LitElement) {
    */
   _getTriggerLabel() {
     if(this.triggerLabel) {
-      return html `<div class="trigger-label">${this.triggerLabel}</div>`
+      return html `<dw-button class="trigger-label" .label="${this.triggerLabel}"></dw-button>`
     }
 
     return html ``;
