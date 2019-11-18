@@ -114,7 +114,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           border-bottom-right-radius: 0;
         }
 
-        :host([mobile-mode][full-height="true"]) {
+        :host([mobile-mode][full-height]) {
           border-top-left-radius: 0;
           border-top-right-radius: 0;
         }
