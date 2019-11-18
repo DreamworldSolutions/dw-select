@@ -52,22 +52,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         :host([opened][mobile-mode]) {
-          animation-name: slideUpAnimation;
-          -webkit-animation-name: slideUpAnimation;
-          -moz-animation-name: slideUpAnimation;
-          -o-animation-name: slideUpAnimation;
-          animation-duration: 500ms;
-          -webkit-animation-duration: 500ms;
-          -moz-animation-duration: 500ms;
-          -o-animation-duration: 500ms;
-          animation-timing-function: ease-in-out;
-          -webkit-animation-timing-function: ease-in-out;
-          -moz-animation-timing-function: ease-in-out;
-          -o-animation-timing-function: ease-in-out;
-          animation-fill-mode: forwards;
-          -webkit-animation-fill-mode: forwards;
-          -moz-animation-fill-mode: forwards;
-          -o-animation-fill-mode: forwards;
+          animation: slideInUp 0.2s forwards;
         }
 
         :host(:not([mobile-mode])[opened]) {
@@ -87,13 +72,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -o-animation-fill-mode: forwards;
         }
 
-        @-webkit-keyframes slideUpAnimation {
-          0% {bottom: -750px;opacity: 0;}
-          100%{opacity: 1;bottom: 0px;}
-        }
-        @keyframes slideUpAnimation  {
-          0% {bottom: -750px;opacity: 0;}
-          100%{opacity: 1;bottom: 0px;}
+        @keyframes slideInUp {
+          from {
+            transform: translate3d(0, 100%, 0);
+          }
+
+          to {
+            transform: translate3d(0, 0, 0);
+          }
         }
 
         @-webkit-keyframes fadeIn {
