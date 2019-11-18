@@ -109,6 +109,16 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           width: 100%;
         }
 
+        :host([mobile-mode]) {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        :host([mobile-mode][full-height="true"]) {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
         :host(:not([scrolled-down])) .footer {
           box-shadow:  0 -1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }

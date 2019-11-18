@@ -77,6 +77,9 @@ export class DwSelectBaseDialog extends LitElement {
       this.style.left = '0px';
       this.style.right = '0px';
       this.style.transform = 'none';
+      
+      //Dialog has full height or not.
+      this.setAttribute('full-height', window.innerHeight <= this.offsetHeight);
       return;
     }
 
