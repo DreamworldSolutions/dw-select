@@ -109,11 +109,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           width: 100%;
         }
 
-        :host([scrolled-down]) .footer {
+        :host(:not([scrolled-down])) .footer {
           box-shadow:  0 -1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
 
-        :host([scrolled-down][scrolled-up]) .header {
+        :host(:not([scrolled-up])) .header {
           box-shadow: 0 1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
 
@@ -1007,8 +1007,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     if(!scrollerEl) {
       return;
     }
-    this.scrolledDown = scrollerEl.scrollTop > 15;
-    this.scrolledUp = (scrollerEl.scrollHeight - scrollerEl.offsetHeight - scrollerEl.scrollTop) > 15;
+    
+    let scrollLength = scrollerEl.offsetHeight + scrollerEl.scrollTop;
+    this.scrolledUp = scrollerEl.scrollTop < 15;
+    this.scrolledDown = (scrollerEl.scrollHeight - 15) <= scrollLength;
   }
 
   _selectAllClicked() {
