@@ -166,8 +166,7 @@ export class DwSelectBaseDialog extends LitElement {
    * @protected
    */
   _manageFullHeight() {
-    let el = this.shadowRoot.querySelector('.mdc-dialog__surface');
-    this._fullHeight = el && window.innerHeight == el.offsetHeight;
+    this._fullHeight = window.innerHeight == this.offsetHeight;
   }
 
   _hasNoEnoughBottomSpace(positionTargetClientRect) {
