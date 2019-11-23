@@ -45,7 +45,16 @@ export class DwSelectBaseDialog extends LitElement {
        * When true, Show dialog in full screen even if items are very less in mobile mode
        * Default value: false
        */
-      alwaysFullScreenInMobile: Boolean
+      alwaysFullScreenInMobile: Boolean,
+
+      /**
+       * True when dialog height is equal to viewport.
+       */
+      _fullHeight: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'full-height'
+      }
     };
   }
 
@@ -77,6 +86,9 @@ export class DwSelectBaseDialog extends LitElement {
       this.style.left = '0px';
       this.style.right = '0px';
       this.style.transform = 'none';
+      
+      //Dialog has full height or not.
+      this._manageFullHeight();
       return;
     }
 
@@ -145,6 +157,16 @@ export class DwSelectBaseDialog extends LitElement {
     } else {
       this.style.height = Math.min(winHeight - bottom, dropdownHeight) + 'px';
     }
+
+  }
+
+  /**
+   * Manage `_fullHeight` property.
+   * If dialog height and viewport is equal then set `_fullHeight` as a true. otherwise set false.
+   * @protected
+   */
+  _manageFullHeight() {
+    this._fullHeight = window.innerHeight == this.offsetHeight;
   }
 
   _hasNoEnoughBottomSpace(positionTargetClientRect) {

@@ -52,22 +52,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         :host([opened][mobile-mode]) {
-          animation-name: slideUpAnimation;
-          -webkit-animation-name: slideUpAnimation;
-          -moz-animation-name: slideUpAnimation;
-          -o-animation-name: slideUpAnimation;
-          animation-duration: 500ms;
-          -webkit-animation-duration: 500ms;
-          -moz-animation-duration: 500ms;
-          -o-animation-duration: 500ms;
-          animation-timing-function: ease-in-out;
-          -webkit-animation-timing-function: ease-in-out;
-          -moz-animation-timing-function: ease-in-out;
-          -o-animation-timing-function: ease-in-out;
-          animation-fill-mode: forwards;
-          -webkit-animation-fill-mode: forwards;
-          -moz-animation-fill-mode: forwards;
-          -o-animation-fill-mode: forwards;
+          animation: slideInUp 0.2s forwards;
         }
 
         :host(:not([mobile-mode])[opened]) {
@@ -87,13 +72,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -o-animation-fill-mode: forwards;
         }
 
-        @-webkit-keyframes slideUpAnimation {
-          0% {bottom: -750px;opacity: 0;}
-          100%{opacity: 1;bottom: 0px;}
-        }
-        @keyframes slideUpAnimation  {
-          0% {bottom: -750px;opacity: 0;}
-          100%{opacity: 1;bottom: 0px;}
+        @keyframes slideInUp {
+          from {
+            transform: translate3d(0, 100%, 0);
+          }
+
+          to {
+            transform: translate3d(0, 0, 0);
+          }
         }
 
         @-webkit-keyframes fadeIn {
@@ -109,11 +95,21 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           width: 100%;
         }
 
-        :host([scrolled-down]) .footer {
+        :host([mobile-mode]) {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        :host([mobile-mode][full-height]) {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        :host(:not([scrolled-down])) .footer {
           box-shadow:  0 -1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
 
-        :host([scrolled-down][scrolled-up]) .header {
+        :host(:not([scrolled-up])) .header {
           box-shadow: 0 1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
 
@@ -1007,8 +1003,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     if(!scrollerEl) {
       return;
     }
-    this.scrolledDown = scrollerEl.scrollTop > 15;
-    this.scrolledUp = (scrollerEl.scrollHeight - scrollerEl.offsetHeight - scrollerEl.scrollTop) > 15;
+    
+    let scrollLength = scrollerEl.offsetHeight + scrollerEl.scrollTop;
+    this.scrolledUp = scrollerEl.scrollTop < 15;
+    this.scrolledDown = (scrollerEl.scrollHeight - 15) <= scrollLength;
   }
 
   _selectAllClicked() {
