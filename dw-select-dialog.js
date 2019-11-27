@@ -114,7 +114,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         :host([single-select]) .main-content {
-          padding-bottom: 8px;
+          padding-bottom: 12px;
         }
 
         .header .dialog-header {
