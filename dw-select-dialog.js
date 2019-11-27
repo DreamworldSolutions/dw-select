@@ -113,6 +113,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           box-shadow: 0 1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
 
+        :host([single-select]) .main-content {
+          padding-bottom: 8px;
+        }
+
         .header .dialog-header {
           display: flex;
           display: -ms-flexbox;
@@ -360,7 +364,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
        * Input property. By default, it allows multiple selection. when this property is set, it will behave as single select control.
        * Default value: false
        */
-      singleSelect: { type: Boolean },
+      singleSelect: { type: Boolean, reflect: true, attribute: 'single-select' },
       /**
        * Input property. Allows user to filter items by typing query.
        * Default value: false
