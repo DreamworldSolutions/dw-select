@@ -668,25 +668,12 @@ export class DwSelect extends DwFormElement(LitElement) {
           ?hidden="${!this.triggerIcon}"
           .iconSize="${this.triggerIconSize}"
           ?disabled="${this.readOnly}"
-          icon="${this._getIconName()}">
+          icon="${this.triggerIcon}">
         </dw-icon-button>
       `
     }
 
     return html ``;
-  }
-
-  _getIconName(){
-    if(!this.triggerIcon) {
-     return '';
-    }
-    
-    let aIcon = this.triggerIcon.split('.');
-    if(aIcon.length > 1) {
-     return aIcon[1];
-    }
-    
-    return this.triggerIcon;
   }
 
   /**

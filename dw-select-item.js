@@ -146,25 +146,12 @@ export class DwSelectItem extends LitElement {
     return html`
       <div class="container" title=${this._getToolTipText()}>
         <div class="icon" ?hidden="${!this.icon}">
-          <dw-icon name="${this._getIconName()}" size="${this.iconSize}"></dw-icon>
+          <dw-icon name="${this.icon}" size="${this.iconSize}"></dw-icon>
         </div>
         <div class="content">${this._getName(this.item, this.itemLabel)}</div>
         <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>
       </div>
     `;
-  }
-
-  _getIconName(){
-    if(!this.icon) {
-      return '';
-    }
-    
-    let aIcon = this.icon.split('.');
-    if(aIcon.length > 1) {
-    return aIcon[1];
-    }
-    
-    return this.icon;
   }
 
   _getName(item, itemLabel){
