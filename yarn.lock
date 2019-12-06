@@ -44,7 +44,7 @@
     "@dreamworld/flex-layout" "^1.0.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-icon@1.1.0", "@dreamworld/dw-icon@^1.0.0", "@dreamworld/dw-icon@^1.1.0":
+"@dreamworld/dw-icon@^1.0.0", "@dreamworld/dw-icon@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-1.1.0.tgz#98e122d97f1d56c52d7cef3b2dc319a169581c01"
   integrity sha512-BhUfYx0YYI+tsnj34QAL0ljX/s0YiNfDXhEF8VGbAYVgq/qZXFjuNfkn1SEGGWLfix2RwqOFYYhoJrrBHiwc5g==
