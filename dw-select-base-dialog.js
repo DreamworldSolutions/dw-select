@@ -153,9 +153,9 @@ export class DwSelectBaseDialog extends LitElement {
     this.style.transform = 'none';
     
     if(!alignTop) {
-      this.style.height = Math.min(winHeight - top, dropdownHeight) + 'px';
+      this.style.height = Math.min(winHeight - top, dropdownHeight + 0.1) + 'px';
     } else {
-      this.style.height = Math.min(winHeight - bottom, dropdownHeight) + 'px';
+      this.style.height = Math.min(winHeight - bottom, dropdownHeight + 0.1) + 'px';
     }
 
   }
