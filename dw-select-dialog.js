@@ -114,7 +114,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         :host([single-select]) .main-content {
-          padding-bottom: 12px;
+          padding-bottom: var(--dw-select-dialog-single-select-padding-bottom, 12px);
         }
 
         .header .dialog-header {
@@ -263,6 +263,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
         .main-content .items-container  .item.kb-highlighted {
           background: var(--dw-select-kb-highlighted-bg-color);
+        }
+
+        .main-content .items-container  .item.kb-highlighted:hover {
+          background: var(--dw-select-kb-highlighted-hover-bg-color, #fff);
         }
 
         .footer {
