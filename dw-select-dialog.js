@@ -504,6 +504,20 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       selectionButtonsAlign: { type: String, reflect: true, attribute: 'selection-buttons-align' },
 
       /**
+       * Icon to be shown for back button. (e.g "close", "arrow_back")
+       */
+      backIcon: { type: String },
+
+      /**
+       * position of back icon (e.g "left" or "right")
+       */
+      backIconPosition: { type: String, reflect: true, attribute: 'back-icon-position' },
+
+      /**
+       * If it's `true` do not show back icon.
+       */
+      noBackIcon: { type: Boolean },
+      /**
        * default iconsize is 24
        */
       backIconSize: { type: String }, 
@@ -549,6 +563,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }, 500);
     this.stickySelectionButtons = false;
     this.selectionButtonsAlign = 'left';
+    this.backIcon = 'close';
+    this.backIconPosition = 'right';
     this.backIconSize = 24;
     this.clearIconSize = 18;
   }
@@ -658,8 +674,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   _renderDialogHeader(){
     return html `
       <div class="dialog-header">
-        ${this._getBackIcon()}
+        ${!this.noBackIcon && this.backIconPosition === 'left' ? this._getBackIcon() : ''}
         <div class="title headline6">${this.dialogTitle}</div>
+        ${!this.noBackIcon && this.backIconPosition === 'right' ? this._getBackIcon() : ''}
         ${!this.singleSelect ? html`
           ${this._value.length ? html `<div class="count subtitle2">${this._value.length}</div>` : html ``}
         ` : ''}
@@ -910,7 +927,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     return html `
       <dw-icon-button 
         .iconSize="${this.backIconSize}" 
-        icon="arrow_back" 
+        icon="${this.backIcon}" 
         @click=${this._backClicked}
         @keydown=${this._onBackBtnKeyDown}>
       </dw-icon-button>

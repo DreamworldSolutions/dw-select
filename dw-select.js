@@ -386,7 +386,25 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Default value is `false`.
        * When true, Show overlay, otherwise hide overlay.
        */
-      _overlay: { type: Boolean, reflect: true,  attribute: 'overlay'},
+      _overlay: { type: Boolean, reflect: true, attribute: 'overlay' },
+      
+      /**
+       * Icon to be shown for back button. (e.g "close", "arrow_back")
+       * Proxy to "dw-select-dialog"
+       */
+      backIcon: { type: String },
+
+      /**
+       * position of back icon (e.g "left" or "right")
+       * Proxy to "dw-select-dialog"
+       */
+      backIconPosition: { type: String, reflect: true, attribute: 'back-icon-position' },
+
+      /**
+       * If it's `true` do not show back icon.
+       * Proxy to "dw-select-dialog"
+       */
+      noBackIcon: { type: Boolean },
 
       /**
        * default iconsize is 24
@@ -534,6 +552,9 @@ export class DwSelect extends DwFormElement(LitElement) {
         .selectionButtonsAlign="${this.selectionButtonsAlign}"
         @value-changed=${this._valueChanged}
         @opened-changed=${this._openedChanged}
+        .backIcon="${this.backIcon}"
+        .backIconPosition="${this.backIconPosition}"
+        .noBackIcon="${this.noBackIcon}"
         .backIconSize="${this.backIconSize}"
         .clearIconSize="${this.clearIconSize}"
       ></dw-select-dialog>
