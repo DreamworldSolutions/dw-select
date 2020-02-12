@@ -21,7 +21,7 @@ export class DwSelectItem extends LitElement {
         line-height: 16px;
         font-weight: 400;
         min-height: var(--dw-select-item-height, 48px);
-        color: var(--dw-select-item-color);
+        color: var(--dw-select-item-colorj, var(--primary-text-color));
       }
 
       .container {
@@ -71,12 +71,12 @@ export class DwSelectItem extends LitElement {
         flex: none;
         height: var(--dw-select-item-icon-height, 24px);
         width: var(--dw-select-item-icon-width, 24px);
-        fill: var(--dw-select-item-icon-fill-color);
         margin: var(--dw-select-item-icon-margin, 0px 8px 0px 0px);
+        --dw-icon-color: var(--dw-select-item-icon-color);
       }
 
       :host([disabled]) .icon{
-        fill: var(--dw-select-disabled-item-icon-fill-color);
+        --dw-icon-color: var(--dw-select-item-disabled-icon-color);
       } 
       
 
@@ -90,7 +90,7 @@ export class DwSelectItem extends LitElement {
       }
 
       .check-icon dw-icon {
-        --dw-icon-color: var(--dw-select-check-icon);
+        --dw-icon-color: var(--dw-select-check-icon, var(--primary-color));
       }
     `;
   } 

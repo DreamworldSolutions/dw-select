@@ -422,6 +422,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       dropdownIconSize: { type: String },
 
       /**
+       * List item icon size
+       */
+      listItemIconSize: { type: Number },
+
+      /**
        * `true` show dropdown as readonly
        */
       readOnly: { type: Boolean, reflect: true },
@@ -461,12 +466,11 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.stickySelectionButtons = false;
     this.selectionButtonsAlign = 'left';
     this.alwaysFullScreenInMobile = false;
-    this.iconSize = 24;
-    
     this._dropdownRendered = false;
     this._overlay = false;
     this.dropdownIconSize = 24;
     this.backIconSize = 24;
+    this.listItemIconSize = 24;
     this.clearIconSize = 18;
     this.readOnly = false;
   }
@@ -528,7 +532,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         .disabledItems=${this.disabledItems}
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
-        .iconSize=${this.iconSize}
+        .listItemIconSize=${this.listItemIconSize}
         .positionTarget=${this._positionTarget}
         .noHeader=${this.noHeader}
         .mobileMode=${this.mobileMode}
