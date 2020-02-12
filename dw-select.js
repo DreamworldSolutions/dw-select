@@ -422,6 +422,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       dropdownIconSize: { type: String },
 
       /**
+       * List item icon size
+       */
+      listItemIconSize: { type: Number },
+
+      /**
        * `true` show dropdown as readonly
        */
       readOnly: { type: Boolean, reflect: true },
@@ -528,7 +533,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         .disabledItems=${this.disabledItems}
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
-        .iconSize=${this.iconSize}
+        .listItemIconSize=${this.listItemIconSize}
         .positionTarget=${this._positionTarget}
         .noHeader=${this.noHeader}
         .mobileMode=${this.mobileMode}
