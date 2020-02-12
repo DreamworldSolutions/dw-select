@@ -21,7 +21,7 @@ export class DwSelectItem extends LitElement {
         line-height: 16px;
         font-weight: 400;
         min-height: var(--dw-select-item-height, 48px);
-        color: var(--dw-select-item-color);
+        color: var(--dw-select-item-colorj, var(--primary-text-color));
       }
 
       .container {
@@ -90,7 +90,7 @@ export class DwSelectItem extends LitElement {
       }
 
       .check-icon dw-icon {
-        --dw-icon-color: var(--dw-select-check-icon);
+        --dw-icon-color: var(--dw-select-check-icon, var(--primary-color));
       }
     `;
   } 
