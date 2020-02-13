@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
+import { styleMap } from 'lit-html/directives/style-map.js';
 import '@dreamworld/dw-icon';
 
 export class DwSelectItem extends LitElement {
@@ -21,7 +22,7 @@ export class DwSelectItem extends LitElement {
         line-height: 16px;
         font-weight: 400;
         min-height: var(--dw-select-item-height, 48px);
-        color: var(--dw-select-item-colorj, var(--primary-text-color));
+        color: var(--dw-select-item-color, var(--primary-text-color));
       }
 
       .container {
@@ -146,12 +147,42 @@ export class DwSelectItem extends LitElement {
     return html`
       <div class="container" title=${this._getToolTipText()}>
         <div class="icon" ?hidden="${!this.icon}">
-          <dw-icon name="${this.icon}" size="${this.iconSize}"></dw-icon>
+          <dw-icon style="${styleMap(this._setIconColor(this.item))}" name="${this.icon}" size="${this.iconSize}"></dw-icon>
         </div>
-        <div class="content">${this._getName(this.item, this.itemLabel)}</div>
+        <div class="content" style="${styleMap(this._setTextColor(this.item))}">${this._getName(this.item, this.itemLabel)}</div>
         <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>
       </div>
     `;
+  }
+
+  /**
+   * Sets icon color if provided.
+   * @param {Object} item item
+   */
+  _setIconColor(item) {
+    if (item.iconColor) {
+      if (item.iconColor.startsWith('-')) {
+        return { '--dw-icon-color': `var(${item.iconColor})` };
+      } else {
+        return { '--dw-icon-color': `${item.iconColor}` };
+      }
+    }
+    return {};
+  }
+
+  /**
+   * Set text color if provided.
+   * @param {Object} item Item
+   */
+  _setTextColor(item) {
+    if (item.textColor) {
+      if (item.textColor.startsWith('-')) {
+        return { 'color': `var(${item.textColor})` };
+      } else {
+        return { 'color': `${item.textColor}` };
+      }
+    }
+    return {};
   }
 
   _getName(item, itemLabel){
