@@ -14,35 +14,17 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       Typography,
       css`
         :host {
-          --dw-select-bg-color: var(--primary-background-color);
-          --dw-select-title-color: var(--primary-text-color);
-          --dw-select-back-icon-color: var(--secondary-text-color);
-          --dw-select-count-bg-color: var(--primary-color);
-          --dw-select-count-color: var(--light-theme-background-color);
-          --dw-select-divider-color: var(--light-theme-divider-color);
-          --dw-select-input-border-color: var(--light-theme-divider-color);
-          --dw-select-input-color: var(--secondary-text-color);
-          --dw-select-input-placeholder-color: var(--disabled-text-color);
-          --dw-select-clear-icon-fill-color: var(--secondary-text-color);
-          --dw-select-selection-btn-color: var(--primary-color);
-          --dw-select-selection-action-btn-bg-color: var(--light-theme-background-color);
-          --dw-select-group-label-color: var(--secondary-text-color);
-          --dw-select-button-hover-color: var(--light-primary-color);
-          --dw-select-button-focus-color: var(--light-primary-color);
-          --dw-select-kb-highlighted-bg-color: var(--light-primary-color);
-          --dw-select-apply-button-bg-color: var(--primary-color);
-          --dw-select-apply-button-color: var(--light-theme-background-color);
-          --dw-select-item-color: var(--primary-text-color);
-          --dw-select-check-icon: var(--primary-color);
           display: none;
           box-sizing: border-box;
-          background: var(--dw-select-bg-color);
+          background: var(--dw-select-bg-color, var(--primary-background-color));
           flex-direction: column;
           -ms-flex-direction: column;
           -webkit-flex-direction: column;
           outline: none;
           z-index: 100;
           width: var(--dw-select-dialog-width, 250px);
+          max-width: var(--dw-select-dialog-max-width, 250px);
+          margin: var(--dw-select-dialog-margin, 0px auto);
         }
 
         :host([opened]) {
@@ -128,26 +110,33 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -ms-flex-align: center;
           -webkit-align-items: center;
           min-height: var(--dw-select-header-hegiht, 48px);
-          padding: 0px 24px 0px 8px;
+          padding: var(--dw-select-dialog-header-padding, 8px 8px 8px 16px);
+          margin: var(--dw-select-dialog-header-margin, 0px);
         }
 
         .header .dialog-header .title {
           flex: 1;
           padding-left: 24px;
-          color: var(--dw-select-title-color);
+          color: var(--dw-select-dialog-title-color, var(--primary-text-color));
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+          text-transform: var(--dw-select-dialog-header-title-text-transform, uppercase);
+          font-weight: var(--dw-select-dialog-menu-header-title-font-weight, 400);
+          font-size: var(--dw-select-dialog-menu-header-title-font-size, 16px);
+          line-height: var(--dw-select-dialog-menu-header-title-line-height, 28px);
+          padding: var(--dw-select-dialog-menu-header-title-padding, 0px);
+          margin: var(--dw-select-dialog-menu-header-title-margin, 0px);
         }
 
         .header .dialog-header dw-icon-button {
           --dw-icon-button-padding: 8px;
-          --dw-icon-color: var(--dw-select-back-icon-color);
+          --dw-icon-color: var(--dw-select-back-icon-color, var(--secondary-text-color));
         }
 
         .header .dialog-header .count {
-          background-color: var(--dw-select-count-bg-color);
-          color: var(--dw-select-count-color);
+          background-color: var(--dw-select-count-bg-color, var(--primary-color));
+          color: var(--dw-select-count-color, var(--light-theme-background-color));
           line-height: 20px;
           border-radius: 50%;
           min-width: 18px;
@@ -157,7 +146,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         .header .border {
-          border-bottom: 1px solid var(--dw-select-divider-color);
+          border-bottom: 1px solid var(--dw-select-divider-color, var(--light-theme-divider-color));
+          display: var(--dw-select-dialog-header-seprater-display, block);
         }
 
         .header .input-container { 
@@ -168,16 +158,16 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .header .input-container input {
           height: var(--dw-select-input-height, 48px);
           width: var(--dw-delect-input-width, 100%);
-          border: 1px solid var(--dw-select-input-border-color);
+          border: 1px solid var(--dw-select-input-border-color, var(--light-theme-divider-color));
           border-radius: 2px;
-          color: var(--dw-select-input-color);
+          color: var(--dw-select-input-color, var(--secondary-text-color));
           text-indent: 16px;
           outline: none;
           box-sizing: border-box;
         }
 
         .header .input-container input::placeholder {
-          color: var(--dw-select-input-placeholder-color);
+          color: var(--dw-select-input-placeholder-color, var(--disabled-text-color));
         }
 
         .header .input-container .hidden,
@@ -190,7 +180,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           top: 25px;
           right: 24px;
           --dw-icon-button-padding: 0px;
-          --dw-icon-color: var(--dw-select-clear-icon-fill-color);
+          --dw-icon-color: var(--dw-select-clear-icon-fill-color, var(--secondary-text-color));
           cursor: pointer;
         }
 
@@ -222,9 +212,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         }
 
         .selection-action-buttons button { 
-          color: var(--dw-select-selection-btn-color);
+          color: var(--dw-select-selection-btn-color, var(--primary-color));
           text-transform: uppercase;
-          background: var(--dw-select-selection-action-btn-bg-color);
+          background: var(--dw-select-selection-action-btn-bg-color, var(--light-theme-background-color));
           border: none;
           outline: none;
           cursor: pointer;
@@ -235,11 +225,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           margin-right: 8px;
         }
         .selection-action-buttons button:hover {
-          background: var(--dw-select-button-hover-color);
+          background: var(--dw-select-button-hover-color, var(--light-primary-color));
         }
 
         .selection-action-buttons button:focus{
-          background: var(--dw-select-button-focus-color);
+          background: var(--dw-select-button-focus-color, var(--light-primary-color));
         }
 
         .selection-action-buttons button::-moz-focus-inner {
@@ -256,13 +246,13 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           -ms-flex-pack: center;
           -webkit-justify-content: center;
           justify-content: center;
-          color: var(--dw-select-group-label-color);
+          color: var(--dw-select-group-label-color, var(--secondary-text-color));
           height: var(--dw-select-group-label-height, 48px);
           padding-left: 16px;
         }
 
         .main-content .items-container  .item.kb-highlighted {
-          background: var(--dw-select-kb-highlighted-bg-color);
+          background: var(--dw-select-kb-highlighted-bg-color, var(--light-primary-color));
         }
 
         .main-content .items-container  .item.kb-highlighted:hover {
@@ -289,8 +279,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           text-transform: uppercase;
           border: none;
           cursor: pointer;
-          background: var(--dw-select-apply-button-bg-color);
-          color: var(--dw-select-apply-button-color);
+          background: var(--dw-select-apply-button-bg-color, var(--primary-color));
+          color: var(--dw-select-apply-button-color, var(--light-theme-background-color));
           width: var(--dw-select-apply-button-width, 232px);
           text-align: center;
         }
@@ -438,7 +428,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       /**
        * Input property. item icon size.
        */
-      iconSize: Number,
+      listItemIconSize: { type: Number },
 
       /**
        * Sorted items based on groupBy.
@@ -504,6 +494,20 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       selectionButtonsAlign: { type: String, reflect: true, attribute: 'selection-buttons-align' },
 
       /**
+       * Icon to be shown for back button. (e.g "close", "arrow_back")
+       */
+      backIcon: { type: String },
+
+      /**
+       * position of back icon (e.g "left" or "right")
+       */
+      backIconPosition: { type: String, reflect: true, attribute: 'back-icon-position' },
+
+      /**
+       * If it's `true` do not show back icon.
+       */
+      noBackIcon: { type: Boolean },
+      /**
        * default iconsize is 24
        */
       backIconSize: { type: String }, 
@@ -549,6 +553,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }, 500);
     this.stickySelectionButtons = false;
     this.selectionButtonsAlign = 'left';
+    this.backIcon = 'close';
+    this.backIconPosition = 'right';
     this.backIconSize = 24;
     this.clearIconSize = 18;
   }
@@ -658,8 +664,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   _renderDialogHeader(){
     return html `
       <div class="dialog-header">
-        ${this._getBackIcon()}
+        ${!this.noBackIcon && this.backIconPosition === 'left' ? this._getBackIcon() : ''}
         <div class="title headline6">${this.dialogTitle}</div>
+        ${!this.noBackIcon && this.backIconPosition === 'right' ? this._getBackIcon() : ''}
         ${!this.singleSelect ? html`
           ${this._value.length ? html `<div class="count subtitle2">${this._value.length}</div>` : html ``}
         ` : ''}
@@ -680,7 +687,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .disabled=${model.disabled}
         .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
-        .iconSize=${this.iconSize}
+        .iconSize=${this.listItemIconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
     `;
@@ -910,7 +917,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     return html `
       <dw-icon-button 
         .iconSize="${this.backIconSize}" 
-        icon="arrow_back" 
+        icon="${this.backIcon}" 
         @click=${this._backClicked}
         @keydown=${this._onBackBtnKeyDown}>
       </dw-icon-button>
