@@ -1,3 +1,4 @@
+
 import { html, css } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import { cache } from 'lit-html/directives/cache.js';
@@ -495,27 +496,31 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
       /**
        * Icon to be shown for back button. (e.g "close", "arrow_back")
+       * Default value: `close`.
        */
       backIcon: { type: String },
 
       /**
-       * position of back icon (e.g "left" or "right")
+       * position of back icon. Possible values: `left` or `right`.
+       * Default value: `right`.
        */
       backIconPosition: { type: String, reflect: true, attribute: 'back-icon-position' },
 
       /**
        * If it's `true` do not show back icon.
+       * Default: `false`.
        */
       noBackIcon: { type: Boolean },
-      /**
-       * default iconsize is 24
-       */
-      backIconSize: { type: String }, 
 
       /**
-       * default iconsize is 18
+       * Default: `24`.
        */
-      clearIconSize: { type: String }
+      backIconSize: { type: Number }, 
+
+      /**
+       * Default: `18`.
+       */
+      clearIconSize: { type: Number }
     };
   }
 

@@ -390,13 +390,13 @@ export class DwSelect extends DwFormElement(LitElement) {
       
       /**
        * Icon to be shown for back button. (e.g "close", "arrow_back")
-       * Proxy to "dw-select-dialog"
+       * Proxy to "dw-select-dialog". Default value : `close`.
        */
       backIcon: { type: String },
 
       /**
-       * position of back icon (e.g "left" or "right")
-       * Proxy to "dw-select-dialog"
+       * position of back icon. Possible values: `left` or `right`.
+       * Proxy to "dw-select-dialog". Default value: `right`.
        */
       backIconPosition: { type: String, reflect: true, attribute: 'back-icon-position' },
 
