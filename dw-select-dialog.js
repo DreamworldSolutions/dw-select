@@ -681,6 +681,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _renderItem(model) {
+    /* TODO: when model.item.type === "collapsible",  render trail icon*/
     return html`
       ${model.group ? html`<div class="group-label subtitle2">${model.group}</div>` : ''}
       <dw-select-item
@@ -695,6 +696,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .iconSize=${this.listItemIconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
+
+      <!-- TODO: render collapsible sub actions item." -->
+      
     `;
   }
 
@@ -1218,7 +1222,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         return key ? false: true;
       }
       return key === value;
-    });
+     });
   }
 
   _valueKeyGenerator(item) {
@@ -1247,7 +1251,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _itemClicked(e, model) {
+    /* TODO:
+      IF model.item.type === 'collapsible", 
+    */
     this._toggleItem(model.item);
+    
   }
 
   _setFocuAfterItemOpen() {
