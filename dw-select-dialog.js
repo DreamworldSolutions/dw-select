@@ -237,6 +237,12 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           border: 0;
         }
 
+        .expandable{
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.2s ease-out;
+        }
+
         .main-content .items-container .group-label {
           display: flex;
           display: -ms-flexbox;
@@ -681,7 +687,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _renderItem(model) {
-    /* TODO: when model.item.type === "collapsible",  render trail icon*/
     return html`
       ${model.group ? html`<div class="group-label subtitle2">${model.group}</div>` : ''}
       <dw-select-item
@@ -693,12 +698,27 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .disabled=${model.disabled}
         .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
+        .trailIcon=${model.item.trailIcon || (model.item.type === "expandable") ? 'keyboard_arrow_down' : ''}
         .iconSize=${this.listItemIconSize}
-        @click=${(e) => this._itemClicked(e, model)}>
+        @click=${(e) => this._itemClicked(e, model.item)}>
       </dw-select-item>
 
-      <!-- TODO: render collapsible sub actions item." -->
-      
+      ${model.item.type === "expandable" && model.item.subActions && model.item.subActions.length ? html`
+        <div class="expandable">
+          ${repeat(model.item.subActions, (item) => item[this.itemValue], (item, index) => html`
+          <dw-select-item
+            class="item body1"
+            .itemLabel=${this.itemLabel}
+            .itemValue=${this.itemValue}
+            .item=${item}
+            .icon=${item.icon}
+            .iconSize=${item.iconSize}
+            @click=${(e) => this._itemClicked(e, item)}>
+          </dw-select-item>
+          `)}
+        </div>
+      ` : ''}
+
     `;
   }
 
@@ -1250,11 +1270,28 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
-  _itemClicked(e, model) {
-    /* TODO:
-      IF model.item.type === 'collapsible", 
-    */
-    this._toggleItem(model.item);
+  /**
+   * When click on expandable item, expand/collapse it's content.
+   * @param {Object} e Event
+   * @param {Object} item Item
+   */
+  _itemClicked(e, item) {
+    const target = e.target;
+    if (item.type === 'expandable' && item.subActions && item.subActions.length) {
+      target.classList.toggle('expanded');
+      const content = target.nextElementSibling
+      if (content.style.maxHeight){
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      } 
+      return;
+    }
+
+    if (target.parentElement.classList.contains('expandable')) {
+      target.parentElement.style.maxHeight = null;
+    }
+    this._toggleItem(item);
     
   }
 
