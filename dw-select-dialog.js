@@ -237,6 +237,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           border: 0;
         }
 
+        .expandable{
+          height: 0;
+          overflow: hidden;
+        }
+
         .main-content .items-container .group-label {
           display: flex;
           display: -ms-flexbox;
@@ -681,7 +686,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _renderItem(model) {
-    /* TODO: when model.item.type === "collapsible",  render trail icon*/
     return html`
       ${model.group ? html`<div class="group-label subtitle2">${model.group}</div>` : ''}
       <dw-select-item
@@ -693,12 +697,27 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .disabled=${model.disabled}
         .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
+        .trailIcon=${model.item.trailIcon || (model.item.type === "expandable") ? 'keyboard_arrow_down' : ''}
         .iconSize=${this.listItemIconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
 
-      <!-- TODO: render collapsible sub actions item." -->
-      
+      ${model.item.type === "expandable" && model.item.subActions && model.item.subActions.length ? html`
+        <div class="expandable">
+          ${repeat(model.item.subActions, (item) => item[this.itemValue], (item, index) => html`
+          <dw-select-item
+            class="item body1"
+            .itemLabel=${this.itemLabel}
+            .itemValue=${this.itemValue}
+            .item=${item}
+            .icon=${item.icon}
+            .iconSize=${item.iconSize}
+            @click=${(e) => this._itemClicked(e, {item})}>
+          </dw-select-item>
+          `)}
+        </div>
+      ` : ''}
+
     `;
   }
 
@@ -1250,12 +1269,79 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
+  /**
+   * When click on expandable item, expand/collapse it's content.
+   * @param {Object} e Event
+   * @param {Object} model Model
+   */
   _itemClicked(e, model) {
-    /* TODO:
-      IF model.item.type === 'collapsible", 
-    */
-    this._toggleItem(model.item);
+    const target = e.target;
+    const item = model.item;
+    if (item.type === 'expandable' && item.subActions && item.subActions.length) {
+      target.classList.toggle('expanded');
+      const content = target.nextElementSibling
+      if (content.offsetHeight){
+        this._collapseSubItems(content);
+      } else {
+        this._expandSubItems(content);
+      } 
+      return;
+    }
+
+    if (target.parentElement.classList.contains('expandable')) {
+      target.parentElement.style.height = 0;
+    }
+    this._toggleItem(item);
     
+  }
+
+  /**
+   * Expand sub items wrapper.
+   * @param {Object} content Content Element
+   */
+  _expandSubItems(content) {
+    let currentHeight = 0;
+    const targetedHeight = content.scrollHeight;
+    const heightPerFrame = targetedHeight / 10;
+    
+    let id;
+    
+    const expand = () => {
+      if (currentHeight >= targetedHeight) {
+        cancelAnimationFrame(id);
+        return;
+      }
+      currentHeight = currentHeight + heightPerFrame;
+      currentHeight = currentHeight > targetedHeight ? targetedHeight : currentHeight;
+      content.style.height = currentHeight + "px";
+      this.refit();
+      id = requestAnimationFrame(expand);
+    }
+    id = requestAnimationFrame(expand);
+  }
+
+  /**
+   * Collapse sub items wrapper.
+   * @param {Object} content Content element
+   */
+  _collapseSubItems(content) {
+    let currentHeight = content.scrollHeight;
+    const heightPerFrame = currentHeight / 10;
+    let id;
+    
+    const collapse = () => {
+      if (currentHeight <= 0) {
+        cancelAnimationFrame(id);
+        return;
+      }
+      currentHeight = currentHeight - heightPerFrame;
+      currentHeight = currentHeight < 0 ? 0 : currentHeight
+      content.style.height = currentHeight + "px";
+      this.refit();
+      id = requestAnimationFrame(collapse);
+
+    }
+    id = requestAnimationFrame(collapse);
   }
 
   _setFocuAfterItemOpen() {
