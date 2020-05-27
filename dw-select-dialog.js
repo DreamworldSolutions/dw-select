@@ -8,6 +8,8 @@ import { Typography } from '@dreamworld/material-styles/typography'
 import './dw-select-item';
 import '@dreamworld/dw-icon-button'; 
 
+import * as urlUtils from './url-utils';
+
 export class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
     return [
@@ -525,7 +527,30 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       /**
        * Default: `18`.
        */
-      clearIconSize: { type: Number }
+      clearIconSize: { type: Number },
+
+      /**
+       * Input property
+       * Represents name of the query params to be add when dialog is opened
+       * Used to set params in current URL when dialog is opened
+       * Clears added params on dialog close
+       */
+      actionName: { type: String },
+
+      /**
+       * Input property
+       * Represents value of the given `actionName` param
+       * e.g. if actionName is 'action' and `actionValue` is 'edit' then in URL action=edit will be added
+       */
+      actionValue: { type: String },
+
+      /**
+       * Input property
+       * Represents the location at where action params will be added.
+       * Possible values: `hash` or `queryParams`
+       * Default value is `queryParams`
+       */
+      location: { type: String },
     };
   }
 
@@ -567,6 +592,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this.backIconPosition = 'right';
     this.backIconSize = 24;
     this.clearIconSize = 18;
+    this.actionName = '';
+    this.actionValue = '';
+    this.location = 'queryParams';
   }
 
   /**
@@ -755,6 +783,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
     if(changedProps.has('opened') && (this.opened || changedProps.get('opened')) && changedProps.get('opened') !== this.opened) {
       this._triggerOpenedChange();
+      this._updateUrl();
     }
 
     //Scroll Keyboard highlighted item into view when dialog is opened and Keyboard highlighted index is changed and current mode is not mobile .
@@ -1438,6 +1467,21 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     if(!this._applyDisabled) {
       this._triggerValueChange();
     }
+  }
+
+  _updateUrl(){
+    if(!this.actionName){
+      return;
+    }
+
+    let value = this.opened ? this.actionValue : undefined;
+    
+    if(this.location === 'queryParams'){
+      urlUtils.setQueryParam(this.actionName, value);
+      return;
+    }
+
+    urlUtils.setHashParam(this.actionName, value);
   }
 }
 

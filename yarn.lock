@@ -75,6 +75,11 @@
     "@polymer/font-roboto" "^3.0.2"
     lit-element "^2.2.0"
 
+"@dw/urijs-esm@^1.19.1":
+  version "1.19.1"
+  resolved "https://npm.dreamworld.solutions/repository/npm/@dw/urijs-esm/-/urijs-esm-1.19.1.tgz#0ba74390dc7ff193aab308152ab175e7d1b55ed8"
+  integrity sha512-qfQzMYrqU55UmZJ2UYvz81n71lMJdIcmvG7Kqp5l3tAOyNK1TPD8or78Adgqksg67e2TvaL+p3BEBjJZ+1STFQ==
+
 "@material/animation@3.1.0", "@material/animation@^1.0.0", "@material/animation@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@material/animation/-/animation-3.1.0.tgz#ab04e7c2e92ab370a2b28d12af1b88538d23014f"
@@ -3398,7 +3403,6 @@ npm@^6.3.0:
     cmd-shim "^3.0.3"
     columnify "~1.5.4"
     config-chain "^1.1.12"
-    debuglog "*"
     detect-indent "~5.0.0"
     detect-newline "^2.1.0"
     dezalgo "~1.0.3"
@@ -3413,7 +3417,6 @@ npm@^6.3.0:
     has-unicode "~2.0.1"
     hosted-git-info "^2.8.5"
     iferr "^1.0.2"
-    imurmurhash "*"
     infer-owner "^1.0.4"
     inflight "~1.0.6"
     inherits "^2.0.4"
@@ -3432,14 +3435,8 @@ npm@^6.3.0:
     libnpx "^10.2.0"
     lock-verify "^2.1.0"
     lockfile "^1.0.4"
-    lodash._baseindexof "*"
     lodash._baseuniq "~4.6.0"
-    lodash._bindcallback "*"
-    lodash._cacheindexof "*"
-    lodash._createcache "*"
-    lodash._getnative "*"
     lodash.clonedeep "~4.5.0"
-    lodash.restparam "*"
     lodash.union "~4.6.0"
     lodash.uniq "~4.5.0"
     lodash.without "~4.4.0"

@@ -441,6 +441,27 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       triggerButtonSize: { type: Number },
 
+      /**
+       * Input property
+       * Represents name of the query params to be add when dialog is opened
+       */
+      actionName: { type: String },
+
+      /**
+       * Input property
+       * Represents value of the given `actionName` param
+       * e.g. if actionName is 'action' and `actionValue` is 'edit' then in URL action=edit will be added
+       */
+      actionValue: { type: String },
+
+      /**
+       * Input property
+       * Represents the location at where action params will be added.
+       * Possible values: `hash` or `queryParams`
+       * Default value is `queryParams`
+       */
+      location: { type: String },
+
       _dropdownRendered: Boolean
     };
   }
@@ -473,6 +494,9 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.listItemIconSize = 24;
     this.clearIconSize = 18;
     this.readOnly = false;
+    this.actionName = '';
+    this.actionValue = '';
+    this.location = 'queryParams';
   }
 
   /**
@@ -561,6 +585,9 @@ export class DwSelect extends DwFormElement(LitElement) {
         .noBackIcon="${this.noBackIcon}"
         .backIconSize="${this.backIconSize}"
         .clearIconSize="${this.clearIconSize}"
+        .actionName="${this.actionName}"
+        .actionValue="${this.actionValue}"
+        .location="${this.location}"
       ></dw-select-dialog>
     `;
   }
