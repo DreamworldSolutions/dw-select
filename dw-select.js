@@ -1,4 +1,5 @@
-import { LitElement, html, css } from 'lit-element';
+import { html, css } from 'lit-element';
+import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
 import { Typography } from '@dreamworld/material-styles/typography';
 import './dw-select-dialog';
 import '@dreamworld/dw-icon';
