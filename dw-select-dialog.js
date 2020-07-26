@@ -240,6 +240,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .expandable{
           height: 0;
           overflow: hidden;
+          /* Apply indent for sub action */
+          padding: 0px 0px 0px 16px;
         }
 
         .main-content .items-container .group-label {
