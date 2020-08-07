@@ -619,14 +619,8 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       <div class="header">
         ${!this.noHeader ? html` ${this._renderDialogHeader()} ` : ''}
         <div class="input-container ${this.allowFilter ? '' : 'hidden'}">
-          <input
-            id="filter"
-            type="text"
-            class="body2"
-            .placeholder=${this.filterPlaceholder}
-            @input=${this._inputChanged} 
-            .value=${this._filterQuery} />
-            ${this._getClearIcon()}
+          ${this._getSearchInputTemplate}
+          ${this._getClearIcon()}
         </div>
       </div>
       ${this.stickySelectionButtons ? html `${this._renderSelectAllAndResetBtn()}` : html ``}
@@ -648,6 +642,19 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       </div>
       ${this._renderFooter()}
     `;
+  }
+
+  get _getSearchInputTemplate(){
+    return html`
+      <input
+        id="filter"
+        type="text"
+        class="body2"
+        .placeholder=${this.filterPlaceholder}
+        @input=${this._inputChanged} 
+        .value=${this._filterQuery} 
+      />
+    `
   }
 
   _renderSelectAllAndResetBtn(){
