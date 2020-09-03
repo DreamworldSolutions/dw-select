@@ -1244,7 +1244,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   }
 
   _findItemByValue(items, value){
-    return items.find((item) => {
+    return items && items.find((item) => {
       let key = this._valueKeyGenerator(item);
       if(value === this._emptyValue){
         return key ? false: true;
