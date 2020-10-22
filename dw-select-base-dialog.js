@@ -67,6 +67,10 @@ export class DwSelectBaseDialog extends LitElement {
     this.hAlign = 'left';
     this.vAlign = 'top';
   }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._removeDialogKeyEventListeners();
+  }
 
   refit() {
     this.style.height = 'auto';
