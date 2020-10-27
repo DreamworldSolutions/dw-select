@@ -58,6 +58,7 @@ export class DwSelectItem extends LitElement {
       }
 
       :host([disabled]) {
+        pointer-events: none;
         opacity: var(--dw-select-item-disabled-opacity, 0.3);
         cursor: default;
       }
