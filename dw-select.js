@@ -735,11 +735,17 @@ export class DwSelect extends DwFormElement(LitElement) {
     `;
   }
 
-  _onClick() {
+  /**
+   * Invoked when user click trigger element.
+   * When trigger element is icon then wait for icon button ripple is completed then dialog open or close.
+   */
+  async _onClick() {
     if(this.readOnly){
       return;
     }
 
+    let triggerIcon = this.shadowRoot.querySelector('.trigger-icon');
+    triggerIcon && triggerIcon.__waitForEntryAnimation && await triggerIcon.__waitForEntryAnimation;
     this.opened = !this.opened;
   }
 
