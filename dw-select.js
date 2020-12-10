@@ -745,7 +745,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     let triggerIcon = this.shadowRoot.querySelector('.trigger-icon');
-    triggerIcon && triggerIcon.__waitForEntryAnimation && await triggerIcon.__waitForEntryAnimation;
+    triggerIcon && triggerIcon.waitForEntryAnimation && await triggerIcon.waitForEntryAnimation;
     this.opened = !this.opened;
   }
 
