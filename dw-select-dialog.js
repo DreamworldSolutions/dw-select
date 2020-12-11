@@ -1369,7 +1369,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this._updateFilter();
   }
 
-  _backClicked() {
+  /**
+   * Invoked on back button click.
+   * Dialog closed after once icon-button ripple is completed.
+   * @param {Object} e event object
+   */
+  async _backClicked(e) {
+    let target = e.target;
+    target && target.waitForEntryAnimation && await target.waitForEntryAnimation;
     this.close();
   }
 
