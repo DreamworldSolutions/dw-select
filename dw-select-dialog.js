@@ -1377,7 +1377,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
   async _backClicked(e) {
     let target = e.target;
     target && target.waitForEntryAnimation && await target.waitForEntryAnimation;
-    this.close();
+    setTimeout(() => {
+      this.close();
+    }, 2000);
   }
 
   _clearFilter() {
