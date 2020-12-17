@@ -706,7 +706,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .disabled=${model.disabled}
         .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
-        .trailIcon=${model.item.trailIcon || (model.item.type === "expandable") ? 'keyboard_arrow_down' : ''}
+        .trailIcon=${model.item.trailIcon || ((model.item.type === "expandable") ? 'keyboard_arrow_down' : '')}
         .iconSize=${this.listItemIconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
