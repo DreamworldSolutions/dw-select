@@ -300,6 +300,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .main-content .items-container dw-select-item.hidden {
           display: none;
         }
+
+        dw-select-item[has-divider] {
+          border-top: 1px solid var(--dw-select-item-divider-color, rgba(0, 0, 0, .10));
+        }
       `
     ];
   }
@@ -706,6 +710,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .disabled=${model.disabled}
         .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
+        ?has-divider=${model.item.hasDivider}
         .trailIcon=${model.item.trailIcon || ((model.item.type === "expandable") ? 'keyboard_arrow_down' : '')}
         .iconSize=${this.listItemIconSize}
         @click=${(e) => this._itemClicked(e, model)}>
@@ -721,6 +726,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
             .item=${item}
             .icon=${item.icon}
             .iconSize=${item.iconSize}
+            ?has-divider=${model.item.hasDivider}
             @click=${(e) => this._itemClicked(e, {item})}>
           </dw-select-item>
           `)}
