@@ -23,41 +23,41 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@dreamworld/dw-button@update-mwc":
-  version "1.2.0-update-mwc.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-button/-/dw-button-1.2.0-update-mwc.1.tgz#6149c52e022d7ba6c16ab24fa4bd365528de1371"
-  integrity sha512-yMSMA6uwZKaIhGEKsTMm/TK4vhG78Nj/Sh+FVway4XqXpuQHqxCvHGT/3mw/cq4wo32fgb/gr2THPm1VOJ6Lzg==
+"@dreamworld/dw-button@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-button/-/dw-button-2.1.0.tgz#b14881b5dbf70ffbd7d41e1f7b4b52e8ebd38338"
+  integrity sha512-Nlfw9HUEDxcJ07d4I0XUfxMCwB55MwZ0zIAMFsGqfU4mRO1Dm4Jb1JQp5CpaCfJFO6xkIlFXDNcj8pAfgJmwjA==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.0.0"
     "@material/mwc-button" "^0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-form@update-mwc":
-  version "1.5.0-update-mwc.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-1.5.0-update-mwc.1.tgz#fb6b98f339745b1ff03bb0558ae50908113967a0"
-  integrity sha512-offeCxfFFMbqpY6JN457D+luShxcxbwLs0rMVVFh37b3q732J4wMssPBsYt7eaG9OfsNTKbAfm2ljIhaxrBGyQ==
+"@dreamworld/dw-form@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-2.1.0.tgz#e980f82a9a6cb240d4442373c04526ca1658db1c"
+  integrity sha512-AaikcQ5tQjXQvaf3V7YJrrqmEMTND+Zz0vtkSYdfa5qx/NxM8OD09ZZYitTNs075nPPd73gA6eG2FiNoetghnA==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.7.1"
     "@material/mwc-formfield" "^0.20.0"
     lit-element "^2.0.1"
     lodash-es "^4.17.15"
 
-"@dreamworld/dw-icon-button@update-mwc":
-  version "1.6.0-mwc-update.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-1.6.0-mwc-update.1.tgz#63c345caa04d9859816c9e7c6487e05a27b97587"
-  integrity sha512-U/GSd+6bJFGyEJU+qA3Y7FDa4rBxc9gWqWJhpT0Kzo2yNCCU0AjEivxN5DcI1EbrL75CYm0fqbvMK/utlwovgw==
+"@dreamworld/dw-icon-button@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-2.1.0.tgz#09c7841a94ba5925d9f68cab20a4132cef6290f8"
+  integrity sha512-jeAEFVlf7RoiCNTC89rtCEmIH5Hdl50MuuDp1nOWIRzTmn1O5HNJgaHMwg7H49aGRqBSaQawc1p70ll7n74tkQ==
   dependencies:
-    "@dreamworld/dw-icon" update-mwc
+    "@dreamworld/dw-icon" "^2.1.0"
     "@dreamworld/flex-layout" "^1.0.0"
     "@dreamworld/pwa-helpers" "^1.8.0"
     "@dreamworld/web-util" "^1.2.0"
     "@material/mwc-base" "0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-icon@update-mwc":
-  version "1.4.2-update-mwc.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-1.4.2-update-mwc.1.tgz#1bb5ae72ea69d4bc4d6b3e446ac03f0b24ddc073"
-  integrity sha512-rBYhC3kigQG/bbTSLpke8F5HQcoTfXIddB+AVrSJee22NK1vsvoaM1svPE723CNVYS3DVgdOncg5VUxsvStrPA==
+"@dreamworld/dw-icon@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-2.1.0.tgz#2d7061ad6b077514c7970728f296e4f308946e5c"
+  integrity sha512-t/NOOGDKOyS6+Oi8MF4q2OsNqMGipMjlgpO9fgG4TFpel48zd/k6THLTlxpxYzmYyLF7WK2wOzrFVS1kT52U2A==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.7.1"
     "@material/mwc-icon" "0.20.0"
@@ -1190,7 +1190,7 @@ debug@^3.1.0:
   dependencies:
     ms "^2.1.1"
 
-debuglog@*, debuglog@^1.0.1:
+debuglog@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debuglog/-/debuglog-1.0.1.tgz#aa24ffb9ac3df9a2351837cfb2d279360cd78492"
   integrity sha1-qiT/uaw9+aI1GDfPstJ5NgzXhJI=
@@ -2021,7 +2021,7 @@ import-lazy@^2.1.0:
   resolved "https://registry.yarnpkg.com/import-lazy/-/import-lazy-2.1.0.tgz#05698e3d45c88e8d7e9d92cb0584e77f096f3e43"
   integrity sha1-BWmOPUXIjo1+nZLLBYTnfwlvPkM=
 
-imurmurhash@*, imurmurhash@^0.1.4:
+imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha1-khi5srkoojixPcT7a21XbyMUU+o=
@@ -2596,11 +2596,6 @@ lodash-es@^4.17.15:
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.20.tgz#29f6332eefc60e849f869c264bc71126ad61e8f7"
   integrity sha512-JD1COMZsq8maT6mnuz1UMV0jvYD0E0aUsSOdrr1/nAG3dhqQXwRRgeW0cSqH1U43INKcqxaiVIQNOUDld7gRDA==
 
-lodash._baseindexof@*:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/lodash._baseindexof/-/lodash._baseindexof-3.1.0.tgz#fe52b53a1c6761e42618d654e4a25789ed61822c"
-  integrity sha1-/lK1OhxnYeQmGNZU5KJXie1hgiw=
-
 lodash._baseuniq@~4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash._baseuniq/-/lodash._baseuniq-4.6.0.tgz#0ebb44e456814af7905c6212fa2c9b2d51b841e8"
@@ -2609,32 +2604,10 @@ lodash._baseuniq@~4.6.0:
     lodash._createset "~4.0.0"
     lodash._root "~3.0.0"
 
-lodash._bindcallback@*:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/lodash._bindcallback/-/lodash._bindcallback-3.0.1.tgz#e531c27644cf8b57a99e17ed95b35c748789392e"
-  integrity sha1-5THCdkTPi1epnhftlbNcdIeJOS4=
-
-lodash._cacheindexof@*:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/lodash._cacheindexof/-/lodash._cacheindexof-3.0.2.tgz#3dc69ac82498d2ee5e3ce56091bafd2adc7bde92"
-  integrity sha1-PcaayCSY0u5ePOVgkbr9Ktx73pI=
-
-lodash._createcache@*:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/lodash._createcache/-/lodash._createcache-3.1.2.tgz#56d6a064017625e79ebca6b8018e17440bdcf093"
-  integrity sha1-VtagZAF2JeeevKa4AY4XRAvc8JM=
-  dependencies:
-    lodash._getnative "^3.0.0"
-
 lodash._createset@~4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/lodash._createset/-/lodash._createset-4.0.3.tgz#0f4659fbb09d75194fa9e2b88a6644d363c9fe26"
   integrity sha1-D0ZZ+7CddRlPqeK4imZE02PJ/iY=
-
-lodash._getnative@*, lodash._getnative@^3.0.0:
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/lodash._getnative/-/lodash._getnative-3.9.1.tgz#570bc7dede46d61cdcde687d65d3eecbaa3aaff5"
-  integrity sha1-VwvH3t5G1hzc3mh9ZdPuy6o6r/U=
 
 lodash._root@~3.0.0:
   version "3.0.1"
@@ -2670,11 +2643,6 @@ lodash.isstring@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
   integrity sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=
-
-lodash.restparam@*:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.restparam/-/lodash.restparam-3.6.1.tgz#936a4e309ef330a7645ed4145986c85ae5b20805"
-  integrity sha1-k2pOMJ7zMKdkXtQUWYbIWuWyCAU=
 
 lodash.toarray@^4.4.0:
   version "4.4.0"
