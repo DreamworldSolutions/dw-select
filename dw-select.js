@@ -6,6 +6,7 @@ import '@dreamworld/dw-icon';
 import '@dreamworld/dw-icon-button';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element'; 
 import '@dreamworld/dw-button';
+import tippy from 'tippy.js';
 
 /**
  * Trigger for `dw-select-dialog`
@@ -143,7 +144,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       cursor: pointer;
     }
 
-    :host([overlay]) #overlay {
+    :host([overlay][mobile-mode]) #overlay {
       display:block;
     }
 
@@ -155,6 +156,30 @@ export class DwSelect extends DwFormElement(LitElement) {
     :host([readOnly]) .main-container #dropdownContainer .dropdown-input {
       opacity: 0.6;
     }
+
+    .tippy-box:focus {
+        outline: none;
+      }
+
+      .tippy-box[data-animation="dropdown"] {
+        will-change: opacity, transform, transform-origin;
+        animation-name: dropdown;
+        animation-duration: var(--dw-popover-animation-time, 0.3s);
+      }
+
+      @keyframes dropdown {
+        from {
+          opacity: 0;
+          transform-origin: left top;
+          transform: scaleY(0);
+        }
+
+        to {
+          opacity: 1;
+          transform-origin: left top;
+          transform: scaleY(1);
+        }
+      }
     `];
   }
 
@@ -188,98 +213,118 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Input property. The label for this element.
        */
-      label: String,
+      label: { type: String },
 
       /**
        * name of element
        */
-      name: String,
+      name: { type: String},
 
       /**
        * Input property. A placeholder string in addition to the label.
        */
-      placeholder: String,
+      placeholder: { type: String },
       /**
        * Input property. A placeholder string for search/filter input.
        */
-      filterPlaceholder: String,
+      filterPlaceholder: { type: String },
       /**
        * Input property. A full set of items to filter the visible options from. The items can be of either String or Object type.
        */
-      items: Array,
+      items: { type: Array},
 
       /**
        * Input property. Disabled item with message.
        * Proxy to `dw-select-dialog` element.
        * e.g. {'DELETE': 'User has no write permission'}.
        */
-      disabledItems: Object,
+      disabledItems: { type: Object },
 
       /**
        * Input + Output property. True if the dropdown is open, false otherwise.
        */
       opened: { type: Boolean, reflect: true },
       /**
+       * Note: It's deprecated. Use `placement` instead.
        * Input property. The orientation against which to align the menu dropdown horizontally relative to the dropdown trigger.
        * Possible values: "left", "right"
        * Default value: "left"
        */
-      hAlign: String,
+      hAlign: { type: String },
+
       /**
+       * Note: It's deprecated. Use `placement` instead.
        * Input property. The orientation against which to align the menu dropdown vertically relative to the dropdown trigger.
        * Possible values: "top", "bottom"
        * Default value: "top"
        */
-      vAlign: String,
+      vAlign: { type: String },
+
       /**
+       * Input property. Possible values:  `bottom-start` or `bottom-end`
+       * Sets position of dropdown relative to trigger element.
+       */
+      placement: { type: String },
+
+      /**
+       * Note: It's deprecated. Use `offset` instead.
        * Input property. The horizontal offset in pixels. Negtaive numbers allowed.
        * Default value: 0
        */
-      hOffset: Number,
+      hOffset: { type: Number },
+
       /**
+       * Note: It's deprecated. Use `offset` instead.
        * Input property. The vertical offset in pixels. Negtaive numbers allowed.
        * Default value: 0
        */
-      vOffset: Number,
+      vOffset: { type: Number },
+
+      /**
+       * Input property.  e.g `[10, 14]`
+       * Used to set offset of dropdown relative to trigger element.
+       */
+      offset: { type: Array },
+
       /**
        * Input property. By default, it allows multiple selection. when this property is set, it will behave as single select control.
        * Default value: false
        */
-      singleSelect: Boolean,
+      singleSelect: { type: Boolean },
       /**
        * Input property. Path for label of the item. If items is an array of objects, the itemLabel is used to fetch the displayed string label for each item.
        * The item label is also used for matching items when processing user input, i.e., for filtering .
        */
-      itemLabel: String,
+      itemLabel: { type: String },
       /**
        * Input property. Path for the value of the item. If items is an array of objects, the itemValue: is used to fetch the string value for the selected item.
        */
-      itemValue: String,
+      itemValue: { type: String },
 
       /**
        * Input property. drop down item icon size.
        */
-      iconSize: Number,
+      iconSize: { type: Number },
 
       /**
        * Input property. Allows user to filter items by typing query.
        * Default value: false
        */
-      allowFilter: Boolean,
+      allowFilter: { type: Boolean },
       /**
        * Input property. Path for groupBy of the item. i.e "type" in items
        */
-      groupBy: String,
+      groupBy: { type: String },
       /**
        * Input + Output property. The String value for the selected item of the multiselect.
        * It can be of either String or Array type.
        */
-      value: String,
+      value: { type: String },
       /**
        * Output property. The selected item from the items array.
        * It can be of either String, object or Array type.
        */
-      selected: Object,
+      selected: { type: Object },
       /**
        * Input property. Display multiselect in mobile mode (full screen) and no keyboard support
        * Default value: false
@@ -303,21 +348,21 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Input property. The error message to display when invalid.
        */
-      errorMessage: String,
+      errorMessage: { type: String },
       /**
        * Input property. Array of string, to specify orders of group
        * i.e ["CONTACT", "BANK"]
        */
-      groupByOrder: Array,
+      groupByOrder: { type: Array },
       /**
        * Input property. Custom function for rendering group label. Receives one argument:
        * - `value` Value of groupBy key in item
        */
-      groupText: Object,
+      groupText: { type: Object },
       /**
        * Input property. The title for dialog
        */
-      dialogTitle: String,
+      dialogTitle: { type: String },
       /**
        * Input property. Custom function for rendering text of selected items. Receives four arguments:
        * - `items` A full set of items
@@ -325,7 +370,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * - `itemLabel` Path for the label of the item.
        * - `itemValue` Path for the value of the item.
        */
-      selectedItemsText: Object,
+      selectedItemsText: { type: Object },
 
       /**
        * Input property. hide selectAll button
@@ -342,7 +387,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * When true, Show dialog in full screen even if items are very less in mobile mode
        * Default value: false
        */
-      alwaysFullScreenInMobile: Boolean,
+      alwaysFullScreenInMobile: { type: Boolean },
 
       /**
        * Input property.
@@ -370,7 +415,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * The element that should be used to position the element
        */
-      _positionTarget: Object,
+      _positionTarget: { type: Object },
        /**
        * By default, Show all/Reset buttons are not sticky
        * When true, Show all/Reset button are sticky when user scroll items
@@ -442,7 +487,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       triggerButtonSize: { type: Number },
 
-      _dropdownRendered: Boolean
+      _dropdownRendered: { type: Boolean }
     };
   }
 
@@ -483,7 +528,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     if(this.opened || this.readOnly){
       return;
     }
-
     this.opened = true;
   }
 
@@ -588,7 +632,17 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   firstUpdated(changedProps){
     super.updated(changedProps);
-    this._positionTarget = this.shadowRoot.getElementById('dropdownContainer');
+    this._positionTarget = this.renderRoot.getElementById('dropdownContainer');
+  }
+
+  updated(changedProps) {
+    if (changedProps.has('opened')) {
+      if (this.opened && this._positionTarget && !this.mobileMode) {
+        this._showTippy(this._positionTarget);  
+      } else {
+        this._tippyInstance && this._tippyInstance.destroy();
+      }
+    }
   }
 
   connectedCallback() {
@@ -596,9 +650,96 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._addKeyEventListeners();
   }
 
+  /**
+   * @returns {Array} Offset based on `offset`, `hOffset` & `vOffset` properties
+   */
+  __getOffset() {
+    let offset = [0, -(this._positionTarget.offsetHeight)];
+    if (this.offset) {
+      offset = this.offset;
+    } else if (this.hOffset && this.vOffset) {
+      offset = [this.hOffset, this.vOffset];
+    } else if (this.hOffset && !this.vOffset) {
+      offset = [this.hOffset, -(this._positionTarget.offsetHeight)];
+    } else if (!this.hOffset && this.vOffset) {
+      offset = [0, this.vOffset];
+    }
+    return offset;
+  }
+
+  /**
+   * @returns {String} placement of dropdown based on `placement`, `hAlign` & `vAlign` properties.
+   */
+  __getPlacement() {
+    let placement = 'bottom-start';
+    if (this.placement) {
+      placement = this.placement;
+    } else if (this.hAlign || this.vAlign) {
+      placement = `${this.vAlign || 'bottom'}-${this.hAlign === 'left' ? 'start' : 'end'}`;
+    }
+    return placement;
+  }
+
+  /**
+   * Initializes tippy & shows it.
+   * @param {Object} triggerEl Trigger Element
+   */
+  _showTippy(triggerEl) {
+    this._dialog = this.renderRoot.querySelector('dw-select-dialog');
+    const self = this;
+    this._tippyInstance = tippy(triggerEl, {
+      placement: this.__getPlacement(),
+      offset: self.__getOffset(),
+      content: self._dialog,
+      maxWidth: 'none',
+      trigger: 'manual',
+      interactive: true,
+      hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
+      appendTo: 'parent',
+      onClickOutside(instance, event) {
+        const path = event.path;
+        for (let el of path) {
+          if (self._dialog === el) {
+            return;
+          }
+        }
+        self.close();
+      },
+      onCreate() {
+        self.refreshMaxHeight(triggerEl);
+      },
+      onHidden() {
+        if (self._dialog) {
+          self.renderRoot.appendChild(self._dialog);
+          setTimeout(() => {
+            self.opened = false;
+          })
+        }
+      },
+      animation: 'dropdown',
+      popperOptions: {
+        modifiers: [{ name: 'flip', enabled: false }]
+      }
+    });
+    this._tippyInstance.show();
+  }
+
+  /**
+   * Refreshes maximum height of popover dialog based on `triggerElement`'s position.
+   * @param {Object} triggerElement Trigger element.
+   */
+  refreshMaxHeight(triggerElement) {
+    this.updateComplete.then(() => {
+      const dialog = this.renderRoot.querySelector('dw-select-dialog');
+      const maxHeight = `${window.innerHeight - triggerElement.getBoundingClientRect().top}px`;
+      dialog.style.maxHeight = maxHeight;
+    })
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this._removeKeyEventListeners();
+    this._tippyInstance && this._tippyInstance.destroy();
   }
 
   _addKeyEventListeners() {
