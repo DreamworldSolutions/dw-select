@@ -505,7 +505,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.label = '';
     this.dialogTitle = '';
     this.hAlign = 'left';
-    this.vAlign = 'top';
+    this.vAlign = 'bottom';
     this.filterPlaceholder = '';
     this.items = [];
     this.hideResetBtn = false;
@@ -574,6 +574,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _renderSelectDialog() {
     return html`
       <dw-select-dialog
+        id="select-dialog"
         .items=${this.items}
         .disabledItems=${this.disabledItems}
         .itemLabel=${this.itemLabel}
@@ -686,7 +687,7 @@ export class DwSelect extends DwFormElement(LitElement) {
    * @param {Object} triggerEl Trigger Element
    */
   _showTippy(triggerEl) {
-    this._dialog = this.renderRoot.querySelector('dw-select-dialog');
+    this._dialog = this.renderRoot.querySelector('#select-dialog');
     const self = this;
     this._tippyInstance = tippy(triggerEl, {
       placement: this.__getPlacement(),
@@ -731,9 +732,10 @@ export class DwSelect extends DwFormElement(LitElement) {
    */
   refreshMaxHeight(triggerElement) {
     this.updateComplete.then(() => {
-      const dialog = this.renderRoot.querySelector('dw-select-dialog');
       const maxHeight = `${window.innerHeight - triggerElement.getBoundingClientRect().top}px`;
-      dialog.style.maxHeight = maxHeight;
+      if (this._dialog) {
+        this._dialog.style.maxHeight = maxHeight;
+      }
     })
   }
 
