@@ -484,7 +484,13 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       triggerButtonSize: { type: Number },
 
-      _dropdownRendered: { type: Boolean }
+      _dropdownRendered: { type: Boolean },
+
+      /**
+       * Input property. 
+       * When it's provided, renders this template into footer.
+       */
+      customFooterTemplate: { type: Object }
     };
   }
 
@@ -559,7 +565,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     if(this.opened){
       this._dropdownRendered = true;
     }
-
+    
     return html`
       <div id="overlay"></div>
       ${this._renderTriggerElement()}
@@ -604,6 +610,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         .noBackIcon="${this.noBackIcon}"
         .backIconSize="${this.backIconSize}"
         .clearIconSize="${this.clearIconSize}"
+        .customFooterTemplate=${this.customFooterTemplate}
       ></dw-select-dialog>
     `;
   }
