@@ -161,24 +161,20 @@ export class DwSelect extends DwFormElement(LitElement) {
         outline: none;
       }
 
-      .tippy-box[data-animation="dropdown"] {
+      .tippy-box[data-animation="fadeIn"] {
         box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
         will-change: opacity, transform, transform-origin;
-        animation-name: dropdown;
+        animation-name: fadeIn;
         animation-duration: var(--dw-popover-animation-time, 0.3s);
       }
 
-      @keyframes dropdown {
+      @keyframes fadeIn {
         from {
           opacity: 0;
-          transform-origin: left top;
-          transform: scaleY(0);
         }
 
         to {
           opacity: 1;
-          transform-origin: left top;
-          transform: scaleY(1);
         }
       }
     `];
@@ -707,9 +703,6 @@ export class DwSelect extends DwFormElement(LitElement) {
         }
         self.close();
       },
-      onCreate() {
-        self.refreshMaxHeight(triggerEl);
-      },
       onHidden() {
         if (self._dialog) {
           self.renderRoot.appendChild(self._dialog);
@@ -718,25 +711,10 @@ export class DwSelect extends DwFormElement(LitElement) {
           })
         }
       },
-      animation: 'dropdown',
-      popperOptions: {
-        modifiers: [{ name: 'flip', enabled: false }]
-      }
+      animation: 'fadeIn',
+      
     });
     this._tippyInstance.show();
-  }
-
-  /**
-   * Refreshes maximum height of popover dialog based on `triggerElement`'s position.
-   * @param {Object} triggerElement Trigger element.
-   */
-  refreshMaxHeight(triggerElement) {
-    this.updateComplete.then(() => {
-      const maxHeight = `${window.innerHeight - triggerElement.getBoundingClientRect().top}px`;
-      if (this._dialog) {
-        this._dialog.style.maxHeight = maxHeight;
-      }
-    })
   }
 
   disconnectedCallback() {
