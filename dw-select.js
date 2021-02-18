@@ -643,7 +643,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   updated(changedProps) {
     if (changedProps.has('opened')) {
       if (this.opened && this._positionTarget && !this.mobileMode) {
-        this._showTippy(this._positionTarget);  
+        this._openDialog(this._positionTarget);  
       } else {
         this._tippyInstance && this._tippyInstance.destroy();
       }
@@ -689,7 +689,7 @@ export class DwSelect extends DwFormElement(LitElement) {
    * Initializes tippy & shows it.
    * @param {Object} triggerEl Trigger Element
    */
-  _showTippy(triggerEl) {
+  _openDialog(triggerEl) {
     this._dialog = this.renderRoot.querySelector('#select-dialog');
     const self = this;
     this._tippyInstance = tippy(triggerEl, {
