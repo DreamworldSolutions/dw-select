@@ -157,27 +157,32 @@ export class DwSelect extends DwFormElement(LitElement) {
       opacity: 0.6;
     }
 
+    #select-dialog,
+    .tippy-box {
+      border-radius: 4px;
+    }
+
     .tippy-box:focus {
-        outline: none;
+      outline: none;
+    }
+
+    .tippy-box[data-animation="fadeIn"] {
+      box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+      will-change: opacity, transform, transform-origin;
+      animation-name: fadeIn;
+      animation-duration: var(--dw-popover-animation-time, 0.3s);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
       }
 
-      .tippy-box[data-animation="fadeIn"] {
-        box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
-        will-change: opacity, transform, transform-origin;
-        animation-name: fadeIn;
-        animation-duration: var(--dw-popover-animation-time, 0.3s);
+      to {
+        opacity: 1;
       }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-
-        to {
-          opacity: 1;
-        }
-      }
-    `];
+    }
+  `];
   }
 
   /**
