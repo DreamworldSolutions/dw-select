@@ -5,7 +5,7 @@ export class DwSelectBaseDialog extends LitElement {
   
   static get styles() {
     return css`
-    :host {
+    :host([mobile-mode]) {
       position: fixed;
       border-radius: 3px;
       box-shadow: 0px 2px 6px #ccc;
@@ -73,6 +73,9 @@ export class DwSelectBaseDialog extends LitElement {
   }
 
   refit() {
+    if (!this.mobileMode) {
+      return;
+    }
     this.style.height = 'auto';
     let dropdownHeight = this.offsetHeight;
     let dropdownWidth = this.offsetWidth;
@@ -110,59 +113,6 @@ export class DwSelectBaseDialog extends LitElement {
       this.style.transform = 'translate(-50%,-50%)';
       return;
     }
-
-    let clientRect = this.positionTarget.getBoundingClientRect();
-    let left, top, bottom;
-    let alignTop = this._hasNoEnoughBottomSpace(clientRect);
-
-    if(!alignTop) {
-      if(this.vAlign === 'bottom') {
-        top = clientRect.top + clientRect.height;
-      } else {
-        top = clientRect.top;
-      }
-    } else {
-      if(this.vAlign === 'bottom') {
-        bottom = winHeight - clientRect.top;
-      } else {
-        bottom = winHeight - clientRect.top - clientRect.height;
-      }
-    }
-
-    if(this.hAlign === 'right') {
-      left = clientRect.left + clientRect.width - dropdownWidth;
-    } else {
-      left = clientRect.left;
-    }
-
-    if(this.hOffset) {
-      left = left + this.hOffset;
-    }
-    if(!alignTop && this.vOffset) {
-      top = top + this.vOffset;
-    }
-    if(alignTop && this.vOffset) {
-      bottom = bottom + this.vOffset;
-    }
-
-    if(!alignTop) {
-      this.style.top = top + 'px';
-      this.style.bottom = 'initial';
-    } else {
-      this.style.bottom = bottom + 'px';
-      this.style.top = 'initial';
-    }
-
-    this.style.left = left + 'px';
-    this.style.right = 'initial';
-    this.style.transform = 'none';
-    
-    if(!alignTop) {
-      this.style.height = Math.min(winHeight - top, dropdownHeight + 0.1) + 'px';
-    } else {
-      this.style.height = Math.min(winHeight - bottom, dropdownHeight + 0.1) + 'px';
-    }
-
   }
 
   /**

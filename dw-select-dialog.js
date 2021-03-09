@@ -531,7 +531,13 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       /**
        * Default: `18`.
        */
-      clearIconSize: { type: Number }
+      clearIconSize: { type: Number },
+
+      /**
+       * Input property. 
+       * When it's provided, renders this template into footer.
+       */
+      customFooterTemplate: { type: Object }
     };
   }
 
@@ -674,7 +680,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     `
   }
 
-  _renderFooter(){
+  _renderFooter() {
+    if (this.customFooterTemplate) {
+      return html`${this.customFooterTemplate}`
+    }
+
     return html `
       ${!this.singleSelect ? html`
         <div class="footer">
@@ -905,7 +915,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
-  _addResizeEventListeners(){
+  _addResizeEventListeners() {
     this._removeResizeEventListeners();
     window.addEventListener('resize', this._resize);
   }
