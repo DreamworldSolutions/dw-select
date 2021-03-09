@@ -915,7 +915,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
   }
 
-  _addResizeEventListeners(){
+  _addResizeEventListeners() {
     this._removeResizeEventListeners();
     window.addEventListener('resize', this._resize);
   }
