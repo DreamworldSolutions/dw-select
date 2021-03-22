@@ -707,7 +707,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
       appendTo: 'parent',
       onClickOutside(instance, event) {
-        const path = event.path;
+        const path = event.composedPath && event.composedPath() || event.path;
         for (let el of path) {
           if (self._dialog === el) {
             return;
