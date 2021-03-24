@@ -718,7 +718,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           }
           tippyBox.style.overflow = 'auto';
           tippyBox.style.maxHeight = `${maxHeight}px`;
-        }, 300); // Animation duration is 300 milliseconds.
+        }, 0);
       },
       onClickOutside(instance, event) {
         const path = event.composedPath && event.composedPath() || event.path;
