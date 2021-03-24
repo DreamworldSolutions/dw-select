@@ -706,6 +706,20 @@ export class DwSelect extends DwFormElement(LitElement) {
       interactive: true,
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
       appendTo: 'parent',
+      onMount: (instance) => {
+        setTimeout(() => {
+          const tippyBox = instance.popper.querySelector('.tippy-box');
+          const placement = tippyBox.getAttribute('data-placement');
+          let maxHeight;
+          if (placement === 'bottom-start' || placement === 'bottom-end') {
+            maxHeight = window.innerHeight - tippyBox.getBoundingClientRect().top;
+          } else {
+            maxHeight = tippyBox.getBoundingClientRect().bottom;
+          }
+          tippyBox.style.overflow = 'auto';
+          tippyBox.style.maxHeight = `${maxHeight}px`;
+        }, 300); // Animation duration is 300 milliseconds.
+      },
       onClickOutside(instance, event) {
         const path = event.composedPath && event.composedPath() || event.path;
         for (let el of path) {
