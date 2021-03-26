@@ -166,20 +166,36 @@ export class DwSelect extends DwFormElement(LitElement) {
       outline: none;
     }
 
-    .tippy-box[data-animation="fadeIn"] {
+    .tippy-box[data-animation="expand"] {
       box-shadow: 0px 2px 6px #ccc;
-      will-change: opacity, transform, transform-origin;
-      animation-name: fadeIn;
+      will-change: transform, transform-origin;
+      animation-name: expand;
       animation-duration: var(--dw-popover-animation-time, 0.3s);
     }
 
-    @keyframes fadeIn {
+    .tippy-box[data-placement="bottom-start"] {
+      transform-origin: top left;
+    }
+
+    .tippy-box[data-placement="bottom-end"] {
+      transform-origin: top right;
+    }
+
+    .tippy-box[data-placement="top-start"] {
+      transform-origin: bottom left;
+    }
+
+    .tippy-box[data-placement="top-end"] {
+      transform-origin: bottom right;
+    }
+
+    @keyframes expand {
       from {
-        opacity: 0;
+        transform: scale(0, 0)
       }
 
       to {
-        opacity: 1;
+        transform: scaleY(1, 1)
       }
     }
   `];
@@ -267,6 +283,14 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Sets position of dropdown relative to trigger element.
        */
       placement: { type: String },
+
+      /**
+       * Input property.
+       * Name of the animation. At preset only `expand` is supported.
+       * It can be customized only when element is used by extention.
+       * To customize animation apply animatin CSS to `.tippy-box[data-animation="{animation-name}"]` element.
+       */
+      animation: { type: String },
 
       /**
        * Note: It's deprecated. Use `offset` instead.
@@ -527,6 +551,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.listItemIconSize = 24;
     this.clearIconSize = 18;
     this.readOnly = false;
+    this.animation = 'expand';
   }
 
   /**
@@ -718,7 +743,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           }
           tippyBox.style.overflow = 'auto';
           tippyBox.style.maxHeight = `${maxHeight}px`;
-        });
+        }, 50); //tippy.js updates `data-placement` attribute after some time when flip needed. so setting height after 50 milliseconds.
       },
       onClickOutside(instance, event) {
         const path = event.composedPath && event.composedPath() || event.path;
@@ -737,7 +762,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           })
         }
       },
-      animation: 'fadeIn',
+      animation: this.animation,
       
     });
     this._tippyInstance.show();
