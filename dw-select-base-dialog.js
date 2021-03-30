@@ -154,7 +154,6 @@ export class DwSelectBaseDialog extends LitElement {
   }
 
   _addDialogKeyEventListeners() {
-    document.addEventListener('keydown', this._onKeyDown);
     this.addEventListener('click', this._onDialogClick);
 
     let options = {

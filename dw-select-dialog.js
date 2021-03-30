@@ -909,11 +909,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       return;
     }
     this._removeKeyEventListeners();
-    document.addEventListener('keydown', this._onKeyDown);
+    document.addEventListener('keydown', this._onKeyDown, {capture: true});
   }
 
   _removeKeyEventListeners() {
-    document.removeEventListener('keydown', this._onKeyDown);
+    document.removeEventListener('keydown', this._onKeyDown, { capture: true });
   }
 
   _addScrollEventListeners() {
@@ -1065,6 +1065,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
     else if(keyCode === 27) {
       e.preventDefault();
+      e.stopPropagation();
       this._onEscKeyDown();
     }
   }
