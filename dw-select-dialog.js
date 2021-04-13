@@ -96,6 +96,22 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           box-shadow: 0 1px 3px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.24);
         }
 
+        :host(:not([mobile-mode])) .header,
+        :host(:not([mobile-mode])) .footer {
+          position: sticky;
+          z-index: 1;
+        }
+
+        :host(:not([mobile-mode])) .header {
+          background: var(--dw-select-dialog-header-background, #FFF);
+          top: 0;
+        }
+
+        :host(:not([mobile-mode])) .footer {
+          background: var(--dw-select-dialog-footer-background, #FFF);
+          bottom: 0;
+        }
+
         :host([single-select]) .main-content {
           padding-bottom: var(--dw-select-dialog-single-select-padding-bottom, 12px);
         }
@@ -893,11 +909,11 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       return;
     }
     this._removeKeyEventListeners();
-    document.addEventListener('keydown', this._onKeyDown);
+    document.addEventListener('keydown', this._onKeyDown, {capture: true});
   }
 
   _removeKeyEventListeners() {
-    document.removeEventListener('keydown', this._onKeyDown);
+    document.removeEventListener('keydown', this._onKeyDown, { capture: true });
   }
 
   _addScrollEventListeners() {
@@ -1049,6 +1065,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     }
     else if(keyCode === 27) {
       e.preventDefault();
+      e.stopPropagation();
       this._onEscKeyDown();
     }
   }
