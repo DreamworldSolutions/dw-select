@@ -737,7 +737,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       onMount: (instance) => {
         const tippyBox = instance.popper.querySelector('.tippy-box');
         const placement = tippyBox.getAttribute('data-placement');
-        console.log({ placement });
         if (placement === 'bottom-start' || placement === 'bottom-end') {
           const rect = tippyBox.getBoundingClientRect();
           const top = rect.top;
