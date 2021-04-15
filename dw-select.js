@@ -723,7 +723,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._dialog = this.renderRoot.querySelector('#select-dialog');
     const self = this;
     this._tippyInstance = tippy(triggerEl, {
-      placement: this.__getPlacement(),
+      placement: self.__getPlacement(),
       offset: self.__getOffset(),
       content: self._dialog,
       maxWidth: 'none',
@@ -731,19 +731,31 @@ export class DwSelect extends DwFormElement(LitElement) {
       interactive: true,
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
       appendTo: 'parent',
+      popperOptions: {
+        modifiers: [{ name: 'flip', enabled: false }]
+      },
       onMount: (instance) => {
-        setTimeout(() => {
-          const tippyBox = instance.popper.querySelector('.tippy-box');
-          const placement = tippyBox.getAttribute('data-placement');
+        const tippyBox = instance.popper.querySelector('.tippy-box');
+        const placement = tippyBox.getAttribute('data-placement');
+        console.log({ placement });
+        if (placement === 'bottom-start' || placement === 'bottom-end') {
+          const rect = tippyBox.getBoundingClientRect();
+          const top = rect.top;
+          const height = tippyBox.offsetHeight;
+          const viewportHeight = window.innerHeight;
           let maxHeight;
-          if (placement === 'bottom-start' || placement === 'bottom-end') {
-            maxHeight = window.innerHeight - tippyBox.getBoundingClientRect().top;
-          } else {
+          if (((top + height) > viewportHeight / 2) && top > viewportHeight / 2) {
             maxHeight = tippyBox.getBoundingClientRect().bottom;
+            const newPlacement = placement.replace('bottom', 'top');
+            tippyBox.setAttribute('data-placement', newPlacement);
+            instance.setProps({ placement: newPlacement });
+            
+          } else {
+            maxHeight = window.innerHeight - tippyBox.getBoundingClientRect().top;
           }
           tippyBox.style.overflow = 'auto';
           tippyBox.style.maxHeight = `${maxHeight}px`;
-        }, 50); //tippy.js updates `data-placement` attribute after some time when flip needed. so setting height after 50 milliseconds.
+        }
       },
       onClickOutside(instance, event) {
         const path = event.composedPath && event.composedPath() || event.path;
