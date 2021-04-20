@@ -648,7 +648,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _renderTriggerElement() {
     return html `
       <div class="main-container" @click="${this._onClick}">
-        <div id="dropdownContainer" tabindex="0">
+        <div id="dropdownContainer">
           ${this._getTriggerElement()}
         </div>
         ${(!this.customTrigger && !this.triggerIcon && !this.triggerLabel && this.invalid)? html `
