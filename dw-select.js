@@ -163,7 +163,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     .tippy-box {
-      overflow-x: hidden;
+      overflow-x: hidden !important;
     }
 
     .tippy-box:focus {
