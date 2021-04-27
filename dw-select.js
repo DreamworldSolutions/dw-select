@@ -162,6 +162,10 @@ export class DwSelect extends DwFormElement(LitElement) {
       border-radius: 4px;
     }
 
+    .tippy-box {
+      overflow-x: hidden;
+    }
+
     .tippy-box:focus {
       outline: none;
     }
@@ -648,7 +652,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _renderTriggerElement() {
     return html `
       <div class="main-container" @click="${this._onClick}">
-        <div id="dropdownContainer">
+        <div id="dropdownContainer" tabindex="0">
           ${this._getTriggerElement()}
         </div>
         ${(!this.customTrigger && !this.triggerIcon && !this.triggerLabel && this.invalid)? html `
