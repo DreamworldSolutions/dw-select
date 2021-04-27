@@ -206,23 +206,6 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   /**
-   * Fired when the value changes.
-   *
-   * @event value-changed
-   * @type {Object}
-   * @property {String} value - The String value for the selected item of the multiselect.
-   * @property {String} selected - The selected item from the items array.
-   */
-
-  /**
-   * Fired when the opened property changes.
-   *
-   * @event opened-changed
-   * @type {Object}
-   * @property {Boolean} opened - True if the dropdown is open, false otherwise.
-   */
-
-  /**
    * Fired when the invalid property changes.
    *
    * @event invalid-changed
