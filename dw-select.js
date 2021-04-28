@@ -144,7 +144,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       cursor: pointer;
     }
 
-    :host([overlay][mobile-mode]) #overlay {
+    :host(:not([mobile-mode])) #overlay {
+      background: var(--dw-select-popover-overlay-color, transparent);
+    }
+
+    :host([overlay]) #overlay {
       display:block;
     }
 
@@ -947,7 +951,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _openedChanged(e) {
     this.opened = e.detail.opened;
     this._triggerOpenedChange();
-    this._mobileModeOverlay();
+    this.__setOverlay();
   }
 
   _triggerOpenedChange() {
@@ -968,23 +972,13 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.dispatchEvent(invalidChangeEvent);
   }
 
-  /**
-   * Show overlay in modile mode when dialog is opend.
-   * Close overlay when dialog is closed.
+   /**
+   * Shows/hides overlay when dialog is opened/closed.
    * @protected
    */
-  _mobileModeOverlay() {
-    let self = this;
-    self._overlay = false;
-    if(!self.mobileMode || !self.opened) {
-      return;
-    }
-
-    //Show dropdown using animation, So overlay show after some time because remove a jerk.
-    window.setTimeout(()=> {
-      self._overlay = true;
-    }, 100);
-  }
+    __setOverlay() {
+      this._overlay = this.opened;
+   }
 
   _computeSelectedItemsText(items, value, itemLabel, itemValue) {
     if(this.selectedItemsText){
