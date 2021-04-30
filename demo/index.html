@@ -13,16 +13,24 @@
         background: #f3f3f3;
         font-family: 'Roboto';
       }
+
+      .row {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 100px;
+      }
+
     </style>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined&display=block" rel="stylesheet">
   </head>
   <body>
-    <select-demo  style="position: relative; top: 500px; left: 40px;" allow-filter group-by="type"></select-demo>
-    <select-demo  style="position: relative; top: 400px; left: 150px;" single-select value="id2" h-align="right" v-align="bottom"></select-demo>
+    <div class="row">
+      <select-demo group-by="type"></select-demo>
+      <select-demo single-select value="id2" h-align="right" v-align="bottom"></select-demo>
+    </div>
 
-    <div style="height: 1000px;"></div>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
