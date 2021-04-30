@@ -739,7 +739,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           } else {
             maxHeight = window.innerHeight - tippyBox.getBoundingClientRect().top;
           }
-          tippyBox.style.overflow = 'auto';
+          tippyBox.style.overflowY = 'auto';
           tippyBox.style.maxHeight = `${maxHeight}px`;
         }
       },
