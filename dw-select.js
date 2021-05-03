@@ -144,11 +144,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       cursor: pointer;
     }
 
-    :host(:not([mobile-mode])) #overlay {
-      background: var(--dw-select-popover-overlay-color, transparent);
-    }
-
-    :host([overlay]) #overlay {
+    :host([overlay][mobile-mode]) #overlay {
       display:block;
     }
 
