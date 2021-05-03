@@ -178,7 +178,7 @@ export class DwSelectItem extends LitElement {
           <dw-icon style="${styleMap(this._setIconColor(this.item))}" name="${this.icon}" size="${this.iconSize}"></dw-icon>
         </div>
         <div class="content" style="${styleMap(this._setTextColor(this.item))}">${this._getName(this.item, this.itemLabel)}</div>
-        <div class="check-icon">${this.selected ? this._getCheckIcon() : ''}</div>
+        ${this.selected ? html`<div class="check-icon">${this._getCheckIcon()}</div>` : ''}
         ${this.trailIcon ? html`
         <dw-icon class="trail-icon" style="${styleMap(this._setIconColor(this.item))}" name="${this.trailIcon}" size="${this.iconSize}"></dw-icon>
         ` : ''}
