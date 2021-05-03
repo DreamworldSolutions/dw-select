@@ -184,7 +184,7 @@ export class DwSelectItem extends LitElement {
         ` : ''}
       </div>
       ${this._tooltipText ? html`
-        <dw-tooltip .forEl=${this} .content=${this._tooltipText}></dw-tooltip>
+        <dw-tooltip .forEl=${this} .content=${this._tooltipText} .extraOptions=${{delay: 500}}></dw-tooltip>
       ` : ''}
     `;
   }
