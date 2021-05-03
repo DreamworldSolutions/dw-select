@@ -2,6 +2,7 @@ import { html, css } from 'lit-element';
 import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
 import { styleMap } from 'lit-html/directives/style-map.js';
 import '@dreamworld/dw-icon';
+import '@dreamworld/dw-tooltip/dw-tooltip';
 
 export class DwSelectItem extends LitElement {
   
@@ -137,6 +138,11 @@ export class DwSelectItem extends LitElement {
       disabledTooltip: { type: String },
 
       /**
+       * When ellipsis is active, show content into tooltip.
+       */
+       _tooltipText: { type: String },
+
+      /**
        * Input property. Show icon for item.
        */
       icon: { type: String },
@@ -158,9 +164,16 @@ export class DwSelectItem extends LitElement {
     this.selected = false;
   }
 
+  update(changedProps) {
+    if (changedProps.has('item')) {
+      this._setTooltipText();
+    }
+    super.update(changedProps);
+  }
+
   render() {
     return html`
-      <div class="container" title=${this._getToolTipText()}>
+      <div class="container">
         <div class="icon" ?hidden="${!this.icon}">
           <dw-icon style="${styleMap(this._setIconColor(this.item))}" name="${this.icon}" size="${this.iconSize}"></dw-icon>
         </div>
@@ -170,6 +183,9 @@ export class DwSelectItem extends LitElement {
         <dw-icon class="trail-icon" style="${styleMap(this._setIconColor(this.item))}" name="${this.trailIcon}" size="${this.iconSize}"></dw-icon>
         ` : ''}
       </div>
+      ${this._tooltipText ? html`
+        <dw-tooltip .forEl=${this} .content=${this._tooltipText}></dw-tooltip>
+      ` : ''}
     `;
   }
 
@@ -212,15 +228,18 @@ export class DwSelectItem extends LitElement {
   }
 
   /**
-   * @return {String} `disabledTooltip` when item is disabled, otherwise empty string.
+   * @return {String} `disabledTooltip` when it's provided & item is disabled otherwise `itemLabel` if ellipsis applied.
    * @protected
    */
-  _getToolTipText() {
+   async _setTooltipText() {
     if(this.disabled) {
-      return this.disabledTooltip || '';
+      this._tooltipText = this.disabledTooltip || '';
+      return;
     }
 
-    return '';
+    await this.updateComplete;
+    const content = this.renderRoot.querySelector('.content');
+    this._tooltipText = content && (content.offsetWidth < content.scrollWidth) ? this._getName(this.item, this.itemLabel) : '';
   }
 }
 
