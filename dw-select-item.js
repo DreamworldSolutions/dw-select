@@ -122,6 +122,7 @@ export class DwSelectItem extends LitElement {
        * Input property. Path for the value of the item. If items is an array of objects, the itemValue: is used to fetch the string value for the selected item.
        */
       itemValue: { type: String },
+
       /**
        * Input property. True when item is selected
        */
@@ -136,6 +137,11 @@ export class DwSelectItem extends LitElement {
        * Input property. Show tooltip if item is disabled.
        */
       disabledTooltip: { type: String },
+
+      /**
+       * Computed from item.
+       */
+       _title: { type: String },
 
       /**
        * When ellipsis is active, show content into tooltip.
@@ -166,9 +172,16 @@ export class DwSelectItem extends LitElement {
 
   update(changedProps) {
     if (changedProps.has('item')) {
-      this._setTooltipText();
+      this._title = this._getName(this.item, this.itemLabel);
     }
     super.update(changedProps);
+  }
+
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('_title') || changedProps.has('disabledTooltip')) {
+      this._setTooltipText();
+    }
   }
 
   render() {
@@ -177,14 +190,14 @@ export class DwSelectItem extends LitElement {
         <div class="icon" ?hidden="${!this.icon}">
           <dw-icon style="${styleMap(this._setIconColor(this.item))}" name="${this.icon}" size="${this.iconSize}"></dw-icon>
         </div>
-        <div class="content" style="${styleMap(this._setTextColor(this.item))}">${this._getName(this.item, this.itemLabel)}</div>
+        <div class="content" style="${styleMap(this._setTextColor(this.item))}">${this._title}</div>
         ${this.selected ? html`<div class="check-icon">${this._getCheckIcon()}</div>` : ''}
         ${this.trailIcon ? html`
         <dw-icon class="trail-icon" style="${styleMap(this._setIconColor(this.item))}" name="${this.trailIcon}" size="${this.iconSize}"></dw-icon>
         ` : ''}
       </div>
       ${this._tooltipText ? html`
-        <dw-tooltip .forEl=${this} .content=${this._tooltipText} .extraOptions=${{delay: 500}}></dw-tooltip>
+        <dw-tooltip .forEl=${this} .content=${this._tooltipText} .extraOptions=${{delay: [500, 0]}}></dw-tooltip>
       ` : ''}
     `;
   }
@@ -231,15 +244,14 @@ export class DwSelectItem extends LitElement {
    * @return {String} `disabledTooltip` when it's provided & item is disabled otherwise `itemLabel` if ellipsis applied.
    * @protected
    */
-   async _setTooltipText() {
+   _setTooltipText() {
     if(this.disabled) {
       this._tooltipText = this.disabledTooltip || '';
       return;
     }
 
-    await this.updateComplete;
     const content = this.renderRoot.querySelector('.content');
-    this._tooltipText = content && (content.offsetWidth < content.scrollWidth) ? this._getName(this.item, this.itemLabel) : '';
+    this._tooltipText = content && (content.offsetWidth < content.scrollWidth) ? this._title : '';
   }
 }
 
