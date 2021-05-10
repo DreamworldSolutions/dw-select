@@ -1309,7 +1309,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
    * @param {Object} e Event
    * @param {Object} model Model
    */
-   _itemClicked(e, model) {
+  _itemClicked(e, model) {
+    const target = e.target;
+    const item = model.item;
+    
     if (this.singleSelect && item.type !== 'expandable') {
       if (this._preventItemClick) {
         return;
@@ -1319,8 +1322,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       setTimeout(() => { this._preventItemClick = false; }, 1000);
     }
 
-    const target = e.target;
-    const item = model.item;
     if (item.type === 'expandable' && item.subActions && item.subActions.length) {
       target.classList.toggle('expanded');
       const content = target.nextElementSibling
