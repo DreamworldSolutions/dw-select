@@ -1305,12 +1305,23 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   /**
    * When click on expandable item, expand/collapse it's content.
+   * When single select, prevents second click for 1 second after first click.
    * @param {Object} e Event
    * @param {Object} model Model
    */
   _itemClicked(e, model) {
     const target = e.target;
     const item = model.item;
+    
+    if (this.singleSelect && item.type !== 'expandable') {
+      if (this._preventItemClick) {
+        return;
+      }
+  
+      this._preventItemClick = true;
+      setTimeout(() => { this._preventItemClick = false; }, 1000);
+    }
+
     if (item.type === 'expandable' && item.subActions && item.subActions.length) {
       target.classList.toggle('expanded');
       const content = target.nextElementSibling

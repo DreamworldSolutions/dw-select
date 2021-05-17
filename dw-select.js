@@ -593,6 +593,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _renderSelectDialog() {
     return html`
       <dw-select-dialog
+        @click=${(e) => { e.stopPropagation()}}
         id="select-dialog"
         .items=${this.items}
         .disabledItems=${this.disabledItems}
