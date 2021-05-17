@@ -63,6 +63,15 @@
     "@material/mwc-icon" "0.20.0"
     lit-element "^2.2.0"
 
+"@dreamworld/dw-tooltip@true2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-2.1.0.tgz#95f0ca13fd328b040043c4dd87596bdeb6329975"
+  integrity sha512-nxjF4YXbCWpLPIkh3mOFyET5Zwa/c9XjvxL8Fmmnvnoo/wWxIjeW7p4Ym2YtMXrqwQnRFogTmwH5Pnj9C0C71w==
+  dependencies:
+    "@dreamworld/pwa-helpers" "^1.7.1"
+    lit-element "^2.2.0"
+    tippy.js "^6.2.7"
+
 "@dreamworld/flex-layout@^1.0.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/flex-layout/-/flex-layout-1.1.1.tgz#89ddedc09292b7e2a55271126ca9f83501595a15"
