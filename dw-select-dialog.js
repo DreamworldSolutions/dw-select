@@ -8,7 +8,6 @@ import { Typography } from '@dreamworld/material-styles/typography'
 import './dw-select-item';
 import '@dreamworld/dw-icon-button'; 
 import throttle from 'lodash-es/throttle';
-const ITEM_CLICK_THROTTLE_TIME = 300;
 
 export class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
@@ -566,7 +565,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onScroll = this._onScroll.bind(this);
     this._updateScrolledFlags = this._updateScrolledFlags.bind(this);
-    this._itemClicked = throttle(this._itemClicked.bind(this), ITEM_CLICK_THROTTLE_TIME, { trailing: false });
     this._selectedMap = {};
     this.opened = false;
     this.singleSelect = false;
@@ -622,6 +620,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   connectedCallback() {
     super.connectedCallback();
+    const throttleTimeout = this.singleSelect ? 1000 : 0; // When signle select, prevents another click for 1 second.
+    this._itemClicked = throttle(this._itemClicked.bind(this), throttleTimeout, { trailing: false });
+
     if(!this.opened) {
       return;
     }
