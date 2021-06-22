@@ -593,7 +593,6 @@ export class DwSelect extends DwFormElement(LitElement) {
   _renderSelectDialog() {
     return html`
       <dw-select-dialog
-        @click=${(e) => { e.stopPropagation()}}
         id="select-dialog"
         .items=${this.items}
         .disabledItems=${this.disabledItems}
@@ -655,7 +654,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   firstUpdated(changedProps){
     super.updated(changedProps);
-    this._positionTarget = this.renderRoot.getElementById('dropdownContainer');
+    this._positionTarget = this.renderRoot.querySelector('.main-container');
   }
 
   updated(changedProps) {
