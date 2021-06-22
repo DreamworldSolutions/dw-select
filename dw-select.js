@@ -654,7 +654,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   firstUpdated(changedProps){
     super.updated(changedProps);
-    this._positionTarget = this.renderRoot.getElementById('dropdownContainer');
+    this._positionTarget = this.renderRoot.querySelector('.main-container');
   }
 
   updated(changedProps) {
