@@ -7,6 +7,7 @@ import { DwSelectBaseDialog } from './dw-select-base-dialog';
 import { Typography } from '@dreamworld/material-styles/typography'
 import './dw-select-item';
 import '@dreamworld/dw-icon-button'; 
+import throttle from 'lodash-es/throttle';
 
 export class DwSelectDialog extends DwSelectBaseDialog {
   static get styles() {
@@ -619,6 +620,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   connectedCallback() {
     super.connectedCallback();
+    const throttleTimeout = this.singleSelect ? 1000 : 0; // When signle select, prevents another click for 1 second.
+    this._itemClicked = throttle(this._itemClicked.bind(this), throttleTimeout, { trailing: false });
+
     if(!this.opened) {
       return;
     }
@@ -1313,15 +1317,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     const target = e.target;
     const item = model.item;
     
-    if (this.singleSelect && item.type !== 'expandable') {
-      if (this._preventItemClick) {
-        return;
-      }
-  
-      this._preventItemClick = true;
-      setTimeout(() => { this._preventItemClick = false; }, 1000);
-    }
-
     if (item.type === 'expandable' && item.subActions && item.subActions.length) {
       target.classList.toggle('expanded');
       const content = target.nextElementSibling
