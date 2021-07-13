@@ -105,11 +105,13 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
         :host(:not([mobile-mode])) .header {
           background: var(--dw-select-dialog-header-background, #FFF);
+          border-bottom: 1px solid var(--dw-select-divider-color, var(--divider-color, rgba(0, 0, 0, .10)));
           top: 0;
         }
 
         :host(:not([mobile-mode])) .footer {
           background: var(--dw-select-dialog-footer-background, #FFF);
+          border-top: 1px solid var(--dw-select-divider-color, var(--divider-color, rgba(0, 0, 0, .10)));
           bottom: 0;
         }
 
@@ -143,6 +145,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           font-weight: var(--dw-select-dialog-menu-header-title-font-weight, 400);
           font-size: var(--dw-select-dialog-menu-header-title-font-size, 16px);
           line-height: var(--dw-select-dialog-menu-header-title-line-height, 28px);
+          letter-spacing: var(--dw-select-dialog-menu-header-title-letter-spacing, 0.5px);
           padding: var(--dw-select-dialog-menu-header-title-padding, 0px);
           margin: var(--dw-select-dialog-menu-header-title-margin, 0px);
         }
@@ -732,7 +735,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     return html`
       ${model.group ? html`<div class="group-label subtitle2">${model.group}</div>` : ''}
       <dw-select-item
-        class="item body1 ${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
+        class="item ${model.hidden ? 'hidden' : ''} ${model.kbHighlighted ? 'kb-highlighted' : ''}"
         .itemLabel=${this.itemLabel}
         .itemValue=${this.itemValue}
         .selected=${model.selected}

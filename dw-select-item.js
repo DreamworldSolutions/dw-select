@@ -20,9 +20,10 @@ export class DwSelectItem extends LitElement {
         -webkit-align-items: center;
         box-sizing: border-box;
         cursor: pointer;
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 400;
+        font-size: var(--dw-select-item-font-size, var(--body1-font-size, 16px));
+        line-height: var(--dw-select-item-line-height, var(--body1-line-height, 16px));
+        font-weight: var(--dw-select-item-font-weight, var(--body1-font-weight, 400));
+        letter-spacing: var(--dw-select-item-letter-spacing, var(--body1-letter-spacing, 0.5px));
         min-height: var(--dw-select-item-height, 48px);
         color: var(--dw-select-item-color, var(--primary-text-color));
       }
