@@ -753,7 +753,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         <div class="expandable">
           ${repeat(model.item.subActions, (item) => item[this.itemValue], (item, index) => html`
           <dw-select-item
-            class="item body1"
+            class="item"
             .itemLabel=${this.itemLabel}
             .itemValue=${this.itemValue}
             .item=${item}
