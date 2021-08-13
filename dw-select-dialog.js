@@ -623,7 +623,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
   connectedCallback() {
     super.connectedCallback();
-    const throttleTimeout = this.singleSelect ? 1000 : 0; // When signle select, prevents another click for 1 second.
+    const throttleTimeout = this.singleSelect ? 500 : 0; // When signle select, prevents another click for 1 second.
     this._itemClicked = throttle(this._itemClicked.bind(this), throttleTimeout, { trailing: false });
 
     if(!this.opened) {
