@@ -10,13 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dreamworld/dw-button": "^2.1.0",
-    "@dreamworld/dw-form": "^2.1.0",
-    "@dreamworld/dw-icon": "^2.1.0",
+    "@dreamworld/dw-button": "^2.1.2",
+    "@dreamworld/dw-form": "^2.2.1",
+    "@dreamworld/dw-icon": "^2.1.1",
     "@dreamworld/dw-icon-button": "^2.1.0",
     "@dreamworld/dw-tooltip": "2.1.0",
     "@dreamworld/material-styles": "1.0.1",
-    "@dreamworld/pwa-helpers": "^1.7.1",
+    "@dreamworld/pwa-helpers": "^1.11.1",
     "lit-element": "^2.2.0",
     "lodash-es": "^4.17.15",
     "tippy.js": "^6.2.7"

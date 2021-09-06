@@ -23,19 +23,19 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@dreamworld/dw-button@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-button/-/dw-button-2.1.0.tgz#b14881b5dbf70ffbd7d41e1f7b4b52e8ebd38338"
-  integrity sha512-Nlfw9HUEDxcJ07d4I0XUfxMCwB55MwZ0zIAMFsGqfU4mRO1Dm4Jb1JQp5CpaCfJFO6xkIlFXDNcj8pAfgJmwjA==
+"@dreamworld/dw-button@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-button/-/dw-button-2.1.2.tgz#1e7f050edc73b2c06c0b709b275085bc4795f5f8"
+  integrity sha512-pgE0KxvOFg7m1stj5B+j2LYboqqDhiWfqjWxwc6RHTl9Ap/2JNULTAAC5EBBKqYhqx6aUmsi2xjcpURF5L8Nnw==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.0.0"
     "@material/mwc-button" "^0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-form@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-2.1.0.tgz#e980f82a9a6cb240d4442373c04526ca1658db1c"
-  integrity sha512-AaikcQ5tQjXQvaf3V7YJrrqmEMTND+Zz0vtkSYdfa5qx/NxM8OD09ZZYitTNs075nPPd73gA6eG2FiNoetghnA==
+"@dreamworld/dw-form@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-2.2.1.tgz#4f5e3f0d27faa95b6b6371977142a96e32c99ef3"
+  integrity sha512-1zNstmC5fSy0MFuFp5RE1luvrcyqZrMNLBIMmNkIQ2lZUCWp4UCv0iwlLbnVtfWLps9dGT/5uNI0Niwg0PkJpQ==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.7.1"
     "@material/mwc-formfield" "^0.20.0"
@@ -54,16 +54,16 @@
     "@material/mwc-base" "0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-icon@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-2.1.0.tgz#2d7061ad6b077514c7970728f296e4f308946e5c"
-  integrity sha512-t/NOOGDKOyS6+Oi8MF4q2OsNqMGipMjlgpO9fgG4TFpel48zd/k6THLTlxpxYzmYyLF7WK2wOzrFVS1kT52U2A==
+"@dreamworld/dw-icon@^2.1.0", "@dreamworld/dw-icon@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-2.1.1.tgz#3b63c9a696e8e9080aba4b13f93068c93004524f"
+  integrity sha512-R34QUIRS1hBTWpPYsOCLtWeNh0k09ReYEdoItHfg01LytyH+McUvjqztsM1z3gs6/1LtatHtlXB7/0rIeQvTTA==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.7.1"
     "@material/mwc-icon" "0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-tooltip@true2.1.0":
+"@dreamworld/dw-tooltip@2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-2.1.0.tgz#95f0ca13fd328b040043c4dd87596bdeb6329975"
   integrity sha512-nxjF4YXbCWpLPIkh3mOFyET5Zwa/c9XjvxL8Fmmnvnoo/wWxIjeW7p4Ym2YtMXrqwQnRFogTmwH5Pnj9C0C71w==
@@ -87,10 +87,10 @@
     "@polymer/font-roboto" "^3.0.2"
     lit-element "^2.2.0"
 
-"@dreamworld/pwa-helpers@^1.0.0", "@dreamworld/pwa-helpers@^1.7.1", "@dreamworld/pwa-helpers@^1.8.0":
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/pwa-helpers/-/pwa-helpers-1.11.0.tgz#d3cff515e26631b04bf14c43affb9f590e914697"
-  integrity sha512-3mXD7FfbgKInoAlIJo9zJqOfsPBM8/Lbg2OYNDtAMjTnjesLh0TtsoHjrTqqpGIow/mA/e3leAO8AV3yueDfhQ==
+"@dreamworld/pwa-helpers@^1.0.0", "@dreamworld/pwa-helpers@^1.11.1", "@dreamworld/pwa-helpers@^1.7.1", "@dreamworld/pwa-helpers@^1.8.0":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/pwa-helpers/-/pwa-helpers-1.11.1.tgz#6ac8d465ff4e41a294c9a83bc9244f6397d7f197"
+  integrity sha512-WpXKkTNAiVSao2O+lAhGAku0Ri0ABlMy5sz/EgZNZNlwYCJ+2swgyFdlpijlf9G8RG/L7WzlPzb1dzGWbU1fkQ==
   dependencies:
     bowser "^2.8.1"
     lit-element "^2.2.1"
