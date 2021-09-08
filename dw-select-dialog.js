@@ -264,6 +264,14 @@ export class DwSelectDialog extends DwSelectBaseDialog {
           padding: 0px 0px 0px 16px;
         }
 
+        .item.expanded {
+          border-top: 1px solid var(--submenu-border-color, rgba(0, 0, 0, .10));
+        }
+
+        .expandable.expanded {
+          border-bottom: 1px solid var(--submenu-border-color, rgba(0, 0, 0, .10));
+        }
+
         .main-content .items-container .group-label {
           display: flex;
           display: -ms-flexbox;
@@ -1321,6 +1329,9 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     const item = model.item;
     
     if (item.type === 'expandable' && item.subActions && item.subActions.length) {
+      if (!target.classList.contains('expanded')) {
+        this.__collapseAllItems();
+      }
       target.classList.toggle('expanded');
       const content = target.nextElementSibling
       if (content.offsetHeight){
@@ -1348,7 +1359,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     const heightPerFrame = targetedHeight / 10;
     
     let id;
-    
+    content.classList.add('expanded');
     const expand = () => {
       if (currentHeight >= targetedHeight) {
         cancelAnimationFrame(id);
@@ -1371,7 +1382,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     let currentHeight = content.scrollHeight;
     const heightPerFrame = currentHeight / 10;
     let id;
-    
+    content.classList.remove('expanded');
     const collapse = () => {
       if (currentHeight <= 0) {
         cancelAnimationFrame(id);
@@ -1385,6 +1396,20 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
     }
     id = requestAnimationFrame(collapse);
+  }
+
+  /**
+   * Collapses all expanded items 
+   */
+   __collapseAllItems() {
+     const expandedEls = this.renderRoot.querySelectorAll('.expandable.expanded');
+     if (expandedEls) {
+      for (let el of expandedEls) {
+        const item = el.previousElementSibling;
+        item.trailIcon = 'keyboard_arrow_down';
+        el && el.classList.remove('expanded');
+       }
+     }
   }
 
   _setFocuAfterItemOpen() {
