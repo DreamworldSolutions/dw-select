@@ -63,10 +63,10 @@
     "@material/mwc-icon" "0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-tooltip@^2.2.0-upgrade-version.1":
-  version "2.2.0-upgrade-version.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-2.2.0-upgrade-version.1.tgz#4118c07ff7bedeb54bcf8162982a7541cff10dda"
-  integrity sha512-C8bEJ4vo0tV/FkChvRL+4vlVSEFwPPqnCNHeS2SNlwyFhtFfc/17qh6BnP8dwjMtQlFLtTMjm9F+K8RiaIanKg==
+"@dreamworld/dw-tooltip@^2.2.0-development.2":
+  version "2.2.0-development.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-2.2.0-development.2.tgz#b8ed0747029212ae66440aaaeb0cd1135575beae"
+  integrity sha512-PQAGSgbnULiswLSrGUOCrvKgfLUsKFBmb3hrf90/FAg74DBewxmWFCyKXa5+m7ze9g+0jaJS3dTpM/u9Gj5QDQ==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.11.1"
     lit-element "^2.2.0"
