@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@dreamworld/dw-button": "^2.2.0-upgrade-version.1",
-    "@dreamworld/dw-form": "^2.3.0-upgrade-version.1",
+    "@dreamworld/dw-form": "^2.3.0-development.2",
     "@dreamworld/dw-icon": "^2.2.0-upgrade-version.1",
     "@dreamworld/dw-icon-button": "^2.2.0-upgrade-version.2",
     "@dreamworld/dw-tooltip": "^2.2.0-upgrade-version.1",

@@ -32,10 +32,10 @@
     "@material/mwc-button" "^0.20.0"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-form@^2.3.0-upgrade-version.1":
-  version "2.3.0-upgrade-version.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-2.3.0-upgrade-version.1.tgz#6a10e098dbdc29c5f48a3513da8317ca8d381283"
-  integrity sha512-EkblAGTMV6tr6HOHuOw4VsTU5JN4gDuk1k832M5uLW309SWq84GGmQC1fx38MiBTAUsK7o/7VeXc7YWeh4PIBw==
+"@dreamworld/dw-form@^2.3.0-development.2":
+  version "2.3.0-development.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-2.3.0-development.2.tgz#567eafc010891ef088c50e5f068f143831ec3db5"
+  integrity sha512-dfo6OIGAuhufIelRIMfswZze3QjiH6vJgd/0NzmiHlVJwgus6NqnxBu8C+DcpKbZPn2Hikx47e9kkjAbpR09BA==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.11.1"
     "@material/mwc-formfield" "^0.20.0"
