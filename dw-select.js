@@ -35,6 +35,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     .main-container {
       display: inline-block;
+      width: 100%;
     }
 
     :host([trigger-icon]) .main-container #dropdownContainer, 
