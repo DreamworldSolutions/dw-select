@@ -154,7 +154,7 @@ export class DwSelectBaseDialog extends LitElement {
   }
 
   _addDialogKeyEventListeners() {
-    this.addEventListener('click', this._onDialogClick);
+    this.addEventListener('mousedown', this._onDialogClick);
 
     let options = {
       capture: true,
@@ -170,7 +170,7 @@ export class DwSelectBaseDialog extends LitElement {
 
     setTimeout(() => {
       if(this.opened) {
-        document.addEventListener('click', this._onCaptureClick);
+        document.addEventListener('mousedown', this._onCaptureClick);
       }
     });
   }
@@ -180,8 +180,8 @@ export class DwSelectBaseDialog extends LitElement {
       capture: true,
       passive: false
     };
-    this.removeEventListener('click', this._onDialogClick);
-    document.removeEventListener('click', this._onCaptureClick);
+    this.removeEventListener('mousedown', this._onDialogClick);
+    document.removeEventListener('mousedown', this._onCaptureClick);
     document.removeEventListener('wheel', this._boundScrollHandler, options);
     document.removeEventListener('mousewheel', this._boundScrollHandler, options);
     document.removeEventListener('DOMMouseScroll', this._boundScrollHandler, options);
