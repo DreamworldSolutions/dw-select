@@ -187,8 +187,11 @@ export class DwSelectBaseDialog extends LitElement {
     document.removeEventListener('DOMMouseScroll', this._boundScrollHandler, options);
   }
 
-  _onCaptureClick(e) {
-    this.close();
+  /**
+   * When mobile mode, closes dialog on outside click.
+   */
+  _onCaptureClick() {
+    this.mobileMode && this.close();
   }
 
   _onDialogClick(e) {
