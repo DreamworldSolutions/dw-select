@@ -16,7 +16,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   static get styles() {
     return [Typography, css`
     :host {
-      display: block;
+      display: inline-block;
       box-sizing: border-box;
       width: var(--dw-select-width, 250px);
       --dw-select-error-color: var(--error-color);
@@ -30,23 +30,22 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     :host([trigger-icon]), :host([trigger-label]), :host([custom-trigger]) {
-      width: var(--dw-select-width, auto);
+      width: var(--dw-select-width, 100%);
+    }
+
+    .main-container {
+      display: inline-block;
+      width: 100%;
     }
 
     :host([trigger-icon]) .main-container #dropdownContainer, 
     :host([trigger-label]) .main-container #dropdownContainer, 
     .main-container #dropdownContainer .trigger-icon, 
     .main-container #dropdownContainer .trigger-label {
-      display: flex;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      flex-direction: row;
-      -ms-flex-direction: row;
-      -webkit-flex-direction: row;
+      display: inline-flex;
       align-items: center;
-      -ms-flex-align: center;
-      -webkit-align-items: center;
       box-sizing: border-box;
+      width: 100%;
     }
 
     .main-container #dropdownContainer .trigger-icon, .main-container #dropdownContainer .trigger-label {
