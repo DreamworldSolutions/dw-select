@@ -30,7 +30,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     :host([trigger-icon]), :host([trigger-label]), :host([custom-trigger]) {
-      width: var(--dw-select-width, auto);
+      width: var(--dw-select-width, 100%);
     }
 
     .main-container {
@@ -45,6 +45,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       display: inline-flex;
       align-items: center;
       box-sizing: border-box;
+      width: 100%;
     }
 
     .main-container #dropdownContainer .trigger-icon, .main-container #dropdownContainer .trigger-label {
