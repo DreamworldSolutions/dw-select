@@ -715,7 +715,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       trigger: 'manual',
       interactive: true,
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
-      appendTo: 'parent',
+      appendTo: document.body,
       popperOptions: {
         modifiers: [{ name: 'flip', enabled: false }]
       },
