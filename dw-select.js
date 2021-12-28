@@ -42,8 +42,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     :host([trigger-label]) .main-container #dropdownContainer, 
     .main-container #dropdownContainer .trigger-icon, 
     .main-container #dropdownContainer .trigger-label {
-      display: inline-flex;
-      align-items: center;
+      display: inline-block;
       box-sizing: border-box;
       width: 100%;
     }
@@ -716,7 +715,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       trigger: 'manual',
       interactive: true,
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
-      appendTo: 'parent',
+      appendTo: document.body,
       popperOptions: {
         modifiers: [{ name: 'flip', enabled: false }]
       },
