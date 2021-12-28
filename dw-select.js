@@ -249,6 +249,13 @@ export class DwSelect extends DwFormElement(LitElement) {
       appendTo: { type: Object },
 
       /**
+       * Input property.
+       * This work only if `mobileMode` property is false.
+       * Dropdown element z-index, default value is 9999.
+       */
+      zIndex: { type: Number },
+
+      /**
        * The element that should be used to position the element
        */
       _positionTarget: { type: Object },
@@ -363,6 +370,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.readOnly = false;
     this.animation = 'expand';
     this.appendTo = 'parent';
+    this.zIndex = 9999;
   }
 
   /**
@@ -539,6 +547,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       content: self._dialog,
       maxWidth: 'none',
       trigger: 'manual',
+      zIndex: this.zIndex,
       interactive: true,
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
       appendTo: this.appendTo,
