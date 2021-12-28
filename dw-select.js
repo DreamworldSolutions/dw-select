@@ -424,6 +424,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       triggerLabel: {type: String, reflect: true, attribute: 'trigger-label'},
 
       /**
+       * dropdon element in which content will be appened. Default is parent element of trigger element.
+       */
+      appendTo: { type: Object },
+
+      /**
        * The element that should be used to position the element
        */
       _positionTarget: { type: Object },
@@ -537,6 +542,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.clearIconSize = 18;
     this.readOnly = false;
     this.animation = 'expand';
+    this.appendTo = 'parent';
   }
 
   /**
@@ -715,7 +721,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       trigger: 'manual',
       interactive: true,
       hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
-      appendTo: 'parent',
+      appendTo: this.appendTo,
       popperOptions: {
         modifiers: [{ name: 'flip', enabled: false }]
       },
