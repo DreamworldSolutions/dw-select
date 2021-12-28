@@ -150,6 +150,10 @@ export const dwSelectStyle = css`
   :host([readOnly]) .main-container #dropdownContainer .dropdown-input {
     opacity: 0.6;
   }
+
+  #select-dialog {
+    border-radius: 4px;
+  }
 `;
 
 export const externalStyle = css`
