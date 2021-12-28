@@ -424,7 +424,9 @@ export class DwSelect extends DwFormElement(LitElement) {
       triggerLabel: {type: String, reflect: true, attribute: 'trigger-label'},
 
       /**
-       * dropdon element in which content will be appened. Default is parent element of trigger element.
+       * Input property.
+       * This work only if `mobileMode` property is false.
+       * Dropdown element in which content will be appened. Default is parent element of trigger element.
        */
       appendTo: { type: Object },
 
