@@ -100,11 +100,7 @@ export const dwSelectStyle = css`
     white-space: nowrap;
   }
 
-  .main-container
-    #dropdownContainer
-    .dropdown-input
-    .value-container
-    .placeholder {
+  .main-container #dropdownContainer .dropdown-input .value-container .placeholder {
     color: var(--dw-select-placeholder-color);
   }
 
