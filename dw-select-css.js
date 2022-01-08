@@ -82,17 +82,8 @@ export const dwSelectStyle = css`
 
   .main-container #dropdownContainer .dropdown-input {
     display: flex;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    flex-direction: row;
-    -ms-flex-direction: row;
-    -webkit-flex-direction: row;
     align-items: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
     justify-content: space-between;
-    -ms-flex-pack: space-between;
-    -webkit-justify-content: space-between;
     border-bottom: 1px solid var(--dw-select-border-color);
   }
 
