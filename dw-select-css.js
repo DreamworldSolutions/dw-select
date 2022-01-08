@@ -2,7 +2,7 @@ import { css } from "lit-element";
 
 export const dwSelectStyle = css`
   :host {
-    display: inline-block;
+    display: flex;
     box-sizing: border-box;
     width: var(--dw-select-width, 250px);
     --dw-select-error-color: var(--error-color);
@@ -18,21 +18,16 @@ export const dwSelectStyle = css`
   :host([trigger-icon]),
   :host([trigger-label]),
   :host([custom-trigger]) {
-    width: var(--dw-select-width, 100%);
-  }
-
-  .main-container {
-    display: inline-block;
-    width: 100%;
+    width: var(--dw-select-width, auto);
   }
 
   :host([trigger-icon]) .main-container #dropdownContainer,
   :host([trigger-label]) .main-container #dropdownContainer,
   .main-container #dropdownContainer .trigger-icon,
   .main-container #dropdownContainer .trigger-label {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     box-sizing: border-box;
-    width: 100%;
   }
 
   .main-container #dropdownContainer .trigger-icon,
@@ -153,6 +148,10 @@ export const dwSelectStyle = css`
 
   #select-dialog {
     border-radius: 4px;
+  }
+
+  [data-tippy-root] {
+    position: absolute;
   }
 `;
 
