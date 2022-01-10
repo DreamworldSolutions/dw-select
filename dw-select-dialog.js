@@ -791,7 +791,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       if(openedChanged) {
         this._clearFilter();
       }
-      if(openedChanged || changedProps.has('items') || changedProps.has('value')) {
+      if(openedChanged || changedProps.has('value')) {
         this._copyInputValue();
         this._resetKbHighlightIndex();
       }
