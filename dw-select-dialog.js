@@ -749,6 +749,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .selected=${model.selected}
         .item=${model.item}
         .disabled=${model.disabled}
+        .outlinedIcon=${model.item.outlinedIcon}
         .disabledTooltip=${model.disabledTooltip}
         .icon=${model.item.icon}
         ?has-divider=${model.item.hasDivider}
@@ -767,6 +768,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
             .item=${item}
             .icon=${item.icon}
             .iconSize=${item.iconSize}
+            .outlinedIcon=${item.outlinedIcon}
             ?has-divider=${model.item.hasDivider}
             @click=${(e) => this._itemClicked(e, {item})}>
           </dw-select-item>
