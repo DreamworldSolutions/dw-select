@@ -91,8 +91,11 @@ export class DwSelectItem extends LitElement {
       :host([disabled]) .icon{
         --dw-icon-color: var(--dw-select-item-disabled-icon-color);
       } 
+ 
+      :host([outlined-icon]) .icon dw-icon {
+        --mdc-icon-font: 'Material Icons Outlined';
+      }
       
-
       .check-icon {
         display: var(--dw-select-item-check-icon-display, block);
         -ms-flex: none;
@@ -138,6 +141,11 @@ export class DwSelectItem extends LitElement {
        * Input property. Show tooltip if item is disabled.
        */
       disabledTooltip: { type: String },
+
+      /**
+       * Item icon shows in outlined style or not.
+       */
+      outlinedIcon: { type: Boolean, reflect: true, attribute: 'outlined-icon'},
 
       /**
        * Computed from item.
