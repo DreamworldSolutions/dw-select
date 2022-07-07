@@ -229,7 +229,7 @@ export class DwSelect extends LitElement {
 
   render() {
     return html`
-      <dw-select-trigger @click=${this._onTrigger}></dw-select-trigger>
+      <dw-select-trigger @click=${this._onTrigger} @input=${this._onInput}></dw-select-trigger>
       ${this._loadFragments}
     `;
   }
@@ -241,6 +241,10 @@ export class DwSelect extends LitElement {
   _onTrigger(e) {
     let dialogElement = this.renderRoot.querySelector("#selectDialog");
     dialogElement && dialogElement.open(e.target);
+  }
+
+  _onInput(e) {
+    console.log(e.target.value);
   }
 }
 
