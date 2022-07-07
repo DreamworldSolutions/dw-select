@@ -41,8 +41,6 @@ import "./dw-select-dialog.js";
  * 
  * ### Reset Icon
  *  TODO - write documentation
- * 
- * 
  */
 
 export class DwSelect extends LitElement {
