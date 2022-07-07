@@ -2,7 +2,6 @@ import { LitElement, html } from "lit";
 
 // View Elements
 import "./dw-select-trigger.js";
-import "./dw-select-dialog.js";
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -227,24 +226,51 @@ export class DwSelect extends LitElement {
     _query: { type: String },
   };
 
+  /**
+   * Trigger Element Getter
+   */
+  get _triggerElement() {
+    return this.renderRoot.querySelector("dw-select-trigger");
+  }
+
   render() {
     return html`
       <dw-select-trigger @click=${this._onTrigger} @input=${this._onInput}></dw-select-trigger>
-      ${this._loadFragments}
+      ${this._opened
+        ? html`<dw-select-dialog
+            opened
+            .triggerElement=${this._triggerElement}
+            @dw-dialog-closed=${this._onDialogClose}
+          ></dw-select-dialog>`
+        : html``}
     `;
   }
 
-  get _loadFragments() {
-    return html`<dw-select-dialog id="selectDialog"></dw-select-dialog>`;
+  willUpdate(_changedProperties) {
+    if (_changedProperties.has("_opened") && this._opened) {
+      this._loadFragments();
+    }
+  }
+
+  /**
+   * Import manually
+   */
+  _loadFragments() {
+    if (this._opened) {
+      import("./dw-select-dialog.js");
+    }
   }
 
   _onTrigger(e) {
-    let dialogElement = this.renderRoot.querySelector("#selectDialog");
-    dialogElement && dialogElement.open(e.target);
+    this._opened = true;
   }
 
   _onInput(e) {
     console.log(e.target.value);
+  }
+
+  _onDialogClose() {
+    this._opened = false;
   }
 }
 
