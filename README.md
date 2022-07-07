@@ -1,4 +1,4 @@
-# `<dw-select>`
+# `<dw-select>` [![Published on npm](https://img.shields.io/npm/v/@dreamworld/dw-select.svg)](https://www.npmjs.com/package/@dreamworld/dw-select)
 
 A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
 
@@ -11,12 +11,6 @@ Two types of select component: [`default`](docs/non-searchable.md) (searchable=f
 ```sh
 npm install @dreamworld/dw-select
 ```
-
-## Behaviour
-- On Enter, opens dialog if not already opened.
-- On ESC, closes dialog
-- On select, closes dialog
-- Triggers internal validation on blur & select.
 
 ## Example usage
 
@@ -38,10 +32,17 @@ npm install @dreamworld/dw-select
 <dw-select outlined items=${this.items} label="outlined" searchable></dw-select>
 ```
 
+## Behaviour
+- Renders [`dw-select-trigger`](docs/select-trigger.md) and [`dw-select-dialog`](docs/select-dialog.md)
+- Triggers internal validation on blur & select.
+- Focus:
+  - For searchable types, it shows a cursor. For non searchable type, doesn’t show cursor.
+  - The dropdown opens when the user clicks the field using a pointing device.
+
 ## API
 
 ### Extension Method
-| 
+TODO
 
 ### Properties/Attributes
 
@@ -66,7 +67,7 @@ npm install @dreamworld/dw-select
 | `groups`                  | `Group[]`                     | `null`             | List of groups.
 | `groupSelector`           | `fn()`                        |                    | returns GroupName. Group selector provides a path of groupName in Items
 | `groupExpression`         | `string`                      | `""`               | 
-| `items`                   | `object[]`                    | `[]`               | List of selectable items.
+| `items`                   | `object[]`                    | `undefined`        | List of selectable items.
 | `valueProvider`           | `fn()`                        |                    | Provides Value
 | `valueExpression`         | `string`                      | `_id`              | 
 | `valueTextProvider`       | `fn()`                        |                    | returns String. Provides value that represents in list item
@@ -78,7 +79,7 @@ npm install @dreamworld/dw-select
 
 #### Object
 
-| Key           | Type                | Description                  
+| Key           | Type                | Description
 | ------------- | ------------------- | ---------------------------- 
 | `name`        | `string`            | Name of the group.
 | `title`       | `string`            | Titile of the group.
