@@ -2,6 +2,14 @@ import { css, html } from "lit-element";
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
+import "@material/mwc-circular-progress";
+import "@dreamworld/dw-icon";
+
+const defaultMessages = {
+  noRecords: "No Records",
+  noMatching: "No matching records found!",
+  loading: "Loading...",
+};
 
 /**
  * Renders the list of choices on temporary Composite Dialog.
@@ -11,6 +19,37 @@ import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js"
  */
 
 export class DwSelectDialog extends DwCompositeDialog {
+  static styles = [
+    DwCompositeDialog.styles,
+    css`
+      :host {
+        display: block;
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        overflow: hidden;
+      }
+
+      .loading mwc-circular-progress {
+        padding-right: 8px;
+      }
+
+      .no-record {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+      }
+
+      .no-record dw-icon {
+        padding-bottom: 8px;
+      }
+    `,
+  ];
+
   static properties = {
     /**
      * Selected list item object.
@@ -68,14 +107,14 @@ export class DwSelectDialog extends DwCompositeDialog {
     /**
      * Original List of selectable items.
      */
-    items: { type: Object },
+    items: { type: Array },
 
     /**
      * Represents items to be rendered by lit-virtualizer.
      * { type: GROUP or ITEM, value: Group or Item object }
      * It’s computed from _groups, items & query.
      */
-    _items: { type: Object },
+    _items: { type: Array },
 
     /**
      * Activated item
@@ -95,8 +134,8 @@ export class DwSelectDialog extends DwCompositeDialog {
     valueExpression: { type: String },
 
     /**
-     * Messages of for noRecords and noMatchingRecords
-     * Example: {noRecords: "", noMatchingRecords: ""}
+     * Messages of for noRecords and noMatching
+     * Example: {noRecords: "", noMatching: "", loading: ""}
      */
     messages: { type: Object },
 
@@ -126,10 +165,52 @@ export class DwSelectDialog extends DwCompositeDialog {
   constructor() {
     super();
     this.type = "popover";
+    this.showTrigger = true;
+    this.messages = defaultMessages;
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if(changedProperties.has('items')) {
+      this._items = this.items;
+    }
   }
 
   get _contentTemplate() {
-    return html`Dw-Select-dialog`;
+    // Render Loading view when _items is `undefined`
+    if (!this._items) {
+      return this._renderLoading;
+    }
+
+    // Render No Records view when _items's length is 0
+    if (this._items.length === 0) {
+      return this._renderNoRecord;
+    }
+
+    // Render list of choices
+    return this._renderList;
+  }
+
+  get _renderLoading() {
+    return html`<div class="loading">
+      <mwc-circular-progress indeterminate density="-2"></mwc-circular-progress>
+      <div>${this.messages.loading}</div>
+    </div>`;
+  }
+
+  get _renderNoRecord() {
+    return html`<div class="no-record">
+      <dw-icon name="search_off" size="36"></dw-icon>
+      <div>
+        ${this.items && this.items.length === 0
+          ? this.messages.noRecords
+          : this.messages.noMatching}
+      </div>
+    </div>`;
+  }
+
+  get _renderList() {
+    return html`List of choices`;
   }
 }
 
