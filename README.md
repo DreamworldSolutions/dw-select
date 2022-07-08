@@ -1,4 +1,4 @@
-# `<dw-select>`
+# `<dw-select>` [![Published on npm](https://img.shields.io/npm/v/@dreamworld/dw-select.svg)](https://www.npmjs.com/package/@dreamworld/dw-select)
 
 A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
 
@@ -66,7 +66,7 @@ npm install @dreamworld/dw-select
 | `groups`                  | `Group[]`                     | `null`             | List of groups.
 | `groupSelector`           | `fn()`                        |                    | returns GroupName. Group selector provides a path of groupName in Items
 | `groupExpression`         | `string`                      | `""`               | 
-| `items`                   | `object[]`                    | `[]`               | List of selectable items.
+| `items`                   | `object[]`                    | `undefined`        | List of selectable items.
 | `valueProvider`           | `fn()`                        |                    | Provides Value
 | `valueExpression`         | `string`                      | `_id`              | 
 | `valueTextProvider`       | `fn()`                        |                    | returns String. Provides value that represents in list item
