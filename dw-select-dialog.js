@@ -1,9 +1,14 @@
 import { css, html } from "lit-element";
+import { repeat } from "lit-html/directives/repeat";
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
 import "@material/mwc-circular-progress";
 import "@dreamworld/dw-icon";
+import "@dreamworld/dw-list-item";
+
+import get from "lodash-es/get";
+import isEqual from "lodash-es/isEqual";
 
 /**
  * Renders the list of choices on temporary Composite Dialog.
@@ -159,6 +164,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     super();
     this.type = "popover";
     this.showTrigger = true;
+    this.valueExpression = "_id";
     this.messages = {
       noRecords: "No Records",
       noMatchingRecords: "No matching records found!",
@@ -169,6 +175,11 @@ export class DwSelectDialog extends DwCompositeDialog {
   connectedCallback() {
     // Set initial _items value that actually used render list of choices
     this._items = this.items;
+
+    if (this.vkb) {
+      this.type = "modal";
+      this.placement = "bottom";
+    }
 
     super.connectedCallback();
   }
@@ -207,7 +218,30 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   get _renderList() {
-    return html`List of choices`;
+    return html`
+      ${repeat(this._items, (item, index) => {
+        let title1 = this.valueExpression ? get(item, this.valueExpression) : item;
+        return html`<dw-list-item
+          title1=${title1}
+          @click=${(e) => this._onItemClick(e, item)}
+          ?selected=${this._isItemSelected(item)}
+        ></dw-list-item>`;
+      })}
+    `;
+  }
+
+  /**
+   *
+   * @param {Object} item Selected item, one of the `items`
+   * @returns whether item is selected or not.
+   */
+  _isItemSelected(item) {
+    return isEqual(item, this.value);
+  }
+
+  _onItemClick(e, item) {
+    this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    this.close();
   }
 }
 
