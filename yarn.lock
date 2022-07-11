@@ -964,7 +964,7 @@
     lodash-es "^4.17.15"
     tippy.js "^6.2.7"
 
-"@dreamworld/dw-icon@^2.3.1":
+"@dreamworld/dw-icon@^2.3.0", "@dreamworld/dw-icon@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-2.3.1.tgz#75cf2091b1d50646cec678da4ca6b33d8acffc45"
   integrity sha512-xSoL9TlvVQR0CSAhrqZ/b+nX/WKfI62Hxlt96fhtxPMvY6p/FiqPnvvoQLfKI3DSk6bpOE8Qw54Tg+uxWGH8Og==
@@ -973,10 +973,55 @@
     "@material/mwc-icon" "^0.26.1"
     lit-element "^2.2.0"
 
+"@dreamworld/dw-list-item@^3.3.0-development.1":
+  version "3.3.0-development.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-3.3.0-development.1.tgz#6c0cbb8ceda59e3f3569e69edda2d2511350a062"
+  integrity sha512-LBqEbekbt5o5AQo3yxeRlVuK4aNkbzmeK7mvfpurLUCFhsDqnrH3aQAxpr3kE0hmnv/RlngbY0Hsm+PxWJILqg==
+  dependencies:
+    "@dreamworld/dw-icon" "^2.3.0"
+    "@dreamworld/dw-ripple" "^2.3.0"
+    "@dreamworld/dw-tooltip" "^2.3.0"
+    "@dreamworld/flex-layout" "^1.1.0"
+    "@dreamworld/material-styles" "^1.1.0"
+    "@dreamworld/pwa-helpers" "^1.7.1"
+    lit-element "^2.2.1"
+
+"@dreamworld/dw-ripple@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ripple/-/dw-ripple-2.3.0.tgz#2f995f604dbfec5dcd3998b9bc4e83dd4fb33491"
+  integrity sha512-qU35HmCv44GfDUuKhrYbP/mucZ7dP0gq4LDw+j1UuhZbC4+Z6cnR247pyujfCCFnwiYB1QpuM6rRRp/Sd83WWw==
+  dependencies:
+    "@material/mwc-ripple" "^0.26.1"
+    lit-element "^2.2.0"
+
+"@dreamworld/dw-tooltip@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-2.3.0.tgz#d870aa9beee95e9bfd25696ba801517cb2112896"
+  integrity sha512-AU5tGYN98mDzHRDse1ONF9HrT1iS1PCN+O2tUqnm8i4yBGIQtW4qkiUedsBy2391pabWBUERNWJUBoBrUq5wcQ==
+  dependencies:
+    "@dreamworld/material-styles" "^2.1.0"
+    "@dreamworld/pwa-helpers" "^1.7.1"
+    lit-element "^2.2.0"
+    tippy.js "^6.2.7"
+
+"@dreamworld/flex-layout@^1.1.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/flex-layout/-/flex-layout-1.1.1.tgz#89ddedc09292b7e2a55271126ca9f83501595a15"
+  integrity sha512-EMVQBXnmAMhWm0YzLol0ZOQ67Qxvtsr6IamM2drb8mcp0XQ5rxqMzSUK1eon/y/0ybStQQw5pTv3GqrgGlZrTQ==
+  dependencies:
+    lit-element "^2.1.0"
+
 "@dreamworld/material-styles@^1.1.0":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-1.3.1.tgz#8450eb3b4e8a0515f9457926e31e15246dce653a"
   integrity sha512-3+k9rRxrO2fFHhz++/yzuJExycJHznZvckYdYOye7aiWXgQ9BZC1kR6KONWbygjE+EsnQ80KAuaMIhtPsXrQPg==
+  dependencies:
+    lit-element "^2.2.0"
+
+"@dreamworld/material-styles@^2.1.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-2.2.0.tgz#45d232cdd1b9b063a447d96316c9f9f08a16f5c4"
+  integrity sha512-26ZnFaTZD0NdehrSuzJ7J1PLGv+Mo/rNVGegwIAlT49c3/c3rLJ6DbRfaTLAu4cKO2JWwkcZ01unywQet1QiOQ==
   dependencies:
     lit-element "^2.2.0"
 
@@ -1141,7 +1186,7 @@
     "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
-"@material/dom@=14.0.0-canary.53b3cad2f.0":
+"@material/dom@14.0.0-canary.53b3cad2f.0", "@material/dom@=14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/dom/-/dom-14.0.0-canary.53b3cad2f.0.tgz#55613a2bf3d0ea64989ad77291f053b607256012"
   integrity sha512-aR+rfncF6oi2ivdOlKSJI4UXwNzWV5rXM88MLDoSJF1D7lXxhAKhge+tMUBodWGV/q0+FnXLuVAa0WYTrKjo+A==
@@ -1238,11 +1283,35 @@
     lit "^2.0.0"
     tslib "^2.0.1"
 
+"@material/mwc-ripple@^0.26.1":
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/@material/mwc-ripple/-/mwc-ripple-0.26.1.tgz#0825137329c78df02cee4f8da2e28d6daeceb305"
+  integrity sha512-hBeC2S7TSYLmHetXbtu52/EZFzvAqrQk5skIV0aUZeZvywTJWRVoc5OavDjsJYuKxDnSECMnkIt8+l8WC48chg==
+  dependencies:
+    "@material/dom" "=14.0.0-canary.53b3cad2f.0"
+    "@material/mwc-base" "^0.26.1"
+    "@material/ripple" "=14.0.0-canary.53b3cad2f.0"
+    lit "^2.0.0"
+    tslib "^2.0.1"
+
 "@material/progress-indicator@14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/progress-indicator/-/progress-indicator-14.0.0-canary.53b3cad2f.0.tgz#cdec3ad71a5bc145f8c2a925c062c9301c1bdc4b"
   integrity sha512-vW0oZK70QOpAarip95ueCQ/I3kBClcWjxsc0F0QjkqT76DOVXpjnZ4XoRRyq9eMpwLqlKLTecrsSNpmqwwF1Dg==
   dependencies:
+    tslib "^2.1.0"
+
+"@material/ripple@=14.0.0-canary.53b3cad2f.0":
+  version "14.0.0-canary.53b3cad2f.0"
+  resolved "https://registry.yarnpkg.com/@material/ripple/-/ripple-14.0.0-canary.53b3cad2f.0.tgz#143454681b56ba42e979116903a3a1e4680249bf"
+  integrity sha512-6g2G62vd8DsMuIUSXlRrzb98qkZ4o8ZREknNwNP2zaLQEOkJ//4j9HaqDt98/3LIjUTY9UIVFTQENiMmlwKHYQ==
+  dependencies:
+    "@material/animation" "14.0.0-canary.53b3cad2f.0"
+    "@material/base" "14.0.0-canary.53b3cad2f.0"
+    "@material/dom" "14.0.0-canary.53b3cad2f.0"
+    "@material/feature-targeting" "14.0.0-canary.53b3cad2f.0"
+    "@material/rtl" "14.0.0-canary.53b3cad2f.0"
+    "@material/theme" "14.0.0-canary.53b3cad2f.0"
     tslib "^2.1.0"
 
 "@material/ripple@^14.0.0":
@@ -4461,7 +4530,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lit-element@^2.2.0, lit-element@^2.2.1:
+lit-element@^2.1.0, lit-element@^2.2.0, lit-element@^2.2.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/lit-element/-/lit-element-2.5.1.tgz#3fa74b121a6cd22902409ae3859b7847d01aa6b6"
   integrity sha512-ogu7PiJTA33bEK0xGu1dmaX5vhcRjBXCFexPja0e7P7jqLhTpNKYRPmE+GmiCaRVAbiQKGkUgkh/i6+bh++dPQ==
@@ -4522,7 +4591,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.15:
+lodash-es@^4.17.15, lodash-es@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==

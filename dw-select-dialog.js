@@ -1,9 +1,15 @@
 import { css, html } from "lit-element";
+import { repeat } from "lit-html/directives/repeat";
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
 import "@material/mwc-circular-progress";
 import "@dreamworld/dw-icon";
+import "@dreamworld/dw-list-item";
+
+// Lodash Methods
+import get from "lodash-es/get";
+import isEqual from "lodash-es/isEqual";
 
 const defaultMessages = {
   noRecords: "No Records",
@@ -166,12 +172,22 @@ export class DwSelectDialog extends DwCompositeDialog {
     super();
     this.type = "popover";
     this.showTrigger = true;
+    this.valueExpression = "_id";
     this.messages = defaultMessages;
+  }
+
+  connectedCallback() {
+    if (this.vkb) {
+      this.type = "modal";
+      this.placement = "bottom";
+    }
+
+    super.connectedCallback();
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    if(changedProperties.has('items')) {
+    if (changedProperties.has("items")) {
       this._items = this.items;
     }
   }
@@ -210,7 +226,34 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   get _renderList() {
-    return html`List of choices`;
+    return html`
+      ${repeat(this._items, (item, index) =>
+        this.renderItem ? this.renderItem(item) : this._defaultTemplate(item)
+      )}
+    `;
+  }
+
+  _defaultTemplate(item) {
+    let title1 = this.valueExpression ? get(item, this.valueExpression) : item;
+    return html`<dw-list-item
+      title1=${title1}
+      @click=${(e) => this._onItemClick(e, item)}
+      ?selected=${this._isItemSelected(item)}
+    ></dw-list-item>`;
+  }
+
+  /**
+   *
+   * @param {Object} item Selected item, one of the `items`
+   * @returns whether item is selected or not.
+   */
+  _isItemSelected(item) {
+    return isEqual(item, this.value);
+  }
+
+  _onItemClick(e, item) {
+    this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    this.close();
   }
 }
 
