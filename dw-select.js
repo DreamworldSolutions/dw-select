@@ -6,6 +6,10 @@ import "./dw-select-trigger.js";
 // Lodash Methods
 import get from "lodash-es/get";
 
+const KEYCODES = {
+  ENTER: 13,
+};
+
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
  *
@@ -247,14 +251,21 @@ export class DwSelect extends LitElement {
   constructor() {
     super();
     this.valueExpression = "_id";
+    this.searchable = false;
   }
 
   render() {
     return html`
       <dw-select-trigger
+        label=${this.label}
+        placeholder=${this.placeholder}
+        helper=${this.helper}
+        ?readOnly=${!this.searchable}
+        value=${this._getValue}
+        ?outlined=${this.outlined}
         @click=${this._onTrigger}
         @input=${this._onInput}
-        value=${this._getValue}
+        @keydown=${this._onKeydown}
       ></dw-select-trigger>
       ${this._opened
         ? html`<dw-select-dialog
@@ -328,6 +339,12 @@ export class DwSelect extends LitElement {
 
   _onDialogClose() {
     this._opened = false;
+  }
+
+  _onKeydown(e) {
+    if (e.keyCode === KEYCODES.ENTER) {
+      this._onTrigger(e);
+    }
   }
 }
 
