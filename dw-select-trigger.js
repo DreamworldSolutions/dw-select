@@ -1,7 +1,11 @@
 import { LitElement, html, css } from "lit";
 
+// view Elements
+import "@material/mwc-textfield";
+import "@dreamworld/dw-ripple";
+
 /**
- * Used to edit and enter text, or only readOnnly.
+ * Used to edit and enter text, or only readOnly.
  *
  * [`select-dialog-doc`](docs/select-trigger.md)
  */
@@ -68,7 +72,17 @@ export class DwSelectTrigger extends LitElement {
   };
 
   render() {
-    return html` <input type="text" @input=${this._onInput} value=${this.value} /> `;
+    return html`
+      <mwc-textfield
+        label=${this.label}
+        placeholder=${this.placeholder}
+        helper=${this.helper}
+        ?readOnly=${this.readOnly}
+        @input=${this._onInput}
+        value=${this.value}
+        ?outlined=${this.outlined}
+      ></mwc-textfield>
+    `;
   }
 
   _onInput(e) {

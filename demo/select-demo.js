@@ -8,7 +8,8 @@ class SelectDemo extends LitElement {
     return [
       css`
         :host {
-          display: inline-block;
+          display: flex;
+          flex-direction: column;
           box-sizing: border-box;
         }
       `,
@@ -16,7 +17,23 @@ class SelectDemo extends LitElement {
   }
 
   render() {
-    return html` <dw-select .items=${country_list_with_code} valueExpression="name"></dw-select> `;
+    return html`
+      <dw-select
+        .items=${country_list_with_code}
+        valueExpression="name"
+        label="select country"
+        placeholder="placeholder"
+        helper="helper text"
+      ></dw-select>
+
+      <dw-select
+        .items=${list}
+        valueExpression=""
+        label="Download"
+        placeholder="placeholder"
+        helper="helper text"
+      ></dw-select>
+    `;
   }
 }
 
