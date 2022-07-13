@@ -1,5 +1,20 @@
 export const list = ["PDF", "EXCEL", "CUSTOM"]
 
+export const groupList = [
+  {
+    name: "SBI Bank",
+    type: "BANK_ACCOUNTS"
+  },
+  {
+    name: "John",
+    type: "CONTACTS"
+  },
+  {
+    name: "Steve",
+    type: "CONTACTS"
+  }
+];
+
 export const country_list = [
   "Afghanistan",
   "Albania",
