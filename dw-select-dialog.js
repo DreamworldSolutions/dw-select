@@ -6,9 +6,13 @@ import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js"
 import "@material/mwc-circular-progress";
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-list-item";
+import "./dw-select-group-item";
 
+// Lodash Methods
 import get from "lodash-es/get";
 import isEqual from "lodash-es/isEqual";
+import orderBy from "lodash-es/orderBy";
+import filter from "lodash-es/filter";
 
 /**
  * Renders the list of choices on temporary Composite Dialog.
@@ -173,8 +177,11 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   connectedCallback() {
-    // Set initial _items value that actually used render list of choices
-    this._items = this.items;
+    // Set initial _groups value that actually used compute list of choices
+    this._groups = this.groups;
+
+    // get Initial `_items`
+    this._getItems();
 
     if (this.vkb) {
       this.type = "modal";
@@ -220,13 +227,20 @@ export class DwSelectDialog extends DwCompositeDialog {
   get _renderList() {
     return html`
       ${repeat(this._items, (item, index) => {
-        let title1 = this.valueExpression ? get(item, this.valueExpression) : item;
-        return html`<dw-list-item
-          title1=${title1}
-          @click=${(e) => this._onItemClick(e, item)}
-          ?selected=${this._isItemSelected(item)}
-          .focusable=${false}
-        ></dw-list-item>`;
+        // render Item
+        if (item.type === "ITEM") {
+          let title1 = this.valueExpression ? get(item.value, this.valueExpression) : item.value;
+          return html`<dw-list-item
+            title1=${title1}
+            @click=${(e) => this._onItemClick(e, item)}
+            ?selected=${this._isItemSelected(item)}
+            .focusable=${false}
+          ></dw-list-item>`;
+        }
+        // Render Group
+        if (item.type === "GROUP") {
+          return html`<dw-select-group-item label=${item.value.label}></dw-select-group-item>`;
+        }
       })}
     `;
   }
@@ -237,12 +251,45 @@ export class DwSelectDialog extends DwCompositeDialog {
    * @returns whether item is selected or not.
    */
   _isItemSelected(item) {
-    return isEqual(item, this.value);
+    return isEqual(item.value, this.value);
   }
 
   _onItemClick(e, item) {
     this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
+  }
+
+  _getItems() {
+    let array = [];
+
+    // If group is exist
+    if (this._groups && this._groups.length !== 0) {
+      // Sort Items with groupExpression and valueExpression
+      const sortedArray = orderBy(this.items, [this.groupExpression, this.valueExpression]);
+
+      this._groups.forEach((group) => {
+        // Filter items with group
+        const filteredArray = filter(sortedArray, [this.groupExpression, group.name]);
+        if (filteredArray.length !== 0) {
+          // First push group item
+          array.push({ type: "GROUP", value: group });
+
+          // Push every items 
+          filteredArray.forEach((item) => {
+            array.push({ type: "ITEM", value: item });
+          });
+        }
+      });
+    }
+
+    // If group does not exist
+    if (!this._groups || this._groups.length === 0) {
+      this.items.forEach((item) => {
+        array.push({ type: "ITEM", value: item });
+      });
+    }
+
+    this._items = array;
   }
 }
 

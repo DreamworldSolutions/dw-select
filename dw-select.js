@@ -243,8 +243,14 @@ export class DwSelect extends LitElement {
     return html`<dw-select-dialog
       id="selectDialog"
       .value=${this.value}
+      ?searchable=${this.searchable}
+      .groups=${this.groups}
+      .groupSelector=${this.groupSelector}
+      .groupExpression=${this.groupExpression}
       .items=${this.items}
+      .valueProvider=${this.valueProvider}
       .valueExpression=${this.valueExpression}
+      .valueTextProvider=${this.valueTextProvider}
       ?vkb=${this.vkb}
       @selected=${this._onSelect}
       @dw-dialog-opened=${() => (this._opened = true)}
@@ -292,7 +298,7 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    this.value = e.detail;
+    this.value = e.detail.value;
   }
 
   _onKeydown(e) {
