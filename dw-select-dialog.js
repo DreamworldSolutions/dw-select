@@ -164,6 +164,23 @@ export class DwSelectDialog extends DwCompositeDialog {
     _query: { type: String },
   };
 
+  set _groups(value) {
+    let oldValue = this._type;
+
+    if (value === oldValue) {
+      return;
+    }
+
+    this.__groups = value;
+    this.requestUpdate("_groups", oldValue);
+    // Compute updated `_items`
+    this._getItems();
+  }
+
+  get _groups() {
+    return this.__groups;
+  }
+
   constructor() {
     super();
     this.type = "popover";
@@ -239,7 +256,13 @@ export class DwSelectDialog extends DwCompositeDialog {
         }
         // Render Group
         if (item.type === "GROUP") {
-          return html`<dw-select-group-item label=${item.value.label}></dw-select-group-item>`;
+          return html`<dw-select-group-item
+            name=${item.value.name}
+            label=${item.value.label}
+            ?collapsible=${item.value.collapsible}
+            ?collapsed=${item.value.collapsed}
+            @click=${(e) => this._onGroupClick(e, item)}
+          ></dw-select-group-item>`;
         }
       })}
     `;
@@ -259,6 +282,16 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.close();
   }
 
+  _onGroupClick(e, item) {
+    let groups = this._groups;
+    const index = groups.indexOf(item.value);
+    if (groups[index].collapsible) {
+      groups[index].collapsed = groups[index].collapsed ? false : true;
+    }
+
+    this._groups = groups;
+  }
+
   _getItems() {
     let array = [];
 
@@ -274,10 +307,12 @@ export class DwSelectDialog extends DwCompositeDialog {
           // First push group item
           array.push({ type: "GROUP", value: group });
 
-          // Push every items 
-          filteredArray.forEach((item) => {
-            array.push({ type: "ITEM", value: item });
-          });
+          if (!group.collapsed) {
+            // Push every items
+            filteredArray.forEach((item) => {
+              array.push({ type: "ITEM", value: item });
+            });
+          }
         }
       });
     }
