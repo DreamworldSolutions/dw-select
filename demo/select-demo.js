@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html, css } from "lit";
 import "../dw-select";
 import "../dw-select-group-item";
 
@@ -20,6 +20,7 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <dw-select
+      searchable
         .items=${country_list_with_code}
         valueExpression="name"
         label="select country"
@@ -27,23 +28,24 @@ class SelectDemo extends LitElement {
         helper="helper text"
       ></dw-select>
 
-      <dw-select
+      <!-- <dw-select
         .items=${list}
         valueExpression=""
         label="Download"
         placeholder="placeholder"
         helper="helper text"
-      ></dw-select>
+      ></dw-select> -->
 
-      <dw-select
+      <!-- <dw-select
+        outlined
         .items=${accounts}
         .groups=${groups}
         groupExpression="type"
         valueExpression="name"
         label="Contacts"
-      ></dw-select>
+      ></dw-select> -->
 
-      <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item>
+      <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
   }
 }
