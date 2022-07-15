@@ -20,30 +20,30 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <dw-select
-      searchable
-        .items=${country_list_with_code}
+        searchable
+        .items=${groupList}
         valueExpression="name"
         label="select country"
         placeholder="placeholder"
         helper="helper text"
       ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         .items=${list}
         valueExpression=""
         label="Download"
         placeholder="placeholder"
         helper="helper text"
-      ></dw-select> -->
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         outlined
         .items=${accounts}
         .groups=${groups}
         groupExpression="type"
         valueExpression="name"
         label="Contacts"
-      ></dw-select> -->
+      ></dw-select>
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
