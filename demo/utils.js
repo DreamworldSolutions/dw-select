@@ -13,7 +13,14 @@ export const groupList = [
     name: "SBI Bank",
     type: "BANK_ACCOUNT",
   },
-
+  {
+    name: "hdfc Bank 1",
+    type: "BANK_ACCOUNT",
+  },
+  {
+    name: "hdfc Bank 2",
+    type: "BANK_ACCOUNT",
+  },
   {
     name: "Capital Gain",
     type: "ACCOUNT",

@@ -13,6 +13,7 @@ import get from "lodash-es/get";
 import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
 import filter from "lodash-es/filter";
+import forEach from "lodash-es/forEach";
 
 /**
  * Renders the list of choices on temporary Composite Dialog.
@@ -181,8 +182,26 @@ export class DwSelectDialog extends DwCompositeDialog {
     return this.__groups;
   }
 
+  set _query(value) {
+    let oldValue = this.__query;
+
+    if (value === oldValue) {
+      return;
+    }
+
+    this.__query = value;
+    this.requestUpdate("_query", oldValue);
+    // Compute updated `_items`
+    this._getItems();
+  }
+
+  get _query() {
+    return this.__query;
+  }
+
   constructor() {
     super();
+    this._query = "";
     this.type = "popover";
     this.showTrigger = true;
     this.valueExpression = "_id";
@@ -246,9 +265,8 @@ export class DwSelectDialog extends DwCompositeDialog {
       ${repeat(this._items, (item, index) => {
         // render Item
         if (item.type === "ITEM") {
-          let title1 = this.valueExpression ? get(item.value, this.valueExpression) : item.value;
           return html`<dw-list-item
-            title1=${title1}
+            title1=${this.getLabelValue(item.value)}
             @click=${(e) => this._onItemClick(e, item)}
             ?selected=${this._isItemSelected(item)}
             .focusable=${false}
@@ -293,12 +311,17 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   _getItems() {
+    let sortedArray = filter(
+      this.items,
+      (item) => this.isMatched(this.getLabelValue(item).toLowerCase(), this._query.toLowerCase().split(" "))
+    );
+
     let array = [];
 
     // If group is exist
     if (this._groups && this._groups.length !== 0) {
       // Sort Items with groupExpression and valueExpression
-      const sortedArray = orderBy(this.items, [this.groupExpression, this.valueExpression]);
+      sortedArray = orderBy(sortedArray, [this.groupExpression, this.valueExpression]);
 
       this._groups.forEach((group) => {
         // Filter items with group
@@ -319,12 +342,39 @@ export class DwSelectDialog extends DwCompositeDialog {
 
     // If group does not exist
     if (!this._groups || this._groups.length === 0) {
-      this.items.forEach((item) => {
+      sortedArray.forEach((item) => {
         array.push({ type: "ITEM", value: item });
       });
     }
 
     this._items = array;
+  }
+
+  /**
+   * Wheter query matching with any word of the input string
+   * @param {String} string string which will be matched with query string
+   * @param {Array} queryArray array 
+   * @returns return true if query string's any word is matched with input string
+   */
+  isMatched(string, queryArray) {
+    let isMatched = false;
+
+    forEach(queryArray, (e) => {
+      if(string.indexOf(e) !== -1) {
+        isMatched = true;
+        return false;
+      }
+    })
+    return isMatched;
+  }
+
+  /**
+   * Compute label of the item
+   * @param {Object | String} item 
+   * @returns {String} returns string that actually represents in list item
+   */
+  getLabelValue(item) {
+    return this.valueExpression ? get(item, this.valueExpression) : item;
   }
 }
 
