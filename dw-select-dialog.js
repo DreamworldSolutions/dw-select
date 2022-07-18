@@ -7,6 +7,7 @@ import "@material/mwc-circular-progress";
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-list-item";
 import "./dw-select-group-item";
+import "./dw-select-dialog-input";
 
 // Lodash Methods
 import get from "lodash-es/get";
@@ -14,6 +15,9 @@ import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
 import filter from "lodash-es/filter";
 import forEach from "lodash-es/forEach";
+import debounce from "lodash-es/debounce";
+
+const MOBILE_LAYOUT_MEDIA_QUERY = "only screen and (max-width: 420px)";
 
 const defaultMessages = {
   noRecords: "No Records",
@@ -34,6 +38,8 @@ export class DwSelectDialog extends DwCompositeDialog {
     css`
       :host {
         display: block;
+        --dw-dialog-header-padding: 8px 16px;
+        --dw-dialog-content-padding: 0;
       }
 
       :host([type="popover"]) .dialog__content {
@@ -60,6 +66,27 @@ export class DwSelectDialog extends DwCompositeDialog {
 
       .no-record dw-icon {
         padding-bottom: 8px;
+      }
+
+      :host([type="popover"]) header {
+        padding: 0;
+      }
+
+      :host([type="modal"]) .mdc-dialog__title::before {
+        height: 0px;
+        display: none;
+      }
+
+      :host([type="fit"][opened][has-header]) .mdc-dialog__content {
+        padding: 0;
+      }
+
+      :host([type="fit"][opened]) .mdc-dialog__content {
+        padding: 0;
+      }
+
+      :host([type="fit"]) .mdc-dialog__title {
+        padding: 8px 16px;
       }
     `,
   ];
@@ -220,15 +247,41 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   connectedCallback() {
+    this.layout = window.matchMedia(MOBILE_LAYOUT_MEDIA_QUERY).matches ? "small" : "";
     // Set initial _groups value that actually used compute list of choices
     this._groups = this.groups;
-
-    if (this.vkb) {
-      this.type = "modal";
-      this.placement = "bottom";
-    }
+    
+    // Determine Dialog type
+    this._determineType();
 
     super.connectedCallback();
+    this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+  }
+
+  _determineType() {
+    if (this.vkb && this.searchable) {
+      this.type = "fit";
+      return;
+    }
+
+    if (this.layout === "small") {
+      this.type = "modal";
+      this.placement = "bottom";
+      return;
+    }
+
+    this.type = "popover";
+  }
+
+  get _headerTemplate() {
+    if (this.searchable && this.type === "fit") {
+      return html`<dw-select-dialog-input
+        @cancel=${this._onClose}
+        @input=${this._onUserInteraction}
+      ></dw-select-dialog-input>`;
+    }
+
+    return html``;
   }
 
   updated(changedProperties) {
@@ -326,9 +379,8 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   _getItems() {
-    let sortedArray = filter(
-      this.items,
-      (item) => this.isMatched(this.getLabelValue(item).toLowerCase(), this._query.toLowerCase().split(" "))
+    let sortedArray = filter(this.items, (item) =>
+      this.isMatched(this.getLabelValue(item).toLowerCase(), this._query.toLowerCase().split(" "))
     );
 
     let array = [];
@@ -373,28 +425,47 @@ export class DwSelectDialog extends DwCompositeDialog {
   /**
    * Wheter query matching with any word of the input string
    * @param {String} string string which will be matched with query string
-   * @param {Array} queryArray array 
+   * @param {Array} queryArray array
    * @returns return true if query string's any word is matched with input string
    */
   isMatched(string, queryArray) {
     let isMatched = false;
 
     forEach(queryArray, (e) => {
-      if(string.indexOf(e) !== -1) {
+      if (string.indexOf(e) !== -1) {
         isMatched = true;
         return false;
       }
-    })
+    });
     return isMatched;
   }
 
   /**
    * Compute label of the item
-   * @param {Object | String} item 
+   * @param {Object | String} item
    * @returns {String} returns string that actually represents in list item
    */
   getLabelValue(item) {
     return this.valueExpression ? get(item, this.valueExpression) : item;
+  }
+
+  /**
+   * Trigger when actual user intract
+   * @param {Event} e
+   */
+  _onUserInteraction(e) {
+    if (e.type === "input") {
+      this._onInput();
+    }
+  }
+
+  _onClose() {
+    this.close();
+  }
+
+  _onInput(e) {
+    let el = this.renderRoot.querySelector("dw-select-dialog-input");
+    this._query = el.value;
   }
 }
 
