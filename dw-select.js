@@ -212,7 +212,7 @@ export class DwSelect extends LitElement {
     /**
      * search query in string. used to filter items and highlight query keywords
      */
-     _query: { type: String },
+    _query: { type: String },
   };
 
   static styles = [
@@ -296,10 +296,10 @@ export class DwSelect extends LitElement {
 
   /**
    * Trigger when actual user intract
-   * @param {Event} e 
+   * @param {Event} e
    */
   _onUserInteraction(e) {
-    if(e.type === "input") {
+    if (e.type === "input") {
       this._onInput();
     }
   }
