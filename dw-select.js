@@ -4,7 +4,9 @@ import { LitElement, html, css } from "lit";
 import "./dw-select-trigger.js";
 import "./dw-select-dialog.js";
 
+// Lodash Methods
 import get from "lodash-es/get";
+import debounce from "lodash-es/debounce";
 
 const KEYCODES = {
   ENTER: 13,
@@ -206,6 +208,11 @@ export class DwSelect extends LitElement {
      * Used to set dialog width. Only for popover dialog.
      */
     _opened: { type: Boolean },
+
+    /**
+     * search query in string. used to filter items and highlight query keywords
+     */
+     _query: { type: String },
   };
 
   static styles = [
@@ -232,7 +239,7 @@ export class DwSelect extends LitElement {
         value=${this._getValue}
         ?outlined=${this.outlined}
         @click=${this._onTrigger}
-        @input=${this._onInput}
+        @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
       ></dw-select-trigger>
       ${this._loadFragments}
@@ -251,11 +258,17 @@ export class DwSelect extends LitElement {
       .valueProvider=${this.valueProvider}
       .valueExpression=${this.valueExpression}
       .valueTextProvider=${this.valueTextProvider}
+      _query=${this._query}
       ?vkb=${this.vkb}
       @selected=${this._onSelect}
       @dw-dialog-opened=${() => (this._opened = true)}
       @dw-dialog-closed=${() => (this._opened = false)}
     ></dw-select-dialog>`;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
   }
 
   willUpdate(_changedProperties) {
@@ -282,6 +295,16 @@ export class DwSelect extends LitElement {
   }
 
   /**
+   * Trigger when actual user intract
+   * @param {Event} e 
+   */
+  _onUserInteraction(e) {
+    if(e.type === "input") {
+      this._onInput();
+    }
+  }
+
+  /**
    * Returns String that represents current value
    */
   get _getValue() {
@@ -294,7 +317,10 @@ export class DwSelect extends LitElement {
   }
 
   _onInput(e) {
-    console.log(e.target.value);
+    // Trigger element getter
+    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+
+    this._query = triggerEl.value;
   }
 
   _onSelect(e) {
