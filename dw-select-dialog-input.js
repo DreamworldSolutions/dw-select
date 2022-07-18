@@ -4,7 +4,7 @@ import "@dreamworld/dw-icon-button";
 /**
  * #Behaviours
  *  - on Focus: Updates border color to primary color
- * 
+ *
  * #Events
  *  - `cancel`: When Back icon-button is clicked.
  *  - `input`: Proxied from input element. Before it’s proxied, value property is synced/updated.
@@ -20,12 +20,12 @@ export class DwSelectDialogInput extends LitElement {
         border-radius: 24px;
         box-sizing: border-box;
       }
-      
-      :host([_hasFocus]){
+
+      :host([_hasFocus]) {
         border: 2px solid;
         border-color: var(--mdc-theme-primary, #6200ee);
       }
-      
+
       .container {
         height: 100%;
         display: flex;
@@ -58,6 +58,7 @@ export class DwSelectDialogInput extends LitElement {
      * Contains value of the input
      */
     value: String,
+
     /**
      * Whether close icon button is visible or not
      */
@@ -66,19 +67,19 @@ export class DwSelectDialogInput extends LitElement {
     /**
      * Whether element has focused or not
      */
-    _hasFocus: {type: Boolean, reflect: true}
-  }
+    _hasFocus: { type: Boolean, reflect: true },
+  };
 
   constructor() {
     super();
-    this.value = ""
+    this.value = "";
   }
 
   render() {
     return html`
       <div class="container">
         <dw-icon-button icon="arrow_back" @click=${this._onBack}></dw-icon-button>
-        <input @focus=${this._onFocus} @blur=${this._onBlur} @input=${this._onInput}/>
+        <input @focus=${this._onFocus} @blur=${this._onBlur} @input=${this._onInput} />
         ${this._hasCloseButton
           ? html`<dw-icon-button icon="close" @click=${this._onBack}></dw-icon-button>`
           : nothing}
@@ -99,7 +100,7 @@ export class DwSelectDialogInput extends LitElement {
   }
 
   _onBack() {
-    this.dispatchEvent(new CustomEvent('cancel'))
+    this.dispatchEvent(new CustomEvent("cancel"));
   }
 }
 

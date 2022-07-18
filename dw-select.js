@@ -313,10 +313,10 @@ export class DwSelect extends LitElement {
 
   /**
    * Trigger when actual user intract
-   * @param {Event} e 
+   * @param {Event} e
    */
   _onUserInteraction(e) {
-    if(e.type === "input") {
+    if (e.type === "input") {
       this._onInput();
     }
   }
