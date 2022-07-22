@@ -9,6 +9,9 @@ import "@dreamworld/dw-list-item";
 import "./dw-select-group-item";
 import "./dw-select-dialog-input";
 
+// Web-Utils
+import { scrollIntoView } from "@dreamworld/web-util/scrollIntoView";
+
 // Lodash Methods
 import get from "lodash-es/get";
 import isEqual from "lodash-es/isEqual";
@@ -18,6 +21,19 @@ import forEach from "lodash-es/forEach";
 import debounce from "lodash-es/debounce";
 
 const MOBILE_LAYOUT_MEDIA_QUERY = "only screen and (max-width: 420px)";
+
+const KEY_CODE = {
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
+  ARROW_LEFT: 37,
+  ARROW_RIGHT: 39,
+  ENTER: 13,
+};
+
+const DIRECTION = {
+  UP: "up",
+  DOWN: "down",
+};
 
 const defaultMessages = {
   noRecords: "No Records",
@@ -197,6 +213,17 @@ export class DwSelectDialog extends DwCompositeDialog {
      * search query in string. used to filter items and highlight query keywords
      */
     _query: { type: String },
+
+    /**
+     * index of activated Item
+     * default: -1
+     */
+    _activatedIndex: { type: Number },
+
+    /**
+     * Contains Scrollable Elements
+     */
+    _scrollableElement: { type: Object },
   };
 
   set _groups(value) {
@@ -239,6 +266,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.type = "popover";
     this.showTrigger = true;
     this.valueExpression = "_id";
+    this._activatedIndex = -1;
     this.messages = defaultMessages;
   }
 
@@ -252,6 +280,16 @@ export class DwSelectDialog extends DwCompositeDialog {
 
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+    window.addEventListener("keydown", this.onKeydown.bind(this));
+  }
+
+  firstUpdated() {
+    this._scrollableElement =
+      this.type === "fit"
+        ? document.querySelector("body")
+        : this.type === "modal"
+        ? this.renderRoot.querySelector("#dialog-content")
+        : this.renderRoot.querySelector("#popover_dialog__surface");
   }
 
   _determineType() {
@@ -323,17 +361,18 @@ export class DwSelectDialog extends DwCompositeDialog {
   get _renderList() {
     return html`
       ${repeat(this._items, (item, index) =>
-        this.renderItem ? this.renderItem(item) : this._defaultTemplate(item)
+        this.renderItem ? this.renderItem(item) : this._defaultTemplate(item, index)
       )}
     `;
   }
 
-  _defaultTemplate(item) {
+  _defaultTemplate(item, index) {
     if (item.type === "ITEM") {
       let title1 = this.valueExpression ? get(item.value, this.valueExpression) : item.value;
       return html`<dw-list-item
         title1=${this.getLabelValue(item.value)}
         @click=${(e) => this._onItemClick(e, item)}
+        ?activated=${index === this._activatedIndex}
         ?selected=${this._isItemSelected(item)}
         .focusable=${false}
       ></dw-list-item>`;
@@ -343,6 +382,8 @@ export class DwSelectDialog extends DwCompositeDialog {
       return html`<dw-select-group-item
         name=${item.value.name}
         label=${item.value.label}
+        index=${index}
+        ?activated=${index === this._activatedIndex}
         ?collapsible=${item.value.collapsible}
         ?collapsed=${item.value.collapsed}
         @click=${(e) => this._onGroupClick(e, item)}
@@ -359,7 +400,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     return isEqual(item.value, this.value);
   }
 
-  _onItemClick(e, item) {
+  _onItemClick(item) {
     this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
   }
@@ -462,6 +503,55 @@ export class DwSelectDialog extends DwCompositeDialog {
   _onInput(e) {
     let el = this.renderRoot.querySelector("dw-select-dialog-input");
     this._query = el.value;
+  }
+
+  _getItem(index) {
+    return this._items[index];
+  }
+
+  onKeydown(e) {
+    if (this.opened) {
+      if (e.keyCode === KEY_CODE.ARROW_UP) {
+        this._moveActivated(DIRECTION.UP);
+      }
+
+      if (e.keyCode === KEY_CODE.ARROW_DOWN) {
+        this._moveActivated(DIRECTION.DOWN);
+      }
+
+      if (e.keyCode === KEY_CODE.ENTER) {
+        this._onItemClick(this._getItem(this._activatedIndex));
+      }
+    }
+  }
+
+  _moveActivated(direction) {
+    var items = this.renderRoot.querySelectorAll("dw-list-item");
+
+    if (this._items.length === 0) {
+      return;
+    }
+
+    let numberOfitems = this.items.length - 1;
+
+    let isFistItem = this._activatedIndex === 0;
+    let isLastItem = this._activatedIndex === numberOfitems;
+    let isNoitemActivated = this._activatedIndex === -1;
+
+    let modifier = 1;
+
+    if ((isNoitemActivated || isFistItem) && direction === DIRECTION.UP) {
+      this._activatedIndex = numberOfitems;
+    } else if ((isNoitemActivated || isLastItem) && direction === DIRECTION.DOWN) {
+      this._activatedIndex = 0;
+    } else {
+      modifier = direction === DIRECTION.DOWN ? 1 : -1;
+      this._activatedIndex = this._activatedIndex + modifier;
+    }
+
+    let element = items[this._activatedIndex];
+
+    scrollIntoView(this._scrollableElement, element);
   }
 }
 
