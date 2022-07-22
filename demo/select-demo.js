@@ -36,6 +36,7 @@ class SelectDemo extends LitElement {
         label="Download"
         placeholder="placeholder"
         helper="helper text"
+        layout="small"
       ></dw-select>
 
       <dw-select
@@ -48,10 +49,10 @@ class SelectDemo extends LitElement {
         label="Contacts"
       ></dw-select>
 
-      <dw-select-dialog-input
+      <!-- <dw-select-dialog-input
         @input=${(e) => console.log(e.target.value)}
         @cancel=${() => console.log("cancel")}
-      ></dw-select-dialog-input>
+      ></dw-select-dialog-input> -->
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;

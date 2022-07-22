@@ -8,8 +8,10 @@ import "./dw-select-dialog.js";
 import get from "lodash-es/get";
 import debounce from "lodash-es/debounce";
 
-const KEYCODES = {
+const KEY_CODE = {
   ENTER: 13,
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
 };
 
 /**
@@ -328,7 +330,7 @@ export class DwSelect extends LitElement {
   }
 
   _onKeydown(e) {
-    if (e.keyCode === KEYCODES.ENTER) {
+    if (e.keyCode === KEY_CODE.ENTER) {
       this._onTrigger(e);
     }
   }
