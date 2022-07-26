@@ -266,6 +266,7 @@ export class DwSelect extends LitElement {
         ?inputAllowed=${this.searchable && !this.readOnly}
         value=${this._getValue}
         ?outlined=${this.outlined}
+        ?disabled=${this.disabled}
         ?required=${this.required}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         @click=${this._onTrigger}

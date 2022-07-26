@@ -30,7 +30,6 @@ class SelectDemo extends LitElement {
         helper="helper text"
         required
         requiredMessage="required Message"
-        readOnly
       ></dw-select>
 
       <dw-select
