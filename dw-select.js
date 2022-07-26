@@ -243,7 +243,7 @@ export class DwSelect extends LitElement {
         label=${this.label}
         placeholder=${this.placeholder}
         helper=${this.helper}
-        ?inputAllowed=${this.searchable}
+        ?inputAllowed=${this.searchable && !this.readOnly}
         value=${this._getValue}
         ?outlined=${this.outlined}
         ?required=${this.required}
@@ -333,7 +333,9 @@ export class DwSelect extends LitElement {
   }
 
   _onTrigger(e) {
-    this._opened = true;
+    if (!this.readOnly) {
+      this._opened = true;
+    }
   }
 
   _onInput(e) {
