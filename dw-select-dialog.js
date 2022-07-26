@@ -404,7 +404,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     return isEqual(item.value, this.value);
   }
 
-  _onItemClick(item) {
+  _onItemClick(e, item) {
     this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
   }
