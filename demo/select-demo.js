@@ -2,6 +2,7 @@ import { LitElement, html, css } from "lit";
 import "../dw-select";
 import "../dw-select-group-item";
 import "../dw-select-dialog-input";
+import "../dw-select-trigger";
 
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
@@ -28,8 +29,6 @@ class SelectDemo extends LitElement {
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
-        required
-        requiredMessage="required Message"
       ></dw-select>
 
       <dw-select
@@ -50,6 +49,8 @@ class SelectDemo extends LitElement {
         valueExpression="name"
         label="Contacts"
       ></dw-select>
+
+      <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger>
 
       <!-- <dw-select-dialog-input
         @input=${(e) => console.log(e.target.value)}

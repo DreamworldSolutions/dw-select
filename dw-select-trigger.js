@@ -11,6 +11,17 @@ import "@dreamworld/dw-ripple";
  */
 
 export class DwSelectTrigger extends LitElement {
+  static styles = [
+    css`
+      :host([updatedHighlight]:not([outlined])) mwc-textfield {
+        --mdc-text-field-fill-color: var(
+          --dw-select-updated-highlight-bg-color,
+          rgba(2, 175, 205, 0.04)
+        );
+      }
+    `,
+  ];
+
   static properties = {
     /**
      * The input control's value.
@@ -43,7 +54,7 @@ export class DwSelectTrigger extends LitElement {
     /**
      * Input Property. When true, shows updated highlights
      */
-    updatedHighlight: { type: Boolean },
+    updatedHighlight: { type: Boolean, reflect: true },
 
     /**
      * Whether or not to show the temprory select dialog.
