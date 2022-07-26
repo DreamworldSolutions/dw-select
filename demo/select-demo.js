@@ -25,9 +25,11 @@ class SelectDemo extends LitElement {
         searchable
         .items=${country_list_with_code}
         valueExpression="name"
-        label="select country"
+        label="Select country"
         placeholder="placeholder"
         helper="helper text"
+        required
+        requiredMessage="required Message"
       ></dw-select>
 
       <dw-select
