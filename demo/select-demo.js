@@ -25,6 +25,7 @@ class SelectDemo extends LitElement {
       <dw-select
         searchable
         .items=${country_list_with_code}
+        .originalValue=${country_list_with_code[0]}
         valueExpression="name"
         label="Select country"
         placeholder="placeholder"
@@ -50,7 +51,7 @@ class SelectDemo extends LitElement {
         label="Contacts"
       ></dw-select>
 
-      <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger>
+      <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
       <!-- <dw-select-dialog-input
         @input=${(e) => console.log(e.target.value)}
