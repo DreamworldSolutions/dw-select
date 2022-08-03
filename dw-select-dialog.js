@@ -371,6 +371,7 @@ export class DwSelectDialog extends DwCompositeDialog {
       let title1 = this.valueExpression ? get(item.value, this.valueExpression) : item.value;
       return html`<dw-list-item
         title1=${this.getLabelValue(item.value)}
+        .highlight=${this._query}
         @click=${(e) => this._onItemClick(e, item)}
         ?activated=${index === this._activatedIndex}
         ?selected=${this._isItemSelected(item)}
