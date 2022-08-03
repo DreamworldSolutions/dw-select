@@ -25,7 +25,6 @@ class SelectDemo extends LitElement {
       <dw-select
         searchable
         .items=${country_list_with_code}
-        .originalValue=${country_list_with_code[0]}
         valueExpression="name"
         label="Select country"
         placeholder="placeholder"
