@@ -224,6 +224,11 @@ export class DwSelectDialog extends DwCompositeDialog {
      * Contains Scrollable Elements
      */
     _scrollableElement: { type: Object },
+
+    /**
+     * Custom footer template as property
+     */
+    dialogFooterElement: { type: Object },
   };
 
   set _groups(value) {
@@ -274,7 +279,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.layout = window.matchMedia(MOBILE_LAYOUT_MEDIA_QUERY).matches ? "small" : "";
     // Set initial _groups value that actually used compute list of choices
     this._groups = this.groups;
-    
+
     // Determine Dialog type
     this._determineType();
 
@@ -338,6 +343,10 @@ export class DwSelectDialog extends DwCompositeDialog {
 
     // Render list of choices
     return this._renderList;
+  }
+
+  get _footerTemplate() {
+    return this.dialogFooterElement;
   }
 
   get _renderLoading() {
