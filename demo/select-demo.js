@@ -3,6 +3,7 @@ import "../dw-select";
 import "../dw-select-group-item";
 import "../dw-select-dialog-input";
 import "../dw-select-trigger";
+import "./dw-select-extension-demo";
 
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
@@ -12,7 +13,7 @@ class SelectDemo extends LitElement {
       css`
         :host {
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           justify-content: space-evenly;
           box-sizing: border-box;
         }
@@ -49,6 +50,8 @@ class SelectDemo extends LitElement {
         valueExpression="name"
         label="Contacts"
       ></dw-select>
+
+      <dw-select-extension-demo></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
