@@ -1,114 +1,68 @@
-import { html, css } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
-import '../dw-select';
-import {materialStyles} from '@dreamworld/material-styles/material-styles';
+import { LitElement, html, css } from "lit";
+import "../dw-select";
+import "../dw-select-group-item";
+import "../dw-select-dialog-input";
+import "../dw-select-trigger";
+import "./dw-select-extension-demo";
+
+import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
 class SelectDemo extends LitElement {
   static get styles() {
     return [
-      materialStyles,
       css`
         :host {
-          display: inline-block;
-          box-sizing: border-box
+          display: flex;
+          flex-direction: row;
+          justify-content: space-evenly;
+          box-sizing: border-box;
         }
-      `
+      `,
     ];
-  } 
-
-  static get properties() {
-    return {
-      items: { type: Array },
-      value: { type: String },
-      singleSelect: { type: Boolean, reflect: true, attribute:'single-select'},
-      itemLabel: { type: String },
-      itemValue: { type: String },
-      hAlign: { type: String, reflect: true, attribute:'h-align' },
-      vAlign: { type: String, reflect: true, attribute:'v-align' },
-      hOffset: { type: Number },
-      vOffset: { type: Number },
-      allowFilter: { type: Boolean, reflect: true, attribute:'allow-filter' },
-      groupBy: { type: String, reflect: true, attribute:'group-by' },
-      groupByOrder: { type: Array },
-      groupText: { type: Object }
-    };
-  }
-
-  constructor() {
-    super();
-    let array = [];
-    for(let i=0; i< 100; i++){
-      array.push({
-        id: 'id' + i,
-        name: i % 2 === 0 ? 'bank name ' + i : 'contact name ' + i,
-        type: i % 2 === 0 ? 'BANK' : 'CONTACT'
-      });
-    }
-    this.items = array;
-    this.singleSelect = false;
-    this.allowFilter = false;
-    this.groupByOrder = ['CONTACT', 'BANK'];
-    this.groupText = (group) => {
-      if(group === 'CONTACT') {
-        return 'Contact';
-      }
-      if(group === 'BANK') {
-        return 'Bank';
-      }
-    };
-  }
-
-  connectedCallback(){
-    super.connectedCallback();
-    if(this.singleSelect){
-      this.items = [{
-        id: '', name: 'Select one'
-      }, ...this.items];
-    } else {
-      this.value = ['id2', 'id3'];
-    }
   }
 
   render() {
     return html`
       <dw-select
-       .items=${this.items}
-       itemValue="id"
-       itemLabel="name"
-       label="Account"
-       required
-       .dialogTitle=${'Select account'}
-       .filterPlaceholder=${'Search account'}
-       placeholder="Select account"
-       .hAlign=${this.hAlign}
-       .vAlign=${this.vAlign}
-       .hOffset=${this.hOffset}
-       .vOffset=${this.vOffset}
-       .value=${this.value}
-       .singleSelect=${this.singleSelect}
-       .allowFilter=${this.allowFilter}
-       .groupBy=${this.groupBy}
-       .groupByOrder=${this.groupByOrder}
-       .groupText=${this.groupText}
-       .selectedItemsText=${this.selectedItemsText}
-       @invalid-changed=${this._invalidChanged}
-       @value-changed=${this._valueChanged}
-       @opened-changed=${this._openedChanged}>
-      </dw-select>
+        searchable
+        .items=${country_list_with_code}
+        valueExpression="name"
+        label="Select country"
+        placeholder="placeholder"
+        helper="helper text"
+      ></dw-select>
+
+      <dw-select
+        .items=${list}
+        valueExpression=""
+        label="Download"
+        placeholder="placeholder"
+        helper="helper text"
+        layout="small"
+      ></dw-select>
+
+      <dw-select
+        vkb
+        searchable
+        .items=${accounts}
+        .groups=${groups}
+        groupExpression="type"
+        valueExpression="name"
+        label="Contacts"
+      ></dw-select>
+
+      <dw-select-extension-demo></dw-select-extension-demo>
+
+      <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
+
+      <!-- <dw-select-dialog-input
+        @input=${(e) => console.log(e.target.value)}
+        @cancel=${() => console.log("cancel")}
+      ></dw-select-dialog-input> -->
+
+      <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
-  }
-
-  _valueChanged(e) {
-    console.log('Value change', e.detail);
-  }
-
-  _openedChanged(e) {
-    console.log('opened change', e.detail);
-  }
-
-  _invalidChanged(e) {
-    console.log('invalid change', e.detail);
   }
 }
 
-customElements.define('select-demo', SelectDemo);
+customElements.define("select-demo", SelectDemo);

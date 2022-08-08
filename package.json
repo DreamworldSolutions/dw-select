@@ -4,26 +4,42 @@
   "description": "Mobile-first, Single/Multiple select/auto-complete solution in material design style.",
   "main": "dw-select.js",
   "scripts": {
+    "start": "web-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1",
     "semantic-release": "semantic-release"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:DreamworldSolutions/dw-select.git"
+  },
+  "keywords": [
+    "lit",
+    "select"
+  ],
+  "bugs": {
+    "url": "https://github.com/DreamworldSolutions/dw-select/issues"
+  },
+  "homepage": "https://github.com/DreamworldSolutions/dw-select",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dreamworld/dw-button": "^2.1.0",
-    "@dreamworld/dw-form": "^2.1.0",
-    "@dreamworld/dw-icon": "^2.1.0",
-    "@dreamworld/dw-icon-button": "^2.1.0",
-    "@dreamworld/dw-tooltip": "2.1.0",
-    "@dreamworld/material-styles": "1.0.1",
-    "@dreamworld/pwa-helpers": "^1.7.1",
-    "lit-element": "^2.2.0",
-    "lodash-es": "^4.17.15",
-    "tippy.js": "^6.2.7"
+    "@dreamworld/dw-dialog": "^4.2.0-development.1",
+    "@dreamworld/dw-icon": "^2.3.1",
+    "@dreamworld/dw-icon-button": "^2.4.0",
+    "@dreamworld/dw-list-item": "^3.3.0-support-highlight.1",
+    "@dreamworld/dw-ripple": "^2.3.0",
+    "@dreamworld/web-util": "^1.5.0",
+    "@material/mwc-circular-progress": "^0.26.1",
+    "@material/mwc-textfield": "^0.26.1",
+    "lit": "^2.2.7",
+    "lit-html": "^1.1.1",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.2.10",
-    "semantic-release": "17.0.8"
+    "@open-wc/building-rollup": "^2.0.1",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@web/dev-server": "^0.1.32",
+    "semantic-release": "^19.0.3"
   },
   "publishConfig": {
     "access": "public"
