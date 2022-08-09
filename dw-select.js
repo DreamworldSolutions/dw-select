@@ -10,27 +10,27 @@ import "./dw-select-dialog.js";
  * ## Types of Select
  *
  * ### Default
- *  - Sometimes Select does not support to allowed user intrect with text input (Non-searchable).
+ *  - Sometimes Select does not allow user to interact with text input (Non-searchable).
  *  - It is used when the list of options is predefined and limited.
  *
  * ### Searchable
- *  - Sometimes Select support to allowed user intrect with text input (searchable).
- *  - Typing input serves to filter suggestions presented in the popup.
- *  - It is used when the list of options is variable and very long.
+ *  - Sometimes Select allows user to interact with text input (searchable).
+ *  - Typing input serves to filter suggestions presented in the dropdown.
+ *  - It is used when the list of options is variable and/or very long.
  *
  * ## Behaviour
  *  - Renders `dw-select-trigger` and `dw-select-dialog`
- *  - When `opened` is true attach and open dialog
+ *  - When `opened=true` drop-down dialog is opened
  *
  * ### Focus:
  *  - For searchable types, it shows a cursor. For non searchable type, doesn’t show cursor.
  *  - The dropdown opens when the user clicks the field using a pointing device.
  *
  * ### Typing:
- *  - Not applicable to non searchable
- *  - Typing a character when the field is focused also opens the popup.
- *  - Shows result matching with any word of the input string. For e.g. if the user types ‘hdfc bank’ it should show a records which contains words ‘hdfc’ or ‘bank’ anywhere (at start, middle or at end)
- *  - Matching string is highlighted
+ *  - Not applicable to non-searchable
+ *  - Typing a character when the field is focused also opens the drop-down.
+ *  - drop-down shows result matching with any word of the input text. For e.g. if the user types ‘hdfc bank’ it should show a records which contains words ‘hdfc’ or ‘bank’ anywhere (at start, middle or at end)
+ *  - Matching text is highlighted
  *  - Shows the most relevant matches in dropdown in sorted order. Sorting order is most matched to least matched.
  *
  * ### Keyboard accessibility
@@ -47,7 +47,8 @@ export class DwSelect extends LitElement {
   static properties = {
     /**
      * Sets the `name` attribute on the internal input.
-     * The name property should only be used for browser autofill as webcomponent form participation does not currently consider the `name` attribute.
+     * The name property should only be used for browser autofill as webcomponent form participation
+     * does not currently consider the `name` attribute.
      */
     name: { type: String },
 
@@ -60,8 +61,8 @@ export class DwSelect extends LitElement {
 
     /**
      * Input property.
-     * __NOTE:__ When `originalValue` is specified (not `undefined`) &
-     * its value is different than this; then highlight is shown. (Comparison is done by reference)
+     * __NOTE:__ When it is specified (not `undefined`) & its value is different than `value`;
+     * then highlight is shown. (Comparison is done by reference)
      */
     originalValue: { type: Object },
 
@@ -93,12 +94,12 @@ export class DwSelect extends LitElement {
     readOnly: { type: Boolean },
 
     /**
-     * Displays error state if value is empty and input is blurred.
+     * Set `true` to apply required validation.
      */
     required: { type: Boolean },
 
     /**
-     * Message to show in the error color when the textfield is invalid.
+     * A Custom Error Message to be shown.
      */
     errorMessage: { type: String },
 
@@ -118,7 +119,7 @@ export class DwSelect extends LitElement {
     validity: { type: Object },
 
     /**
-     * Whether or not to show the `disabled` variant.
+     * Set to `true` to make it disabled.
      */
     disabled: { type: Boolean },
 
@@ -134,75 +135,94 @@ export class DwSelect extends LitElement {
     vkb: { type: Boolean },
 
     /**
-     * List of groups.
+     * Specify various available/possible groups of the Items.
+     * A Group is an Object `{name, title, collapsible, collapsed}`
      */
     groups: { type: Array },
 
     /**
-     * To select group name
-     * returns group name in string
+     * A Function `(item) -> groupName` to identify a group from an item.
      */
     groupSelector: { type: Function },
 
     /**
-     * Expression of Group
+     * An expression (dot-separated properties) to be applied on Item, to find it's group.
+     * When `groupSelector` is specified, this is ignored. When `groupSelector` isn't specified
+     * and this is specified, `groupSelector` is built using this.
      */
     groupExpression: { type: String },
 
     /**
-     * Original List of selectable items.
+     * List of total available items under drop-down.
      */
     items: { type: Array },
 
     /**
-     * Provides value that actually represent in list items
+     * A function `(item) -> value` to indetify value of any item.
      */
     valueProvider: { type: Function },
 
     /**
-     * Expression of the value
+     * An expression (dot-separated properties) to be applied on Item, to find it's value.
+     * When `valueProvider` is specified, this is ignored. When `valueProvider` isn't specified
+     * and this is specified, `valueProvider` is built using this.
      * default: _id
      */
     valueExpression: { type: String },
 
     /**
-     * returns String. Provides value that represents in list item
+     * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
+     * current `value`.
+     * default: `(item) -> item`.
      */
     valueTextProvider: { type: Function },
 
     /**
      * By default, the pop-over dialog is rendered in the width of the host element
-     * And the fit dialog is rendered in a fixed-width specified by –dw-select-fit-dialog-width css property.
+     * And the fit dialog is rendered in a fixed-width specified by 
+     * `-–dw-select-fit-dialog-width` css property.
+     * 
      * __But:__ when this is specified, both dialogs are shown in this width.
      * __Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
      */
     dialogWidth: { type: Number },
 
     /**
-     * Provides any Block element to represent list items.
-     * Should show its hover effect, and ripple on click.
-     * Highlight text based on `query`.
-     * Integrator listens to the ‘click’ event to know whether the selection is changed or not.
+     * A function to customize item rendering.
+     * Prototype: `(item, selected, activated, query) => HTMLTemplate`.
+     * 
+     * - Input property.
+     * - It's Optional, by default it renders an item using a `dw-surface`.
+     * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
+     * children at any depth.
+     * - It should show hover and ripple (on click) effects.
+     * - Highlight text based on `query`.
+     * `click` event on it is being listened to know that item has been selected by the user.
      * __Note:__ It must not be focusable.
      */
     renderItem: { type: Object },
 
     /**
-     * Provides any Block elements to represent group items.
-     * name property should be set to input name.
-     * Should show hover & ripple effects only if it’s collapsible.
-     * Integrator listens on ‘click’ event to toggle collapsed status.
+     * A function to customize groupItem's rendering.
+     * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
+     * 
+     * - Input property.
+     * - It's optional, by default it renders groupItem using //TODO: ????
+     * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
+     * children at any depth.
+     * - `name` (available as input) should be set to `name` property on the groupItem element.
+     * - It should show hover and ripple (on click) effects, but only when it’s `collapsible`.
+     * - `click` event on it is being listened to toggle `collapsed` status.
      */
     renderGroupItem: { type: Object },
 
     /**
      * Whether dialog is opened or not.
-     * Used to set dialog width. Only for popover dialog.
      */
     _opened: { type: Boolean },
 
     /**
-     * search query in string. used to filter items and highlight query keywords
+     * search query (as text). used to filter items and highlight matched words.
      */
     _query: { type: String },
   };
