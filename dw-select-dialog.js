@@ -30,6 +30,11 @@ export class DwSelectDialog extends DwCompositeDialog {
     css`
       :host {
         display: block;
+        --dw-select-content-padding: 16px 0;
+      }
+
+      :host([type="popover"]) .dialog__content {
+        padding: var(--dw-select-content-padding, 0);
       }
 
       .loading {
