@@ -1,7 +1,10 @@
-import { LitElement, html } from "lit";
+import { LitElement, html, css } from "lit";
 
 // View Elements
 import "./dw-select-trigger.js";
+
+// Lodash Methods
+import get from "lodash-es/get";
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -233,14 +236,38 @@ export class DwSelect extends LitElement {
     return this.renderRoot.querySelector("dw-select-trigger");
   }
 
+  static styles = [
+    css`
+      :host {
+        --dw-popover-min-width: 0px;
+      }
+    `,
+  ];
+
+  constructor() {
+    super();
+    this.valueExpression = "_id";
+  }
+
   render() {
     return html`
-      <dw-select-trigger @click=${this._onTrigger} @input=${this._onInput}></dw-select-trigger>
+      <dw-select-trigger
+        @click=${this._onTrigger}
+        @input=${this._onInput}
+        value=${this._getValue}
+      ></dw-select-trigger>
       ${this._opened
         ? html`<dw-select-dialog
+            id="selectDialog"
             opened
+            .triggerElement=${this._triggerElement}
+            .value=${this.value}
             .items="${this.items}"
-            .triggerElement="${this._triggerElement}"
+            .valueExpression=${this.valueExpression}
+            ?vkb=${this.vkb}
+            .renderItem=${this.renderItem}
+            .renderGroupItem=${this.renderGroupItem}
+            @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
           ></dw-select-dialog>`
         : html``}
@@ -250,6 +277,7 @@ export class DwSelect extends LitElement {
   willUpdate(_changedProperties) {
     if (_changedProperties.has("_opened") && this._opened) {
       this._loadFragments();
+      this._setPopoverDialogWidth();
     }
   }
 
@@ -262,12 +290,40 @@ export class DwSelect extends LitElement {
     }
   }
 
+  /**
+   * Set dialog width if `dialogWidth` is provided.
+   * Otherwise determine trigger element's width and set to dialog
+   */
+  _setPopoverDialogWidth() {
+    if (this.dialogWidth) {
+      this.style.setProperty("--dw-popover-width", this.dialogWidth + "px");
+      return;
+    }
+
+    // Trigger element getter
+    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+
+    // Set Trigger element's offSetWidth to PopOver Dialog
+    this.style.setProperty("--dw-popover-width", triggerEl.offsetWidth + "px");
+  }
+
+  /**
+   * Returns String that represents current value
+   */
+  get _getValue() {
+    return this.valueExpression ? get(this.value, this.valueExpression) : this.value;
+  }
+
   _onTrigger(e) {
     this._opened = true;
   }
 
   _onInput(e) {
     console.log(e.target.value);
+  }
+
+  _onSelect(e) {
+    this.value = e.detail;
   }
 
   _onDialogClose() {
