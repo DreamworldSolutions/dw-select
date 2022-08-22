@@ -238,7 +238,7 @@ export class DwSelect extends LitElement {
     /**
      * When true, shows updated highlights.
      */
-    _updatedHighlight: { type: Boolean}
+    _updatedHighlight: { type: Boolean },
   };
 
   /**
@@ -297,6 +297,7 @@ export class DwSelect extends LitElement {
             ?searchable=${this.searchable}
             .renderItem=${this.renderItem}
             .renderGroupItem=${this.renderGroupItem}
+            .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
           ></dw-select-dialog>`
@@ -304,12 +305,20 @@ export class DwSelect extends LitElement {
     `;
   }
 
+  /**
+   * Footer Template getter
+   * Used when this element is used by `Extension` To override this method
+   */
+  get _footerTemplate() {
+    return;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
 
-    if(this.originalValue) {
-      this.value = this.originalValue
+    if (this.originalValue) {
+      this.value = this.originalValue;
     }
   }
 
@@ -319,7 +328,7 @@ export class DwSelect extends LitElement {
       this._setPopoverDialogWidth();
     }
 
-    if (_changedProperties.has('value')) {
+    if (_changedProperties.has("value")) {
       this._updatedHighlight = !Object.is(this.value, this.originalValue);
     }
   }
