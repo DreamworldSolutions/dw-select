@@ -11,7 +11,7 @@ class SelectDemo extends LitElement {
       css`
         :host {
           display: flex;
-          flex-direction: row;
+          flex-direction: column;
           justify-content: space-evenly;
           box-sizing: border-box;
         }
@@ -39,6 +39,7 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
+        vkb
         searchable
         .items=${accounts}
         .groups=${groups}
@@ -47,7 +48,10 @@ class SelectDemo extends LitElement {
         label="Contacts"
       ></dw-select>
 
-      <dw-select-dialog-input @input=${(e) => console.log(e.target.value)} @cancel=${() => console.log("cancel")}></dw-select-dialog-input>
+      <dw-select-dialog-input
+        @input=${(e) => console.log(e.target.value)}
+        @cancel=${() => console.log("cancel")}
+      ></dw-select-dialog-input>
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
