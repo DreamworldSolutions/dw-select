@@ -10,7 +10,8 @@ class SelectDemo extends LitElement {
       css`
         :host {
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
+          justify-content: space-evenly;
           box-sizing: border-box;
         }
       `,
@@ -21,7 +22,7 @@ class SelectDemo extends LitElement {
     return html`
       <dw-select
         searchable
-        .items=${groupList}
+        .items=${country_list_with_code}
         valueExpression="name"
         label="select country"
         placeholder="placeholder"
@@ -37,7 +38,7 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
-        outlined
+        searchable
         .items=${accounts}
         .groups=${groups}
         groupExpression="type"
