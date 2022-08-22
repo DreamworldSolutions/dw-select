@@ -1,5 +1,7 @@
 # `<dw-select-trigger>`
 
+> NOTE: Internally [`mwc-textfield`](https://www.npmjs.com/package/@material/mwc-textfield) is used. And this component is a work in progress, so breaking changes might affect the current implementation.
+
 A Input Text Field lets user to enter or edit existing texts.
 3 Variants:
 
