@@ -266,6 +266,8 @@ export class DwSelect extends LitElement {
         ?inputAllowed=${this.searchable}
         value=${this._getValue}
         ?outlined=${this.outlined}
+        ?required=${this.required}
+        .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
