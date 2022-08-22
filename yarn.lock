@@ -986,10 +986,10 @@
     "@material/mwc-icon" "^0.26.1"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-list-item@^3.3.0-development.1":
-  version "3.3.0-development.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-3.3.0-development.1.tgz#6c0cbb8ceda59e3f3569e69edda2d2511350a062"
-  integrity sha512-LBqEbekbt5o5AQo3yxeRlVuK4aNkbzmeK7mvfpurLUCFhsDqnrH3aQAxpr3kE0hmnv/RlngbY0Hsm+PxWJILqg==
+"@dreamworld/dw-list-item@^3.3.0-support-highlight.1":
+  version "3.3.0-support-highlight.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-3.3.0-support-highlight.1.tgz#3b8043cd5a26c53e7000d82a8ab5ecf17dbd4e0c"
+  integrity sha512-4TSnmTm7io+x2ASTCGgIOIbhHtzL8FuF94Y58DtCZmFbF922VmZSlsrB6xS3YktzG4t5t0j+CeoIcPMaYFpU3w==
   dependencies:
     "@dreamworld/dw-icon" "^2.3.0"
     "@dreamworld/dw-ripple" "^2.3.0"
@@ -998,6 +998,7 @@
     "@dreamworld/material-styles" "^1.1.0"
     "@dreamworld/pwa-helpers" "^1.7.1"
     lit-element "^2.2.1"
+    lit-html "^1.1.1"
 
 "@dreamworld/dw-ripple@^2.3.0":
   version "2.3.0"
