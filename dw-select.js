@@ -239,8 +239,9 @@ export class DwSelect extends LitElement {
       ${this._opened
         ? html`<dw-select-dialog
             opened
-            .triggerElement=${this._triggerElement}
-            @dw-dialog-closed=${this._onDialogClose}
+            .items="${this.items}"
+            .triggerElement="${this._triggerElement}"
+            @dw-dialog-closed="${this._onDialogClose}"
           ></dw-select-dialog>`
         : html``}
     `;
