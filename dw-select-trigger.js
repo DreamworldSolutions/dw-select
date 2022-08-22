@@ -61,6 +61,11 @@ export class DwSelectTrigger extends LitElement {
     inputAllowed: { type: Boolean },
 
     /**
+     * Displays error state if value is empty and input is blurred.
+     */
+    required: { type: Boolean },
+
+    /**
      * When true, helper text isn’t visible. Instead `errorMesage` is shown.
      */
     error: { type: Boolean },
@@ -81,6 +86,8 @@ export class DwSelectTrigger extends LitElement {
         @input=${this._onInput}
         value=${this.value}
         ?outlined=${this.outlined}
+        ?required=${this.required}
+        .validationMessage=${this.errorMessage}
       ></mwc-textfield>
     `;
   }
