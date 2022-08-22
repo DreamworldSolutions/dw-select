@@ -1,7 +1,8 @@
 import { LitElement, html, css } from "lit-element";
 import "../dw-select";
+import "../dw-select-group-item";
 
-import { country_list, country_list_with_code, list } from "./utils";
+import { country_list, country_list_with_code, list, groupList } from "./utils";
 
 class SelectDemo extends LitElement {
   static get styles() {
@@ -33,6 +34,14 @@ class SelectDemo extends LitElement {
         placeholder="placeholder"
         helper="helper text"
       ></dw-select>
+
+      <dw-select
+        .items=${groupList}
+        valueExpression="name"
+        label="Contacts"
+      ></dw-select>
+
+      <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item>
     `;
   }
 }
