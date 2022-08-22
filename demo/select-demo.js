@@ -2,7 +2,7 @@ import { LitElement, html, css } from "lit-element";
 import "../dw-select";
 import "../dw-select-group-item";
 
-import { country_list, country_list_with_code, list, groupList } from "./utils";
+import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
 class SelectDemo extends LitElement {
   static get styles() {
@@ -36,7 +36,9 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
-        .items=${groupList}
+        .items=${accounts}
+        .groups=${groups}
+        groupExpression="type"
         valueExpression="name"
         label="Contacts"
       ></dw-select>
