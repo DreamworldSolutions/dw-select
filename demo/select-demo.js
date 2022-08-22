@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
 import "../dw-select";
 import "../dw-select-group-item";
+import "../dw-select-dialog-input";
 
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
@@ -45,6 +46,8 @@ class SelectDemo extends LitElement {
         valueExpression="name"
         label="Contacts"
       ></dw-select>
+
+      <dw-select-dialog-input @input=${(e) => console.log(e.target.value)} @cancel=${() => console.log("cancel")}></dw-select-dialog-input>
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
