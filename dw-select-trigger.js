@@ -77,7 +77,7 @@ export class DwSelectTrigger extends LitElement {
         label=${this.label}
         placeholder=${this.placeholder}
         helper=${this.helper}
-        ?readOnly=${this.readOnly}
+        ?readOnly=${!this.inputAllowed}
         @input=${this._onInput}
         value=${this.value}
         ?outlined=${this.outlined}
