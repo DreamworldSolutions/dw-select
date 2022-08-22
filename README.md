@@ -109,3 +109,9 @@ TODO
 | Name     | Description
 | -------- | -------------
 | `checkValidity() => boolean`   | Returns `true` if the textfield passes validity checks. Returns `false` and fires an [`invalid`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/invalid_event) event on the textfield otherwise.
+
+### CSS Custom Properties
+
+| Name                                              | Default                   | Description
+| ------------------------------------------------- | ------------------------- | -----------
+| `--dw-select-updated-highlight-bg-color`          | `rgba(2, 175, 205, 0.04)` | Background Color of the trigger element when value is  Updated
