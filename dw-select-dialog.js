@@ -243,6 +243,7 @@ export class DwSelectDialog extends DwCompositeDialog {
       title1=${title1}
       @click=${(e) => this._onItemClick(e, item)}
       ?selected=${this._isItemSelected(item)}
+      .focusable=${false}
     ></dw-list-item>`;
   }
 
