@@ -66,6 +66,11 @@ export class DwSelectTrigger extends LitElement {
     required: { type: Boolean },
 
     /**
+     * Whether or not to show the `disabled` variant.
+     */
+    disabled: { type: Boolean },
+
+    /**
      * When true, helper text isn’t visible. Instead `errorMesage` is shown.
      */
     error: { type: Boolean },
@@ -87,6 +92,7 @@ export class DwSelectTrigger extends LitElement {
         value=${this.value}
         ?outlined=${this.outlined}
         ?required=${this.required}
+        ?disabled=${this.disabled}
         .validationMessage=${this.errorMessage}
       ></mwc-textfield>
     `;
