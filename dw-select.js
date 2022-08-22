@@ -274,8 +274,14 @@ export class DwSelect extends LitElement {
             .triggerElement=${this._triggerElement}
             .value=${this.value}
             .items="${this.items}"
+            .valueProvider=${this.valueProvider}
             .valueExpression=${this.valueExpression}
+            .valueTextProvider=${this.valueTextProvider}
+            .groups=${this.groups}
+            .groupSelector=${this.groupSelector}
+            .groupExpression=${this.groupExpression}
             ?vkb=${this.vkb}
+            ?searchable=${this.searchable}
             .renderItem=${this.renderItem}
             .renderGroupItem=${this.renderGroupItem}
             @selected=${this._onSelect}
@@ -334,7 +340,7 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    this.value = e.detail;
+    this.value = e.detail.value;
   }
 
   _onDialogClose() {

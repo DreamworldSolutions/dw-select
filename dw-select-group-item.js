@@ -1,6 +1,11 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css, unsafeCSS } from "lit";
+
+// View Elements
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-ripple";
+
+// Styles
+import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals";
 
 /**
  * # Behaviour
@@ -28,6 +33,8 @@ export class DwSelectGroupItem extends LitElement {
 
       .label {
         flex: 1;
+        color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
+        ${unsafeCSS(TypographyLiterals.subtitle2)};
       }
     `,
   ];
