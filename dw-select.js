@@ -234,6 +234,11 @@ export class DwSelect extends LitElement {
      * search query (as text). used to filter items and highlight matched words.
      */
     _query: { type: String },
+
+    /**
+     * When true, shows updated highlights.
+     */
+    _updatedHighlight: { type: Boolean}
   };
 
   /**
@@ -268,6 +273,7 @@ export class DwSelect extends LitElement {
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
         ?required=${this.required}
+        ?updatedHighlight=${this._updatedHighlight}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
@@ -301,12 +307,20 @@ export class DwSelect extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+
+    if(this.originalValue) {
+      this.value = this.originalValue
+    }
   }
 
   willUpdate(_changedProperties) {
     if (_changedProperties.has("_opened") && this._opened) {
       this._loadFragments();
       this._setPopoverDialogWidth();
+    }
+
+    if (_changedProperties.has('value')) {
+      this._updatedHighlight = !Object.is(this.value, this.originalValue);
     }
   }
 
