@@ -66,7 +66,7 @@ export class DwSelect extends LitElement {
      * `object` in case of single selection;
      * `object[]` in case of multiple selections.
      */
-    value: { type: Object },
+    value: { type: Array },
 
     /**
      * Input property.
