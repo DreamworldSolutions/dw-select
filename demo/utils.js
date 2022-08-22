@@ -24,19 +24,19 @@ export const groups = [
   {
     name: "BANK_ACCOUNT",
     label: "Bank Accounts",
-    collapsible: false,
+    collapsible: true,
     collapsed: false,
   },
   {
     name: "CONTACT",
     label: "Contacts",
-    collapsible: false,
+    collapsible: true,
     collapsed: false,
   },
   {
     name: "ACCOUNT",
     label: "Custom Accounts",
-    collapsible: false,
+    collapsible: true,
     collapsed: false,
   },
 ];
