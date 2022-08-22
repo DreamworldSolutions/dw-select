@@ -28,6 +28,7 @@
     "@dreamworld/dw-icon-button": "^2.4.0",
     "@dreamworld/dw-list-item": "^3.3.0-development.1",
     "@dreamworld/dw-ripple": "^2.3.0",
+    "@dreamworld/web-util": "^1.5.0",
     "@material/mwc-circular-progress": "^0.26.1",
     "@material/mwc-textfield": "^0.26.1",
     "lit": "^2.2.7",
