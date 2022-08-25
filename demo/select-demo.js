@@ -30,6 +30,7 @@ class SelectDemo extends LitElement {
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
+        @selected=${this._onSelect}
       ></dw-select>
 
       <dw-select
@@ -62,6 +63,10 @@ class SelectDemo extends LitElement {
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
+  }
+
+  _onSelect(e) {
+    console.log(e);
   }
 }
 

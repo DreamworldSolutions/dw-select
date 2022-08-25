@@ -391,6 +391,7 @@ export class DwSelect extends LitElement {
 
   _onSelect(e) {
     this.value = e.detail.value;
+    this.dispatchEvent(new CustomEvent('selected', { detail: e.detail }))
   }
 
   _onDialogClose() {
