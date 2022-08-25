@@ -54,11 +54,8 @@ export class DwSelectDialog extends DwCompositeDialog {
     css`
       :host {
         display: block;
-        --dw-select-content-padding: 16px 0;
-      }
-
-      :host([type="popover"]) .dialog__content {
-        padding: var(--dw-select-content-padding, 0);
+        --dw-dialog-header-padding: 8px 16px;
+        --dw-dialog-content-padding: 0;
       }
 
       :host([type="popover"]) .dialog__content {
@@ -417,7 +414,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     return isEqual(item.value, this.value);
   }
 
-  _onItemClick(item) {
+  _onItemClick(e, item) {
     this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
   }

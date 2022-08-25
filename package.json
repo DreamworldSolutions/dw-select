@@ -32,7 +32,6 @@
     "@material/mwc-circular-progress": "^0.26.1",
     "@material/mwc-textfield": "^0.26.1",
     "lit": "^2.2.7",
-    "lit-element": "^2.0.1",
     "lit-html": "^1.1.1",
     "lodash-es": "^4.17.21"
   },
