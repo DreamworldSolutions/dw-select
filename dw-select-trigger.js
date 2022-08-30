@@ -13,6 +13,10 @@ import "@dreamworld/dw-ripple";
 export class DwSelectTrigger extends LitElement {
   static styles = [
     css`
+      mwc-textfield {
+        display: block;
+      }
+
       :host([updatedHighlight]:not([outlined])) mwc-textfield {
         --mdc-text-field-fill-color: var(
           --dw-select-updated-highlight-bg-color,

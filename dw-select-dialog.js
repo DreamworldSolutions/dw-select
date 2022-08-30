@@ -281,7 +281,7 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   connectedCallback() {
     this.layout = window.matchMedia(MOBILE_LAYOUT_MEDIA_QUERY).matches ? "small" : "";
-    // Set initial _groups value that actually used compute list of choices
+    // Set initial _groups value that actually used to compute list of choices
     this._groups = this.groups;
 
     // Determine Dialog type

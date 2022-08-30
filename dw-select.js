@@ -145,7 +145,7 @@ export class DwSelect extends LitElement {
 
     /**
      * Specify various available/possible groups of the Items.
-     * A Group is an Object `{name, title, collapsible, collapsed}`
+     * A Group is an Object `{name: string, title: string, collapsible: boolean, collapsed: boolean}`
      */
     groups: { type: Array },
 
@@ -251,6 +251,7 @@ export class DwSelect extends LitElement {
   static styles = [
     css`
       :host {
+        display: block;
         --dw-popover-min-width: 0px;
       }
     `,

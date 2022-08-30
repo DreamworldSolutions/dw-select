@@ -12,10 +12,11 @@ class SelectDemo extends LitElement {
     return [
       css`
         :host {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-evenly;
           box-sizing: border-box;
+        }
+
+        dw-select {
+          margin-bottom: 24px;
         }
       `,
     ];
