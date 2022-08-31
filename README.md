@@ -74,6 +74,7 @@ TODO
 | `dialogWidth`             | `number`                      | `undefined`        | By default, the pop-over dialog is rendered in the width of the host element; And the fit dialog is rendered in a fixed-width specified by –dw-select-fit-dialog-width css property. <br>__But:__ when this is specified, both dialogs are shown in this width. <br>__Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
 | `renderItem`              | `HTMLTemplate`                | `undefined`        | Provides any Block element to represent list items. Should show its hover effect, and ripple on click. Highlight text based on `query`. Integrator listens to the ‘click’ event to know whether the selection is changed or not. <br>__Note:__ It must not be focusable.
 | `renderGroupItem`         | `HTMLTemplate`                | `undefined`        | Provides any Block elements to represent group items. name property should be set to input name. Should show hover & ripple effects only if it’s collapsible. Integrator listens on ‘click’ event to toggle collapsed status.
+| `valueEquator`            | `Function`                    | `(v1, v2) => v1 === v2` | Set this to configure custom logic to detect whether value is changed or not.
 
 ### Group
 

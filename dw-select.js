@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css, nothing } from "lit";
 
 // View Elements
 import "./dw-select-trigger.js";
@@ -227,9 +227,9 @@ export class DwSelect extends LitElement {
 
     /**
      * Set this to configure custom logic to detect whether value is changed or not.
-     * By default it will check by equality check of `value` and `originalValue`.
+     * Default: compares both values by strict equality (by reference) `v1 === v2`.
      * It must return a Boolean.
-     * Function receives 2 arguments: (val1, val2). Should return `true` when both values are same otherwise `false`.
+     * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
      */
     valueEquator: { type: Function },
 
@@ -270,9 +270,7 @@ export class DwSelect extends LitElement {
     this.valueExpression = "_id";
     this.searchable = false;
 
-    this.valueEquator = function (value, originalValue) {
-      return value === originalValue;
-    };
+    this.valueEquator = (v1, v2) => v1 === v2;
   }
 
   render() {
@@ -314,7 +312,7 @@ export class DwSelect extends LitElement {
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
           ></dw-select-dialog>`
-        : html``}
+        : nothing}
     `;
   }
 
