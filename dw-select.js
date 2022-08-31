@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css, nothing } from "lit";
 
 // View Elements
 import "./dw-select-trigger.js";
@@ -188,9 +188,9 @@ export class DwSelect extends LitElement {
 
     /**
      * By default, the pop-over dialog is rendered in the width of the host element
-     * And the fit dialog is rendered in a fixed-width specified by 
+     * And the fit dialog is rendered in a fixed-width specified by
      * `-–dw-select-fit-dialog-width` css property.
-     * 
+     *
      * __But:__ when this is specified, both dialogs are shown in this width.
      * __Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
      */
@@ -199,7 +199,7 @@ export class DwSelect extends LitElement {
     /**
      * A function to customize item rendering.
      * Prototype: `(item, selected, activated, query) => HTMLTemplate`.
-     * 
+     *
      * - Input property.
      * - It's Optional, by default it renders an item using a `dw-surface`.
      * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
@@ -214,7 +214,7 @@ export class DwSelect extends LitElement {
     /**
      * A function to customize groupItem's rendering.
      * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
-     * 
+     *
      * - Input property.
      * - It's optional, by default it renders groupItem using //TODO: ????
      * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
@@ -224,6 +224,14 @@ export class DwSelect extends LitElement {
      * - `click` event on it is being listened to toggle `collapsed` status.
      */
     renderGroupItem: { type: Object },
+
+    /**
+     * Set this to configure custom logic to detect whether value is changed or not.
+     * Default: compares both values by strict equality (by reference) `v1 === v2`.
+     * It must return a Boolean.
+     * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
+     */
+    valueEquator: { type: Function },
 
     /**
      * Whether dialog is opened or not.
@@ -261,6 +269,8 @@ export class DwSelect extends LitElement {
     super();
     this.valueExpression = "_id";
     this.searchable = false;
+
+    this.valueEquator = (v1, v2) => v1 === v2;
   }
 
   render() {
@@ -302,7 +312,7 @@ export class DwSelect extends LitElement {
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
           ></dw-select-dialog>`
-        : html``}
+        : nothing}
     `;
   }
 
@@ -330,7 +340,7 @@ export class DwSelect extends LitElement {
     }
 
     if (_changedProperties.has("value")) {
-      this._updatedHighlight = !Object.is(this.value, this.originalValue);
+      this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
     }
   }
 
