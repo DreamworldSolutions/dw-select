@@ -53,201 +53,203 @@ const KEY_CODE = {
  */
 
 export class DwSelect extends LitElement {
-  static properties = {
-    /**
-     * Sets the `name` attribute on the internal input.
-     * The name property should only be used for browser autofill as webcomponent form participation
-     * does not currently consider the `name` attribute.
-     */
-    name: { type: String },
-
-    /**
-     * Selected list item object.
-     * `object` in case of single selection;
-     * `object[]` in case of multiple selections.
-     */
-    value: { type: Array },
-
-    /**
-     * Input property.
-     * __NOTE:__ When it is specified (not `undefined`) & its value is different than `value`;
-     * then highlight is shown. (Comparison is done by reference)
-     */
-    originalValue: { type: Object },
-
-    /**
-     * Whether or not to show the `outlined` variant.
-     */
-    outlined: { type: Boolean },
-
-    /**
-     * Sets floating label value.
-     * __NOTE:__ The label will not float if the selected item has a false value property.
-     */
-    label: { type: String },
-
-    /**
-     * Sets disappearing input placeholder.
-     */
-    placeholder: { type: String },
-
-    /**
-     * Helper text to display below the input.
-     * Display default only when focused.
-     */
-    helper: { type: String },
-
-    /**
-     * Whether or not to show the `readOnly` state.
-     */
-    readOnly: { type: Boolean },
-
-    /**
-     * Set `true` to apply required validation.
-     */
-    required: { type: Boolean },
-
-    /**
-     * A Custom Error Message to be shown.
-     */
-    errorMessage: { type: String },
-
-    /**
-     * Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.
-     */
-    requiredMessage: { type: String },
-
-    /**
-     * Whether or not to show the `required` error message.
-     */
-    _requiredErrorVisible: { type: Boolean },
-
-    /**
-     * The [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) of the textfield.
-     */
-    validity: { type: Object },
-
-    /**
-     * Set to `true` to make it disabled.
-     */
-    disabled: { type: Boolean },
-
-    /**
-     * Whether or not to show the `searchable` variant.
-     */
-    searchable: { type: Boolean },
-
-    /**
-     * `vkb` stands for Virtual KeyBoard.
-     * Whether the Device has Virtual KeyBoard.
-     */
-    vkb: { type: Boolean },
-
-    /**
-     * Specify various available/possible groups of the Items.
-     * A Group is an Object `{name: string, title: string, collapsible: boolean, collapsed: boolean}`
-     */
-    groups: { type: Array },
-
-    /**
-     * A Function `(item) -> groupName` to identify a group from an item.
-     */
-    groupSelector: { type: Function },
-
-    /**
-     * An expression (dot-separated properties) to be applied on Item, to find it's group.
-     * When `groupSelector` is specified, this is ignored. When `groupSelector` isn't specified
-     * and this is specified, `groupSelector` is built using this.
-     */
-    groupExpression: { type: String },
-
-    /**
-     * List of total available items under drop-down.
-     */
-    items: { type: Array },
-
-    /**
-     * A function `(item) -> value` to indetify value of any item.
-     */
-    valueProvider: { type: Function },
-
-    /**
-     * An expression (dot-separated properties) to be applied on Item, to find it's value.
-     * When `valueProvider` is specified, this is ignored. When `valueProvider` isn't specified
-     * and this is specified, `valueProvider` is built using this.
-     * default: _id
-     */
-    valueExpression: { type: String },
-
-    /**
-     * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
-     * current `value`.
-     * default: `(item) -> item`.
-     */
-    valueTextProvider: { type: Function },
-
-    /**
-     * By default, the pop-over dialog is rendered in the width of the host element
-     * And the fit dialog is rendered in a fixed-width specified by
-     * `-–dw-select-fit-dialog-width` css property.
-     *
-     * __But:__ when this is specified, both dialogs are shown in this width.
-     * __Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
-     */
-    dialogWidth: { type: Number },
-
-    /**
-     * A function to customize item rendering.
-     * Prototype: `(item, selected, activated, query) => HTMLTemplate`.
-     *
-     * - Input property.
-     * - It's Optional, by default it renders an item using a `dw-surface`.
-     * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
-     * children at any depth.
-     * - It should show hover and ripple (on click) effects.
-     * - Highlight text based on `query`.
-     * `click` event on it is being listened to know that item has been selected by the user.
-     * __Note:__ It must not be focusable.
-     */
-    renderItem: { type: Object },
-
-    /**
-     * A function to customize groupItem's rendering.
-     * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
-     *
-     * - Input property.
-     * - It's optional, by default it renders groupItem using //TODO: ????
-     * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
-     * children at any depth.
-     * - `name` (available as input) should be set to `name` property on the groupItem element.
-     * - It should show hover and ripple (on click) effects, but only when it’s `collapsible`.
-     * - `click` event on it is being listened to toggle `collapsed` status.
-     */
-    renderGroupItem: { type: Object },
-
-    /**
-     * Set this to configure custom logic to detect whether value is changed or not.
-     * Default: compares both values by strict equality (by reference) `v1 === v2`.
-     * It must return a Boolean.
-     * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
-     */
-    valueEquator: { type: Function },
-
-    /**
-     * Whether dialog is opened or not.
-     */
-    _opened: { type: Boolean },
-
-    /**
-     * search query (as text). used to filter items and highlight matched words.
-     */
-    _query: { type: String },
-
-    /**
-     * When true, shows updated highlights.
-     */
-    _updatedHighlight: { type: Boolean },
-  };
+  static get properties() {
+    return {
+      /**
+       * Sets the `name` attribute on the internal input.
+       * The name property should only be used for browser autofill as webcomponent form participation
+       * does not currently consider the `name` attribute.
+       */
+      name: { type: String },
+  
+      /**
+       * Selected list item object.
+       * `object` in case of single selection;
+       * `object[]` in case of multiple selections.
+       */
+      value: { type: Array },
+  
+      /**
+       * Input property.
+       * __NOTE:__ When it is specified (not `undefined`) & its value is different than `value`;
+       * then highlight is shown. (Comparison is done by reference)
+       */
+      originalValue: { type: Object },
+  
+      /**
+       * Whether or not to show the `outlined` variant.
+       */
+      outlined: { type: Boolean },
+  
+      /**
+       * Sets floating label value.
+       * __NOTE:__ The label will not float if the selected item has a false value property.
+       */
+      label: { type: String },
+  
+      /**
+       * Sets disappearing input placeholder.
+       */
+      placeholder: { type: String },
+  
+      /**
+       * Helper text to display below the input.
+       * Display default only when focused.
+       */
+      helper: { type: String },
+  
+      /**
+       * Whether or not to show the `readOnly` state.
+       */
+      readOnly: { type: Boolean },
+  
+      /**
+       * Set `true` to apply required validation.
+       */
+      required: { type: Boolean },
+  
+      /**
+       * A Custom Error Message to be shown.
+       */
+      errorMessage: { type: String },
+  
+      /**
+       * Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.
+       */
+      requiredMessage: { type: String },
+  
+      /**
+       * Whether or not to show the `required` error message.
+       */
+      _requiredErrorVisible: { type: Boolean },
+  
+      /**
+       * The [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) of the textfield.
+       */
+      validity: { type: Object },
+  
+      /**
+       * Set to `true` to make it disabled.
+       */
+      disabled: { type: Boolean },
+  
+      /**
+       * Whether or not to show the `searchable` variant.
+       */
+      searchable: { type: Boolean },
+  
+      /**
+       * `vkb` stands for Virtual KeyBoard.
+       * Whether the Device has Virtual KeyBoard.
+       */
+      vkb: { type: Boolean },
+  
+      /**
+       * Specify various available/possible groups of the Items.
+       * A Group is an Object `{name: string, title: string, collapsible: boolean, collapsed: boolean}`
+       */
+      groups: { type: Array },
+  
+      /**
+       * A Function `(item) -> groupName` to identify a group from an item.
+       */
+      groupSelector: { type: Function },
+  
+      /**
+       * An expression (dot-separated properties) to be applied on Item, to find it's group.
+       * When `groupSelector` is specified, this is ignored. When `groupSelector` isn't specified
+       * and this is specified, `groupSelector` is built using this.
+       */
+      groupExpression: { type: String },
+  
+      /**
+       * List of total available items under drop-down.
+       */
+      items: { type: Array },
+  
+      /**
+       * A function `(item) -> value` to indetify value of any item.
+       */
+      valueProvider: { type: Function },
+  
+      /**
+       * An expression (dot-separated properties) to be applied on Item, to find it's value.
+       * When `valueProvider` is specified, this is ignored. When `valueProvider` isn't specified
+       * and this is specified, `valueProvider` is built using this.
+       * default: _id
+       */
+      valueExpression: { type: String },
+  
+      /**
+       * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
+       * current `value`.
+       * default: `(item) -> item`.
+       */
+      valueTextProvider: { type: Function },
+  
+      /**
+       * By default, the pop-over dialog is rendered in the width of the host element
+       * And the fit dialog is rendered in a fixed-width specified by
+       * `-–dw-select-fit-dialog-width` css property.
+       *
+       * __But:__ when this is specified, both dialogs are shown in this width.
+       * __Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
+       */
+      dialogWidth: { type: Number },
+  
+      /**
+       * A function to customize item rendering.
+       * Prototype: `(item, selected, activated, query) => HTMLTemplate`.
+       *
+       * - Input property.
+       * - It's Optional, by default it renders an item using a `dw-surface`.
+       * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
+       * children at any depth.
+       * - It should show hover and ripple (on click) effects.
+       * - Highlight text based on `query`.
+       * `click` event on it is being listened to know that item has been selected by the user.
+       * __Note:__ It must not be focusable.
+       */
+      renderItem: { type: Object },
+  
+      /**
+       * A function to customize groupItem's rendering.
+       * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
+       *
+       * - Input property.
+       * - It's optional, by default it renders groupItem using //TODO: ????
+       * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
+       * children at any depth.
+       * - `name` (available as input) should be set to `name` property on the groupItem element.
+       * - It should show hover and ripple (on click) effects, but only when it’s `collapsible`.
+       * - `click` event on it is being listened to toggle `collapsed` status.
+       */
+      renderGroupItem: { type: Object },
+  
+      /**
+       * Set this to configure custom logic to detect whether value is changed or not.
+       * Default: compares both values by strict equality (by reference) `v1 === v2`.
+       * It must return a Boolean.
+       * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
+       */
+      valueEquator: { type: Function },
+  
+      /**
+       * Whether dialog is opened or not.
+       */
+      _opened: { type: Boolean },
+  
+      /**
+       * search query (as text). used to filter items and highlight matched words.
+       */
+      _query: { type: String },
+  
+      /**
+       * When true, shows updated highlights.
+       */
+      _updatedHighlight: { type: Boolean },
+    }
+  } ;
 
   /**
    * Trigger Element Getter
@@ -256,14 +258,16 @@ export class DwSelect extends LitElement {
     return this.renderRoot.querySelector("dw-select-trigger");
   }
 
-  static styles = [
-    css`
-      :host {
-        display: block;
-        --dw-popover-min-width: 0px;
-      }
-    `,
-  ];
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: block;
+          --dw-popover-min-width: 0px;
+        }
+      `,
+    ]
+  };
 
   constructor() {
     super();

@@ -20,45 +20,49 @@ import * as TypographyLiterals from "@dreamworld/material-styles/typography-lite
  */
 
 export class DwSelectGroupItem extends LitElement {
-  static styles = [
-    css`
-      :host {
-        position: relative;
-        display: flex;
-        height: 42px;
-        flex-direction: row;
-        align-items: center;
-        padding: 0 16px;
-      }
+  static get styles() {
+    return [
+      css`
+        :host {
+          position: relative;
+          display: flex;
+          height: 42px;
+          flex-direction: row;
+          align-items: center;
+          padding: 0 16px;
+        }
+  
+        .label {
+          flex: 1;
+          color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
+          ${unsafeCSS(TypographyLiterals.subtitle2)};
+        }
+      `,
+    ]
+  } ;
 
-      .label {
-        flex: 1;
-        color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
-        ${unsafeCSS(TypographyLiterals.subtitle2)};
-      }
-    `,
-  ];
-
-  static properties = {
-    /**
-     * Name of the group item
-     */
-    name: { type: String },
-
-    /**
-     * Label of the group item
-     */
-    label: { type: String },
-
-    /**
-     * Whether group item is collapsible or not.
-     */
-    collapsible: { type: Boolean },
-
-    /**
-     * Whether group item is collapsed or not.
-     */
-    collapsed: { type: Boolean },
+  static get properties() {
+    return {
+      /**
+       * Name of the group item
+       */
+      name: { type: String },
+  
+      /**
+       * Label of the group item
+       */
+      label: { type: String },
+  
+      /**
+       * Whether group item is collapsible or not.
+       */
+      collapsible: { type: Boolean },
+  
+      /**
+       * Whether group item is collapsed or not.
+       */
+      collapsed: { type: Boolean },
+    }
   };
 
   render() {
