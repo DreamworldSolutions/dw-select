@@ -158,6 +158,7 @@ export const externalStyle = css`
 
   .tippy-box {
     overflow-x: hidden !important;
+    background: var(--dw-select-bg-color, var(--primary-background-color, #FFF));
   }
 
   .tippy-box:focus {
