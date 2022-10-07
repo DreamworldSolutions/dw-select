@@ -1,12 +1,11 @@
-import { html, css } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
+import { LitElement, html, css } from '@dreamworld/pwa-helpers/lit.js';
 import '../dw-select';
-import {materialStyles} from '@dreamworld/material-styles/material-styles';
+import {ThemeStyle} from '@dreamworld/material-styles';
 
 class SelectDemo extends LitElement {
   static get styles() {
     return [
-      materialStyles,
+      ThemeStyle,
       css`
         :host {
           display: inline-block;

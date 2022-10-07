@@ -1,4 +1,5 @@
-import { css } from "lit-element";
+import { css } from '@dreamworld/pwa-helpers/lit.js';
+
 
 export const dwSelectStyle = css`
   :host {
