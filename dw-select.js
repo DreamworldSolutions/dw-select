@@ -1,8 +1,17 @@
-import { LitElement, html } from "lit";
+import { LitElement, html, css, nothing } from "lit";
 
 // View Elements
 import "./dw-select-trigger.js";
-import "./dw-select-dialog.js";
+
+// Lodash Methods
+import get from "lodash-es/get";
+import debounce from "lodash-es/debounce";
+
+const KEY_CODE = {
+  ENTER: 13,
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
+};
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -57,7 +66,7 @@ export class DwSelect extends LitElement {
      * `object` in case of single selection;
      * `object[]` in case of multiple selections.
      */
-    value: { type: Object },
+    value: { type: Array },
 
     /**
      * Input property.
@@ -136,7 +145,7 @@ export class DwSelect extends LitElement {
 
     /**
      * Specify various available/possible groups of the Items.
-     * A Group is an Object `{name, title, collapsible, collapsed}`
+     * A Group is an Object `{name: string, title: string, collapsible: boolean, collapsed: boolean}`
      */
     groups: { type: Array },
 
@@ -179,9 +188,9 @@ export class DwSelect extends LitElement {
 
     /**
      * By default, the pop-over dialog is rendered in the width of the host element
-     * And the fit dialog is rendered in a fixed-width specified by 
+     * And the fit dialog is rendered in a fixed-width specified by
      * `-–dw-select-fit-dialog-width` css property.
-     * 
+     *
      * __But:__ when this is specified, both dialogs are shown in this width.
      * __Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
      */
@@ -190,7 +199,7 @@ export class DwSelect extends LitElement {
     /**
      * A function to customize item rendering.
      * Prototype: `(item, selected, activated, query) => HTMLTemplate`.
-     * 
+     *
      * - Input property.
      * - It's Optional, by default it renders an item using a `dw-surface`.
      * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
@@ -205,7 +214,7 @@ export class DwSelect extends LitElement {
     /**
      * A function to customize groupItem's rendering.
      * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
-     * 
+     *
      * - Input property.
      * - It's optional, by default it renders groupItem using //TODO: ????
      * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
@@ -217,6 +226,14 @@ export class DwSelect extends LitElement {
     renderGroupItem: { type: Object },
 
     /**
+     * Set this to configure custom logic to detect whether value is changed or not.
+     * Default: compares both values by strict equality (by reference) `v1 === v2`.
+     * It must return a Boolean.
+     * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
+     */
+    valueEquator: { type: Function },
+
+    /**
      * Whether dialog is opened or not.
      */
     _opened: { type: Boolean },
@@ -225,26 +242,176 @@ export class DwSelect extends LitElement {
      * search query (as text). used to filter items and highlight matched words.
      */
     _query: { type: String },
+
+    /**
+     * When true, shows updated highlights.
+     */
+    _updatedHighlight: { type: Boolean },
   };
+
+  /**
+   * Trigger Element Getter
+   */
+  get _triggerElement() {
+    return this.renderRoot.querySelector("dw-select-trigger");
+  }
+
+  static styles = [
+    css`
+      :host {
+        display: block;
+        --dw-popover-min-width: 0px;
+      }
+    `,
+  ];
+
+  constructor() {
+    super();
+    this.valueExpression = "_id";
+    this.searchable = false;
+
+    this.valueEquator = (v1, v2) => v1 === v2;
+  }
 
   render() {
     return html`
-      <dw-select-trigger @click=${this._onTrigger} @input=${this._onInput}></dw-select-trigger>
-      ${this._loadFragments}
+      <dw-select-trigger
+        label=${this.label}
+        placeholder=${this.placeholder}
+        helper=${this.helper}
+        ?inputAllowed=${this.searchable && !this.readOnly}
+        value=${this._getValue}
+        ?outlined=${this.outlined}
+        ?disabled=${this.disabled}
+        ?required=${this.required}
+        ?updatedHighlight=${this._updatedHighlight}
+        .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+        @click=${this._onTrigger}
+        @input=${this._onUserInteraction}
+        @keydown=${this._onKeydown}
+      ></dw-select-trigger>
+      ${this._opened
+        ? html`<dw-select-dialog
+            id="selectDialog"
+            opened
+            .triggerElement=${this._triggerElement}
+            .value=${this.value}
+            .items="${this.items}"
+            .valueProvider=${this.valueProvider}
+            .valueExpression=${this.valueExpression}
+            .valueTextProvider=${this.valueTextProvider}
+            .groups=${this.groups}
+            .groupSelector=${this.groupSelector}
+            .groupExpression=${this.groupExpression}
+            _query=${this._query}
+            ?vkb=${this.vkb}
+            ?searchable=${this.searchable}
+            .renderItem=${this.renderItem}
+            .renderGroupItem=${this.renderGroupItem}
+            .dialogFooterElement=${this._footerTemplate}
+            @selected=${this._onSelect}
+            @dw-dialog-closed="${this._onDialogClose}"
+          ></dw-select-dialog>`
+        : nothing}
     `;
   }
 
-  get _loadFragments() {
-    return html`<dw-select-dialog id="selectDialog"></dw-select-dialog>`;
+  /**
+   * Footer Template getter
+   * Used when this element is used by `Extension` To override this method
+   */
+  get _footerTemplate() {
+    return;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+
+    if (this.originalValue) {
+      this.value = this.originalValue;
+    }
+  }
+
+  willUpdate(_changedProperties) {
+    if (_changedProperties.has("_opened") && this._opened) {
+      this._loadFragments();
+      this._setPopoverDialogWidth();
+    }
+
+    if (_changedProperties.has("value")) {
+      this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
+    }
+  }
+
+  /**
+   * Import manually
+   */
+  _loadFragments() {
+    if (this._opened) {
+      import("./dw-select-dialog.js");
+    }
+  }
+
+  /**
+   * Set dialog width if `dialogWidth` is provided.
+   * Otherwise determine trigger element's width and set to dialog
+   */
+  _setPopoverDialogWidth() {
+    if (this.dialogWidth) {
+      this.style.setProperty("--dw-popover-width", this.dialogWidth + "px");
+      return;
+    }
+
+    // Trigger element getter
+    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+
+    // Set Trigger element's offSetWidth to PopOver Dialog
+    this.style.setProperty("--dw-popover-width", triggerEl.offsetWidth + "px");
+  }
+
+  /**
+   * Trigger when actual user intract
+   * @param {Event} e
+   */
+  _onUserInteraction(e) {
+    if (e.type === "input") {
+      this._onInput();
+    }
+  }
+
+  /**
+   * Returns String that represents current value
+   */
+  get _getValue() {
+    return this.valueExpression ? get(this.value, this.valueExpression) : this.value;
   }
 
   _onTrigger(e) {
-    let dialogElement = this.renderRoot.querySelector("#selectDialog");
-    dialogElement && dialogElement.open(e.target);
+    if (!this.readOnly) {
+      this._opened = true;
+    }
   }
 
   _onInput(e) {
-    console.log(e.target.value);
+    // Trigger element getter
+    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+
+    this._query = triggerEl.value;
+  }
+
+  _onSelect(e) {
+    this.value = e.detail.value;
+  }
+
+  _onDialogClose() {
+    this._opened = false;
+  }
+
+  _onKeydown(e) {
+    if (e.keyCode === KEY_CODE.ENTER) {
+      this._onTrigger(e);
+    }
   }
 }
 

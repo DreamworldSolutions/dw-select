@@ -24,8 +24,16 @@
   "license": "ISC",
   "dependencies": {
     "@dreamworld/dw-dialog": "^4.2.0-development.1",
+    "@dreamworld/dw-icon": "^2.3.1",
+    "@dreamworld/dw-icon-button": "^2.4.0",
+    "@dreamworld/dw-list-item": "^3.3.0-support-highlight.1",
+    "@dreamworld/dw-ripple": "^2.3.0",
+    "@dreamworld/web-util": "^1.5.0",
+    "@material/mwc-circular-progress": "^0.26.1",
+    "@material/mwc-textfield": "^0.26.1",
     "lit": "^2.2.7",
-    "lit-html": "^1.1.1"
+    "lit-html": "^1.1.1",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@open-wc/building-rollup": "^2.0.1",
