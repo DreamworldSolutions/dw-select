@@ -269,6 +269,8 @@ export class DwSelect extends LitElement {
     super();
     this.valueExpression = "_id";
     this.searchable = false;
+    this.valueTextProvider = () => {};
+    this.groupSelector = () => {};
 
     this.valueEquator = (v1, v2) => v1 === v2;
   }
@@ -311,6 +313,7 @@ export class DwSelect extends LitElement {
             .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
+            @dw-fit-dialog-closed="${this._onDialogClose}"
           ></dw-select-dialog>`
         : nothing}
     `;

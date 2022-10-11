@@ -952,10 +952,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-dialog@^4.2.0-development.1":
-  version "4.2.0-development.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-4.2.0-development.1.tgz#b3290eacc0cab57a63c4c1b948db8fb34a132b04"
-  integrity sha512-ITBpnw3GkQO5xPtclMPUBBkMzE3SveyTULW+0gMQWoc1zie7qmimvANP/LPj59plzFV6HiRZooU9ssMlNS14RQ==
+"@dreamworld/dw-dialog@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-4.1.2.tgz#c612c458f5a350bd5f22ddd113525911bebf2724"
+  integrity sha512-/G2dTPpDxL3ozyHBMVkEwlFuS2BmP45dptKljRoSfupq6WETBocXO1H0mhjBRMn0PVXtpnJ8EmMmn8MfG+KO0g==
   dependencies:
     "@dreamworld/material-styles" "^1.1.0"
     "@dreamworld/pwa-helpers" "^1.11.1"
@@ -986,10 +986,10 @@
     "@material/mwc-icon" "^0.26.1"
     lit-element "^2.2.0"
 
-"@dreamworld/dw-list-item@^3.3.0-support-highlight.1":
-  version "3.3.0-support-highlight.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-3.3.0-support-highlight.1.tgz#3b8043cd5a26c53e7000d82a8ab5ecf17dbd4e0c"
-  integrity sha512-4TSnmTm7io+x2ASTCGgIOIbhHtzL8FuF94Y58DtCZmFbF922VmZSlsrB6xS3YktzG4t5t0j+CeoIcPMaYFpU3w==
+"@dreamworld/dw-list-item@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-3.7.0.tgz#958f91b833d0f0595947598ff5c2c3f922ce4836"
+  integrity sha512-b4Jh8SgnWqCmZ2CYvyb9fIY08BNU7++TkAn5PWpwZExBgXwnEO/HlqMR0Eo/GmW0ysjQHoDQ04km7bbT2v44UA==
   dependencies:
     "@dreamworld/dw-icon" "^2.3.0"
     "@dreamworld/dw-ripple" "^2.3.0"

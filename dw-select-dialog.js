@@ -151,8 +151,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     _groups: { type: Object },
 
     /**
-     * To select group name
-     * returns group name in string
+     * A Function `(item) -> groupName` to identify a group from an item.
      */
     groupSelector: { type: Function },
 
@@ -189,6 +188,13 @@ export class DwSelectDialog extends DwCompositeDialog {
      * default: _id
      */
     valueExpression: { type: String },
+
+    /**
+     * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
+     * current `value`.
+     * default: `(item) -> item`.
+     */
+    valueTextProvider: { type: Function },
 
     /**
      * Messages of for noRecords and noMatching
@@ -383,7 +389,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     if (item.type === "ITEM") {
       let title1 = this.valueExpression ? get(item.value, this.valueExpression) : item.value;
       return html`<dw-list-item
-        title1=${this.getLabelValue(item.value)}
+        title1=${this._getItemValue(item.value)}
         .highlight=${this._query}
         @click=${(e) => this._onItemClick(e, item)}
         ?activated=${index === this._activatedIndex}
@@ -394,9 +400,9 @@ export class DwSelectDialog extends DwCompositeDialog {
     // Render Group
     if (item.type === "GROUP") {
       return html`<dw-select-group-item
-        name=${item.value.name}
-        label=${item.value.label}
-        index=${index}
+        .name="${item.value.name}"
+        .label="${this._getGroupValue(item.value)}"
+        .index="${index}"
         ?activated=${index === this._activatedIndex}
         ?collapsible=${item.value.collapsible}
         ?collapsed=${item.value.collapsed}
@@ -430,9 +436,12 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   _getItems() {
-    let sortedArray = filter(this.items, (item) =>
-      this.isMatched(this.getLabelValue(item).toLowerCase(), this._query.toLowerCase().split(" "))
-    );
+    let sortedArray = filter(this.items, (item) => {
+      return this.isMatched(
+        this._getItemValue(item).toLowerCase(),
+        this._query.toLowerCase().split(" ")
+      );
+    });
 
     let array = [];
 
@@ -496,8 +505,18 @@ export class DwSelectDialog extends DwCompositeDialog {
    * @param {Object | String} item
    * @returns {String} returns string that actually represents in list item
    */
-  getLabelValue(item) {
-    return this.valueExpression ? get(item, this.valueExpression) : item;
+  _getItemValue(item) {
+    if (!this.valueTextProvider(item)) {
+      return item;
+    }
+    return this.valueTextProvider(item);
+  }
+
+  _getGroupValue(item) {
+    if (!this.groupSelector(item)) {
+      return item;
+    }
+    return this.groupSelector(item);
   }
 
   /**

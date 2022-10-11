@@ -27,7 +27,7 @@ class SelectDemo extends LitElement {
       <dw-select
         searchable
         .items=${country_list_with_code}
-        valueExpression="name"
+        .valueTextProvider=${(item) => item.name}
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
@@ -35,7 +35,7 @@ class SelectDemo extends LitElement {
 
       <dw-select
         .items=${list}
-        valueExpression=""
+        .valueTextProvider=${(item) => item}
         label="Download"
         placeholder="placeholder"
         helper="helper text"
@@ -47,8 +47,9 @@ class SelectDemo extends LitElement {
         searchable
         .items=${accounts}
         .groups=${groups}
+        .valueTextProvider=${(item) => item.name}
+        .groupSelector=${(item) => item.label}
         groupExpression="type"
-        valueExpression="name"
         label="Contacts"
       ></dw-select>
 

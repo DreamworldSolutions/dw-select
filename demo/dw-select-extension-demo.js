@@ -7,7 +7,7 @@ export class DwSelectExtensionDemo extends DwSelect {
   constructor() {
     super();
     this.items = country_list_with_code;
-    this.valueExpression = "name";
+    this.valueTextProvider = (item) => item.name;
     this.label = "Extenstion Select";
     this.layout = "small";
     this.searchable = true;
