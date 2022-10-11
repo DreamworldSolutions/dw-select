@@ -395,7 +395,7 @@ export class DwSelectDialog extends DwCompositeDialog {
       return html`<dw-list-item
         title1=${this._getItemValue(item.value)}
         .highlight=${this._query}
-        @click=${(e) => this._onItemClick(e, item)}
+        @click=${() => this._onItemClick(item)}
         ?activated=${index === this._activatedIndex}
         ?selected=${this._isItemSelected(item)}
         .focusable=${false}
@@ -424,7 +424,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     return isEqual(item.value, this.value);
   }
 
-  _onItemClick(e, item) {
+  _onItemClick(item) {
     this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
   }

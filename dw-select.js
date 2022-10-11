@@ -391,7 +391,13 @@ export class DwSelect extends LitElement {
    * Returns String that represents current value
    */
   get _getValue() {
-    return this.valueExpression ? get(this.value, this.valueExpression) : this.value;
+    if (!this.value) {
+      return "";
+    }
+    if (!this.valueTextProvider(this.value)) {
+      return item;
+    }
+    return this.valueTextProvider(this.value);
   }
 
   _onTrigger(e) {
