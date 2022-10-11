@@ -49,197 +49,201 @@ const defaultMessages = {
  */
 
 export class DwSelectDialog extends DwCompositeDialog {
-  static styles = [
-    DwCompositeDialog.styles,
-    css`
-      :host {
-        display: block;
-        --dw-dialog-header-padding: 8px 16px;
-        --dw-dialog-content-padding: 0;
-      }
+  static get styles() {
+    return [
+      DwCompositeDialog.styles,
+      css`
+        :host {
+          display: block;
+          --dw-dialog-header-padding: 8px 16px;
+          --dw-dialog-content-padding: 0;
+        }
 
-      :host([type="popover"]) .dialog__content {
-        padding: var(--dw-select-content-padding, 0);
-      }
+        :host([type="popover"]) .dialog__content {
+          padding: var(--dw-select-content-padding, 0);
+        }
 
-      .loading {
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        overflow: hidden;
-      }
+        .loading {
+          display: flex;
+          align-items: center;
+          padding: 16px;
+          overflow: hidden;
+        }
 
-      .loading mwc-circular-progress {
-        padding-right: 8px;
-      }
+        .loading mwc-circular-progress {
+          padding-right: 8px;
+        }
 
-      .no-record {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 16px;
-      }
+        .no-record {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 16px;
+        }
 
-      .no-record dw-icon {
-        padding-bottom: 8px;
-      }
+        .no-record dw-icon {
+          padding-bottom: 8px;
+        }
 
-      :host([type="popover"]) header {
-        padding: 0;
-      }
+        :host([type="popover"]) header {
+          padding: 0;
+        }
 
-      :host([type="modal"]) .mdc-dialog__title::before {
-        height: 0px;
-        display: none;
-      }
+        :host([type="modal"]) .mdc-dialog__title::before {
+          height: 0px;
+          display: none;
+        }
 
-      :host([type="fit"][opened][has-header]) .mdc-dialog__content {
-        padding: 0;
-      }
+        :host([type="fit"][opened][has-header]) .mdc-dialog__content {
+          padding: 0;
+        }
 
-      :host([type="fit"][opened]) .mdc-dialog__content {
-        padding: 0;
-      }
+        :host([type="fit"][opened]) .mdc-dialog__content {
+          padding: 0;
+        }
 
-      :host([type="fit"]) .mdc-dialog__title {
-        padding: 8px 16px;
-      }
-    `,
-  ];
+        :host([type="fit"]) .mdc-dialog__title {
+          padding: 8px 16px;
+        }
+      `,
+    ];
+  }
 
-  static properties = {
-    /**
-     * Selected list item object.
-     * `object` in case of single selection;
-     * `object[]` in case multiple selection.
-     */
-    value: { type: Object },
+  static get properties() {
+    return {
+      /**
+       * Selected list item object.
+       * `object` in case of single selection;
+       * `object[]` in case multiple selection.
+       */
+      value: { type: Object },
 
-    /**
-     * Input Element
-     * When it’s specified it binds keyboard event on this; Otherwise, it renders it’s own input in the header.
-     * Integrator will set this value only for non-touch devices.
-     */
-    elInput: { type: Object },
+      /**
+       * Input Element
+       * When it’s specified it binds keyboard event on this; Otherwise, it renders it’s own input in the header.
+       * Integrator will set this value only for non-touch devices.
+       */
+      elInput: { type: Object },
 
-    /**
-     * Whether or not to show the `searchable` variant.
-     */
-    searchable: { type: Boolean },
+      /**
+       * Whether or not to show the `searchable` variant.
+       */
+      searchable: { type: Boolean },
 
-    /**
-     * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
-     */
-    layout: { type: String },
+      /**
+       * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
+       */
+      layout: { type: String },
 
-    /**
-     * `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual keyboard or not.
-     */
-    vkb: { type: Boolean },
+      /**
+       * `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual keyboard or not.
+       */
+      vkb: { type: Boolean },
 
-    /**
-     * Input Property
-     * A Group has properties: name, label, collapsible, collapsed
-     */
-    groups: { type: Object },
+      /**
+       * Input Property
+       * A Group has properties: name, label, collapsible, collapsed
+       */
+      groups: { type: Object },
 
-    /**
-     * Replica of `groups`
-     * Used to render items in group. When groups is changed it’s updated (through cloned array).
-     * When user interacts, this property is changed but `groups` isn’t.
-     */
-    _groups: { type: Object },
+      /**
+       * Replica of `groups`
+       * Used to render items in group. When groups is changed it’s updated (through cloned array).
+       * When user interacts, this property is changed but `groups` isn’t.
+       */
+      _groups: { type: Object },
 
-    /**
-     * A Function `(item) -> groupName` to identify a group from an item.
-     */
-    groupSelector: { type: Function },
+      /**
+       * A Function `(item) -> groupName` to identify a group from an item.
+       */
+      groupSelector: { type: Function },
 
-    /**
-     * Expression of Group
-     */
-    groupExpression: { type: String },
+      /**
+       * Expression of Group
+       */
+      groupExpression: { type: String },
 
-    /**
-     * Original List of selectable items.
-     */
-    items: { type: Array },
+      /**
+       * Original List of selectable items.
+       */
+      items: { type: Array },
 
-    /**
-     * Represents items to be rendered by lit-virtualizer.
-     * { type: GROUP or ITEM, value: Group or Item object }
-     * It’s computed from _groups, items & query.
-     */
-    _items: { type: Array },
+      /**
+       * Represents items to be rendered by lit-virtualizer.
+       * { type: GROUP or ITEM, value: Group or Item object }
+       * It’s computed from _groups, items & query.
+       */
+      _items: { type: Array },
 
-    /**
-     * Activated item
-     * One of the Item from _items, by reference.
-     */
-    _activatedItem: { type: Object },
+      /**
+       * Activated item
+       * One of the Item from _items, by reference.
+       */
+      _activatedItem: { type: Object },
 
-    /**
-     * Provides value that actually represent in list items
-     */
-    valueProvider: { type: Function },
+      /**
+       * Provides value that actually represent in list items
+       */
+      valueProvider: { type: Function },
 
-    /**
-     * Expression of the value
-     * default: _id
-     */
-    valueExpression: { type: String },
+      /**
+       * Expression of the value
+       * default: _id
+       */
+      valueExpression: { type: String },
 
-    /**
-     * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
-     * current `value`.
-     * default: `(item) -> item`.
-     */
-    valueTextProvider: { type: Function },
+      /**
+       * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
+       * current `value`.
+       * default: `(item) -> item`.
+       */
+      valueTextProvider: { type: Function },
 
-    /**
-     * Messages of for noRecords and noMatching
-     * Example: {noRecords: "", noMatching: "", loading: ""}
-     */
-    messages: { type: Object },
+      /**
+       * Messages of for noRecords and noMatching
+       * Example: {noRecords: "", noMatching: "", loading: ""}
+       */
+      messages: { type: Object },
 
-    /**
-     * Provides any Block element to represents list items
-     * Should show it's hover effect; and ripple on click
-     * Highlight text based on `query`
-     * Integrator listens on the ‘click’ event to know whether selection is changed or not.
-     * It must not be focusable.
-     */
-    renderItem: { type: Function },
+      /**
+       * Provides any Block element to represents list items
+       * Should show it's hover effect; and ripple on click
+       * Highlight text based on `query`
+       * Integrator listens on the ‘click’ event to know whether selection is changed or not.
+       * It must not be focusable.
+       */
+      renderItem: { type: Function },
 
-    /**
-     * Provides any Block elements to represents group items
-     * name property should be set to input name.
-     * Should show hover & ripple effects only if it’s collapsible.
-     * Integrator listens on ‘click’ event to toggle collapsed status.
-     */
-    renderGroupItem: { type: Function },
+      /**
+       * Provides any Block elements to represents group items
+       * name property should be set to input name.
+       * Should show hover & ripple effects only if it’s collapsible.
+       * Integrator listens on ‘click’ event to toggle collapsed status.
+       */
+      renderGroupItem: { type: Function },
 
-    /**
-     * search query in string. used to filter items and highlight query keywords
-     */
-    _query: { type: String },
+      /**
+       * search query in string. used to filter items and highlight query keywords
+       */
+      _query: { type: String },
 
-    /**
-     * index of activated Item
-     * default: -1
-     */
-    _activatedIndex: { type: Number },
+      /**
+       * index of activated Item
+       * default: -1
+       */
+      _activatedIndex: { type: Number },
 
-    /**
-     * Contains Scrollable Elements
-     */
-    _scrollableElement: { type: Object },
+      /**
+       * Contains Scrollable Elements
+       */
+      _scrollableElement: { type: Object },
 
-    /**
-     * Custom footer template as property
-     */
-    dialogFooterElement: { type: Object },
-  };
+      /**
+       * Custom footer template as property
+       */
+      dialogFooterElement: { type: Object },
+    };
+  }
 
   set _groups(value) {
     let oldValue = this._type;

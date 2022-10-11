@@ -11,64 +11,68 @@ import "@dreamworld/dw-icon-button";
  */
 
 export class DwSelectDialogInput extends LitElement {
-  static styles = [
-    css`
-      :host {
-        display: block;
-        height: 48px;
-        border: 1px solid;
-        border-radius: 24px;
-        box-sizing: border-box;
-      }
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: block;
+          height: 48px;
+          border: 1px solid;
+          border-radius: 24px;
+          box-sizing: border-box;
+        }
 
-      :host([_hasFocus]) {
-        border: 2px solid;
-        border-color: var(--mdc-theme-primary, #6200ee);
-      }
+        :host([_hasFocus]) {
+          border: 2px solid;
+          border-color: var(--mdc-theme-primary, #6200ee);
+        }
 
-      .container {
-        height: 100%;
-        display: flex;
-        align-items: center;
-      }
+        .container {
+          height: 100%;
+          display: flex;
+          align-items: center;
+        }
 
-      input {
-        border: none;
-        background: none;
-        appearance: none;
-        padding: 0px;
-        height: 28px;
-        width: 100%;
-        min-width: 0px;
-        font-size: 1rem;
-        font-weight: 400;
-        text-decoration: inherit;
-        text-transform: inherit;
-        caret-color: var(--mdc-theme-primary, #6200ee);
-      }
+        input {
+          border: none;
+          background: none;
+          appearance: none;
+          padding: 0px;
+          height: 28px;
+          width: 100%;
+          min-width: 0px;
+          font-size: 1rem;
+          font-weight: 400;
+          text-decoration: inherit;
+          text-transform: inherit;
+          caret-color: var(--mdc-theme-primary, #6200ee);
+        }
 
-      input:focus {
-        outline: none;
-      }
-    `,
-  ];
+        input:focus {
+          outline: none;
+        }
+      `,
+    ];
+  }
 
-  static properties = {
-    /**
-     * Contains value of the input
-     */
-    value: String,
+  static get properties() {
+    return {
+      /**
+       * Contains value of the input
+       */
+      value: String,
 
-    /**
-     * Whether close icon button is visible or not
-     */
-    _hasCloseButton: Boolean,
+      /**
+       * Whether close icon button is visible or not
+       */
+      _hasCloseButton: Boolean,
 
-    /**
-     * Whether element has focused or not
-     */
-    _hasFocus: { type: Boolean, reflect: true },
-  };
+      /**
+       * Whether element has focused or not
+       */
+      _hasFocus: { type: Boolean, reflect: true },
+    };
+  }
 
   constructor() {
     super();
