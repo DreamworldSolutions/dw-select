@@ -1,844 +1,435 @@
-import { html } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
-import { Typography } from '@dreamworld/material-styles/typography';
-import './dw-select-dialog';
-import '@dreamworld/dw-icon';
-import '@dreamworld/dw-icon-button';
-import { DwFormElement } from '@dreamworld/dw-form/dw-form-element'; 
-import { dwSelectStyle, externalStyle } from './dw-select-css.js';
-import '@dreamworld/dw-button';
-import tippy from 'tippy.js';
+import { LitElement, html, css, nothing } from "lit";
+
+// View Elements
+import "./dw-select-trigger.js";
+
+// Lodash Methods
+import get from "lodash-es/get";
+import debounce from "lodash-es/debounce";
+
+const KEY_CODE = {
+  ENTER: 13,
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
+};
 
 /**
- * Trigger for `dw-select-dialog`
+ * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
+ *
+ * ## Types of Select
+ *
+ * ### Default
+ *  - Sometimes Select does not allow user to interact with text input (Non-searchable).
+ *  - It is used when the list of options is predefined and limited.
+ *
+ * ### Searchable
+ *  - Sometimes Select allows user to interact with text input (searchable).
+ *  - Typing input serves to filter suggestions presented in the dropdown.
+ *  - It is used when the list of options is variable and/or very long.
+ *
+ * ## Behaviour
+ *  - Renders `dw-select-trigger` and `dw-select-dialog`
+ *  - When `opened=true` drop-down dialog is opened
+ *
+ * ### Focus:
+ *  - For searchable types, it shows a cursor. For non searchable type, doesn’t show cursor.
+ *  - The dropdown opens when the user clicks the field using a pointing device.
+ *
+ * ### Typing:
+ *  - Not applicable to non-searchable
+ *  - Typing a character when the field is focused also opens the drop-down.
+ *  - drop-down shows result matching with any word of the input text. For e.g. if the user types ‘hdfc bank’ it should show a records which contains words ‘hdfc’ or ‘bank’ anywhere (at start, middle or at end)
+ *  - Matching text is highlighted
+ *  - Shows the most relevant matches in dropdown in sorted order. Sorting order is most matched to least matched.
+ *
+ * ### Keyboard accessibility
+ *  TODO - write documentation
+ *
+ * ### Toggle icon
+ *  TODO - write documentation
+ *
+ * ### Reset Icon
+ *  TODO - write documentation
  */
-export class DwSelect extends DwFormElement(LitElement) {
 
-  static get styles() {
-    return [
-      Typography, 
-      dwSelectStyle
-    ];
-  }
-
-  /**
-   * Fired when the invalid property changes.
-   *
-   * @event invalid-changed
-   * @type {Object}
-   * @property {Boolean} invalid - True ifthe value is invalid
-   */
-
+export class DwSelect extends LitElement {
   static get properties() {
     return {
       /**
-       * Input property. The label for this element.
+       * Sets the `name` attribute on the internal input.
+       * The name property should only be used for browser autofill as webcomponent form participation
+       * does not currently consider the `name` attribute.
+       */
+      name: { type: String },
+
+      /**
+       * Selected list item object.
+       * `object` in case of single selection;
+       * `object[]` in case of multiple selections.
+       */
+      value: { type: Array },
+
+      /**
+       * Input property.
+       * __NOTE:__ When it is specified (not `undefined`) & its value is different than `value`;
+       * then highlight is shown. (Comparison is done by reference)
+       */
+      originalValue: { type: Object },
+
+      /**
+       * Whether or not to show the `outlined` variant.
+       */
+      outlined: { type: Boolean },
+
+      /**
+       * Sets floating label value.
+       * __NOTE:__ The label will not float if the selected item has a false value property.
        */
       label: { type: String },
 
       /**
-       * name of element
-       */
-      name: { type: String},
-
-      /**
-       * Input property. A placeholder string in addition to the label.
+       * Sets disappearing input placeholder.
        */
       placeholder: { type: String },
-      /**
-       * Input property. A placeholder string for search/filter input.
-       */
-      filterPlaceholder: { type: String },
-      /**
-       * Input property. A full set of items to filter the visible options from. The items can be of either String or Object type.
-       */
-      items: { type: Array},
 
       /**
-       * Input property. Disabled item with message.
-       * Proxy to `dw-select-dialog` element.
-       * e.g. {'DELETE': 'User has no write permission'}.
+       * Helper text to display below the input.
+       * Display default only when focused.
        */
-      disabledItems: { type: Object },
+      helper: { type: String },
 
       /**
-       * Input + Output property. True if the dropdown is open, false otherwise.
+       * Whether or not to show the `readOnly` state.
        */
-      opened: { type: Boolean, reflect: true },
-      /**
-       * Note: It's deprecated. Use `placement` instead.
-       * Input property. The orientation against which to align the menu dropdown horizontally relative to the dropdown trigger.
-       * Possible values: "left", "right"
-       * Default value: "left"
-       */
-      hAlign: { type: String },
+      readOnly: { type: Boolean },
 
       /**
-       * Note: It's deprecated. Use `placement` instead.
-       * Input property. The orientation against which to align the menu dropdown vertically relative to the dropdown trigger.
-       * Possible values: "top", "bottom"
-       * Default value: "top"
+       * Set `true` to apply required validation.
        */
-      vAlign: { type: String },
+      required: { type: Boolean },
 
       /**
-       * Input property. Possible values:  `bottom-start` or `bottom-end`
-       * Sets position of dropdown relative to trigger element.
-       */
-      placement: { type: String },
-
-      /**
-       * Input property.
-       * Name of the animation. At preset only `expand` is supported.
-       * It can be customized only when element is used by extention.
-       * To customize animation apply animatin CSS to `.tippy-box[data-animation="{animation-name}"]` element.
-       */
-      animation: { type: String },
-
-      /**
-       * Note: It's deprecated. Use `offset` instead.
-       * Input property. The horizontal offset in pixels. Negtaive numbers allowed.
-       * Default value: 0
-       */
-      hOffset: { type: Number },
-
-      /**
-       * Note: It's deprecated. Use `offset` instead.
-       * Input property. The vertical offset in pixels. Negtaive numbers allowed.
-       * Default value: 0
-       */
-      vOffset: { type: Number },
-
-      /**
-       * Input property.  e.g `[10, 14]`
-       * Used to set offset of dropdown relative to trigger element.
-       */
-      offset: { type: Array },
-
-      /**
-       * Input property. By default, it allows multiple selection. when this property is set, it will behave as single select control.
-       * Default value: false
-       */
-      singleSelect: { type: Boolean },
-      /**
-       * Input property. Path for label of the item. If items is an array of objects, the itemLabel is used to fetch the displayed string label for each item.
-       * The item label is also used for matching items when processing user input, i.e., for filtering .
-       */
-      itemLabel: { type: String },
-      /**
-       * Input property. Path for the value of the item. If items is an array of objects, the itemValue: is used to fetch the string value for the selected item.
-       */
-      itemValue: { type: String },
-
-      /**
-       * Input property. drop down item icon size.
-       */
-      iconSize: { type: Number },
-
-      /**
-       * Input property. Allows user to filter items by typing query.
-       * Default value: false
-       */
-      allowFilter: { type: Boolean },
-      /**
-       * Input property. Path for groupBy of the item. i.e "type" in items
-       */
-      groupBy: { type: String },
-      /**
-       * Input + Output property. The String value for the selected item of the multiselect.
-       * It can be of either String or Array type.
-       */
-      value: { type: String },
-      /**
-       * Output property. The selected item from the items array.
-       * It can be of either String, object or Array type.
-       */
-      selected: { type: Object },
-      /**
-       * Input property. Display multiselect in mobile mode (full screen) and no keyboard support
-       * Default value: false
-       */
-      mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
-      /**
-       * Input property. When true, header will be hidde. header contains Back button, Dialog title, count
-       * Default value: false
-       */
-      noHeader: { type: Boolean, reflect: true, attribute: 'no-header' },
-      /**
-       * Input property. Set to true to mark the input as required.
-       * Default value: false
-       */
-      required: { type: Boolean, reflect: true },
-      /**
-       * Input + Output property. Set to true if the value is invalid.
-       * Default value: false
-       */
-      invalid: { type: Boolean, reflect: true },
-      /**
-       * Input property. The error message to display when invalid.
+       * A Custom Error Message to be shown.
        */
       errorMessage: { type: String },
-      /**
-       * Input property. Array of string, to specify orders of group
-       * i.e ["CONTACT", "BANK"]
-       */
-      groupByOrder: { type: Array },
-      /**
-       * Input property. Custom function for rendering group label. Receives one argument:
-       * - `value` Value of groupBy key in item
-       */
-      groupText: { type: Object },
-      /**
-       * Input property. The title for dialog
-       */
-      dialogTitle: { type: String },
-      /**
-       * Input property. Custom function for rendering text of selected items. Receives four arguments:
-       * - `items` A full set of items
-       * - `value` The String value for the selected item of the multiselect.
-       * - `itemLabel` Path for the label of the item.
-       * - `itemValue` Path for the value of the item.
-       */
-      selectedItemsText: { type: Object },
 
       /**
-       * Input property. hide selectAll button
+       * Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.
        */
-      hideSelectAllBtn : { type: Boolean },
+      requiredMessage: { type: String },
 
       /**
-       * Input property. hide reset button
+       * Whether or not to show the `required` error message.
        */
-      hideResetBtn : { type: Boolean },
+      _requiredErrorVisible: { type: Boolean },
 
       /**
-       * Input property.
-       * When true, Show dialog in full screen even if items are very less in mobile mode
-       * Default value: false
+       * The [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) of the textfield.
        */
-      alwaysFullScreenInMobile: { type: Boolean },
+      validity: { type: Object },
 
       /**
-       * Input property.
-       * When `true`, Remove defualt trigger element
-       * Provide your custom trigger element as a slot.
+       * Set to `true` to make it disabled.
        */
-      customTrigger: {type: Boolean, reflect: true, attribute: 'custom-trigger'},
+      disabled: { type: Boolean },
 
       /**
-       * Input property.
-       * Remove default trigger element.
-       * Passed as a icon name like `navigation.more_vert`.
-       * New trigger element as a icon. 
+       * Whether or not to show the `searchable` variant.
        */
-      triggerIcon: {type: String, reflect: true, attribute: 'trigger-icon'},
+      searchable: { type: Boolean },
 
       /**
-       * Input property.
-       * Remove default trigger element.
-       * Passed as a label like `Create`.
-       * New trigger element as a label.
+       * `vkb` stands for Virtual KeyBoard.
+       * Whether the Device has Virtual KeyBoard.
        */
-      triggerLabel: {type: String, reflect: true, attribute: 'trigger-label'},
+      vkb: { type: Boolean },
 
       /**
-       * Input property.
-       * This work only if `mobileMode` property is false.
-       * Dropdown element in which content will be appened. Default is parent element of trigger element.
+       * Specify various available/possible groups of the Items.
+       * A Group is an Object `{name: string, title: string, collapsible: boolean, collapsed: boolean}`
        */
-      appendTo: { type: Object },
+      groups: { type: Array },
 
       /**
-       * Input property.
-       * This work only if `mobileMode` property is false.
-       * Dropdown element z-index, default value is 9999.
+       * A Function `(item) -> groupName` to identify a group from an item.
        */
-      zIndex: { type: Number },
+      groupSelector: { type: Function },
 
       /**
-       * The element that should be used to position the element
+       * An expression (dot-separated properties) to be applied on Item, to find it's group.
+       * When `groupSelector` is specified, this is ignored. When `groupSelector` isn't specified
+       * and this is specified, `groupSelector` is built using this.
        */
-      _positionTarget: { type: Object },
-       /**
-       * By default, Show all/Reset buttons are not sticky
-       * When true, Show all/Reset button are sticky when user scroll items
-       */
-      stickySelectionButtons: { type: Boolean },
+      groupExpression: { type: String },
 
       /**
-       * default value is left
-       * Possible value - 'left', 'right'
+       * List of total available items under drop-down.
        */
-      selectionButtonsAlign: { type: String },
+      items: { type: Array },
 
       /**
-       * Default value is `false`.
-       * When true, Show overlay, otherwise hide overlay.
+       * A function `(item) -> value` to indetify value of any item.
        */
-      _overlay: { type: Boolean, reflect: true, attribute: 'overlay' },
-      
-      /**
-       * Icon to be shown for back button. (e.g "close", "arrow_back")
-       * Proxy to "dw-select-dialog". Default value : `close`.
-       */
-      backIcon: { type: String },
+      valueProvider: { type: Function },
 
       /**
-       * position of back icon. Possible values: `left` or `right`.
-       * Proxy to "dw-select-dialog". Default value: `right`.
+       * An expression (dot-separated properties) to be applied on Item, to find it's value.
+       * When `valueProvider` is specified, this is ignored. When `valueProvider` isn't specified
+       * and this is specified, `valueProvider` is built using this.
+       * default: _id
        */
-      backIconPosition: { type: String, reflect: true, attribute: 'back-icon-position' },
+      valueExpression: { type: String },
 
       /**
-       * If it's `true` do not show back icon.
-       * Proxy to "dw-select-dialog"
+       * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
+       * current `value`.
+       * default: `(item) -> item`.
        */
-      noBackIcon: { type: Boolean },
+      valueTextProvider: { type: Function },
 
       /**
-       * default iconsize is 24
+       * By default, the pop-over dialog is rendered in the width of the host element
+       * And the fit dialog is rendered in a fixed-width specified by
+       * `-–dw-select-fit-dialog-width` css property.
+       *
+       * __But:__ when this is specified, both dialogs are shown in this width.
+       * __Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
        */
-      backIconSize: { type: String }, 
+      dialogWidth: { type: Number },
 
       /**
-       * default iconsize is 18
+       * A function to customize item rendering.
+       * Prototype: `(item, selected, activated, query) => HTMLTemplate`.
+       *
+       * - Input property.
+       * - It's Optional, by default it renders an item using a `dw-surface`.
+       * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
+       * children at any depth.
+       * - It should show hover and ripple (on click) effects.
+       * - Highlight text based on `query`.
+       * `click` event on it is being listened to know that item has been selected by the user.
+       * __Note:__ It must not be focusable.
        */
-      clearIconSize: { type: String },
+      renderItem: { type: Object },
 
       /**
-       * default iconsize is 24
+       * A function to customize groupItem's rendering.
+       * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
+       *
+       * - Input property.
+       * - It's optional, by default it renders groupItem using //TODO: ????
+       * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
+       * children at any depth.
+       * - `name` (available as input) should be set to `name` property on the groupItem element.
+       * - It should show hover and ripple (on click) effects, but only when it’s `collapsible`.
+       * - `click` event on it is being listened to toggle `collapsed` status.
        */
-      dropdownIconSize: { type: String },
+      renderGroupItem: { type: Object },
 
       /**
-       * List item icon size
+       * Set this to configure custom logic to detect whether value is changed or not.
+       * Default: compares both values by strict equality (by reference) `v1 === v2`.
+       * It must return a Boolean.
+       * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
        */
-      listItemIconSize: { type: Number },
+      valueEquator: { type: Function },
 
       /**
-       * `true` show dropdown as readonly
+       * Whether dialog is opened or not.
        */
-      readOnly: { type: Boolean, reflect: true },
+      _opened: { type: Boolean },
 
       /**
-       * size trigger icon
+       * search query (as text). used to filter items and highlight matched words.
        */
-      triggerIconSize: { type: Number },
+      _query: { type: String },
 
       /**
-       * size trigger icon container
+       * When true, shows updated highlights.
        */
-      triggerButtonSize: { type: Number },
-
-      _dropdownRendered: { type: Boolean },
-
-      /**
-       * Input property. 
-       * When it's provided, renders this template into footer.
-       */
-      customFooterTemplate: { type: Object }
+      _updatedHighlight: { type: Boolean },
     };
+  }
+
+  /**
+   * Trigger Element Getter
+   */
+  get _triggerElement() {
+    return this.renderRoot.querySelector("dw-select-trigger");
+  }
+
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: block;
+          --dw-popover-min-width: 0px;
+        }
+      `,
+    ];
   }
 
   constructor() {
     super();
-    this.opened = false;
-    this.singleSelect = false;
-    this.allowFilter = false;
-    this.required = false;
-    this.invalid = false;
-    this.noHeader = false;
-    this.mobileMode = false;
-    this.errorMessage = 'Required';
-    this.label = '';
-    this.dialogTitle = '';
-    this.hAlign = 'left';
-    this.vAlign = 'bottom';
-    this.filterPlaceholder = '';
-    this.items = [];
-    this.hideResetBtn = false;
-    this.hideSelectAllBtn = false;
-    this.stickySelectionButtons = false;
-    this.selectionButtonsAlign = 'left';
-    this.alwaysFullScreenInMobile = false;
-    this._dropdownRendered = false;
-    this._overlay = false;
-    this.dropdownIconSize = 24;
-    this.backIconSize = 24;
-    this.listItemIconSize = 24;
-    this.clearIconSize = 18;
-    this.readOnly = false;
-    this.animation = 'expand';
-    this.appendTo = 'parent';
-    this.zIndex = 9999;
+    this.valueExpression = "_id";
+    this.searchable = false;
+    this.valueTextProvider = () => {};
+    this.groupSelector = () => {};
+
+    this.valueEquator = (v1, v2) => v1 === v2;
   }
 
-  /**
-   * Show the dropdown content
-   */
-  open() {
-    if(this.opened || this.readOnly){
-      return;
-    }
-    this.opened = true;
-  }
-
-  /**
-   * Hide the dropdown content
-   */
-  close() {
-    if(!this.opened){
-      return;
-    }
-    this.opened = false;
-  }
-
-  /**
-   * Returns true if the value is valid. and updates invalid if dryRun=false
-   * @param {Bolean} dryRun - When true, It won't override invalid property
-   */
-  validate(dryRun) {
-    let invalid = false;
-    if(this.required && (!this.value || !this.value.length)) {
-      invalid = true;
-    }
-
-    if(!dryRun && this.invalid !== invalid) {
-      this.invalid = invalid;
-      this._triggerInvalidChange();
-    }
-    return invalid;
-  }
-  
   render() {
-    if(this.opened){
-      this._dropdownRendered = true;
-    }
-    
     return html`
-      <div id="overlay"></div>
-      ${this._renderTriggerElement()}
-      ${this._dropdownRendered ? this._renderSelectDialog() : ''}
+      <dw-select-trigger
+        label=${this.label}
+        placeholder=${this.placeholder}
+        helper=${this.helper}
+        ?inputAllowed=${this.searchable && !this.readOnly}
+        value=${this._getValue}
+        ?outlined=${this.outlined}
+        ?disabled=${this.disabled}
+        ?required=${this.required}
+        ?updatedHighlight=${this._updatedHighlight}
+        .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+        @click=${this._onTrigger}
+        @input=${this._onUserInteraction}
+        @keydown=${this._onKeydown}
+      ></dw-select-trigger>
+      ${this._opened
+        ? html`<dw-select-dialog
+            id="selectDialog"
+            opened
+            .triggerElement=${this._triggerElement}
+            .value=${this.value}
+            .items="${this.items}"
+            .valueProvider=${this.valueProvider}
+            .valueExpression=${this.valueExpression}
+            .valueTextProvider=${this.valueTextProvider}
+            .groups=${this.groups}
+            .groupSelector=${this.groupSelector}
+            .groupExpression=${this.groupExpression}
+            _query=${this._query}
+            ?vkb=${this.vkb}
+            ?searchable=${this.searchable}
+            .renderItem=${this.renderItem}
+            .renderGroupItem=${this.renderGroupItem}
+            .dialogFooterElement=${this._footerTemplate}
+            @selected=${this._onSelect}
+            @dw-dialog-closed="${this._onDialogClose}"
+            @dw-fit-dialog-closed="${this._onDialogClose}"
+          ></dw-select-dialog>`
+        : nothing}
     `;
   }
 
-  _renderSelectDialog() {
-    return html`
-      <dw-select-dialog
-        id="select-dialog"
-        .items=${this.items}
-        .disabledItems=${this.disabledItems}
-        .itemLabel=${this.itemLabel}
-        .itemValue=${this.itemValue}
-        .listItemIconSize=${this.listItemIconSize}
-        .positionTarget=${this._positionTarget}
-        .noHeader=${this.noHeader}
-        .mobileMode=${this.mobileMode}
-        .filterPlaceholder=${this.filterPlaceholder}
-        .opened=${this.opened}
-        .hAlign=${this.hAlign}
-        .vAlign=${this.vAlign}
-        .hOffset=${this.hOffset}
-        .vOffset=${this.vOffset}
-        .singleSelect=${this.singleSelect}
-        .value=${this.value}
-        .groupBy=${this.groupBy}
-        .allowFilter=${this.allowFilter}
-        .groupByOrder=${this.groupByOrder}
-        .groupText=${this.groupText}
-        .dialogTitle=${this.dialogTitle}
-        .hideSelectAllBtn="${this.hideSelectAllBtn}"
-        .alwaysFullScreenInMobile=${this.alwaysFullScreenInMobile}
-        .hideResetBtn="${this.hideResetBtn}"
-        .stickySelectionButtons="${this.stickySelectionButtons}"
-        .selectionButtonsAlign="${this.selectionButtonsAlign}"
-        @value-changed=${this._valueChanged}
-        @opened-changed=${this._openedChanged}
-        .backIcon="${this.backIcon}"
-        .backIconPosition="${this.backIconPosition}"
-        .noBackIcon="${this.noBackIcon}"
-        .backIconSize="${this.backIconSize}"
-        .clearIconSize="${this.clearIconSize}"
-        .customFooterTemplate=${this.customFooterTemplate}
-      ></dw-select-dialog>
-    `;
-  }
-  
-  _renderTriggerElement() {
-    return html `
-      <div class="main-container" @mousedown="${this._onClick}">
-        <div id="dropdownContainer">
-          ${this._getTriggerElement()}
-        </div>
-        ${(!this.customTrigger && !this.triggerIcon && !this.triggerLabel && this.invalid)? html `
-          <div class="error-message caption">${this.errorMessage}</div>
-        `: html ``}
-      </div>
-    `;
-  }
-
-  shouldUpdate(changedProps) {
-    if(!this.opened && changedProps.size === 1 && changedProps.has('_positionTarget')) {
-      return false;
-    }
-    return true;
-  }
-
-  firstUpdated(changedProps){
-    super.updated(changedProps);
-    this._positionTarget = this.renderRoot.querySelector('.main-container');
-  }
-
-  updated(changedProps) {
-    if (changedProps.has('opened')) {
-      if (this.opened && this._positionTarget && !this.mobileMode) {
-        this._openDialog(this._positionTarget);  
-      } else {
-        this._tippyInstance && this._tippyInstance.destroy();
-      }
-    }
+  /**
+   * Footer Template getter
+   * Used when this element is used by `Extension` To override this method
+   */
+  get _footerTemplate() {
+    return;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this._addKeyEventListeners();
+    this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+
+    if (this.originalValue) {
+      this.value = this.originalValue;
+    }
+  }
+
+  willUpdate(_changedProperties) {
+    if (_changedProperties.has("_opened") && this._opened) {
+      this._loadFragments();
+      this._setPopoverDialogWidth();
+    }
+
+    if (_changedProperties.has("value")) {
+      this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
+    }
   }
 
   /**
-   * @returns {Array} Offset based on `offset`, `hOffset` & `vOffset` properties
+   * Import manually
    */
-  __getOffset() {
-    let offset = [0, -(this._positionTarget.offsetHeight)];
-    if (this.offset) {
-      offset = this.offset;
-    } else if (this.hOffset && this.vOffset) {
-      offset = [this.hOffset, this.vOffset];
-    } else if (this.hOffset && !this.vOffset) {
-      offset = [this.hOffset, -(this._positionTarget.offsetHeight)];
-    } else if (!this.hOffset && this.vOffset) {
-      offset = [0, this.vOffset];
+  _loadFragments() {
+    if (this._opened) {
+      import("./dw-select-dialog.js");
     }
-    return offset;
   }
 
   /**
-   * @returns {String} placement of dropdown based on `placement`, `hAlign` & `vAlign` properties.
+   * Set dialog width if `dialogWidth` is provided.
+   * Otherwise determine trigger element's width and set to dialog
    */
-  __getPlacement() {
-    let placement = 'bottom-start';
-    if (this.placement) {
-      placement = this.placement;
-    } else if (this.hAlign || this.vAlign) {
-      placement = `${this.vAlign || 'bottom'}-${this.hAlign === 'left' ? 'start' : 'end'}`;
-    }
-    return placement;
-  }
-
-  /**
-   * Initializes tippy & shows it.
-   * @param {Object} triggerEl Trigger Element
-   */
-  _openDialog(triggerEl) {
-    this._dialog = this.renderRoot.querySelector('#select-dialog');
-    const self = this;
-    this._tippyInstance = tippy(triggerEl, {
-      placement: self.__getPlacement(),
-      offset: self.__getOffset(),
-      content: self._dialog,
-      maxWidth: 'none',
-      trigger: 'manual',
-      zIndex: this.zIndex,
-      interactive: true,
-      hideOnClick: false, //Note: interactive does not work in shadowDOM, so explicitly sets it to `false` & closes dialog from `onClickOutside` handler.
-      appendTo: this.appendTo,
-      popperOptions: {
-        modifiers: [{ name: 'flip', enabled: false }]
-      },
-      onMount: (instance) => {
-        const tippyBox = instance.popper.querySelector('.tippy-box');
-        const placement = tippyBox.getAttribute('data-placement');
-        if (placement === 'bottom-start' || placement === 'bottom-end') {
-          const rect = tippyBox.getBoundingClientRect();
-          const top = rect.top;
-          const height = tippyBox.offsetHeight;
-          const viewportHeight = window.innerHeight;
-          let maxHeight;
-          if (((top + height) > viewportHeight / 2) && top > viewportHeight / 2) {
-            maxHeight = tippyBox.getBoundingClientRect().bottom;
-            const newPlacement = placement.replace('bottom', 'top');
-            tippyBox.setAttribute('data-placement', newPlacement);
-            instance.setProps({ placement: newPlacement });
-            
-          } else {
-            maxHeight = window.innerHeight - tippyBox.getBoundingClientRect().top;
-          }
-          tippyBox.style.overflowY = 'auto';
-          tippyBox.style.maxHeight = `${maxHeight}px`;
-        }
-      },
-      onCreate() {
-        self._sheet = document.createElement('style');
-        self._sheet.id = 'dw-select-style';
-        self._sheet.innerHTML = externalStyle.cssText;
-        const parentEl = self.appendTo === 'parent' ? triggerEl.parentNode : self.appendTo;
-        parentEl.appendChild(self._sheet);
-      },
-      onClickOutside(instance, event) {
-        const path = event.composedPath && event.composedPath() || event.path;
-        for (let el of path) {
-          if (self._dialog === el) {
-            return;
-          }
-        }
-        self.close();
-      },
-      onHidden() {
-        if (self._dialog) {
-          self.renderRoot.appendChild(self._dialog);
-          setTimeout(() => {
-            self.opened = false;
-          })
-        }
-
-        if (self.isConnected) {
-          self._sheet && self._sheet.remove && self._sheet.remove();
-        }
-      },
-      animation: this.animation,
-      
-    });
-    this._tippyInstance.show();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._removeKeyEventListeners();
-    this._tippyInstance && this._tippyInstance.destroy();
-  }
-
-  _addKeyEventListeners() {
-    if(this.mobileMode) {
-      return;
-    }
-    this._removeKeyEventListeners();
-    this.addEventListener('keydown', this._onKeyDown);
-  }
-
-  _removeKeyEventListeners() {
-    this.removeEventListener('keydown', this._onKeyDown);
-  }
-
-  _onKeyDown(e) {
-    var keyCode = e.keyCode || e.which;
-    if(keyCode === 13) {
-      this._onEnterKeyDown(e);
-    }
-  }
-
-  _onEnterKeyDown(e) {
-    if(!this.opened) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.opened = true;
-    }
-  }
-
-  _getDropDownArrowIcon() {
-    return html `
-      <dw-icon 
-        .size="${this.dropdownIconSize}" 
-        name="arrow_drop_down" >
-      </dw-icon>
-    `
-  }
-
-  /**
-   * @returns Trigger element based on `customTrigger`, `triggerIcon`, and `triggerLabel` property.
-   * @protected
-   */
-  _getTriggerElement() {
-    if(this.customTrigger) {
-      return html `
-        <slot></slot>
-      `;
-    }
-
-    if(this.triggerIcon && this.triggerLabel) {
-      return html `
-        ${this._getTriggerIconWithLabel()}
-      `;
-    }
-
-    if(this.triggerIcon){
-      return html `
-        ${this._getTriggerIcon()}
-    `;
-    }
-
-    if(this.triggerLabel){
-      return html `
-        ${this._getTriggerLabel()}
-    `;
-    }
-
-    return html `${this._getDefaultTriggerElement()}`;
-  }
-
-  /**
-   * @returns Trigger icon and label.
-   * @protected
-   */
-  _getTriggerIconWithLabel(){
-    return html `
-      <dw-button class="trigger-icon-label">
-        <dw-icon .size="${this.triggerIconSize}" name="${this.triggerIcon}"></dw-icon> 
-        ${this.triggerLabel}
-      </dw-button>`
-  }
-
-  /**
-   * @returns Trigger icon element.
-   * @protected
-   */
-  _getTriggerIcon() {
-    if(this.triggerIcon) {
-      return html `
-        <dw-icon-button
-          .buttonSize="${this.triggerButtonSize}"
-          class="trigger-icon"
-          ?hidden="${!this.triggerIcon}"
-          .iconSize="${this.triggerIconSize}"
-          ?disabled="${this.readOnly}"
-          icon="${this.triggerIcon}">
-        </dw-icon-button>
-      `
-    }
-
-    return html ``;
-  }
-
-  /**
-   * @returns Trigger label element.
-   * @protected
-   */
-  _getTriggerLabel() {
-    if(this.triggerLabel) {
-      return html `<dw-button class="trigger-label" .label="${this.triggerLabel}"></dw-button>`
-    }
-
-    return html ``;
-  }
-
-  /**
-   * @returns Default trigger element.
-   * @protected
-   */
-  _getDefaultTriggerElement() {
-    let selectedText = this._computeSelectedItemsText(this.items, this.value, this.itemLabel, this.itemValue);
-    return html `
-      <div class="label caption">
-        <div>${this.label}</div>
-      </div>
-      <div class="dropdown-input">
-        <div class="value-container">
-          ${!selectedText ? 
-                html`<div class="placeholder field">${this.placeholder}</div>`
-                : html`<div class="value field">${selectedText}</div>`}
-        </div>
-       ${this._getDropDownArrowIcon()}
-      </div>
-    `;
-  }
-
-  /**
-   * Invoked when user click trigger element.
-   * When trigger element is icon then wait for icon button ripple is completed then dialog open or close.
-   */
-  async _onClick() {
-    if(this.readOnly){
+  _setPopoverDialogWidth() {
+    if (this.dialogWidth) {
+      this.style.setProperty("--dw-popover-width", this.dialogWidth + "px");
       return;
     }
 
-    let triggerIcon = this.shadowRoot.querySelector('.trigger-icon');
-    triggerIcon && triggerIcon.waitForEntryAnimation && await triggerIcon.waitForEntryAnimation;
-    this.opened = !this.opened;
+    // Trigger element getter
+    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+
+    // Set Trigger element's offSetWidth to PopOver Dialog
+    this.style.setProperty("--dw-popover-width", triggerEl.offsetWidth + "px");
   }
 
-  _valueChanged(e) {
+  /**
+   * Trigger when actual user intract
+   * @param {Event} e
+   */
+  _onUserInteraction(e) {
+    if (e.type === "input") {
+      this._onInput();
+    }
+  }
+
+  /**
+   * Returns String that represents current value
+   */
+  get _getValue() {
+    if (!this.value) {
+      return "";
+    }
+    if (!this.valueTextProvider(this.value)) {
+      if (typeof this.value !== "string") {
+        return "";
+      }
+      return this.value;
+    }
+    return this.valueTextProvider(this.value);
+  }
+
+  _onTrigger(e) {
+    if (!this.readOnly) {
+      this._opened = true;
+    }
+  }
+
+  _onInput(e) {
+    // Trigger element getter
+    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+
+    this._query = triggerEl.value;
+  }
+
+  _onSelect(e) {
     this.value = e.detail.value;
-    this.selected = e.detail.selected;
-    
-    this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: e.detail
-    }));
-
-    this.validate();
+    this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
-  _openedChanged(e) {
-    this.opened = e.detail.opened;
-    this._triggerOpenedChange();
-    this.__setOverlay();
+  _onDialogClose() {
+    this._opened = false;
   }
 
-  _triggerOpenedChange() {
-    let openedChangeEvent = new CustomEvent('opened-changed', {
-      detail: {
-        opened: this.opened
-      }
-    });
-    this.dispatchEvent(openedChangeEvent);
-  }
-
-  _triggerInvalidChange() {
-    let invalidChangeEvent = new CustomEvent('invalid-changed', {
-      detail: {
-        invalid: this.invalid
-      }
-    });
-    this.dispatchEvent(invalidChangeEvent);
-  }
-
-   /**
-   * Shows/hides overlay when dialog is opened/closed.
-   * @protected
-   */
-    __setOverlay() {
-      this._overlay = this.opened;
-   }
-
-  _computeSelectedItemsText(items, value, itemLabel, itemValue) {
-    if(this.selectedItemsText){
-      return this.selectedItemsText(items, value, itemLabel, itemValue);
+  _onKeydown(e) {
+    if (e.keyCode === KEY_CODE.ENTER) {
+      this._onTrigger(e);
     }
-    return this._selectedItemsText(items, value, itemLabel, itemValue);
-  }
-
-  _getItemLabel(items, value, itemLabel, itemValue) {
-    if(!items){
-      return '';
-    }
-    let matchedItem = items.find((item) => {
-      return item[itemValue] === value;
-    });
-    return matchedItem ? matchedItem[itemLabel] : '';
-  }
-
-  _selectedItemsText(items, value, itemLabel, itemValue) {
-    if(!value) {
-      return '';
-    }
-
-    if(this.singleSelect){
-      return !itemLabel ? value : this._getItemLabel(items, value, itemLabel, itemValue);
-    }
-
-    if(value.length === 1) {
-      return !itemLabel ? value[0] : (this._getItemLabel(items, value[0], itemLabel, itemValue) || '1 item');
-    }
-
-    return `${value.length} items`;
   }
 }
 
-customElements.define('dw-select', DwSelect);
+customElements.define("dw-select", DwSelect);
