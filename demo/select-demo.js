@@ -31,6 +31,7 @@ class SelectDemo extends LitElement {
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
+        .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
       ></dw-select>
 

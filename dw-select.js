@@ -395,7 +395,10 @@ export class DwSelect extends LitElement {
       return "";
     }
     if (!this.valueTextProvider(this.value)) {
-      return item;
+      if (typeof(this.value) !== "string") {
+        return ""
+      }
+      return this.value;
     }
     return this.valueTextProvider(this.value);
   }
