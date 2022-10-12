@@ -395,8 +395,8 @@ export class DwSelect extends LitElement {
       return "";
     }
     if (!this.valueTextProvider(this.value)) {
-      if (typeof(this.value) !== "string") {
-        return ""
+      if (typeof this.value !== "string") {
+        return "";
       }
       return this.value;
     }
@@ -418,7 +418,7 @@ export class DwSelect extends LitElement {
 
   _onSelect(e) {
     this.value = e.detail.value;
-    this.dispatchEvent(new CustomEvent('selected', {detail: this.value}))
+    this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
   _onDialogClose() {
