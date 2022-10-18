@@ -88,6 +88,7 @@ TODO
 | `title`       | `string`            | Titile of the group.
 | `collapsible` | `boolean`           | Whether group is collapsible or not.
 | `collapsed`   | `boolean`           | Whether group is collapsed or not.
+| `icon`        | `string`            | name of Material icon. It's optional property.
 
 #### Example
 

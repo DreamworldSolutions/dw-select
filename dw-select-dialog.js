@@ -487,6 +487,8 @@ export class DwSelectDialog extends DwCompositeDialog {
         @click=${() => this._onItemClick(item)}
         ?activated=${index === this._activatedIndex}
         ?selected=${this._isItemSelected(item)}
+        .leadingIcon=${this._getLeadingIcon(item.value)}
+        ?hasLeadingIcon=${this._hasLeadingIcon()}
         .focusable=${false}
       ></dw-list-item>`;
     }
@@ -502,6 +504,18 @@ export class DwSelectDialog extends DwCompositeDialog {
         @click=${(e) => this._onGroupClick(e, item)}
       ></dw-select-group-item>`;
     }
+  }
+
+  _getLeadingIcon(item) {
+    let group = this.groups && this.groups.find((e) => e.name === item[this.groupExpression]);
+    if (group && group.icon) {
+      return group.icon;
+    }
+    return "";
+  }
+
+  _hasLeadingIcon() {
+    return Boolean(this.groups && this.groups.some((group) => group.icon));
   }
 
   /**
@@ -546,7 +560,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     // If group is exist
     if (Array.isArray(this._groups)) {
       // Sort Items with groupExpression and valueExpression
-      sortedArray = orderBy(sortedArray, [this.groupExpression, this.valueExpression]);
+      sortedArray = orderBy(sortedArray, [this.groupExpression]);
 
       this._groups.forEach((group) => {
         // Filter items with group
