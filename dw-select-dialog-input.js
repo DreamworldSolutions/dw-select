@@ -111,7 +111,7 @@ export class DwSelectDialogInput extends LitElement {
 
   _onInput(e) {
     e.stopPropagation();
-    this.value = e.target?.value;
+    this.value = e.target && e.target.value;
     this._hasCloseButton = this.value;
     this.dispatchEvent(new CustomEvent("input-change"));
   }
