@@ -366,7 +366,25 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.heading = "";
     this.showClose = false;
     this._activatedIndex = -1;
-    this.messages = defaultMessages;
+    // this.messages = defaultMessages;
+  }
+
+  set messages(newValue){
+    let oldValue = this._messages;
+    
+    if(newValue === oldValue){
+      return;
+    }
+
+    newValue = {...defaultMessages, ...newValue};
+
+    this._messages = newValue;
+    
+    this.requestUpdate("messages", oldValue);
+  }
+
+  get messages(){
+    return this._messages;
   }
 
   connectedCallback() {

@@ -8,9 +8,7 @@ import "./dw-select-extension-demo";
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
 const message = {
-  noRecords: "No Records",
-  noMatching: "No matching records found!",
-  loading: "Loading...",
+  noMatching: "No matching records found!"
 };
 
 class SelectDemo extends LitElement {
@@ -55,7 +53,7 @@ class SelectDemo extends LitElement {
         .messages="${message}"
       ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         vkb
         searchable
         .items=${accounts}
@@ -66,7 +64,7 @@ class SelectDemo extends LitElement {
         label="Contacts"
         @selected=${this._onSelect}
         .messages="${message}"
-      ></dw-select>-->
+      ></dw-select>
 
       <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
