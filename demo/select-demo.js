@@ -7,6 +7,12 @@ import "./dw-select-extension-demo";
 
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
+const defaultMessages = {
+  noRecords: "No Records",
+  noMatching: "No matching records found!",
+  loading: "Loading...",
+};
+
 class SelectDemo extends LitElement {
   static get styles() {
     return [
@@ -33,6 +39,7 @@ class SelectDemo extends LitElement {
         helper="helper text"
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
+        .messages="${defaultMessages}"
       ></dw-select>
 
       <dw-select
@@ -43,6 +50,7 @@ class SelectDemo extends LitElement {
         helper="helper text"
         layout="small"
         @selected=${this._onSelect}
+        .messages="${defaultMessages}"
       ></dw-select>
 
       <dw-select
@@ -55,6 +63,7 @@ class SelectDemo extends LitElement {
         groupExpression="type"
         label="Contacts"
         @selected=${this._onSelect}
+        .messages="${defaultMessages}"
       ></dw-select>
 
       <dw-select-extension-demo></dw-select-extension-demo>

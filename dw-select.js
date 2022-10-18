@@ -248,6 +248,12 @@ export class DwSelect extends LitElement {
        * When true, shows updated highlights.
        */
       _updatedHighlight: { type: Boolean },
+
+      /**
+       * Messages of for noRecords and noMatching
+       * Example: {noRecords: "", noMatching: "", loading: ""}
+       */
+      messages: { type: Object },
     };
   }
 
@@ -318,6 +324,7 @@ export class DwSelect extends LitElement {
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
             @dw-fit-dialog-closed="${this._onDialogClose}"
+            .messages = "${this.messages}"
           ></dw-select-dialog>`
         : nothing}
     `;

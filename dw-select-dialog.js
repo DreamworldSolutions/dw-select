@@ -35,12 +35,6 @@ const DIRECTION = {
   DOWN: "down",
 };
 
-const defaultMessages = {
-  noRecords: "No Records",
-  noMatching: "No matching records found!",
-  loading: "Loading...",
-};
-
 /**
  * Renders the list of choices on temporary Composite Dialog.
  * Using `dw-list-item` or custom template provider `renderItem` to render List of Items
@@ -286,7 +280,6 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.showTrigger = true;
     this.valueExpression = "_id";
     this._activatedIndex = -1;
-    this.messages = defaultMessages;
   }
 
   connectedCallback() {
