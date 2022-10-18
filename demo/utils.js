@@ -33,18 +33,20 @@ export const groups = [
     label: "Bank Accounts",
     collapsible: true,
     collapsed: false,
+    icon: "account_balance"
   },
   {
     name: "CONTACT",
     label: "Contacts",
     collapsible: true,
     collapsed: false,
+    icon: "person"
   },
   {
     name: "ACCOUNT",
     label: "Custom Accounts",
     collapsible: true,
-    collapsed: false,
+    collapsed: false
   },
 ];
 

@@ -47,17 +47,17 @@ class SelectDemo extends LitElement {
         @selected=${this._onSelect}
       ></dw-select>
 
-      <!-- <dw-select
-        vkb
+      <dw-select
+        
         searchable
-        .items=${accounts}
+        .items=${groupList}
         .groups=${groups}
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
         groupExpression="type"
         label="Contacts"
         @selected=${this._onSelect}
-      ></dw-select> -->
+      ></dw-select>
 
       <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
