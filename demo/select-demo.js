@@ -24,7 +24,7 @@ class SelectDemo extends LitElement {
 
   render() {
     return html`
-      <!-- <dw-select
+      <dw-select
         searchable
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
@@ -33,7 +33,7 @@ class SelectDemo extends LitElement {
         helper="helper text"
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
-      ></dw-select> -->
+      ></dw-select>
 
       <dw-select
         .items=${list}
