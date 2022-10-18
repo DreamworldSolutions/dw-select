@@ -560,7 +560,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     // If group is exist
     if (Array.isArray(this._groups)) {
       // Sort Items with groupExpression and valueExpression
-      sortedArray = orderBy(sortedArray, [this.groupExpression, this.valueExpression]);
+      sortedArray = orderBy(sortedArray, [this.groupExpression]);
 
       this._groups.forEach((group) => {
         // Filter items with group
