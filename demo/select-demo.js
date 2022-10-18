@@ -24,7 +24,7 @@ class SelectDemo extends LitElement {
 
   render() {
     return html`
-      <dw-select
+      <!-- <dw-select
         searchable
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
@@ -33,7 +33,7 @@ class SelectDemo extends LitElement {
         helper="helper text"
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
-      ></dw-select>
+      ></dw-select> -->
 
       <dw-select
         .items=${list}
@@ -42,10 +42,12 @@ class SelectDemo extends LitElement {
         placeholder="placeholder"
         helper="helper text"
         layout="small"
+        .heading=${"Download"}
+        showClose
         @selected=${this._onSelect}
       ></dw-select>
 
-      <dw-select
+      <!-- <dw-select
         vkb
         searchable
         .items=${accounts}
@@ -55,9 +57,9 @@ class SelectDemo extends LitElement {
         groupExpression="type"
         label="Contacts"
         @selected=${this._onSelect}
-      ></dw-select>
+      ></dw-select> -->
 
-      <dw-select-extension-demo></dw-select-extension-demo>
+      <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 

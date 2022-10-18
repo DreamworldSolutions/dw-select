@@ -235,6 +235,18 @@ export class DwSelect extends LitElement {
       valueEquator: { type: Function },
 
       /**
+       * Set it if you would like to show a heading on the bottom-sheet dialog.
+       * By default no heading.
+       */
+      heading: { type: String },
+
+      /**
+       * Shows an icon-button with a close icon,
+       * in the `top-right` corner on the bottom-sheet dailog.
+       */
+      showClose: { type: Boolean },
+
+      /**
        * Whether dialog is opened or not.
        */
       _opened: { type: Boolean },
@@ -273,6 +285,8 @@ export class DwSelect extends LitElement {
     super();
     this.valueExpression = "_id";
     this.searchable = false;
+    this.heading = "";
+    this.showClose = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
 
@@ -314,6 +328,8 @@ export class DwSelect extends LitElement {
             ?searchable=${this.searchable}
             .renderItem=${this.renderItem}
             .renderGroupItem=${this.renderGroupItem}
+            .heading=${this.heading}
+            ?showClose=${this.showClose}
             .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
