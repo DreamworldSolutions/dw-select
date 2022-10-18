@@ -12,6 +12,9 @@ import "./dw-select-dialog-input";
 // Web-Utils
 import { scrollIntoView } from "@dreamworld/web-util/scrollIntoView";
 
+// Styles
+import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals";
+
 // Lodash Methods
 import get from "lodash-es/get";
 import isEqual from "lodash-es/isEqual";
@@ -55,7 +58,7 @@ export class DwSelectDialog extends DwCompositeDialog {
       css`
         :host {
           display: block;
-          --dw-dialog-header-padding: 8px 16px;
+          --dw-dialog-header-padding: 4px 4px 4px 16px;
           --dw-dialog-content-padding: 0;
         }
 
@@ -87,6 +90,23 @@ export class DwSelectDialog extends DwCompositeDialog {
 
         :host([type="popover"]) header {
           padding: 0;
+        }
+
+        :host([type="modal"]) .mdc-dialog .mdc-dialog__title {
+          max-height: 56px;
+          display: flex;
+          flex-direction: row-reverse;
+          ${TypographyLiterals.headline6};
+        }
+
+        .heading {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+
+        :host([type="modal"][_showHeader]) .mdc-dialog__title {
+          height: 56px;
         }
 
         :host([type="modal"]) .mdc-dialog__title::before {
@@ -223,6 +243,24 @@ export class DwSelectDialog extends DwCompositeDialog {
       renderGroupItem: { type: Function },
 
       /**
+       * Set it if you would like to show a heading on the bottom-sheet dialog.
+       * By default no heading.
+       */
+      heading: { type: String },
+
+      /**
+       * Shows an icon-button with a close icon,
+       * in the `top-right` corner on the bottom-sheet dailog.
+       */
+      showClose: { type: Boolean },
+
+      /**
+       * true when close button or heading is provided.
+       * use for set styles
+       */
+      _showHeader: { type: Boolean, reflect: true },
+
+      /**
        * search query in string. used to filter items and highlight query keywords
        */
       _query: { type: String },
@@ -243,6 +281,42 @@ export class DwSelectDialog extends DwCompositeDialog {
        */
       dialogFooterElement: { type: Object },
     };
+  }
+
+  // Remove this custom getter/setter when `willUpdate` will be supported
+  set heading(value) {
+    let oldValue = this._heading;
+
+    if (oldValue === value) {
+      return;
+    }
+
+    this._showHeader = Boolean(value) || this.showClose;
+    this._heading = value;
+
+    this.requestUpdate("heading", oldValue);
+  }
+
+  get heading() {
+    return this._heading;
+  }
+
+  // Remove this custom getter/setter when `willUpdate` will be supported
+  set showClose(value) {
+    let oldValue = this._showClose;
+
+    if (oldValue === value) {
+      return;
+    }
+
+    this._showHeader = Boolean(this.heading) || value;
+    this._showClose = value;
+
+    this.requestUpdate("showClose", oldValue);
+  }
+
+  get showClose() {
+    return this._showClose;
   }
 
   set _groups(value) {
@@ -285,6 +359,8 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.type = "popover";
     this.showTrigger = true;
     this.valueExpression = "_id";
+    this.heading = "";
+    this.showClose = false;
     this._activatedIndex = -1;
     this.messages = defaultMessages;
   }
@@ -332,6 +408,15 @@ export class DwSelectDialog extends DwCompositeDialog {
         @cancel=${this._onClose}
         @input=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
+    }
+
+    if (this.type === "modal") {
+      return html`
+        ${this.showClose
+          ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>`
+          : html``}
+        ${this.heading ? html`<div class="heading">${this.heading}</div>` : html``}
+      `;
     }
 
     return html``;
