@@ -82,10 +82,11 @@ export class DwSelectDialog extends DwCompositeDialog {
           flex-direction: column;
           align-items: center;
           padding: 16px;
+          margin-top: 24px;
         }
 
         .no-record dw-icon {
-          padding-bottom: 8px;
+          padding-bottom: 40px;
         }
 
         :host([type="popover"]) header {
@@ -410,7 +411,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     if (this.searchable && this.type === "fit") {
       return html`<dw-select-dialog-input
         @cancel=${this._onClose}
-        @input=${this._onUserInteraction}
+        @input-change=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
     }
 
@@ -461,7 +462,7 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   get _renderNoRecord() {
     return html`<div class="no-record">
-      <dw-icon name="search_off" size="36"></dw-icon>
+      <dw-icon name="search_off" size="100"></dw-icon>
       <div>
         ${this.items && this.items.length === 0
           ? this.messages.noRecords
@@ -631,7 +632,7 @@ export class DwSelectDialog extends DwCompositeDialog {
    * @param {Event} e
    */
   _onUserInteraction(e) {
-    if (e.type === "input") {
+    if (e.type === "input-change") {
       this._onInput();
     }
   }

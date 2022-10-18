@@ -79,13 +79,23 @@ export class DwSelectDialogInput extends LitElement {
     this.value = "";
   }
 
+  firstUpdated() {
+    let input = this.renderRoot.querySelector("input");
+    input.focus();
+  }
+
   render() {
     return html`
       <div class="container">
         <dw-icon-button icon="arrow_back" @click=${this._onBack}></dw-icon-button>
-        <input @focus=${this._onFocus} @blur=${this._onBlur} @input=${this._onInput} />
+        <input
+          @focus=${this._onFocus}
+          @blur=${this._onBlur}
+          @input=${this._onInput}
+          .value=${this.value}
+        />
         ${this._hasCloseButton
-          ? html`<dw-icon-button icon="close" @click=${this._onBack}></dw-icon-button>`
+          ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>`
           : nothing}
       </div>
     `;
@@ -100,11 +110,19 @@ export class DwSelectDialogInput extends LitElement {
   }
 
   _onInput(e) {
-    this.value = e.target.value;
+    e.stopPropagation();
+    this.value = e.target && e.target.value;
+    this._hasCloseButton = Boolean(this.value);
+    this.dispatchEvent(new CustomEvent("input-change"));
   }
 
   _onBack() {
     this.dispatchEvent(new CustomEvent("cancel"));
+  }
+
+  _onClear() {
+    this.value = '';
+    this.dispatchEvent(new CustomEvent("input-change"));
   }
 }
 
