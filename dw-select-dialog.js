@@ -99,6 +99,10 @@ export class DwSelectDialog extends DwCompositeDialog {
           ${TypographyLiterals.headline6};
         }
 
+        :host([type="modal"]) .mdc-dialog--scrollable .mdc-dialog__title {
+          padding: 0;
+        }
+
         .heading {
           flex: 1;
           display: flex;
