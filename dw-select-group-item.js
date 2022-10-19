@@ -26,10 +26,12 @@ export class DwSelectGroupItem extends LitElement {
         :host {
           position: relative;
           display: flex;
-          height: 42px;
+          height: 48px;
           flex-direction: row;
           align-items: center;
           padding: 0 16px;
+          border-bottom: 1px solid var(--mdc-theme-divider-color, rgba(0, 0, 0, 0.12));
+          box-sizing: border-box;
         }
 
         .label {
