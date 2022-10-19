@@ -121,7 +121,7 @@ export class DwSelectDialogInput extends LitElement {
   }
 
   _onClear() {
-    this.value = '';
+    this.value = "";
     this.dispatchEvent(new CustomEvent("input-change"));
   }
 }
