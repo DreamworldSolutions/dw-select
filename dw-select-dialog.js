@@ -380,7 +380,6 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.heading = "";
     this.showClose = false;
     this._activatedIndex = -1;
-    // this.messages = defaultMessages;
   }
 
   set messages(newValue){
