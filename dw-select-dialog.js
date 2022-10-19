@@ -260,6 +260,11 @@ export class DwSelectDialog extends DwCompositeDialog {
       showClose: { type: Boolean },
 
       /**
+       * Name of trailing Icon which availble in selected item.
+       */
+      selectedTrailingIcon: { type: String },
+
+      /**
        * true when close button or heading is provided.
        * use for set styles
        */
@@ -487,9 +492,11 @@ export class DwSelectDialog extends DwCompositeDialog {
         .highlight=${this._query}
         @click=${() => this._onItemClick(item)}
         ?activated=${index === this._activatedIndex}
-        ?selected=${this._isItemSelected(item)}
+        ?selected=${this._isItemSelected(item.value)}
         .leadingIcon=${this._getLeadingIcon(item.value)}
         ?hasLeadingIcon=${this._hasLeadingIcon()}
+        .trailingIcon=${this.selectedTrailingIcon}
+        ?hasTrailingIcon=${this._isTrailingIconAvailable(item.value)}
         .focusable=${false}
       ></dw-list-item>`;
     }
@@ -519,13 +526,20 @@ export class DwSelectDialog extends DwCompositeDialog {
     return Boolean(this.groups && this.groups.some((group) => group.icon));
   }
 
+  _isTrailingIconAvailable(item) {
+    if (this.selectedTrailingIcon) {
+      return this._isItemSelected(item);
+    }
+    return false;
+  }
+
   /**
    *
    * @param {Object} item Selected item, one of the `items`
    * @returns whether item is selected or not.
    */
   _isItemSelected(item) {
-    return isEqual(item.value, this.value);
+    return isEqual(item, this.value);
   }
 
   _onItemClick(item) {

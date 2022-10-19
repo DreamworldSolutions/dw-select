@@ -247,6 +247,11 @@ export class DwSelect extends LitElement {
       showClose: { type: Boolean },
 
       /**
+       * Name of trailing Icon which availble in selected item.
+       */
+      selectedTrailingIcon: { type: String },
+
+      /**
        * Whether dialog is opened or not.
        */
       _opened: { type: Boolean },
@@ -330,6 +335,7 @@ export class DwSelect extends LitElement {
             .renderGroupItem=${this.renderGroupItem}
             .heading=${this.heading}
             ?showClose=${this.showClose}
+            .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
