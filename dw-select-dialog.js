@@ -83,6 +83,7 @@ export class DwSelectDialog extends DwCompositeDialog {
           align-items: center;
           padding: 16px;
           margin-top: 24px;
+          --dw-icon-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0,  0.38));
         }
 
         .no-record dw-icon {
