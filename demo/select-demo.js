@@ -49,7 +49,6 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
-        
         searchable
         .items=${groupList}
         .groups=${groups}
@@ -79,4 +78,3 @@ class SelectDemo extends LitElement {
 }
 
 customElements.define("select-demo", SelectDemo);
-
