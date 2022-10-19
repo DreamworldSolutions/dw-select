@@ -113,6 +113,7 @@ export class DwSelectTrigger extends LitElement {
         ?required=${this.required}
         ?disabled=${this.disabled}
         .validationMessage=${this.errorMessage}
+        iconTrailing=${this.opened ? "expand_less" : "expand_more"}
       ></mwc-textfield>
     `;
   }

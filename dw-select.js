@@ -309,6 +309,7 @@ export class DwSelect extends LitElement {
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
+        ?opened = "${this._opened}"
       ></dw-select-trigger>
       ${this._opened
         ? html`<dw-select-dialog
