@@ -952,10 +952,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-dialog@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-4.1.2.tgz#c612c458f5a350bd5f22ddd113525911bebf2724"
-  integrity sha512-/G2dTPpDxL3ozyHBMVkEwlFuS2BmP45dptKljRoSfupq6WETBocXO1H0mhjBRMn0PVXtpnJ8EmMmn8MfG+KO0g==
+"@dreamworld/dw-dialog@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-4.2.0.tgz#6c410993ae0c4bcaf099092cf8d426e03af41f3b"
+  integrity sha512-gb91vPyopCfHkCjQhshLgxC5HIPbbo7wphejNBreNW+Z2MCmJVokaAPeHsxQZ3ylENo2BpeNntujodM8Wqytww==
   dependencies:
     "@dreamworld/material-styles" "^1.1.0"
     "@dreamworld/pwa-helpers" "^1.11.1"
