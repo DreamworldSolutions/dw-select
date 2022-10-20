@@ -1,4 +1,4 @@
-import { css, html } from "lit-element";
+import { css, html, unsafeCSS } from "lit-element";
 import { repeat } from "lit-html/directives/repeat";
 
 // View Elements
@@ -97,7 +97,7 @@ export class DwSelectDialog extends DwCompositeDialog {
           max-height: 56px;
           display: flex;
           flex-direction: row-reverse;
-          ${TypographyLiterals.headline6};
+          ${unsafeCSS(TypographyLiterals.headline6)};
         }
 
         :host([type="modal"]) .mdc-dialog--scrollable .mdc-dialog__title {
