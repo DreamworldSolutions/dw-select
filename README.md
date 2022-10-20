@@ -75,8 +75,9 @@ TODO
 | `renderItem`              | `HTMLTemplate`                | `undefined`        | Provides any Block element to represent list items. Should show its hover effect, and ripple on click. Highlight text based on `query`. Integrator listens to the ‘click’ event to know whether the selection is changed or not. <br>__Note:__ It must not be focusable.
 | `renderGroupItem`         | `HTMLTemplate`                | `undefined`        | Provides any Block elements to represent group items. name property should be set to input name. Should show hover & ripple effects only if it’s collapsible. Integrator listens on ‘click’ event to toggle collapsed status.
 | `valueEquator`            | `Function`                    | `(v1, v2) => v1 === v2` | Set this to configure custom logic to detect whether value is changed or not.
-| `heading`                 | `String`                      | `""`             | Set it if you would like to show a heading on the bottom-sheet dialog. By default no heading.
+| `heading`                 | `String`                      | `""`               | Set it if you would like to show a heading on the bottom-sheet dialog. By default no heading.
 | `showClose`               | `boolean`                     | `false`            | Shows an icon-button with a close icon, in the `top-right` corner on the bottom-sheet dailog.
+| `selectedTrailingIcon`    | `string`                      | `undefined`        | Name of trailing Icon which availble in selected item.
 
 ### Group
 

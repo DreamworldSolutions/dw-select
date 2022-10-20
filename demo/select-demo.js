@@ -31,6 +31,7 @@ class SelectDemo extends LitElement {
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
+        selectedTrailingIcon="done"
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
       ></dw-select>
@@ -48,7 +49,6 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
-        
         searchable
         .items=${groupList}
         .groups=${groups}
@@ -78,4 +78,3 @@ class SelectDemo extends LitElement {
 }
 
 customElements.define("select-demo", SelectDemo);
-
