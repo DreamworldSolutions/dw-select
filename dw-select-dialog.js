@@ -130,6 +130,14 @@ export class DwSelectDialog extends DwCompositeDialog {
         :host([type="fit"]) .mdc-dialog__title {
           padding: 8px 16px;
         }
+
+        dw-list-item[selected] {
+          --mdc-theme-text-primary: var(--mdc-theme-primary, #6200ee);
+        }
+
+        dw-list-item:not([disabled])[selected]::before {
+          background-color: var(--dw-select-item-selected-bg-color, var(--mdc-theme-primary, #6200ee));
+        }
       `,
     ];
   }
