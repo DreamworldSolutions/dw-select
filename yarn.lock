@@ -952,10 +952,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-dialog@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-4.1.2.tgz#c612c458f5a350bd5f22ddd113525911bebf2724"
-  integrity sha512-/G2dTPpDxL3ozyHBMVkEwlFuS2BmP45dptKljRoSfupq6WETBocXO1H0mhjBRMn0PVXtpnJ8EmMmn8MfG+KO0g==
+"@dreamworld/dw-dialog@^4.2.0-appento-for-fit-dialog.1":
+  version "4.2.0-appento-for-fit-dialog.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-4.2.0-appento-for-fit-dialog.1.tgz#ad9521d579c38df3e26cef519983a6377242f39d"
+  integrity sha512-UR53U8UDH8twez5pFZqFQxYJltPxWuvPup+/eQiAMKXpCzTybmx6zdC6NY+lNPo+IyYHkcw/BUBzdtj99xjKYQ==
   dependencies:
     "@dreamworld/material-styles" "^1.1.0"
     "@dreamworld/pwa-helpers" "^1.11.1"
