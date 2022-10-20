@@ -83,6 +83,7 @@ export class DwSelectDialog extends DwCompositeDialog {
           align-items: center;
           padding: 16px;
           margin-top: 24px;
+          --dw-icon-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0,  0.38));
         }
 
         .no-record dw-icon {
@@ -381,6 +382,24 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = -1;
     this.messages = defaultMessages;
+  }
+
+  set messages(newValue){
+    let oldValue = this._messages;
+    
+    if(newValue === oldValue){
+      return;
+    }
+
+    newValue = {...oldValue, ...newValue};
+
+    this._messages = newValue;
+    
+    this.requestUpdate("messages", oldValue);
+  }
+
+  get messages(){
+    return this._messages;
   }
 
   connectedCallback() {
