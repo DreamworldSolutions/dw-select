@@ -5,6 +5,8 @@ import "../dw-select-dialog-input";
 import "../dw-select-trigger";
 import "./dw-select-extension-demo";
 
+import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
+
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 
 class SelectDemo extends LitElement {
@@ -13,6 +15,7 @@ class SelectDemo extends LitElement {
       css`
         :host {
           box-sizing: border-box;
+          --dw-select-item-selected-bg-color: transparent;
         }
 
         dw-select {
@@ -24,6 +27,7 @@ class SelectDemo extends LitElement {
 
   render() {
     return html`
+      <div class="fit-dialog-container"></div>
       <dw-select
         searchable
         .items=${country_list_with_code}
@@ -49,6 +53,7 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
+        vkb
         searchable
         .items=${groupList}
         .groups=${groups}
@@ -70,6 +75,11 @@ class SelectDemo extends LitElement {
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
+  }
+
+  firstUpdated() {
+    let elFitDialogContainer = this.shadowRoot.querySelector(".fit-dialog-container");
+    DwCompositeDialog.setAppendTo(elFitDialogContainer);
   }
 
   _onSelect(e) {
