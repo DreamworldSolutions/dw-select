@@ -46,6 +46,7 @@ export class DwSelectDialogInput extends LitElement {
           text-decoration: inherit;
           text-transform: inherit;
           caret-color: var(--mdc-theme-primary, #6200ee);
+          color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
         }
 
         input:focus {
@@ -77,11 +78,6 @@ export class DwSelectDialogInput extends LitElement {
   constructor() {
     super();
     this.value = "";
-  }
-
-  firstUpdated() {
-    let input = this.renderRoot.querySelector("input");
-    input.focus();
   }
 
   render() {
