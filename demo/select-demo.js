@@ -43,8 +43,7 @@ class SelectDemo extends LitElement {
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
         .messages="${message}"
-      ></dw-select
-      >-->
+      ></dw-select>
 
       <dw-select
         .items=${list}
