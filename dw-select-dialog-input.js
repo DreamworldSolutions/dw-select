@@ -1,6 +1,9 @@
 import { LitElement, html, css, nothing } from "lit";
 import "@dreamworld/dw-icon-button";
 
+// Styles
+import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
+
 /**
  * #Behaviours
  *  - on Focus: Updates border color to primary color
@@ -17,14 +20,21 @@ export class DwSelectDialogInput extends LitElement {
         :host {
           display: block;
           height: 48px;
-          border: 1px solid;
+          border: 1px solid var(--mdc-theme-divider-color, rgba(0, 0, 0, 0.12));
           border-radius: 24px;
+          box-sizing: border-box;
+          transition: border-width 0.1s, border-color 0.1s;
+          transition-timing-function: ease-in;
           box-sizing: border-box;
         }
 
         :host([_hasFocus]) {
           border: 2px solid;
           border-color: var(--mdc-theme-primary, #6200ee);
+        }
+
+        dw-icon-button {
+          --dw-icon-color: var(--mdc-theme-text-secondary-on-surface, rgba(0, 0, 0, 0.6));
         }
 
         .container {
@@ -52,6 +62,11 @@ export class DwSelectDialogInput extends LitElement {
         input:focus {
           outline: none;
         }
+
+        input::placeholder {
+          color: var(--mdc-theme-text-hint-on-surface, rgba(0, 0, 0, 0.38));
+          ${TypographyLiterals.subtitle1};
+        }
       `,
     ];
   }
@@ -62,6 +77,11 @@ export class DwSelectDialogInput extends LitElement {
        * Contains value of the input
        */
       value: String,
+
+      /**
+       * Placeholder for fit dialog's search input
+       */
+      searchPlaceholder: String,
 
       /**
        * Whether close icon button is visible or not
@@ -89,6 +109,7 @@ export class DwSelectDialogInput extends LitElement {
           @blur=${this._onBlur}
           @input=${this._onInput}
           .value=${this.value}
+          .placeholder="${this.searchPlaceholder}"
         />
         ${this._hasCloseButton
           ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>`
