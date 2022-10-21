@@ -83,7 +83,7 @@ export class DwSelectDialog extends DwCompositeDialog {
           align-items: center;
           padding: 16px;
           margin-top: 24px;
-          --dw-icon-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0,  0.38));
+          --dw-icon-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.38));
         }
 
         .no-record dw-icon {
@@ -137,7 +137,10 @@ export class DwSelectDialog extends DwCompositeDialog {
         }
 
         dw-list-item:not([disabled])[selected]::before {
-          background-color: var(--dw-select-item-selected-bg-color, var(--mdc-theme-primary, #6200ee));
+          background-color: var(
+            --dw-select-item-selected-bg-color,
+            var(--mdc-theme-primary, #6200ee)
+          );
         }
       `,
     ];
@@ -299,6 +302,11 @@ export class DwSelectDialog extends DwCompositeDialog {
        * Custom footer template as property
        */
       dialogFooterElement: { type: Object },
+
+      /**
+       * true if any group item has collapsed value is true.
+       */
+      _isGroupCollapsed: Boolean,
     };
   }
 
@@ -344,6 +352,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     if (value === oldValue) {
       return;
     }
+    this._isGroupCollapsed = Boolean(value) && value.some((e) => e.collapsed);
 
     this.__groups = value;
     this.requestUpdate("_groups", oldValue);
@@ -384,21 +393,21 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.messages = defaultMessages;
   }
 
-  set messages(newValue){
+  set messages(newValue) {
     let oldValue = this._messages;
-    
-    if(newValue === oldValue){
+
+    if (newValue === oldValue) {
       return;
     }
 
-    newValue = {...oldValue, ...newValue};
+    newValue = { ...oldValue, ...newValue };
 
     this._messages = newValue;
-    
+
     this.requestUpdate("messages", oldValue);
   }
 
-  get messages(){
+  get messages() {
     return this._messages;
   }
 
@@ -422,6 +431,15 @@ export class DwSelectDialog extends DwCompositeDialog {
         : this.type === "modal"
         ? this.renderRoot.querySelector("#dialog-content")
         : this.renderRoot.querySelector("#popover_dialog__surface");
+
+    this._isGroupCollapsed = Boolean(this._groups) && this._groups.some((e) => e.collapsed);
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has("items")) {
+      this._getItems();
+    }
   }
 
   _determineType() {
@@ -457,13 +475,6 @@ export class DwSelectDialog extends DwCompositeDialog {
     }
 
     return html``;
-  }
-
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    if (changedProperties.has("items")) {
-      this._getItems();
-    }
   }
 
   get _contentTemplate() {
@@ -685,6 +696,12 @@ export class DwSelectDialog extends DwCompositeDialog {
   _onInput(e) {
     let el = this.renderRoot.querySelector("dw-select-dialog-input");
     this._query = el.value;
+
+    if (this._query && this._isGroupCollapsed) {
+      let groups = this._groups;
+      groups.map((e) => (e.collapsed = false));
+      this._groups = groups;
+    }
   }
 
   _getItem(index) {
