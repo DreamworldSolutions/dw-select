@@ -78,6 +78,7 @@ TODO
 | `heading`                 | `String`                      | `""`               | Set it if you would like to show a heading on the bottom-sheet dialog. By default no heading.
 | `showClose`               | `boolean`                     | `false`            | Shows an icon-button with a close icon, in the `top-right` corner on the bottom-sheet dailog.
 | `selectedTrailingIcon`    | `string`                      | `undefined`        | Name of trailing Icon which availble in selected item.
+| `searchPlaceholder`       | `string`                      | `""`               | Placeholder for fit dialog's search input
 
 ### Group
 

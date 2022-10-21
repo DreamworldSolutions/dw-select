@@ -83,7 +83,7 @@ export class DwSelectDialog extends DwCompositeDialog {
           align-items: center;
           padding: 16px;
           margin-top: 24px;
-          --dw-icon-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0,  0.38));
+          --dw-icon-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.38));
         }
 
         .no-record dw-icon {
@@ -137,7 +137,10 @@ export class DwSelectDialog extends DwCompositeDialog {
         }
 
         dw-list-item:not([disabled])[selected]::before {
-          background-color: var(--dw-select-item-selected-bg-color, var(--mdc-theme-primary, #6200ee));
+          background-color: var(
+            --dw-select-item-selected-bg-color,
+            var(--mdc-theme-primary, #6200ee)
+          );
         }
       `,
     ];
@@ -299,6 +302,11 @@ export class DwSelectDialog extends DwCompositeDialog {
        * Custom footer template as property
        */
       dialogFooterElement: { type: Object },
+
+      /**
+       * Placeholder for fit dialog's search input
+       */
+      searchPlaceholder: { type: String },
     };
   }
 
@@ -384,21 +392,21 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.messages = defaultMessages;
   }
 
-  set messages(newValue){
+  set messages(newValue) {
     let oldValue = this._messages;
-    
-    if(newValue === oldValue){
+
+    if (newValue === oldValue) {
       return;
     }
 
-    newValue = {...oldValue, ...newValue};
+    newValue = { ...oldValue, ...newValue };
 
     this._messages = newValue;
-    
+
     this.requestUpdate("messages", oldValue);
   }
 
-  get messages(){
+  get messages() {
     return this._messages;
   }
 
@@ -442,6 +450,7 @@ export class DwSelectDialog extends DwCompositeDialog {
   get _headerTemplate() {
     if (this.searchable && this.type === "fit") {
       return html`<dw-select-dialog-input
+        .searchPlaceholder="${this.searchPlaceholder}"
         @cancel=${this._onClose}
         @input-change=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
