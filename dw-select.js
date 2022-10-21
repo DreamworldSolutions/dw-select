@@ -270,7 +270,12 @@ export class DwSelect extends LitElement {
        * Messages of for noRecords and noMatching
        * Example: {noRecords: "", noMatching: "", loading: ""}
        */
-       messages: { type: Object },
+      messages: { type: Object },
+
+      /**
+       * Placeholder for fit dialog's search input
+       */
+      searchPlaceholder: { type: String },
     };
   }
 
@@ -298,6 +303,7 @@ export class DwSelect extends LitElement {
     this.searchable = false;
     this.heading = "";
     this.showClose = false;
+    this.searchPlaceholder = "";
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
 
@@ -320,7 +326,7 @@ export class DwSelect extends LitElement {
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
-        ?opened = "${this._opened}"
+        ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
         ? html`<dw-select-dialog
@@ -341,13 +347,14 @@ export class DwSelect extends LitElement {
             .renderItem=${this.renderItem}
             .renderGroupItem=${this.renderGroupItem}
             .heading=${this.heading}
+            .searchPlaceholder="${this.searchPlaceholder}"
             ?showClose=${this.showClose}
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
             @dw-dialog-closed="${this._onDialogClose}"
             @dw-fit-dialog-closed="${this._onDialogClose}"
-            .messages = "${this.messages}"
+            .messages="${this.messages}"
           ></dw-select-dialog>`
         : nothing}
     `;
