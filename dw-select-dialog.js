@@ -307,6 +307,11 @@ export class DwSelectDialog extends DwCompositeDialog {
        * Placeholder for fit dialog's search input
        */
       searchPlaceholder: { type: String },
+
+      /**
+       * true if any group item has collapsed value is true.
+       */
+      isGroupCollapsed: Boolean,
     };
   }
 
@@ -352,6 +357,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     if (value === oldValue) {
       return;
     }
+    this._isGroupCollapsed = Boolean(value) && value.some((e) => e.collapsed);
 
     this.__groups = value;
     this.requestUpdate("_groups", oldValue);
@@ -430,6 +436,15 @@ export class DwSelectDialog extends DwCompositeDialog {
         : this.type === "modal"
         ? this.renderRoot.querySelector("#dialog-content")
         : this.renderRoot.querySelector("#popover_dialog__surface");
+
+    this._isGroupCollapsed = Boolean(this._groups) && this._groups.some((e) => e.collapsed);
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has("items")) {
+      this._getItems();
+    }
   }
 
   _determineType() {
@@ -466,13 +481,6 @@ export class DwSelectDialog extends DwCompositeDialog {
     }
 
     return html``;
-  }
-
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    if (changedProperties.has("items")) {
-      this._getItems();
-    }
   }
 
   get _contentTemplate() {
@@ -694,6 +702,12 @@ export class DwSelectDialog extends DwCompositeDialog {
   _onInput(e) {
     let el = this.renderRoot.querySelector("dw-select-dialog-input");
     this._query = el.value;
+
+    if (this._query && this._isGroupCollapsed) {
+      let groups = this._groups;
+      groups.map((e) => (e.collapsed = false));
+      this._groups = groups;
+    }
   }
 
   _getItem(index) {
