@@ -74,7 +74,7 @@ class SelectDemo extends LitElement {
         .messages="${message}"
       ></dw-select>
 
-      <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
+      <dw-select-extension-demo></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
