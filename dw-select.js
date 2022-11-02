@@ -316,7 +316,7 @@ export class DwSelect extends LitElement {
         label=${this.label}
         placeholder=${this.placeholder}
         helper=${this.helper}
-        ?inputAllowed=${this.searchable && !this.readOnly}
+        ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
         value=${this._getValue}
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
