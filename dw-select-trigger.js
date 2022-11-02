@@ -36,34 +36,6 @@ export class DwSelectTrigger extends TextField {
   static get properties() {
     return {
       /**
-       * The input control's value.
-       * Text to be shown as the value.
-       * It’s output property also when readOnly=false.
-       */
-      // value: { type: String },
-
-      /**
-       * Sets floating label value.
-       */
-      // label: { type: String },
-
-      /**
-       * Sets disappearing input placeholder.
-       */
-      // placeholder: { type: String },
-
-      /**
-       * Helper text to display below the input.
-       * Display default only when focused.
-       */
-      // helper: { type: String },
-
-      /**
-       * Whether or not to show the material outlined variant.
-       */
-      // outlined: { type: Boolean },
-
-      /**
        * Input Property. When true, shows updated highlights
        * Default "false"
        */
@@ -76,25 +48,10 @@ export class DwSelectTrigger extends TextField {
       opened: { type: Boolean },
 
       /**
-       * Whether or not to show the read-only variant.
-       */
-      // readOnly: { type: Boolean },
-
-      /**
        * When true user isn’t allowed to type anything.
        * Default "false"
        */
       inputAllowed: { type: Boolean },
-
-      /**
-       * Displays error state if value is empty and input is blurred.
-       */
-      // required: { type: Boolean },
-
-      /**
-       * Whether or not to show the `disabled` variant.
-       */
-      // disabled: { type: Boolean },
 
       /**
        * When true, helper text isn’t visible. Instead `errorMesage` is shown.
