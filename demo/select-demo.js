@@ -36,6 +36,7 @@ class SelectDemo extends LitElement {
         searchable
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
+        .valueExpression="${"name"}"
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
@@ -63,6 +64,7 @@ class SelectDemo extends LitElement {
         searchable
         .items=${groupList}
         .groups=${groups}
+        .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
         groupExpression="type"
