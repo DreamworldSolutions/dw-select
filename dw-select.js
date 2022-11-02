@@ -299,7 +299,6 @@ export class DwSelect extends LitElement {
 
   constructor() {
     super();
-    this.valueExpression = "_id";
     this.searchable = false;
     this.heading = "";
     this.showClose = false;
@@ -385,6 +384,14 @@ export class DwSelect extends LitElement {
 
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
+    }
+  }
+
+  updated(_change) {
+    if (_change.has("items") && this.value && this.valueExpression) {
+      this.value = this.items.find(
+        (item) => item[this.valueExpression] === this.value[this.valueExpression]
+      );
     }
   }
 

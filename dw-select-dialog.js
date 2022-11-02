@@ -530,7 +530,6 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   _defaultTemplate(item, index) {
     if (item.type === "ITEM") {
-      let title1 = this.valueExpression ? get(item.value, this.valueExpression) : item.value;
       return html`<dw-list-item
         title1=${this._getItemValue(item.value)}
         .highlight=${this._query}
@@ -583,7 +582,15 @@ export class DwSelectDialog extends DwCompositeDialog {
    * @returns whether item is selected or not.
    */
   _isItemSelected(item) {
-    return isEqual(item, this.value);
+    if (this.value && this.valueExpression) {
+      return item[this.valueExpression] === this.value[this.valueExpression];
+    }
+
+    if (this.value) {
+      return isEqual(item, this.value);
+    }
+
+    return false;
   }
 
   _onItemClick(item) {
@@ -618,7 +625,7 @@ export class DwSelectDialog extends DwCompositeDialog {
 
     // If group is exist
     if (Array.isArray(this._groups)) {
-      // Sort Items with groupExpression and valueExpression
+      // Sort Items with groupExpression
       sortedArray = orderBy(sortedArray, [this.groupExpression]);
 
       this._groups.forEach((group) => {
