@@ -1,5 +1,5 @@
 import { css, html, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
-import { repeat } from 'lit/directives/repeat.js';
+import { repeat } from "lit/directives/repeat.js";
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
