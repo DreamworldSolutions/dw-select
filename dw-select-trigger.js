@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { css } from "@dreamworld/pwa-helpers/lit.js";
 
 // view Elements
 import { TextField } from "@material/mwc-textfield";

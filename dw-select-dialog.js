@@ -1,5 +1,5 @@
-import { css, html, unsafeCSS } from "lit-element";
-import { repeat } from "lit-html/directives/repeat";
+import { css, html, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
+import { repeat } from 'lit/directives/repeat.js';
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
@@ -54,7 +54,7 @@ const defaultMessages = {
 export class DwSelectDialog extends DwCompositeDialog {
   static get styles() {
     return [
-      DwCompositeDialog.styles,
+      super.styles,
       css`
         :host {
           display: block;
@@ -421,6 +421,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     // Set initial _groups value that actually used to compute list of choices
     this._groups = this.groups;
 
+    // this.type = "popover"
     // Determine Dialog type
     this._determineType();
 

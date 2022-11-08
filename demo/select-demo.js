@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-select";
 import "../dw-select-group-item";
 import "../dw-select-dialog-input";
@@ -31,7 +31,6 @@ class SelectDemo extends LitElement {
 
   render() {
     return html`
-      <div class="fit-dialog-container"></div>
       <dw-select
         searchable
         .items=${country_list_with_code}
@@ -85,11 +84,6 @@ class SelectDemo extends LitElement {
 
       <!-- <dw-select-group-item label="Contact" collapsible collapsed></dw-select-group-item> -->
     `;
-  }
-
-  firstUpdated() {
-    let elFitDialogContainer = this.shadowRoot.querySelector(".fit-dialog-container");
-    DwCompositeDialog.setAppendTo(elFitDialogContainer);
   }
 
   _onSelect(e) {

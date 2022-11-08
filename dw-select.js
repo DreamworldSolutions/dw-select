@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from "lit";
+import { LitElement, html, css, nothing } from "@dreamworld/pwa-helpers/lit.js";
 
 // View Elements
 import "./dw-select-trigger.js";
@@ -330,7 +330,7 @@ export class DwSelect extends LitElement {
       ${this._opened
         ? html`<dw-select-dialog
             id="selectDialog"
-            opened
+            .opened=${true}
             .triggerElement=${this._triggerElement}
             .value=${this.value}
             .items="${this.items}"
@@ -377,7 +377,7 @@ export class DwSelect extends LitElement {
   }
 
   willUpdate(_changedProperties) {
-    if (_changedProperties.has("_opened") && this._opened) {
+    if (_changedProperties.has("_opened")) {
       this._loadFragments();
       this._setPopoverDialogWidth();
     }
@@ -399,7 +399,7 @@ export class DwSelect extends LitElement {
    * Import manually
    */
   _loadFragments() {
-    if (this._opened) {
+    if (true) {
       import("./dw-select-dialog.js");
     }
   }
@@ -449,6 +449,7 @@ export class DwSelect extends LitElement {
 
   _onTrigger(e) {
     if (!this.readOnly) {
+      console.log("_onTrigger");
       this._opened = true;
     }
   }
