@@ -449,7 +449,6 @@ export class DwSelect extends LitElement {
 
   _onTrigger(e) {
     if (!this.readOnly) {
-      console.log("_onTrigger");
       this._opened = true;
     }
   }
