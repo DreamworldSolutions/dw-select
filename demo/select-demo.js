@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-select";
 import "../dw-select-group-item";
 import "../dw-select-dialog-input";

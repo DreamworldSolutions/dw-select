@@ -23,25 +23,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dreamworld/dw-dialog": "^4.2.0",
-    "@dreamworld/dw-icon": "^2.3.1",
-    "@dreamworld/dw-icon-button": "^2.4.0",
-    "@dreamworld/dw-list-item": "^3.10.0-hisab-list-item.2",
-    "@dreamworld/dw-ripple": "^2.6.0-hisab-ripple.1",
+    "@dreamworld/dw-dialog": "^5.0.0",
+    "@dreamworld/dw-icon": "^4.1.0",
+    "@dreamworld/dw-icon-button": "^3.0.0",
+    "@dreamworld/dw-list-item": "^4.1.0",
+    "@dreamworld/dw-ripple": "^3.0.0",
     "@dreamworld/material-styles": "^3.1.0",
-    "@dreamworld/web-util": "^1.5.0",
-    "@material/mwc-circular-progress": "^0.26.1",
-    "@material/mwc-textfield": "^0.26.1",
-    "lit": "^2.2.7",
-    "lit-element": "^2.0.1",
-    "lit-html": "^1.1.1",
+    "@dreamworld/pwa-helpers": "^1.14.0",
+    "@dreamworld/web-util": "^1.5.1",
+    "@material/mwc-circular-progress": "^0.27.0",
+    "@material/mwc-textfield": "^0.27.0",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@open-wc/building-rollup": "^2.0.1",
-    "@rollup/plugin-commonjs": "^22.0.1",
-    "@web/dev-server": "^0.1.32",
-    "semantic-release": "^19.0.3"
+    "@open-wc/building-rollup": "^2.0.2",
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@web/dev-server": "^0.1.35",
+    "semantic-release": "^19.0.5"
   },
   "publishConfig": {
     "access": "public"
