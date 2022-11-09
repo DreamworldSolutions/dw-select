@@ -1,5 +1,6 @@
-import { css, html, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
 import { repeat } from "lit/directives/repeat.js";
+import "@lit-labs/virtualizer";
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
@@ -60,6 +61,7 @@ export class DwSelectDialog extends DwCompositeDialog {
           display: block;
           --dw-dialog-header-padding: 4px 4px 4px 16px;
           --dw-dialog-content-padding: 0;
+          --dw-popover-height: 50vh;
         }
 
         :host([type="popover"]) .dialog__content {
@@ -130,6 +132,11 @@ export class DwSelectDialog extends DwCompositeDialog {
 
         :host([type="fit"]) .mdc-dialog__title {
           padding: 8px 16px;
+        }
+
+        dw-list-item,
+        dw-select-group-item {
+          width: 100%;
         }
 
         dw-list-item[selected] {
@@ -523,9 +530,14 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   get _renderList() {
     return html`
-      ${repeat(this._items, (item, index) =>
+      <lit-virtualizer
+        .items=${this._items}
+        .renderItem=${(item, index) =>
+          this.renderItem ? this.renderItem(item) : this._defaultTemplate(item, index)}
+      ></lit-virtualizer>
+      <!-- ${repeat(this._items, (item, index) =>
         this.renderItem ? this.renderItem(item) : this._defaultTemplate(item, index)
-      )}
+      )} -->
     `;
   }
 
