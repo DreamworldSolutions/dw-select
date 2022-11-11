@@ -933,10 +933,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-dialog@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.0.0.tgz#c925473c64472c4ca69a5e396fae74218e83403b"
-  integrity sha512-dPZ16XOAblEWwZot/X+pHSJRsySuUsIbbAbrC2S4wXI8Y/NMxaNW6u+b0o6IFXmF9AkCMtV2X6u6wfQ3JaoiyQ==
+"@dreamworld/dw-dialog@^5.1.0-new-property-tippy-shown.1":
+  version "5.1.0-new-property-tippy-shown.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.1.0-new-property-tippy-shown.1.tgz#fe62db941ba13104c87ca672b3314c7705f1e94d"
+  integrity sha512-j1J48BPflLOeEQbaAUdnkooWrHnlWiqAoisnDHVg5e84IBa9NGi+xMtShUfuD3Vv9M6audLeVmjKNdFk5WqBEA==
   dependencies:
     "@dreamworld/material-styles" "^3.1.0"
     "@dreamworld/pwa-helpers" "^1.14.0"
