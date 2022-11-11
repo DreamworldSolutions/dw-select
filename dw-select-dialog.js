@@ -61,7 +61,6 @@ export class DwSelectDialog extends DwCompositeDialog {
           display: block;
           --dw-dialog-header-padding: 4px 4px 4px 16px;
           --dw-dialog-content-padding: 0;
-          --dw-popover-height: 50vh;
         }
 
         :host([type="popover"]) .dialog__content {
@@ -529,6 +528,9 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   get _renderList() {
+    if (this.type === "popover" && !this._tippyShown) {
+      return;
+    }
     return html`
       <lit-virtualizer
         .items=${this._items}
