@@ -353,7 +353,7 @@ export class DwSelect extends LitElement {
             .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
             @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
-            dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
+            @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             .messages="${this.messages}"
