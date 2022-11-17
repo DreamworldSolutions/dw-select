@@ -637,10 +637,17 @@ export class DwSelectDialog extends DwCompositeDialog {
 
     // If group is exist
     if (Array.isArray(this._groups)) {
+      let groups = this._groups.map((group) => {
+        if (group.name === this.value[this.groupExpression]) {
+          return { ...group, collapsed: false };
+        }
+        return group;
+      });
+
       // Sort Items with groupExpression
       sortedArray = orderBy(sortedArray, [this.groupExpression]);
 
-      this._groups.forEach((group) => {
+      groups.forEach((group) => {
         // Filter items with group
         const filteredArray = filter(sortedArray, [this.groupExpression, group.name]);
         if (filteredArray.length !== 0) {
