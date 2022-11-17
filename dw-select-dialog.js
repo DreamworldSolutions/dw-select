@@ -627,13 +627,23 @@ export class DwSelectDialog extends DwCompositeDialog {
     if (Array.isArray(this._groups)) {
       // Sort Items with groupExpression
       sortedArray = orderBy(sortedArray, [this.groupExpression]);
+      let groups = this._groups;
+      const groupsLength = groups.length;
 
-      this._groups.forEach((group) => {
+      if (groupsLength === 1) {
+        groups = groups.map((group) => {
+          return { ...group, collapsed: false };
+        });
+      }
+
+      groups.forEach((group) => {
         // Filter items with group
         const filteredArray = filter(sortedArray, [this.groupExpression, group.name]);
         if (filteredArray.length !== 0) {
           // First push group item
-          array.push({ type: "GROUP", value: group });
+          if (groupsLength !== 1) {
+            array.push({ type: "GROUP", value: group });
+          }
 
           if (!group.collapsed) {
             // Push every items
