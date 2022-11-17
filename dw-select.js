@@ -1,4 +1,5 @@
 import { LitElement, html, css, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 
 // View Elements
 import "./dw-select-trigger.js";
@@ -476,4 +477,8 @@ export class DwSelect extends LitElement {
   }
 }
 
-customElements.define("dw-select", DwSelect);
+if (isElementAlreadyRegistered("dw-select")) {
+  console.warn("lit: 'dw-select' is already registered, so registration skipped.");
+} else {
+  customElements.define("dw-select", DwSelect);
+}
