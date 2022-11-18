@@ -1,4 +1,5 @@
-import { css } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { classMap } from "lit/directives/class-map.js";
 
 // view Elements
 import { TextField } from "@material/mwc-textfield";
@@ -28,6 +29,10 @@ export class DwSelectTrigger extends TextField {
 
         .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--trailing {
           color: var(--dw-icon-color, rgba(0, 0, 0, 0.54));
+        }
+
+        dw-icon-button {
+          --dw-icon-color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
         }
       `,
     ];
@@ -71,6 +76,41 @@ export class DwSelectTrigger extends TextField {
     this.updatedHighlight = false;
     this.inputAllowed = false;
     this.iconTrailing = "expand_less";
+  }
+
+  renderTrailingIcon() {
+    return this.iconTrailing ? this.renderIcon(this.iconTrailing, true) : "";
+  }
+
+  /** @soyTemplate */
+  renderIcon(icon, isTrailingIcon = false) {
+    return html` ${this._renderClearButton} ${this._renderExpandLessMoreButton} `;
+  }
+
+  get _renderClearButton() {
+    if (this.value) {
+      return html`<dw-icon-button icon="close" @click=${this._onClearClick}></dw-icon-button>`;
+    }
+
+    return nothing;
+  }
+
+  get _renderExpandLessMoreButton() {
+    return html`
+      <dw-icon-button icon="${this.iconTrailing}" @click=${this._onExpandClick}></dw-icon-button>
+    `;
+  }
+
+  _onClearClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.dispatchEvent(new CustomEvent("clear"));
+  }
+
+  _onExpandClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.dispatchEvent(new CustomEvent("expand-toggle"));
   }
 
   willUpdate(_changedProperties) {
