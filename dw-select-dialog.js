@@ -1,9 +1,9 @@
-import { html, css } from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat';
-import { cache } from 'lit-html/directives/cache.js';
+import { html, css } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import { cache } from 'lit/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
 
-import { Typography } from '@dreamworld/material-styles/typography'
+import { Typography } from '@dreamworld/material-styles/typography.js'
 import './dw-select-item';
 import '@dreamworld/dw-icon-button'; 
 

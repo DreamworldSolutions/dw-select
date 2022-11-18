@@ -5,6 +5,7 @@
   "main": "dw-select.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "wds --node-resolve --app-index demo/index.html --open --watch",
     "semantic-release": "semantic-release"
   },
   "author": "",
@@ -15,10 +16,11 @@
     "@dreamworld/dw-icon": "^1.1.0",
     "@dreamworld/dw-icon-button": "^1.1.2",
     "@dreamworld/material-styles": "1.0.1",
-    "lit-element": "^2.2.0",
+    "lit": "^2.4.1",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {
+    "@web/dev-server": "^0.1.35",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "semantic-release": "16.0.0-beta.23"
   },

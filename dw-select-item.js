@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css } from 'lit';
 import '@dreamworld/dw-icon';
 
 export class DwSelectItem extends LitElement {
