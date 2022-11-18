@@ -31,6 +31,10 @@ export class DwSelectTrigger extends TextField {
           color: var(--dw-icon-color, rgba(0, 0, 0, 0.54));
         }
 
+        .mdc-text-field--outlined {
+          align-items: center;
+        }
+
         dw-icon-button {
           --dw-icon-color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
         }
