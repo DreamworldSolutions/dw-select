@@ -1,7 +1,6 @@
-import { html, css } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
+import { LitElement, html, css } from 'lit';
 import '../dw-select';
-import {materialStyles} from '@dreamworld/material-styles/material-styles';
+import {materialStyles} from '@dreamworld/material-styles/material-styles.js';
 
 class SelectDemo extends LitElement {
   static get styles() {

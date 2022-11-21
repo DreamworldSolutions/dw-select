@@ -1,5 +1,4 @@
-import { css } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
+import { LitElement, css } from 'lit';
 
 export class DwSelectBaseDialog extends LitElement {
   
