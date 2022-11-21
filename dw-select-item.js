@@ -1,6 +1,5 @@
-import { html, css } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
-import { styleMap } from 'lit-html/directives/style-map.js';
+import { LitElement, html, css } from 'lit';
+import { styleMap } from 'lit/directives/style-map.js';
 import '@dreamworld/dw-icon';
 
 export class DwSelectItem extends LitElement {
