@@ -1,6 +1,5 @@
 version: 2
 jobs:
-
   release-snapshot:
     docker:
       - image: cimg/node:lts
@@ -24,7 +23,6 @@ jobs:
           name: Deploy
           command: npx semantic-release
 
-
 workflows:
   version: 2
   release:
@@ -38,6 +36,6 @@ workflows:
       - release:
           context: Dreamworld
           filters:
-              branches:
-                only:
-                  - master
+            branches:
+              only:
+                - master
