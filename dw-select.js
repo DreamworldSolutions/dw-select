@@ -352,8 +352,10 @@ export class DwSelect extends LitElement {
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
             @selected=${this._onSelect}
-            @dw-dialog-closed="${this._onDialogClose}"
-            @dw-fit-dialog-closed="${this._onDialogClose}"
+            @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
+            @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
+            @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
+            @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             .messages="${this.messages}"
           ></dw-select-dialog>`
         : nothing}
@@ -466,7 +468,12 @@ export class DwSelect extends LitElement {
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
-  _onDialogClose() {
+  _onDialogOpen(e) {
+    e.stopPropagation();
+  }
+
+  _onDialogClose(e) {
+    e.stopPropagation();
     this._opened = false;
   }
 
