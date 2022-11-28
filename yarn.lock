@@ -933,10 +933,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-dialog@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.0.0.tgz#c925473c64472c4ca69a5e396fae74218e83403b"
-  integrity sha512-dPZ16XOAblEWwZot/X+pHSJRsySuUsIbbAbrC2S4wXI8Y/NMxaNW6u+b0o6IFXmF9AkCMtV2X6u6wfQ3JaoiyQ==
+"@dreamworld/dw-dialog@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.1.0.tgz#e62c7a5ea991059678678be8b8f373d628273d66"
+  integrity sha512-p0RiRIlVba3PAw5ZKZe8MWz/9RnS5Pjr3Y2V1KXOplECiyMb2NP/l4z31wdVIvFkmKi7hvMYwS+Hka7PyGHdvw==
   dependencies:
     "@dreamworld/material-styles" "^3.1.0"
     "@dreamworld/pwa-helpers" "^1.14.0"
@@ -1073,6 +1073,15 @@
   dependencies:
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
+
+"@lit-labs/virtualizer@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@lit-labs/virtualizer/-/virtualizer-0.7.2.tgz#8622159f852e76325cc63487b3d092320997d160"
+  integrity sha512-P6sUc9ixaIGYU7gOV3O4ZGrO1Eo1c1sVYGwTIJdJTxXzobi4e5Di6beKksv9HzZdHkTj1JHapCj9hRcSO5kmMQ==
+  dependencies:
+    event-target-shim "^6.0.2"
+    lit "^2.0.0"
+    tslib "^2.0.3"
 
 "@lit/reactive-element@^1.3.0", "@lit/reactive-element@^1.4.0":
   version "1.4.2"
@@ -3426,6 +3435,11 @@ etag@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
+
+event-target-shim@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-6.0.2.tgz#ea5348c3618ee8b62ff1d344f01908ee2b8a2b71"
+  integrity sha512-8q3LsZjRezbFZ2PN+uP+Q7pnHUMmAOziU2vA2OwoFaKIXxlxl38IylhSSgUorWu/rf4er67w0ikBqjBFk/pomA==
 
 execa@^5.0.0:
   version "5.1.1"
