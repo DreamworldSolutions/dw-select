@@ -55,6 +55,10 @@ class SelectDemo extends LitElement {
         layout="small"
         .heading=${"Download"}
         showClose
+        required
+        requiredMessage="required"
+        searchable
+        outlined
         @selected=${this._onSelect}
         .messages="${message}"
       ></dw-select>

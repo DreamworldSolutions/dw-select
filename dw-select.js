@@ -326,6 +326,8 @@ export class DwSelect extends LitElement {
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
+        @clear="${this._onClear}"
+        @expand-toggle="${this._onDialogOpenToggle}"
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
@@ -466,6 +468,14 @@ export class DwSelect extends LitElement {
   _onSelect(e) {
     this.value = e.detail.value;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+  }
+
+  _onClear() {
+    this.value = undefined;
+  }
+
+  _onDialogOpenToggle() {
+    this._opened = !this._opened;
   }
 
   _onDialogOpen(e) {
