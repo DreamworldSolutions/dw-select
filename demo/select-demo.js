@@ -64,6 +64,7 @@ class SelectDemo extends LitElement {
         searchable
         .items=${groupList}
         .groups=${groups}
+        .value=${groupList[1]}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
