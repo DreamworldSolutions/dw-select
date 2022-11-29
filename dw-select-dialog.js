@@ -59,7 +59,6 @@ export class DwSelectDialog extends DwCompositeDialog {
       css`
         :host {
           display: block;
-          --dw-dialog-header-padding: 4px 4px 4px 16px;
           --dw-dialog-content-padding: 0;
         }
 
@@ -103,17 +102,13 @@ export class DwSelectDialog extends DwCompositeDialog {
         }
 
         :host([type="modal"]) .mdc-dialog--scrollable .mdc-dialog__title {
-          padding: 0;
+          padding: var(--dw-dialog-header-padding, 4px 4px 4px 16px);
         }
 
         .heading {
           flex: 1;
           display: flex;
           align-items: center;
-        }
-
-        :host([type="modal"][_showHeader]) .mdc-dialog__title {
-          height: 56px;
         }
 
         :host([type="modal"]) .mdc-dialog__title::before {
