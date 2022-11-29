@@ -20,6 +20,7 @@ class SelectDemo extends LitElement {
         :host {
           box-sizing: border-box;
           --dw-select-item-selected-bg-color: transparent;
+          --dw-dialog-header-padding: 12px 4px 12px 16px;
         }
 
         dw-select {
@@ -41,6 +42,8 @@ class SelectDemo extends LitElement {
         placeholder="placeholder"
         helper="helper text"
         selectedTrailingIcon="done"
+        .heading=${"Download"}
+        showClose
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
         .messages="${message}"
