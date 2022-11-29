@@ -933,10 +933,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-dialog@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.1.0.tgz#e62c7a5ea991059678678be8b8f373d628273d66"
-  integrity sha512-p0RiRIlVba3PAw5ZKZe8MWz/9RnS5Pjr3Y2V1KXOplECiyMb2NP/l4z31wdVIvFkmKi7hvMYwS+Hka7PyGHdvw==
+"@dreamworld/dw-dialog@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.2.0.tgz#740929a90362f2318bec99753a178d6a1bc2a407"
+  integrity sha512-J1Q08TSHTFn9nev5hd7XsRWMIclwhPa3WEcazTSOKncO1ZERrqJMZ8jw+KNTyGS075Mj26+JOqypXWqNhSVtmA==
   dependencies:
     "@dreamworld/material-styles" "^3.1.0"
     "@dreamworld/pwa-helpers" "^1.14.0"
@@ -963,21 +963,21 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-list-item@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.1.0.tgz#878aab15d038519a665dca5af04e64cea004a9d3"
-  integrity sha512-IdcNDHDs3z3+lWWNU7v/0LsQrCMVq3Ha06o85bdVsxfkQOZM+jhJe9mrOwKqu/YQKdnLYjtWNSsIqhcn9QlrpQ==
+"@dreamworld/dw-list-item@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.1.1.tgz#aeece9e7394e61deae88103c8d3d1e6fa8894884"
+  integrity sha512-V6033AOmT6SLBDhURDiqTjk6vPSUv+3tqSRCZTGQ+5747mDkYRePwcg6AL09n2/a/MInlW+YSIK9z0msfAGvMg==
   dependencies:
     "@dreamworld/dw-icon" "^4.1.0"
-    "@dreamworld/dw-ripple" "^3.0.0"
+    "@dreamworld/dw-ripple" "^3.1.0"
     "@dreamworld/dw-tooltip" "^3.0.0"
     "@dreamworld/material-styles" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
 
-"@dreamworld/dw-ripple@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ripple/-/dw-ripple-3.0.0.tgz#2e5b708d4f3292e9a0ccd2292f21a7dd39790251"
-  integrity sha512-U+0dOHcS4QkmGt7m1Qjkv5wycJF61hzJQowCR/63Yxd2a3plFbrodFnW+U7E96iRRvNbvHkkZieWW3qrsfHDsA==
+"@dreamworld/dw-ripple@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ripple/-/dw-ripple-3.1.0.tgz#ffba0945706b958e163e721401ac3b37ebdcb305"
+  integrity sha512-3zlCE/qKWa7OH5P6anTtRn9A7jxH27pjMIFDxkBkUciYzBzo+M/jyZQShLgzd516Xd6l9h81oanB3+QZVKZ38A==
   dependencies:
     "@material/mwc-ripple" "0.27.0"
 
