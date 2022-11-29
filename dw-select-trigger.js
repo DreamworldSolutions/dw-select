@@ -71,6 +71,12 @@ export class DwSelectTrigger extends TextField {
        * Message to show in the error color at helper text when the textfield is invalid.
        */
       errorMessage: { type: String },
+
+      /**
+       * Whether clear selection button is availbale or not
+       * default false
+       */
+      showClearSelection: Boolean
     };
   }
 
@@ -80,6 +86,7 @@ export class DwSelectTrigger extends TextField {
     this.updatedHighlight = false;
     this.inputAllowed = false;
     this.iconTrailing = "expand_less";
+    this.showClearSelection = false;
   }
 
   renderTrailingIcon() {
@@ -92,7 +99,7 @@ export class DwSelectTrigger extends TextField {
   }
 
   get _renderClearButton() {
-    if (this.value) {
+    if (this.value && this.showClearSelection) {
       return html`<dw-icon-button icon="close" @click=${this._onClearClick}></dw-icon-button>`;
     }
 

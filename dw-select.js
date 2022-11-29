@@ -277,6 +277,12 @@ export class DwSelect extends LitElement {
        * Placeholder for fit dialog's search input
        */
       searchPlaceholder: { type: String },
+
+      /**
+       * Whether clear selection button is availbale or not
+       * default false
+       */
+      showClearSelection: Boolean,
     };
   }
 
@@ -304,6 +310,7 @@ export class DwSelect extends LitElement {
     this.heading = "";
     this.showClose = false;
     this.searchPlaceholder = "";
+    this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
 
@@ -322,6 +329,7 @@ export class DwSelect extends LitElement {
         ?disabled=${this.disabled}
         ?required=${this.required}
         ?updatedHighlight=${this._updatedHighlight}
+        .showClearSelection=${this.showClearSelection}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}

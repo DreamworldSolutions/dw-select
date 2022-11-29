@@ -44,6 +44,7 @@ class SelectDemo extends LitElement {
         selectedTrailingIcon="done"
         .heading=${"Download"}
         showClose
+        .showClearSelection=${true}
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
         .messages="${message}"
