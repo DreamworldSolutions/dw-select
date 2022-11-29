@@ -10,9 +10,6 @@ import "@dreamworld/dw-list-item";
 import "./dw-select-group-item";
 import "./dw-select-dialog-input";
 
-// Web-Utils
-import { scrollIntoView } from "@dreamworld/web-util/scrollIntoView";
-
 // Styles
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals";
 
@@ -295,11 +292,6 @@ export class DwSelectDialog extends DwCompositeDialog {
       _activatedIndex: { type: Number },
 
       /**
-       * Contains Scrollable Elements
-       */
-      _scrollableElement: { type: Object },
-
-      /**
        * Custom footer template as property
        */
       dialogFooterElement: { type: Object },
@@ -387,6 +379,13 @@ export class DwSelectDialog extends DwCompositeDialog {
     return this.__query;
   }
 
+  /**
+   * Get lit virtulizer element
+   */
+  get _litVirtulizerEl() {
+    return this.renderRoot.querySelector("lit-virtualizer");
+  }
+
   constructor() {
     super();
     this._query = "";
@@ -432,13 +431,6 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   firstUpdated() {
-    this._scrollableElement =
-      this.type === "fit"
-        ? document.querySelector("body")
-        : this.type === "modal"
-        ? this.renderRoot.querySelector("#dialog-content")
-        : this.renderRoot.querySelector("#popover_dialog__surface");
-
     this._isGroupCollapsed = Boolean(this._groups) && this._groups.some((e) => e.collapsed);
   }
 
@@ -765,22 +757,20 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 
   _moveActivated(direction) {
-    var items = this.renderRoot.querySelectorAll("dw-list-item");
-
     if (this._items.length === 0) {
       return;
     }
 
-    let numberOfitems = this.items.length - 1;
+    let numberOfitems = this._items.length;
 
     let isFistItem = this._activatedIndex === 0;
-    let isLastItem = this._activatedIndex === numberOfitems;
+    let isLastItem = this._activatedIndex === numberOfitems - 1;
     let isNoitemActivated = this._activatedIndex === -1;
 
     let modifier = 1;
 
     if ((isNoitemActivated || isFistItem) && direction === DIRECTION.UP) {
-      this._activatedIndex = numberOfitems;
+      this._activatedIndex = numberOfitems - 1;
     } else if ((isNoitemActivated || isLastItem) && direction === DIRECTION.DOWN) {
       this._activatedIndex = 0;
     } else {
@@ -788,9 +778,7 @@ export class DwSelectDialog extends DwCompositeDialog {
       this._activatedIndex = this._activatedIndex + modifier;
     }
 
-    let element = items[this._activatedIndex];
-
-    scrollIntoView(this._scrollableElement, element);
+    this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
   }
 }
 
