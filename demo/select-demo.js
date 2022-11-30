@@ -8,6 +8,7 @@ import "./dw-select-extension-demo";
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
+import { queryFilterGenerator } from "../utils";
 
 const message = {
   noMatching: "No matching records found!",
@@ -44,6 +45,7 @@ class SelectDemo extends LitElement {
         selectedTrailingIcon="done"
         .heading=${"Download"}
         showClose
+        required
         .showClearSelection=${true}
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
@@ -64,6 +66,7 @@ class SelectDemo extends LitElement {
         showClose
         searchable
         outlined
+        autoValidate
         @selected=${this._onSelect}
         .messages="${message}"
       ></dw-select>
@@ -71,6 +74,7 @@ class SelectDemo extends LitElement {
       <dw-select
         vkb
         searchable
+        .queryFilter=${queryFilterGenerator(["name", "code"])}
         .items=${groupList}
         .groups=${groups}
         .value=${groupList[1]}
@@ -114,3 +118,4 @@ class SelectDemo extends LitElement {
 }
 
 customElements.define("select-demo", SelectDemo);
+
