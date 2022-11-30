@@ -76,7 +76,7 @@ export class DwSelectTrigger extends TextField {
        * Whether clear selection button is availbale or not
        * default false
        */
-      showClearSelection: Boolean
+      showClearSelection: { type: Boolean },
     };
   }
 
@@ -115,6 +115,7 @@ export class DwSelectTrigger extends TextField {
   _onClearClick(e) {
     e.stopPropagation();
     e.preventDefault();
+    this.value = "";
     this.dispatchEvent(new CustomEvent("clear"));
   }
 
@@ -137,6 +138,18 @@ export class DwSelectTrigger extends TextField {
 
     if (_changedProperties.has("errorMessage")) {
       this.validationMessage = this.errorMessage;
+    }
+  }
+
+  updated(_changedProperties) {
+    super.updated(_changedProperties);
+
+    if (_changedProperties.has("value")) {
+      this.error = !this.checkValidity();
+
+      if (!this.error) {
+        this.dispatchEvent(new CustomEvent("valid"));
+      }
     }
   }
 }

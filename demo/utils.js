@@ -4,26 +4,32 @@ export const groupList = [
   {
     name: "Steve",
     type: "CONTACT",
+    code: "001"
   },
   {
     name: "John",
     type: "CONTACT",
+    code: "0001"
   },
   {
     name: "SBI Bank",
     type: "BANK_ACCOUNT",
+    code: "002"
   },
   {
     name: "hdfc Bank 1",
     type: "BANK_ACCOUNT",
+    code: "003"
   },
   {
     name: "hdfc Bank 2",
     type: "BANK_ACCOUNT",
+    code: "0003"
   },
   {
     name: "Capital Gain",
     type: "ACCOUNT",
+    code: "004"
   },
 ];
 

@@ -49,7 +49,7 @@ const defaultMessages = {
  * [`select-dialog-doc`](docs/select-dialog.md)
  */
 
-export class DwSelectDialog extends DwCompositeDialog {
+export class DwSelectCoreDialog extends DwCompositeDialog {
   static get styles() {
     return [
       super.styles,
@@ -305,6 +305,11 @@ export class DwSelectDialog extends DwCompositeDialog {
        * true if any group item has collapsed value is true.
        */
       isGroupCollapsed: Boolean,
+
+      /**
+       * A function to customize search.
+       */
+      queryFilter: Function,
     };
   }
 
@@ -618,10 +623,7 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   _getItems() {
     let sortedArray = filter(this.items, (item) => {
-      return this.isMatched(
-        this._getItemValue(item).toLowerCase(),
-        this._query.toLowerCase().split(" ")
-      );
+      return this.queryFilter(item, this._query);
     });
 
     let array = [];
@@ -672,36 +674,6 @@ export class DwSelectDialog extends DwCompositeDialog {
     }
 
     this._items = array;
-  }
-
-  /**
-   * Wheter query matching with any word of the input string
-   * @param {String} string string which will be matched with query string
-   * @param {Array} queryArray array
-   * @returns return true if query string's any word is matched with input string
-   */
-  isMatched(string, queryArray) {
-    let isMatched = false;
-
-    forEach(queryArray, (e) => {
-      if (string.indexOf(e) !== -1) {
-        isMatched = true;
-        return false;
-      }
-    });
-    return isMatched;
-  }
-
-  /**
-   * Compute label of the item
-   * @param {Object | String} item
-   * @returns {String} returns string that actually represents in list item
-   */
-  _getItemValue(item) {
-    if (!this.valueTextProvider(item)) {
-      return item;
-    }
-    return this.valueTextProvider(item);
   }
 
   _getGroupValue(item) {
@@ -782,4 +754,4 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 }
 
-window.customElements.define("dw-select-dialog", DwSelectDialog);
+window.customElements.define("dw-select-core-dialog", DwSelectCoreDialog);
