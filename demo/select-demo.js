@@ -70,6 +70,7 @@ class SelectDemo extends LitElement {
       <dw-select
         vkb
         searchable
+        .searchKeys=${['name', 'code']}
         .items=${groupList}
         .groups=${groups}
         .value=${groupList[1]}

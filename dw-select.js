@@ -283,6 +283,12 @@ export class DwSelect extends LitElement {
        * default false
        */
       showClearSelection: Boolean,
+
+      /**
+       * contains paths of value that consider in search
+       * This is used with valueTextProvider. If this not provided search consider with only valueTextProvider.
+       */
+      searchKeys: Array,
     };
   }
 
@@ -313,6 +319,7 @@ export class DwSelect extends LitElement {
     this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
+    this.searchKeys = [];
 
     this.valueEquator = (v1, v2) => v1 === v2;
   }
@@ -351,6 +358,7 @@ export class DwSelect extends LitElement {
             .groups=${this.groups}
             .groupSelector=${this.groupSelector}
             .groupExpression=${this.groupExpression}
+            .searchKeys=${this.searchKeys}
             _query=${this._query}
             ?vkb=${this.vkb}
             ?searchable=${this.searchable}

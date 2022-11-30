@@ -313,6 +313,12 @@ export class DwSelectDialog extends DwCompositeDialog {
        * true if any group item has collapsed value is true.
        */
       isGroupCollapsed: Boolean,
+
+      /**
+       * contains paths of value that consider in search
+       * This is used with valueTextProvider. If this not provided search consider with only valueTextProvider.
+       */
+      searchKeys: Array,
     };
   }
 
@@ -397,6 +403,7 @@ export class DwSelectDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = -1;
     this.messages = defaultMessages;
+    this.searchKeys = [];
   }
 
   set messages(newValue) {
@@ -617,10 +624,15 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   _getItems() {
     let sortedArray = filter(this.items, (item) => {
-      return this.isMatched(
-        this._getItemValue(item).toLowerCase(),
-        this._query.toLowerCase().split(" ")
-      );
+      let string = this._getItemValue(item);
+      if (this.searchKeys && this.searchKeys.length > 0) {
+        this.searchKeys.forEach((e) => {
+          if (item.hasOwnProperty(e)) {
+            string = string + " " + item[e];
+          }
+        });
+      }
+      return this.isMatched(string.toLowerCase(), this._query.toLowerCase().split(" "));
     });
 
     let array = [];
