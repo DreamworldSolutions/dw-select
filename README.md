@@ -61,6 +61,7 @@ TODO
 | `requiredMessage`         | `string`                      | `undefined`        | Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.
 | `_requiredErrorVisible`   | `boolean`                     | `false`            | Whether or not to show the `required` error message.
 | `validity`                | `ValidityState` (readonly)    | `{}`               | The [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) of the textfield.
+| `autoValidate`            | `boolean`                     | `false`            | Reports validity on value change rather than only on blur.
 | `disabled`                | `boolean`                     | `false`            | Whether or not to show the `disabled` variant.
 | `searchable`              | `boolean`                     | `false`            | Whether or not to show the `searchable` variant.
 | `vkb`                     | `boolean`                     | `false`            | `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual KeyBoard.
@@ -109,13 +110,14 @@ TODO
 | Event Name | Target             | Detail             | Description
 | ---------- | ------------------ | ------------------ | -----------
 | `selected` | `dw-list-item`     |                    | Fired when the user changed selection. It’s dispatched even when the user selects the same value as the current.
-| `invalid`  | `dw-select`        |                    | Fired when checkValidity() call, On blur, as checkValidity() is called internally.
+| `invalid`  | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally.
+| `valid`    | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally.
 
 ### Methods
 
 | Name     | Description
 | -------- | -------------
-| `checkValidity() => boolean`   | Returns `true` if the textfield passes validity checks. Returns `false` and fires an [`invalid`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/invalid_event) event on the textfield otherwise.
+| `checkValidity() => boolean`   | Returns `true` if the textfield passes validity checks and fires an `valid`. Returns `false` and fires an [`invalid`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/invalid_event) event on the textfield otherwise.
 
 ### CSS Custom Properties
 

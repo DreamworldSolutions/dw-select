@@ -130,6 +130,12 @@ export class DwSelect extends LitElement {
       validity: { type: Object },
 
       /**
+       * Reports validity on value change rather than only on blur.
+       * this property directly pass to trigger element
+       */
+      autoValidate: { type: Boolean },
+
+      /**
        * Set to `true` to make it disabled.
        */
       disabled: { type: Boolean },
@@ -336,6 +342,7 @@ export class DwSelect extends LitElement {
         ?disabled=${this.disabled}
         ?required=${this.required}
         ?updatedHighlight=${this._updatedHighlight}
+        ?autoValidate=${this.autoValidate}
         .showClearSelection=${this.showClearSelection}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         @click=${this._onTrigger}
@@ -477,10 +484,7 @@ export class DwSelect extends LitElement {
   }
 
   _onInput(e) {
-    // Trigger element getter
-    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
-
-    this._query = triggerEl.value;
+    this._query = this._triggerElement.value;
   }
 
   _onSelect(e) {
@@ -492,7 +496,17 @@ export class DwSelect extends LitElement {
   _onClear() {
     this.value = undefined;
     this._query = "";
-    this.dispatchEvent(new CustomEvent('clear-selection'));
+    this.dispatchEvent(new CustomEvent("clear-selection"));
+  }
+
+  _onInvalid(e) {
+    this.validity = this._triggerElement.validity;
+    this.dispatchEvent(new CustomEvent("invalid", { detail: this.validity }));
+  }
+
+  _onValid(e) {
+    this.validity = this._triggerElement.validity;
+    this.dispatchEvent(new CustomEvent("valid", { detail: this.validity }));
   }
 
   _onDialogOpenToggle() {
@@ -512,6 +526,14 @@ export class DwSelect extends LitElement {
     if (e.keyCode === KEY_CODE.ENTER) {
       this._onTrigger(e);
     }
+  }
+
+  checkValidity() {
+    return this._triggerElement && this._triggerElement.checkValidity();
+  }
+
+  reportValidity() {
+    return this._triggerElement && this._triggerElement.reportValidity();
   }
 }
 

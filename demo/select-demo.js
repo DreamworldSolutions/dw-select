@@ -64,6 +64,7 @@ class SelectDemo extends LitElement {
         requiredMessage="required"
         searchable
         outlined
+        autoValidate
         @selected=${this._onSelect}
         .messages="${message}"
       ></dw-select>
