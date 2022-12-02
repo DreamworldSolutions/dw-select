@@ -617,7 +617,6 @@ export class DwSelectDialog extends DwCompositeDialog {
   _onGroupClick(e, item) {
     let groups = this._groups;
     const index = groups.findIndex((group) => group.name === item.name);
-    console.log(item, index, this._groups);
     if (groups[index].collapsible) {
       groups[index].collapsed = groups[index].collapsed ? false : true;
     }
