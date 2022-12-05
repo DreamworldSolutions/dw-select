@@ -402,7 +402,6 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = -1;
     this.messages = defaultMessages;
-    this.searchKeys = [];
   }
 
   set messages(newValue) {
