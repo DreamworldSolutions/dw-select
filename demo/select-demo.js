@@ -8,6 +8,7 @@ import "./dw-select-extension-demo";
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
 import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
+import { queryFilterGenerator } from "../utils";
 
 const message = {
   noMatching: "No matching records found!",
@@ -72,7 +73,7 @@ class SelectDemo extends LitElement {
       <dw-select
         vkb
         searchable
-        .searchKeys=${['name', 'code']}
+        .queryFilter=${queryFilterGenerator(["name", "code"])}
         .items=${groupList}
         .groups=${groups}
         .value=${groupList[1]}

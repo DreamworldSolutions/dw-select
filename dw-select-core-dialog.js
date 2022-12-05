@@ -315,10 +315,9 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
       isGroupCollapsed: Boolean,
 
       /**
-       * contains paths of value that consider in search
-       * This is used with valueTextProvider. If this not provided search consider with only valueTextProvider.
+       * A function to customize search.
        */
-      searchKeys: Array,
+      queryFilter: Function,
     };
   }
 
@@ -624,15 +623,7 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
 
   _getItems() {
     let sortedArray = filter(this.items, (item) => {
-      let string = this._getItemValue(item);
-      if (this.searchKeys && this.searchKeys.length > 0) {
-        this.searchKeys.forEach((e) => {
-          if (item.hasOwnProperty(e)) {
-            string = string + " " + item[e];
-          }
-        });
-      }
-      return this.isMatched(string.toLowerCase(), this._query.toLowerCase().split(" "));
+      return this.queryFilter(item, this._query);
     });
 
     let array = [];
@@ -692,36 +683,6 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
     }
 
     this._items = array;
-  }
-
-  /**
-   * Wheter query matching with any word of the input string
-   * @param {String} string string which will be matched with query string
-   * @param {Array} queryArray array
-   * @returns return true if query string's any word is matched with input string
-   */
-  isMatched(string, queryArray) {
-    let isMatched = false;
-
-    forEach(queryArray, (e) => {
-      if (string.indexOf(e) !== -1) {
-        isMatched = true;
-        return false;
-      }
-    });
-    return isMatched;
-  }
-
-  /**
-   * Compute label of the item
-   * @param {Object | String} item
-   * @returns {String} returns string that actually represents in list item
-   */
-  _getItemValue(item) {
-    if (!this.valueTextProvider(item)) {
-      return item;
-    }
-    return this.valueTextProvider(item);
   }
 
   _getGroupValue(item) {

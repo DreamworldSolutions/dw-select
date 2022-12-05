@@ -5,8 +5,10 @@ import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import "./dw-select-trigger.js";
 
 // Lodash Methods
-import get from "lodash-es/get";
 import debounce from "lodash-es/debounce";
+
+// Utils
+import { filter } from "./utils.js";
 
 const KEY_CODE = {
   ENTER: 13,
@@ -291,10 +293,15 @@ export class DwSelect extends LitElement {
       showClearSelection: Boolean,
 
       /**
-       * contains paths of value that consider in search
-       * This is used with valueTextProvider. If this not provided search consider with only valueTextProvider.
+       * Input Property
+       * A function to customize search.
+       * function has two parameters
+       *  - item
+       *  - query
+       *
+       * returns always boolean
        */
-      searchKeys: Array,
+      queryFilter: Function,
     };
   }
 
@@ -325,9 +332,9 @@ export class DwSelect extends LitElement {
     this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
-    this.searchKeys = [];
 
     this.valueEquator = (v1, v2) => v1 === v2;
+    this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
   }
 
   render() {
@@ -367,7 +374,7 @@ export class DwSelect extends LitElement {
             .groups=${this.groups}
             .groupSelector=${this.groupSelector}
             .groupExpression=${this.groupExpression}
-            .searchKeys=${this.searchKeys}
+            .queryFilter=${this.queryFilter}
             _query=${this._query}
             ?vkb=${this.vkb}
             ?searchable=${this.searchable}
@@ -384,6 +391,7 @@ export class DwSelect extends LitElement {
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             .messages="${this.messages}"
+            ._getItemValue=${this._getItemValue}
           ></dw-select-core-dialog>`
         : nothing}
     `;
@@ -475,6 +483,18 @@ export class DwSelect extends LitElement {
       return this.value;
     }
     return this.valueTextProvider(this.value);
+  }
+
+  /**
+   * Compute label of the item
+   * @param {Object | String} item
+   * @returns {String} returns string that actually represents in list item
+   */
+  _getItemValue(item) {
+    if (!this.valueTextProvider(item)) {
+      return item;
+    }
+    return this.valueTextProvider(item);
   }
 
   _onTrigger(e) {
