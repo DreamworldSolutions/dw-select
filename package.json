@@ -23,7 +23,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dreamworld/dw-dialog": "^5.2.0",
+    "@dreamworld/dw-dialog": "^5.3.0",
     "@dreamworld/dw-icon": "^4.1.0",
     "@dreamworld/dw-icon-button": "^3.0.0",
     "@dreamworld/dw-list-item": "^4.1.1",
