@@ -47,6 +47,9 @@ class SelectDemo extends LitElement {
         .showClearSelection=${true}
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
+        .helper=${"Simple Helper Text"}
+        helperPersistent
+        .helperTextProvider=${this._helperTextProvider}
         .messages="${message}"
       ></dw-select>
 
@@ -59,8 +62,6 @@ class SelectDemo extends LitElement {
         layout="small"
         .heading=${"Download"}
         showClose
-        required
-        requiredMessage="required"
         searchable
         outlined
         @selected=${this._onSelect}
@@ -99,6 +100,12 @@ class SelectDemo extends LitElement {
   firstUpdated() {
     let elFitDialogContainer = this.shadowRoot.querySelector(".fit-dialog-container");
     DwCompositeDialog.setAppendTo(elFitDialogContainer);
+  }
+
+  _helperTextProvider(value) {
+    if (value && value.name) {
+      return "Country Code: " + value.code;
+    }
   }
 
   _onSelect(e) {
