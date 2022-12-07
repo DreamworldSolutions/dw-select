@@ -49,7 +49,7 @@ const defaultMessages = {
  * [`select-dialog-doc`](docs/select-dialog.md)
  */
 
-export class DwSelectDialog extends DwCompositeDialog {
+export class DwSelectCoreDialog extends DwCompositeDialog {
   static get styles() {
     return [
       super.styles,
@@ -782,4 +782,4 @@ export class DwSelectDialog extends DwCompositeDialog {
   }
 }
 
-window.customElements.define("dw-select-dialog", DwSelectDialog);
+window.customElements.define("dw-select-core-dialog", DwSelectCoreDialog);
