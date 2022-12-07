@@ -439,6 +439,15 @@ export class DwSelectDialog extends DwCompositeDialog {
         ? this.renderRoot.querySelector("#dialog-content")
         : this.renderRoot.querySelector("#popover_dialog__surface");
 
+    if (this.value) {
+      this._groups = this._groups.map((group) => {
+        if (group.name === this.value[this.groupExpression]) {
+          return { ...group, collapsed: false };
+        }
+        return group;
+      });
+    }
+
     this._isGroupCollapsed = Boolean(this._groups) && this._groups.some((e) => e.collapsed);
   }
 
@@ -559,7 +568,7 @@ export class DwSelectDialog extends DwCompositeDialog {
         ?activated=${index === this._activatedIndex}
         ?collapsible=${item.value.collapsible}
         ?collapsed=${item.value.collapsed}
-        @click=${(e) => this._onGroupClick(e, item)}
+        @click=${(e) => this._onGroupClick(e, item.value)}
       ></dw-select-group-item>`;
     }
   }
@@ -607,7 +616,7 @@ export class DwSelectDialog extends DwCompositeDialog {
 
   _onGroupClick(e, item) {
     let groups = this._groups;
-    const index = groups.indexOf(item.value);
+    const index = groups.findIndex((group) => group.name === item.name);
     if (groups[index].collapsible) {
       groups[index].collapsed = groups[index].collapsed ? false : true;
     }
@@ -633,15 +642,6 @@ export class DwSelectDialog extends DwCompositeDialog {
     // If group is exist
     if (Array.isArray(this._groups)) {
       let groups = this._groups;
-
-      if (this.value) {
-        groups = this._groups.map((group) => {
-          if (group.name === this.value[this.groupExpression]) {
-            return { ...group, collapsed: false };
-          }
-          return group;
-        });
-      }
 
       // Sort Items with groupExpression
       sortedArray = orderBy(sortedArray, [this.groupExpression]);
