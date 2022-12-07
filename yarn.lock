@@ -1008,7 +1008,7 @@
     lodash-es "^4.17.21"
     pwa-helpers "^0.9.1"
 
-"@dreamworld/web-util@^1.2.0", "@dreamworld/web-util@^1.5.1":
+"@dreamworld/web-util@^1.2.0":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/web-util/-/web-util-1.5.1.tgz#b87676c6abe0da50308066648678eea5ee2de369"
   integrity sha512-OH9Pgzur32RVU6iSaDq8w7otUhFZvRRo3DOK4jw1E7o8A7rIGOzknjjbrc4w1JN1HE0HOn/VpES7bXCRyVgAbA==
