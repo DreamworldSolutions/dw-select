@@ -308,42 +308,6 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
     };
   }
 
-  // Remove this custom getter/setter when `willUpdate` will be supported
-  set heading(value) {
-    let oldValue = this._heading;
-
-    if (oldValue === value) {
-      return;
-    }
-
-    this._showHeader = Boolean(value) || this.showClose;
-    this._heading = value;
-
-    this.requestUpdate("heading", oldValue);
-  }
-
-  get heading() {
-    return this._heading;
-  }
-
-  // Remove this custom getter/setter when `willUpdate` will be supported
-  set showClose(value) {
-    let oldValue = this._showClose;
-
-    if (oldValue === value) {
-      return;
-    }
-
-    this._showHeader = Boolean(this.heading) || value;
-    this._showClose = value;
-
-    this.requestUpdate("showClose", oldValue);
-  }
-
-  get showClose() {
-    return this._showClose;
-  }
-
   set _groups(value) {
     let oldValue = this._type;
 
@@ -360,23 +324,6 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
 
   get _groups() {
     return this.__groups;
-  }
-
-  set _query(value) {
-    let oldValue = this.__query;
-
-    if (value === oldValue) {
-      return;
-    }
-
-    this.__query = value;
-    this.requestUpdate("_query", oldValue);
-    // Compute updated `_items`
-    this._getItems();
-  }
-
-  get _query() {
-    return this.__query;
   }
 
   /**
@@ -717,7 +664,7 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
    */
   _onUserInteraction(e) {
     if (e.type === "input-change") {
-      this._onInput();
+      this._onInput(e);
     }
   }
 
@@ -728,8 +675,10 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
   _onInput(e) {
     let el = this.renderRoot.querySelector("dw-select-dialog-input");
     this._query = el.value;
+  }
 
-    if (this._query && this._isGroupCollapsed) {
+  _onQueryChange(value) {
+    if (value && this._isGroupCollapsed) {
       let groups = this._groups;
       groups.map((e) => (e.collapsed = false));
       this._groups = groups;
@@ -779,6 +728,23 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
     }
 
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
+  }
+
+  willUpdate(_changedProperties) {
+    super.willUpdate(_changedProperties);
+
+    if (_changedProperties.has("_query")) {
+      this._onQueryChange(this._query);
+      this._getItems();
+    }
+
+    if (_changedProperties.has("heading")) {
+      this._showHeader = Boolean(this.heading) || this.showClose;
+    }
+
+    if (_changedProperties.has("showClose")) {
+      this._showHeader = Boolean(this.heading) || this.showClose;
+    }
   }
 }
 
