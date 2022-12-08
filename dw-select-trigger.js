@@ -76,7 +76,7 @@ export class DwSelectTrigger extends TextField {
        * Whether clear selection button is availbale or not
        * default false
        */
-      showClearSelection: Boolean
+      showClearSelection: Boolean,
     };
   }
 
