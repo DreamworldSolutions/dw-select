@@ -79,6 +79,7 @@ TODO
 | `showClose`               | `boolean`                     | `false`            | Shows an icon-button with a close icon, in the `top-right` corner on the bottom-sheet dailog.
 | `selectedTrailingIcon`    | `string`                      | `undefined`        | Name of trailing Icon which availble in selected item.
 | `searchPlaceholder`       | `string`                      | `""`               | Placeholder for fit dialog's search input
+| `helperTextProvider`      | `fn()`                        |                    | Helper text provider. parameters: selected item. If this is provided show helper text using this function otherwise get from the `helper` property.
 
 ### Group
 

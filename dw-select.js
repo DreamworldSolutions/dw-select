@@ -100,6 +100,11 @@ export class DwSelect extends LitElement {
       helper: { type: String },
 
       /**
+       * Always show the helper text despite focus.
+       */
+      helperPersistent: { type: Boolean },
+
+      /**
        * Whether or not to show the `readOnly` state.
        */
       readOnly: { type: Boolean },
@@ -282,7 +287,14 @@ export class DwSelect extends LitElement {
        * Whether clear selection button is availbale or not
        * default false
        */
-      showClearSelection: Boolean,
+      showClearSelection: { type: Boolean },
+
+      /**
+       * Input property
+       * Function which returns hint text string
+       * In the argument selected value
+       */
+      helperTextProvider: { type: Function },
     };
   }
 
@@ -315,6 +327,7 @@ export class DwSelect extends LitElement {
     this.groupSelector = () => {};
 
     this.valueEquator = (v1, v2) => v1 === v2;
+    this.helperTextProvider = (value) => {};
   }
 
   render() {
@@ -322,7 +335,8 @@ export class DwSelect extends LitElement {
       <dw-select-trigger
         label=${this.label}
         placeholder=${this.placeholder}
-        helper=${this.helper}
+        .helper=${this._getHelperText}
+        ?helperPersistent=${this.helperPersistent}
         ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
         value=${this._getValue}
         ?outlined=${this.outlined}
@@ -339,7 +353,7 @@ export class DwSelect extends LitElement {
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
-        ? html`<dw-select-dialog
+        ? html`<dw-select-core-dialog
             id="selectDialog"
             .opened=${true}
             .triggerElement=${this._triggerElement}
@@ -367,7 +381,7 @@ export class DwSelect extends LitElement {
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             .messages="${this.messages}"
-          ></dw-select-dialog>`
+          ></dw-select-core-dialog>`
         : nothing}
     `;
   }
@@ -413,7 +427,7 @@ export class DwSelect extends LitElement {
    */
   _loadFragments() {
     if (true) {
-      import("./dw-select-dialog.js");
+      import("./dw-select-core-dialog.js");
     }
   }
 
@@ -458,6 +472,17 @@ export class DwSelect extends LitElement {
       return this.value;
     }
     return this.valueTextProvider(this.value);
+  }
+
+  get _getHelperText() {
+    if (
+      this.helperTextProvider &&
+      typeof this.helperTextProvider === "function" &&
+      this.helperTextProvider(this.value)
+    ) {
+      return this.helperTextProvider(this.value);
+    }
+    return this.helper;
   }
 
   _onTrigger(e) {
