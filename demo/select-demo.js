@@ -46,6 +46,7 @@ class SelectDemo extends LitElement {
         .heading=${"Download"}
         showClose
         required
+        autoValidate
         .showClearSelection=${true}
         .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
@@ -72,12 +73,10 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
-        vkb
+        
         searchable
-        .queryFilter=${queryFilterGenerator(["name", "code"])}
         .items=${groupList}
         .groups=${groups}
-        .value=${groupList[1]}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
@@ -88,7 +87,23 @@ class SelectDemo extends LitElement {
         .messages="${message}"
       ></dw-select>
 
-      <dw-select-extension-demo></dw-select-extension-demo>
+      <dw-select
+        vkb
+        searchable
+        .queryFilter=${queryFilterGenerator(["name", "code"])}
+        .items=${groupList}
+        .groups=${groups}
+        .valueExpression="${"name"}"
+        .valueTextProvider=${(item) => item.name}
+        .groupSelector=${(item) => item.label}
+        groupExpression="type"
+        label="Contacts"
+        @selected=${this._onSelect}
+        .searchPlaceholder="${"Search Input placeholder"}"
+        .messages="${message}"
+      ></dw-select>
+
+      <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 

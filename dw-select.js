@@ -479,7 +479,7 @@ export class DwSelect extends LitElement {
    */
   _onUserInteraction(e) {
     if (e.type === "input") {
-      this._onInput();
+      this._onInput(e);
     }
   }
 
@@ -529,6 +529,7 @@ export class DwSelect extends LitElement {
   }
 
   _onInput(e) {
+    e.stopPropagation();
     this._query = this._triggerElement.value;
   }
 
@@ -538,7 +539,8 @@ export class DwSelect extends LitElement {
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
-  _onClear() {
+  _onClear(e) {
+    e.stopPropagation();
     this.value = undefined;
     this._query = "";
     this.dispatchEvent(new CustomEvent("clear-selection"));
@@ -568,6 +570,7 @@ export class DwSelect extends LitElement {
   }
 
   _onKeydown(e) {
+    e.stopPropagation();
     if (e.keyCode === KEY_CODE.ENTER) {
       this._onTrigger(e);
     }
