@@ -14,11 +14,9 @@ import "./dw-select-dialog-input";
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals";
 
 // Lodash Methods
-import get from "lodash-es/get";
 import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
 import filter from "lodash-es/filter";
-import forEach from "lodash-es/forEach";
 import debounce from "lodash-es/debounce";
 
 const MOBILE_LAYOUT_MEDIA_QUERY = "only screen and (max-width: 420px)";
@@ -49,7 +47,7 @@ const defaultMessages = {
  * [`select-dialog-doc`](docs/select-dialog.md)
  */
 
-export class DwSelectCoreDialog extends DwCompositeDialog {
+export class DwSelectBaseDialog extends DwCompositeDialog {
   static get styles() {
     return [
       super.styles,
@@ -754,4 +752,4 @@ export class DwSelectCoreDialog extends DwCompositeDialog {
   }
 }
 
-window.customElements.define("dw-select-core-dialog", DwSelectCoreDialog);
+window.customElements.define("dw-select-base-dialog", DwSelectBaseDialog);

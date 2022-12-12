@@ -376,7 +376,7 @@ export class DwSelect extends LitElement {
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
-        ? html`<dw-select-core-dialog
+        ? html`<dw-select-base-dialog
             id="selectDialog"
             .opened=${true}
             .triggerElement=${this._triggerElement}
@@ -406,7 +406,7 @@ export class DwSelect extends LitElement {
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             .messages="${this.messages}"
             ._getItemValue=${this._getItemValue}
-          ></dw-select-core-dialog>`
+          ></dw-select-base-dialog>`
         : nothing}
     `;
   }
@@ -452,7 +452,7 @@ export class DwSelect extends LitElement {
    */
   _loadFragments() {
     if (true) {
-      import("./dw-select-core-dialog.js");
+      import("./dw-select-base-dialog.js");
     }
   }
 
