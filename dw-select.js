@@ -5,8 +5,10 @@ import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import "./dw-select-trigger.js";
 
 // Lodash Methods
-import get from "lodash-es/get";
 import debounce from "lodash-es/debounce";
+
+// Utils
+import { filter } from "./utils.js";
 
 const KEY_CODE = {
   ENTER: 13,
@@ -133,6 +135,12 @@ export class DwSelect extends LitElement {
        * The [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) of the textfield.
        */
       validity: { type: Object },
+
+      /**
+       * Reports validity on value change rather than only on blur.
+       * this property directly pass to trigger element
+       */
+      autoValidate: { type: Boolean },
 
       /**
        * Set to `true` to make it disabled.
@@ -295,6 +303,17 @@ export class DwSelect extends LitElement {
        * In the argument selected value
        */
       helperTextProvider: { type: Function },
+
+      /**
+       * Input Property
+       * A function to customize search.
+       * function has two parameters
+       *  - item
+       *  - query
+       *
+       * returns always boolean
+       */
+      queryFilter: { type: Function },
     };
   }
 
@@ -328,6 +347,7 @@ export class DwSelect extends LitElement {
 
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
+    this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
   }
 
   render() {
@@ -343,6 +363,7 @@ export class DwSelect extends LitElement {
         ?disabled=${this.disabled}
         ?required=${this.required}
         ?updatedHighlight=${this._updatedHighlight}
+        ?autoValidate=${this.autoValidate}
         .showClearSelection=${this.showClearSelection}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         @click=${this._onTrigger}
@@ -350,10 +371,12 @@ export class DwSelect extends LitElement {
         @keydown=${this._onKeydown}
         @clear="${this._onClear}"
         @expand-toggle="${this._onDialogOpenToggle}"
+        @invalid=${this._onInvalid}
+        @valid=${this._onValid}
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
-        ? html`<dw-select-core-dialog
+        ? html`<dw-select-base-dialog
             id="selectDialog"
             .opened=${true}
             .triggerElement=${this._triggerElement}
@@ -365,6 +388,7 @@ export class DwSelect extends LitElement {
             .groups=${this.groups}
             .groupSelector=${this.groupSelector}
             .groupExpression=${this.groupExpression}
+            .queryFilter=${this.queryFilter}
             _query=${this._query}
             ?vkb=${this.vkb}
             ?searchable=${this.searchable}
@@ -381,7 +405,8 @@ export class DwSelect extends LitElement {
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             .messages="${this.messages}"
-          ></dw-select-core-dialog>`
+            ._getItemValue=${this._getItemValue}
+          ></dw-select-base-dialog>`
         : nothing}
     `;
   }
@@ -427,7 +452,7 @@ export class DwSelect extends LitElement {
    */
   _loadFragments() {
     if (true) {
-      import("./dw-select-core-dialog.js");
+      import("./dw-select-base-dialog.js");
     }
   }
 
@@ -485,6 +510,18 @@ export class DwSelect extends LitElement {
     return this.helper;
   }
 
+  /**
+   * Compute label of the item
+   * @param {Object | String} item
+   * @returns {String} returns string that actually represents in list item
+   */
+  _getItemValue(item) {
+    if (!this.valueTextProvider(item)) {
+      return item;
+    }
+    return this.valueTextProvider(item);
+  }
+
   _onTrigger(e) {
     if (!this.readOnly) {
       this._opened = true;
@@ -492,19 +529,29 @@ export class DwSelect extends LitElement {
   }
 
   _onInput(e) {
-    // Trigger element getter
-    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
-
-    this._query = triggerEl.value;
+    this._query = this._triggerElement.value;
   }
 
   _onSelect(e) {
     this.value = e.detail.value;
+    this._query = "";
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
   _onClear() {
     this.value = undefined;
+    this._query = "";
+    this.dispatchEvent(new CustomEvent("clear-selection"));
+  }
+
+  _onInvalid(e) {
+    this.validity = this._triggerElement.validity;
+    this.dispatchEvent(new CustomEvent("invalid", { detail: this.validity }));
+  }
+
+  _onValid(e) {
+    this.validity = this._triggerElement.validity;
+    this.dispatchEvent(new CustomEvent("valid", { detail: this.validity }));
   }
 
   _onDialogOpenToggle() {
@@ -524,6 +571,18 @@ export class DwSelect extends LitElement {
     if (e.keyCode === KEY_CODE.ENTER) {
       this._onTrigger(e);
     }
+  }
+
+  checkValidity() {
+    return this._triggerElement && this._triggerElement.checkValidity();
+  }
+
+  reportValidity() {
+    return this._triggerElement && this._triggerElement.reportValidity();
+  }
+
+  focus() {
+    this._triggerElement && this._triggerElement.focus();
   }
 }
 
