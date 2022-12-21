@@ -531,6 +531,9 @@ export class DwSelect extends LitElement {
   _onInput(e) {
     e.stopPropagation();
     this._query = this._triggerElement.value;
+    if (this._query && !this._opened) {
+      this._opened = true;
+    }
   }
 
   _onSelect(e) {
