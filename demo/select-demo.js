@@ -53,6 +53,7 @@ class SelectDemo extends LitElement {
         .helper=${"Simple Helper Text"}
         helperPersistent
         .helperTextProvider=${this._helperTextProvider}
+        .queryFilter=${queryFilterGenerator(['name', 'code'])}
         .messages="${message}"
       ></dw-select>
 
