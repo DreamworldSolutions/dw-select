@@ -90,7 +90,7 @@ export class DwSelectTrigger extends TextField {
   }
 
   renderTrailingIcon() {
-    return this.iconTrailing ? this.renderIcon(this.iconTrailing, true) : "";
+    return this.iconTrailing ? this.renderIcon(this.iconTrailing, true) : nothing;
   }
 
   /** @soyTemplate */
@@ -100,7 +100,7 @@ export class DwSelectTrigger extends TextField {
 
   get _renderClearButton() {
     if (this.value && this.showClearSelection) {
-      return html`<dw-icon-button icon="close" @click=${this._onClearClick}></dw-icon-button>`;
+      return html`<dw-icon-button icon="close" @click=${this._onClearClick} tabindex=-1></dw-icon-button>`;
     }
 
     return nothing;
@@ -108,7 +108,7 @@ export class DwSelectTrigger extends TextField {
 
   get _renderExpandLessMoreButton() {
     return html`
-      <dw-icon-button icon="${this.iconTrailing}" @click=${this._onExpandClick}></dw-icon-button>
+      <dw-icon-button icon="${this.iconTrailing}" @click=${this._onExpandClick} tabindex=-1></dw-icon-button>
     `;
   }
 
