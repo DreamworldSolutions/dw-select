@@ -670,7 +670,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         this._moveActivated(DIRECTION.DOWN);
       }
 
-      if (e.keyCode === KEY_CODE.ENTER) {
+      if (e.keyCode === KEY_CODE.ENTER && this._activatedIndex > -1) {
         this._onItemClick(this._getItem(this._activatedIndex));
       }
     }
