@@ -1,3 +1,25 @@
+import forEach from "lodash-es/forEach";
+
+export const KeyCode = {
+  ENTER: 13,
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
+  ARROW_LEFT: 37,
+  ARROW_RIGHT: 39,
+};
+
+export const Direction = {
+  UP: "up",
+  DOWN: "down",
+};
+
+export const Position = {
+  START: "start",
+  CENTER: "center",
+  END: "end",
+  NEAREST: "nearest",
+};
+
 /**
  * Whether query's all words are matching with input string
  * @param {String} value string which will be matched with query string

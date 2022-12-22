@@ -8,13 +8,7 @@ import "./dw-select-trigger.js";
 import debounce from "lodash-es/debounce";
 
 // Utils
-import { filter } from "./utils.js";
-
-const KEY_CODE = {
-  ENTER: 13,
-  ARROW_UP: 38,
-  ARROW_DOWN: 40,
-};
+import { filter, KeyCode } from "./utils.js";
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -574,9 +568,9 @@ export class DwSelect extends LitElement {
 
   _onKeydown(e) {
     if (
-      e.keyCode === KEY_CODE.ENTER ||
-      e.keyCode === KEY_CODE.ARROW_DOWN ||
-      e.keyCode === KEY_CODE.ARROW_UP
+      e.keyCode === KeyCode.ENTER ||
+      e.keyCode === KeyCode.ARROW_DOWN ||
+      e.keyCode === KeyCode.ARROW_UP
     ) {
       this._onTrigger(e);
     }
