@@ -34,27 +34,6 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <div class="fit-dialog-container"></div>
-      <dw-select
-        searchable
-        .items=${country_list_with_code}
-        .valueTextProvider=${(item) => item.name}
-        .valueExpression="${"name"}"
-        label="Select country"
-        placeholder="placeholder"
-        helper="helper text"
-        selectedTrailingIcon="done"
-        .heading=${"Download"}
-        showClose
-        required
-        autoValidate
-        .showClearSelection=${true}
-        .value=${country_list_with_code[0]}
-        @selected=${this._onSelect}
-        .helper=${"Simple Helper Text"}
-        helperPersistent
-        .helperTextProvider=${this._helperTextProvider}
-        .messages="${message}"
-      ></dw-select>
 
       <dw-select
         .items=${list}
@@ -73,10 +52,11 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
-        
         searchable
         .items=${groupList}
-        .groups=${groups}
+        .groups=${groups.map((e) => {
+          return { ...e, collapsible: false, collapsed: false };
+        })}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
@@ -100,6 +80,28 @@ class SelectDemo extends LitElement {
         label="Contacts"
         @selected=${this._onSelect}
         .searchPlaceholder="${"Search Input placeholder"}"
+        .messages="${message}"
+      ></dw-select>
+
+      <dw-select
+        searchable
+        .items=${country_list_with_code}
+        .valueTextProvider=${(item) => item.name}
+        .valueExpression="${"name"}"
+        label="Select country"
+        placeholder="placeholder"
+        helper="helper text"
+        selectedTrailingIcon="done"
+        .heading=${"Download"}
+        showClose
+        required
+        autoValidate
+        .showClearSelection=${true}
+        .value=${country_list_with_code[50]}
+        @selected=${this._onSelect}
+        .helper=${"Simple Helper Text"}
+        helperPersistent
+        .helperTextProvider=${this._helperTextProvider}
         .messages="${message}"
       ></dw-select>
 
@@ -133,4 +135,3 @@ class SelectDemo extends LitElement {
 }
 
 customElements.define("select-demo", SelectDemo);
-

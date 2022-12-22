@@ -1,5 +1,25 @@
 import forEach from "lodash-es/forEach";
 
+export const KeyCode = {
+  ENTER: 13,
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
+  ARROW_LEFT: 37,
+  ARROW_RIGHT: 39,
+};
+
+export const Direction = {
+  UP: "up",
+  DOWN: "down",
+};
+
+export const Position = {
+  START: "start",
+  CENTER: "center",
+  END: "end",
+  NEAREST: "nearest",
+};
+
 /**
  * Wheter query matching with any word of the input string
  * @param {String} value string which will be matched with query string
@@ -22,19 +42,19 @@ export const filter = (value, query = "") => {
 
 /**
  * Generator function
- * @param {Array} keys 
+ * @param {Array} keys
  * @returns {Function}
  */
 export const queryFilterGenerator = (keys) => {
   return (item, query) => {
-    let str = ""
+    let str = "";
     if (keys && keys.length > 0) {
-      keys.forEach( key => {
+      keys.forEach((key) => {
         if (item.hasOwnProperty(key)) {
           str = str + " " + item[key];
         }
-      })
+      });
     }
     return filter(str, query);
-  }
-}
+  };
+};
