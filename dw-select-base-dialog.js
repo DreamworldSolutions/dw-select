@@ -335,6 +335,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = -1;
     this.messages = defaultMessages;
+    this.popoverOffset = [0, 4];
   }
 
   set messages(newValue) {
@@ -689,7 +690,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
-    this._scrollToIndex(this._activatedIndex, Position.CENTER);
+    this._scrollToIndex(this._activatedIndex, Position.END);
   }
 
   /**
@@ -703,8 +704,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       });
     }
     setTimeout(() => {
-      this._scrollToIndex(selectedIndex, Position.CENTER);
       this._activatedIndex = selectedIndex;
+      this._scrollToIndex(selectedIndex, Position.END);
     }, 250);
   }
 
@@ -713,7 +714,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {Number} index
    * @param {String} position
    */
-  _scrollToIndex(index, position) {
+  _scrollToIndex(index, position = Position.NEAREST) {
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(index, position);
   }
 
