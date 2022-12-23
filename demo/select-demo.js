@@ -97,7 +97,7 @@ class SelectDemo extends LitElement {
         required
         autoValidate
         .showClearSelection=${true}
-        .value=${country_list_with_code[50]}
+        .value=${country_list_with_code[0]}
         @selected=${this._onSelect}
         .helper=${"Simple Helper Text"}
         helperPersistent
