@@ -14,6 +14,11 @@
         font-family: 'Roboto';
       }
     </style>
+    <script>
+      window.process = window.process || {};
+      window.process.env = window.process.env || {};
+      window.process.env.NODE_ENV = 'production';
+    </script>
   </head>
   <body>
     <select-demo  style="position: relative; top: 500px; left: 40px;" allow-filter group-by="type"></select-demo>

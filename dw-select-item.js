@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '@dreamworld/pwa-helpers/lit.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import '@dreamworld/dw-icon';
 

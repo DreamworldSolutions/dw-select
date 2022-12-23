@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import {  html, css } from '@dreamworld/pwa-helpers/lit.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { cache } from 'lit/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
