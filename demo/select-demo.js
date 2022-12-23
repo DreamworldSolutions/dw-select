@@ -104,6 +104,7 @@ class SelectDemo extends LitElement {
         .helperTextProvider=${this._helperTextProvider}
         .messages="${message}"
       ></dw-select>
+      
 
       <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
