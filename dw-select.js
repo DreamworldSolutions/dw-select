@@ -328,6 +328,8 @@ export class DwSelect extends LitElement {
         :host {
           display: block;
           --dw-popover-min-width: 0px;
+          --dw-select-highlight-bg-color: #fde293;
+          --dw-select-item-selected-bg-color: transparent;
         }
       `,
     ];
