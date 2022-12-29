@@ -20,6 +20,7 @@ class SelectDemo extends LitElement {
       css`
         :host {
           box-sizing: border-box;
+          --dw-select-item-selected-bg-color: transparent;
           --dw-dialog-header-padding: 12px 4px 12px 16px;
         }
 
@@ -33,12 +34,40 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <div class="fit-dialog-container"></div>
+      <dw-select
+        searchable
+        .items=${country_list_with_code}
+        .valueTextProvider=${(item) => item.name}
+        .valueExpression="${"name"}"
+        label="Select country"
+        placeholder="placeholder"
+        helper="helper text"
+        selectedTrailingIcon="done"
+        .heading=${"Download"}
+        showClose
+        required
+        .requiredMessage=${"Required"}
+        errorInTooltip
+        autoValidate
+        .showClearSelection=${true}
+        @selected=${this._onSelect}
+        .helper=${"Simple Helper Text"}
+        helperPersistent
+        .helperTextProvider=${this._helperTextProvider}
+        .messages="${message}"
+        allowNewValue
+        .newValueProvider=${(query) => {
+          return new Promise((resolve, reject) => {
+            resolve({ name: query, code: query });
+          });
+        }}
+      ></dw-select>
 
       <dw-select
         .items=${list}
         .valueTextProvider=${(item) => item}
         label="Download"
-        placeholder="placeholder"
+        placeholder="Placeholder"
         helper="helper text"
         layout="small"
         .heading=${"Download"}
@@ -48,14 +77,20 @@ class SelectDemo extends LitElement {
         autoValidate
         @selected=${this._onSelect}
         .messages="${message}"
+        allowNewValue
+        .newValueProvider=${(query) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
       ></dw-select>
 
       <dw-select
         searchable
         .items=${groupList}
-        .groups=${groups.map((e) => {
-          return { ...e, collapsible: false, collapsed: false };
-        })}
+        .groups=${groups}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
@@ -79,29 +114,6 @@ class SelectDemo extends LitElement {
         label="Contacts"
         @selected=${this._onSelect}
         .searchPlaceholder="${"Search Input placeholder"}"
-        .messages="${message}"
-      ></dw-select>
-
-      <dw-select
-        searchable
-        .items=${country_list_with_code}
-        .valueTextProvider=${(item) => item.name}
-        .valueExpression="${"name"}"
-        label="Select country"
-        placeholder="placeholder"
-        helper="helper text"
-        selectedTrailingIcon="done"
-        .heading=${"Download"}
-        showClose
-        required
-        .requiredMessage=${"Required"}
-        errorInTooltip
-        autoValidate
-        .showClearSelection=${true}
-        @selected=${this._onSelect}
-        .helper=${"Simple Helper Text"}
-        helperPersistent
-        .helperTextProvider=${this._helperTextProvider}
         .messages="${message}"
       ></dw-select>
 

@@ -50,9 +50,9 @@ TODO
 | ------------------------- | ----------------------------- | ------------------ | -----------
 | `name`                    | `string`                      | `""`               | Sets the `name` attribute on the internal input. The name property should only be used for browser autofill as webcomponent form participation does not currently consider the `name` attribute.
 | `value`                   | `object\|object[]`            | `null`             | Selected list item object. `object` in case of single selection; `object[]` in case of multiple selections.
-| `originalValue`           | `object`                      | `null`             | Input property. __NOTE:__ When `originalValue` is specified (not `undefined`) & its value is different than this; then highlight is shown. (Comparison is done by reference)
+| `originalValue`           | `object`                      | `null`             | Input property. __Note:__ When `originalValue` is specified (not `undefined`) & its value is different than this; then highlight is shown. (Comparison is done by reference)
 | `outlined`                | `boolean`                     | `false`            | Whether or not to show the `outlined` variant.
-| `label`                   | `string`                      | `""`               | Sets floating label value. __NOTE:__ The label will not float if the selected item has a false value property.
+| `label`                   | `string`                      | `""`               | Sets floating label value. __Note:__ The label will not float if the selected item has a false value property.
 | `placeholder`             | `string`                      | `""`               | Sets disappearing input placeholder.
 | `helper`                  | `string`                      | `""`               | Helper text to display below the input. Display default only when focused.
 | `readOnly`                | `boolean`                     | `false`            | Whether or not to show the `readOnly` state.
@@ -81,8 +81,11 @@ TODO
 | `selectedTrailingIcon`    | `string`                      | `undefined`        | Name of trailing Icon which availble in selected item.
 | `searchPlaceholder`       | `string`                      | `""`               | Placeholder for fit dialog's search input
 | `helperTextProvider`      | `fn()`                        |                    | Helper text provider. parameters: selected item. If this is provided show helper text using this function otherwise get from the `helper` property.
-| `queryFilter`             | `function`                    | `[]`               | A function to customize search. function has two parameters. 1. item, 2. query. __NOTE__ returns always boolean
+| `queryFilter`             | `function`                    | `[]`               | A function to customize search. function has two parameters. 1. item, 2. query. <br>__Note:__ returns always boolean
 | `messages`                | [`Messages`](#messages)       | [`Messages`](#messages) | Messages of for No Records found, No Matching found, and loading state. It's showing in the dialog. Provide only the message key and value that you want to update. Select will handle it and update the message object.
+| `errorInTooltip`          | `boolean`                     | `false`            | Show error meesage in error trailling icon hover tooltip. 
+| `allowNewValue`           | `boolean`                     | `false`            | Whether new value is allowed or not. Can be used only when select is `searchable`
+| `newValueProvider`        | `function`                    | (query) => query   | Value provider function. Used when `allowNewValue` is available, and `query` does not match with any options. Default it returns searched `query`. <br>__Note:__ Return value could be any except function. Including `Promise`.
 
 ### Group
 
