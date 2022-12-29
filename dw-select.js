@@ -266,21 +266,6 @@ export class DwSelect extends LitElement {
       selectedTrailingIcon: { type: String },
 
       /**
-       * Whether dialog is opened or not.
-       */
-      _opened: { type: Boolean },
-
-      /**
-       * search query (as text). used to filter items and highlight matched words.
-       */
-      _query: { type: String },
-
-      /**
-       * When true, shows updated highlights.
-       */
-      _updatedHighlight: { type: Boolean },
-
-      /**
        * Messages of for noRecords and noMatching
        * Example: {noRecords: "", noMatching: "", loading: ""}
        */
@@ -314,6 +299,27 @@ export class DwSelect extends LitElement {
        * returns always boolean
        */
       queryFilter: { type: Function },
+
+      /**
+       * Whether dialog is opened or not.
+       */
+      _opened: { type: Boolean },
+
+      /**
+       * search query (as text). used to filter items and highlight matched words.
+       */
+      _query: { type: String },
+
+      /**
+       * When true, shows updated highlights.
+       */
+      _updatedHighlight: { type: Boolean },
+
+      /**
+       * Contains text that presents on input text field
+       * Computed property on `value`
+       */
+      _selectedValueText: { type: String },
     };
   }
 
@@ -341,6 +347,7 @@ export class DwSelect extends LitElement {
     this.heading = "";
     this.showClose = false;
     this.searchPlaceholder = "";
+    this._selectedValueText = "";
     this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
@@ -358,7 +365,7 @@ export class DwSelect extends LitElement {
         .helper=${this._getHelperText}
         ?helperPersistent=${this.helperPersistent}
         ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
-        value=${this._getValue}
+        .value=${this._selectedValueText}
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
         ?required=${this.required}
@@ -373,6 +380,7 @@ export class DwSelect extends LitElement {
         @expand-toggle="${this._onDialogOpenToggle}"
         @invalid=${this._onInvalid}
         @valid=${this._onValid}
+        @blur=${this._onBlur}
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
@@ -436,6 +444,7 @@ export class DwSelect extends LitElement {
 
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
+      this._selectedValueText = this._getValue;
     }
   }
 
@@ -531,6 +540,7 @@ export class DwSelect extends LitElement {
   _onInput(e) {
     e.stopPropagation();
     this._query = this._triggerElement.value;
+    this._selectedValueText = this._triggerElement.value;
   }
 
   _onSelect(e) {
@@ -574,6 +584,11 @@ export class DwSelect extends LitElement {
     if (e.keyCode === KEY_CODE.ENTER) {
       this._onTrigger(e);
     }
+  }
+
+  _onBlur(e) {
+    this._query = "";
+    this._selectedValueText = this._getValue;
   }
 
   checkValidity() {
