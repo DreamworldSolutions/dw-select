@@ -26,12 +26,20 @@ export class DwSelectGroupItem extends LitElement {
         :host {
           position: relative;
           display: flex;
-          height: 48px;
           flex-direction: row;
           align-items: center;
-          padding: 0 16px;
+          padding: 12px 16px;
           border-bottom: 1px solid var(--mdc-theme-divider-color, rgba(0, 0, 0, 0.12));
           box-sizing: border-box;
+        }
+
+        :host(:not([collapsible])) {
+          padding: 14px 16px 8px;
+          border-bottom: none;
+        }
+
+        :host(:not([collapsible])) .label {
+          ${unsafeCSS(TypographyLiterals.subtitle2)};
         }
 
         .label {
@@ -58,7 +66,7 @@ export class DwSelectGroupItem extends LitElement {
       /**
        * Whether group item is collapsible or not.
        */
-      collapsible: { type: Boolean },
+      collapsible: { type: Boolean, reflect: true },
 
       /**
        * Whether group item is collapsed or not.
