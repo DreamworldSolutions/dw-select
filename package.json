@@ -28,6 +28,7 @@
     "@dreamworld/dw-icon-button": "^3.0.0",
     "@dreamworld/dw-list-item": "^4.1.1",
     "@dreamworld/dw-ripple": "^3.1.0",
+    "@dreamworld/dw-tooltip": "^3.1.0",
     "@dreamworld/material-styles": "^3.1.0",
     "@dreamworld/pwa-helpers": "^1.14.0",
     "@lit-labs/virtualizer": "^0.7.2",
