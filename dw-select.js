@@ -320,6 +320,13 @@ export class DwSelect extends LitElement {
        * Computed property on `value`
        */
       _selectedValueText: { type: String },
+
+      /**
+       * Input Property
+       * Whether error message shows in tooltip or not.
+       * Default erro shows at hint text
+       */
+      errorInTooltip: { type: Boolean },
     };
   }
 
@@ -373,6 +380,7 @@ export class DwSelect extends LitElement {
         ?autoValidate=${this.autoValidate}
         .showClearSelection=${this.showClearSelection}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+        .errorInTooltip=${this.errorInTooltip}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}

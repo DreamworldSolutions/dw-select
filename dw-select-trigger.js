@@ -1,9 +1,10 @@
 import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
-import { classMap } from "lit/directives/class-map.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 // view Elements
 import { TextField } from "@material/mwc-textfield";
 import "@dreamworld/dw-ripple";
+import "@dreamworld/dw-tooltip";
 
 /**
  * Used to edit and enter text, or only readOnly.
@@ -37,6 +38,10 @@ export class DwSelectTrigger extends TextField {
 
         dw-icon-button {
           --dw-icon-color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
+        }
+
+        #error {
+          --dw-icon-color: var(--mdc-theme-error, #b00020);
         }
       `,
     ];
@@ -77,6 +82,13 @@ export class DwSelectTrigger extends TextField {
        * default false
        */
       showClearSelection: { type: Boolean },
+
+      /**
+       * Input Property
+       * Whether error message shows in tooltip or not.
+       * Default erro shows at hint text
+       */
+      errorInTooltip: { type: Boolean },
     };
   }
 
@@ -87,6 +99,7 @@ export class DwSelectTrigger extends TextField {
     this.inputAllowed = false;
     this.iconTrailing = "expand_less";
     this.showClearSelection = false;
+    this.errorInTooltip = false;
   }
 
   renderTrailingIcon() {
@@ -95,6 +108,16 @@ export class DwSelectTrigger extends TextField {
 
   /** @soyTemplate */
   renderIcon(icon, isTrailingIcon = false) {
+    if (this.errorInTooltip && this.errorMessage && !this.isUiValid) {
+      return html`
+        <dw-icon-button
+          id="error"
+          icon="error"
+          tabindex="-1"
+        ></dw-icon-button>
+        <dw-tooltip for="error">${unsafeHTML(this.errorMessage)}</dw-tooltip>
+      `;
+    }
     return html` ${this._renderClearButton} ${this._renderExpandLessMoreButton} `;
   }
 
@@ -137,7 +160,9 @@ export class DwSelectTrigger extends TextField {
     }
 
     if (_changedProperties.has("errorMessage")) {
-      this.validationMessage = this.errorMessage;
+      if (!this.errorInTooltip) {
+        this.validationMessage = this.errorMessage;
+      }
     }
   }
 

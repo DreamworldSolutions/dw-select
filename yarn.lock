@@ -981,10 +981,10 @@
   dependencies:
     "@material/mwc-ripple" "0.27.0"
 
-"@dreamworld/dw-tooltip@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-3.0.0.tgz#0c4b7398bcf9c80146dbc8d0562c83b0402a5e70"
-  integrity sha512-TwnEQv7J2I85gCCHd+jbLyiz8dIaZInRCmUVx9+61WsasAsOXljY7pNVy9QnMMzHd4/HOr1iiVQdgVzIM7uSAg==
+"@dreamworld/dw-tooltip@^3.0.0", "@dreamworld/dw-tooltip@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-3.1.0.tgz#6449b60f0e28897f293d363d271849c4c23c7f63"
+  integrity sha512-oDUh6dGLJiYYM6Flr5/GLdmyWX23fBl5JdWHZ6xwIJ4RvRMz+JNyjzAK48yyW4ZkOquFrFTfAp3c+H2OPt1Vew==
   dependencies:
     "@dreamworld/material-styles" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
