@@ -18,6 +18,7 @@ import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
 import filter from "lodash-es/filter";
 import debounce from "lodash-es/debounce";
+import { NEW_VALUE_STATUS } from "./utils";
 
 const MOBILE_LAYOUT_MEDIA_QUERY = "only screen and (max-width: 420px)";
 
@@ -308,6 +309,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * A function to customize search.
        */
       queryFilter: Function,
+
+      allowNewValue: { type: Boolean },
+
+      newValueProvider: { type: Function },
+
+      _newValueStatus: { type: String },
+
+      _newValue: { type: Object },
+
+      _newValueRequest: { type: Object },
     };
   }
 
@@ -346,6 +357,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = -1;
     this.messages = defaultMessages;
+    this._items = [];
   }
 
   set messages(newValue) {
@@ -437,6 +449,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _contentTemplate() {
+    if (this.allowNewValue && this._items.length === 0) {
+      return nothing;
+    }
     // Render Loading view when _items is `undefined`
     if (!this._items) {
       return this._renderLoading;
@@ -701,6 +716,27 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
   }
 
+  async _findNewValue() {
+    let result = this.newValueProvider(this._query);
+    this._newValueRequest = result instanceof Promise ? result : Promise.resolve(result);
+    this._newValueStatus = NEW_VALUE_STATUS.IN_PROGRESS;
+    this._newValue = undefined;
+
+    try {
+      this._newValue = await this._newValueRequest;
+      this._newValueRequest = undefined;
+      this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
+    } catch(error) {
+      this._newValueRequest = undefined;
+    }
+
+    console.log("_findNewValue", result);
+  }
+
+  _fire(name, detail) {
+    this.dispatchEvent(new CustomEvent(name, { detail: detail }));
+  }
+
   willUpdate(_changedProperties) {
     super.willUpdate(_changedProperties);
 
@@ -711,6 +747,21 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (_changedProperties.has("heading") || _changedProperties.has("showClose")) {
       this._showHeader = Boolean(this.heading) || this.showClose;
+    }
+
+    if (_changedProperties.has("_query")) {
+      console.log("WillUpdate", this._query, _changedProperties);
+      this._newValueRequest = undefined;
+      if (this.allowNewValue && this._query && this._items.length == 0) {
+        this._findNewValue();
+      } else {
+        this._newValueStatus = undefined;
+        this._newValueRequest = undefined;
+      }
+    }
+    
+    if (_changedProperties.has('_newValueStatus')) {
+      this._fire("new-value-status-changed", this._newValueStatus);
     }
   }
 }

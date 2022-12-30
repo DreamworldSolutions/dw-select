@@ -1,5 +1,11 @@
 import forEach from "lodash-es/forEach";
 
+export const NEW_VALUE_STATUS = {
+  IN_PROGRESS: "IN_PROGRESS",
+  NEW_VALUE: "NEW_VALUE",
+  ERROR: "ERROR",
+};
+
 /**
  * Wheter query matching with any word of the input string
  * @param {String} value string which will be matched with query string
@@ -22,19 +28,19 @@ export const filter = (value, query = "") => {
 
 /**
  * Generator function
- * @param {Array} keys 
+ * @param {Array} keys
  * @returns {Function}
  */
 export const queryFilterGenerator = (keys) => {
   return (item, query) => {
-    let str = ""
+    let str = "";
     if (keys && keys.length > 0) {
-      keys.forEach( key => {
+      keys.forEach((key) => {
         if (item.hasOwnProperty(key)) {
           str = str + " " + item[key];
         }
-      })
+      });
     }
     return filter(str, query);
-  }
-}
+  };
+};

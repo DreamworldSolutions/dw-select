@@ -1,10 +1,17 @@
-import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 // view Elements
 import { TextField } from "@material/mwc-textfield";
 import "@dreamworld/dw-ripple";
 import "@dreamworld/dw-tooltip";
+import "@material/mwc-circular-progress";
+
+// Utils
+import { NEW_VALUE_STATUS } from "./utils";
+
+// Styles
+import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
 
 /**
  * Used to edit and enter text, or only readOnly.
@@ -42,6 +49,20 @@ export class DwSelectTrigger extends TextField {
 
         #error {
           --dw-icon-color: var(--mdc-theme-error, #b00020);
+        }
+
+        .new-tag {
+          background-color: #259B24;
+          color: #FFFFFF;
+          display: inline-flex;
+          ${unsafeCSS(TypographyLiterals.caption)};
+          padding: 0px 8px;
+          border-radius: 4px;
+          box-sizing: border-box;
+          align-items: center;
+          height: 20px;
+          margin: 12px 14px;
+          text-transform: capitalize;
         }
       `,
     ];
@@ -89,6 +110,8 @@ export class DwSelectTrigger extends TextField {
        * Default erro shows at hint text
        */
       errorInTooltip: { type: Boolean },
+
+      newValueStatus: { type: String },
     };
   }
 
@@ -108,6 +131,9 @@ export class DwSelectTrigger extends TextField {
 
   /** @soyTemplate */
   renderIcon(icon, isTrailingIcon = false) {
+    if (this.newValueStatus) {
+      return this._renderNewValueTrailingIcon
+    }
     if (this.errorInTooltip && this.errorMessage && !this.isUiValid) {
       return html`
         <dw-icon-button
@@ -133,6 +159,17 @@ export class DwSelectTrigger extends TextField {
     return html`
       <dw-icon-button icon="${this.iconTrailing}" @click=${this._onExpandClick}></dw-icon-button>
     `;
+  }
+
+  get _renderNewValueTrailingIcon() {
+    if (this.newValueStatus === NEW_VALUE_STATUS.IN_PROGRESS) {
+      return html`<mwc-circular-progress indeterminate density="-2"></mwc-circular-progress>`
+    }
+    
+    if (this.newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+      return html`<div class="new-tag">new</div>`
+    }
+    return nothing;
   }
 
   _onClearClick(e) {

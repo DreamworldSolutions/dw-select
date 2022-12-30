@@ -55,13 +55,21 @@ class SelectDemo extends LitElement {
         helperPersistent
         .helperTextProvider=${this._helperTextProvider}
         .messages="${message}"
+        allowNewValue
+        .newValueProvider=${(query) => {
+          return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(query + " +")
+            }, 3000)
+          })
+        }}
       ></dw-select>
 
       <dw-select
         .items=${list}
         .valueTextProvider=${(item) => item}
         label="Download"
-        placeholder="placeholder"
+        placeholder="Placeholder"
         helper="helper text"
         layout="small"
         .heading=${"Download"}

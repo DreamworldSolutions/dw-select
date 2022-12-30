@@ -327,6 +327,22 @@ export class DwSelect extends LitElement {
        * Default erro shows at hint text
        */
       errorInTooltip: { type: Boolean },
+
+      /**
+       * Can be used only when “searchable=true”
+       */
+      allowNewValue: { type: Boolean },
+
+      /**
+       *
+       */
+      newValueProvider: { type: Function },
+
+      _newValueStatus: { type: String },
+
+      _newValue: { type: Object },
+
+      _newValueRequest: { type: Object },
     };
   }
 
@@ -358,10 +374,11 @@ export class DwSelect extends LitElement {
     this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
-
+    
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
+    this.newValueProvider = (query) => query;
   }
 
   render() {
@@ -372,6 +389,7 @@ export class DwSelect extends LitElement {
         .helper=${this._getHelperText}
         ?helperPersistent=${this.helperPersistent}
         ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
+        .newValueStatus=${this._newValueStatus}
         .value=${this._selectedValueText}
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
@@ -415,11 +433,14 @@ export class DwSelect extends LitElement {
             ?showClose=${this.showClose}
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
+            ?allowNewValue="${this.allowNewValue}"
+            .newValueProvider="${this.newValueProvider}"
             @selected=${this._onSelect}
             @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
+            @new-value-status-changed="${this._onNewValueStausChanged}"
             .messages="${this.messages}"
             ._getItemValue=${this._getItemValue}
           ></dw-select-base-dialog>`
@@ -595,8 +616,15 @@ export class DwSelect extends LitElement {
   }
 
   _onBlur(e) {
-    this._query = "";
+    if (!this.allowNewValue) {
+      this._query = "";
     this._selectedValueText = this._getValue;
+    }
+  }
+
+  _onNewValueStausChanged(e) {
+    console.log("_onNewValueChanged", e.detail);
+    this._newValueStatus = e.detail;
   }
 
   checkValidity() {
