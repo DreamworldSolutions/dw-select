@@ -374,7 +374,7 @@ export class DwSelect extends LitElement {
     this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
-    
+
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
@@ -574,7 +574,6 @@ export class DwSelect extends LitElement {
 
   _onSelect(e) {
     this.value = e.detail.value;
-    this._query = "";
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
@@ -618,12 +617,11 @@ export class DwSelect extends LitElement {
   _onBlur(e) {
     if (!this.allowNewValue) {
       this._query = "";
-    this._selectedValueText = this._getValue;
+      this._selectedValueText = this._getValue;
     }
   }
 
   _onNewValueStausChanged(e) {
-    console.log("_onNewValueChanged", e.detail);
     this._newValueStatus = e.detail;
   }
 

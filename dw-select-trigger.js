@@ -64,6 +64,10 @@ export class DwSelectTrigger extends TextField {
           margin: 12px 14px;
           text-transform: capitalize;
         }
+        
+        mwc-circular-progress{
+          padding: 4px;
+        }
       `,
     ];
   }

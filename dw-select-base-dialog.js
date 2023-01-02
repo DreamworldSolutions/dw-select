@@ -726,11 +726,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._newValue = await this._newValueRequest;
       this._newValueRequest = undefined;
       this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
-    } catch(error) {
+      this._fire("selected", { value: this._newValue });
+    } catch (error) {
       this._newValueRequest = undefined;
+      this._newValueStatus = NEW_VALUE_STATUS.ERROR;
     }
-
-    console.log("_findNewValue", result);
   }
 
   _fire(name, detail) {
@@ -750,7 +750,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (_changedProperties.has("_query")) {
-      console.log("WillUpdate", this._query, _changedProperties);
       this._newValueRequest = undefined;
       if (this.allowNewValue && this._query && this._items.length == 0) {
         this._findNewValue();
@@ -759,8 +758,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         this._newValueRequest = undefined;
       }
     }
-    
-    if (_changedProperties.has('_newValueStatus')) {
+
+    if (_changedProperties.has("_newValueStatus")) {
       this._fire("new-value-status-changed", this._newValueStatus);
     }
   }

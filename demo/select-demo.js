@@ -57,11 +57,9 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-          return new Promise(resolve => {
-            setTimeout(() => {
-              resolve(query + " +")
-            }, 3000)
-          })
+          return new Promise((resolve, reject) => {
+            reject({ name: query, code: query });
+          });
         }}
       ></dw-select>
 
@@ -79,10 +77,17 @@ class SelectDemo extends LitElement {
         autoValidate
         @selected=${this._onSelect}
         .messages="${message}"
+        allowNewValue
+        .newValueProvider=${(query) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
       ></dw-select>
 
       <dw-select
-        
         searchable
         .items=${groupList}
         .groups=${groups}
@@ -142,4 +147,3 @@ class SelectDemo extends LitElement {
 }
 
 customElements.define("select-demo", SelectDemo);
-
