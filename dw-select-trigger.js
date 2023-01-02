@@ -148,7 +148,7 @@ export class DwSelectTrigger extends TextField {
   }
 
   get _renderClearButton() {
-    if (this.value && this.showClearSelection) {
+    if (this.value && this.focused && this.showClearSelection) {
       return html`<dw-icon-button
         icon="close"
         @click=${this._onClearClick}
@@ -221,6 +221,13 @@ export class DwSelectTrigger extends TextField {
         this.dispatchEvent(new CustomEvent("valid"));
       }
     }
+  }
+
+  onInputBlur() {
+    setTimeout(() => {
+      this.focused = false;
+      this.reportValidity();
+    }, 100);
   }
 }
 
