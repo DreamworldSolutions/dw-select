@@ -1,5 +1,4 @@
 import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
-import { classMap } from "lit/directives/class-map.js";
 
 // view Elements
 import { TextField } from "@material/mwc-textfield";
@@ -99,7 +98,7 @@ export class DwSelectTrigger extends TextField {
   }
 
   get _renderClearButton() {
-    if (this.value && this.showClearSelection) {
+    if (this.focused && this.value) {
       return html`<dw-icon-button icon="close" @click=${this._onClearClick}></dw-icon-button>`;
     }
 
@@ -151,6 +150,13 @@ export class DwSelectTrigger extends TextField {
         this.dispatchEvent(new CustomEvent("valid"));
       }
     }
+  }
+
+  onInputBlur() {
+    setTimeout(() => {
+      this.focused = false;
+      this.reportValidity();
+    }, 100);
   }
 }
 
