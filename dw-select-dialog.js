@@ -833,6 +833,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     if(this.opened && changedProps.has('opened')) {
       this._addScrollEventListeners();
       this._setFocuAfterItemOpen();
+      this.__collapseAllItems();
     }
   }
 
@@ -1409,6 +1410,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
       for (let el of expandedEls) {
         const item = el.previousElementSibling;
         item.trailIcon = 'keyboard_arrow_down';
+        item.classList.remove('expanded');
         el && el.classList.remove('expanded');
        }
      }
