@@ -1422,7 +1422,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
     if(!filterInputEl) {
       return;
     }
-    filterInputEl.focus();
+    setTimeout(() => {filterInputEl.focus()}, 500); // Focus after popover animation copleted.
   }
 
   _inputChanged(e) {
