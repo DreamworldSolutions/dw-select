@@ -344,7 +344,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.valueExpression = "_id";
     this.heading = "";
     this.showClose = false;
-    this._activatedIndex = -1;
+    this._activatedIndex = 0;
     this.messages = defaultMessages;
   }
 
