@@ -570,7 +570,6 @@ export class DwSelect extends LitElement {
   }
 
   _onKeydown(e) {
-    e.stopPropagation();
     if (
       e.keyCode === KEY_CODE.ENTER ||
       e.keyCode === KEY_CODE.ARROW_DOWN ||
