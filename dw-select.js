@@ -416,7 +416,7 @@ export class DwSelect extends LitElement {
    * Used when this element is used by `Extension` To override this method
    */
   get _footerTemplate() {
-    return;
+    return nothing;
   }
 
   connectedCallback() {
