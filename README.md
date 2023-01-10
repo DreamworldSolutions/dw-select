@@ -65,7 +65,7 @@ TODO
 | `disabled`                | `boolean`                     | `false`            | Whether or not to show the `disabled` variant.
 | `searchable`              | `boolean`                     | `false`            | Whether or not to show the `searchable` variant.
 | `vkb`                     | `boolean`                     | `false`            | `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual KeyBoard.
-| `groups`                  | `Group[]`                     | `null`             | List of groups.
+| `groups`                  | [`Group[]`](#group)                     | `null`             | List of groups.
 | `groupSelector`           | `fn()`                        |                    | returns GroupName. Group selector provides a path of groupName in Items
 | `groupExpression`         | `string`                      | `""`               | 
 | `items`                   | `object[]`                    | `undefined`        | List of selectable items.
@@ -82,6 +82,7 @@ TODO
 | `searchPlaceholder`       | `string`                      | `""`               | Placeholder for fit dialog's search input
 | `helperTextProvider`      | `fn()`                        |                    | Helper text provider. parameters: selected item. If this is provided show helper text using this function otherwise get from the `helper` property.
 | `queryFilter`             | `function`                    | `[]`               | A function to customize search. function has two parameters. 1. item, 2. query. __NOTE__ returns always boolean
+| `messages`                | [`Messages`](#messages)       | [`Messages`](#messages) | Messages of for No Records found, No Matching found, and loading state. It's showing in the dialog. Provide only the message key and value that you want to update. Select will handle it and update the message object.
 
 ### Group
 
@@ -105,6 +106,16 @@ TODO
   collapsed: false
 }
 ```
+
+### Messages
+
+#### Object
+
+| key          | Type           | Default                      | Description
+| ------------ | -------------- | ---------------------------- | ---------------
+| `noRecords`  | `string`       | `No Records`                 | Show meesage on dialog when no records found.
+| `noMatching` | `string`       | `No matching records found!` | Show when query does not match with any item.
+| `loading`    | `string`       | `Loading...`                 | Show when items is `undefined`.
 
 ### Utils Functions
 
