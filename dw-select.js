@@ -8,13 +8,7 @@ import "./dw-select-trigger.js";
 import debounce from "lodash-es/debounce";
 
 // Utils
-import { filter } from "./utils.js";
-
-const KEY_CODE = {
-  ENTER: 13,
-  ARROW_UP: 38,
-  ARROW_DOWN: 40,
-};
+import { filter, KeyCode } from "./utils.js";
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -324,6 +318,10 @@ export class DwSelect extends LitElement {
     return this.renderRoot.querySelector("dw-select-trigger");
   }
 
+  get _dialogElement() {
+    return this.renderRoot.querySelector("dw-select-base-dialog");
+  }
+
   static get styles() {
     return [
       css`
@@ -473,6 +471,25 @@ export class DwSelect extends LitElement {
     this.style.setProperty("--dw-popover-width", triggerEl.offsetWidth + "px");
   }
 
+  _setPopoverHeight() {
+    const viewportHeight = window.innerHeight;
+    const triggerRect = this._triggerElement.getBoundingClientRect();
+    const isPlacementBottom = triggerRect.bottom <= viewportHeight / 2;
+    let popoverMaxHeight = 0;
+
+    if (isPlacementBottom) {
+      this._dialogElement.popoverPlacement = "bottom-start";
+      popoverMaxHeight = viewportHeight - (triggerRect.bottom + 8);
+    } else {
+      this._dialogElement.popoverPlacement = "top-start";
+      this._dialogElement.popoverOffset = [0, 8];
+      popoverMaxHeight = triggerRect.top - 16;
+    }
+
+    this._popoverMaxHeight = popoverMaxHeight;
+    this.style.setProperty("--dw-popover-max-height", popoverMaxHeight + "px");
+  }
+
   /**
    * Trigger when actual user intract
    * @param {Event} e
@@ -565,6 +582,10 @@ export class DwSelect extends LitElement {
 
   _onDialogOpen(e) {
     e.stopPropagation();
+
+    if (this._dialogElement && this._dialogElement.type === "popover") {
+      this._setPopoverHeight();
+    }
   }
 
   _onDialogClose(e) {
@@ -574,9 +595,9 @@ export class DwSelect extends LitElement {
 
   _onKeydown(e) {
     if (
-      e.keyCode === KEY_CODE.ENTER ||
-      e.keyCode === KEY_CODE.ARROW_DOWN ||
-      e.keyCode === KEY_CODE.ARROW_UP
+      e.keyCode === KeyCode.ENTER ||
+      e.keyCode === KeyCode.ARROW_DOWN ||
+      e.keyCode === KeyCode.ARROW_UP
     ) {
       this._onTrigger(e);
     }

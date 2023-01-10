@@ -1,5 +1,4 @@
 import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
-import { repeat } from "lit/directives/repeat.js";
 import "@lit-labs/virtualizer";
 
 // View Elements
@@ -19,20 +18,10 @@ import orderBy from "lodash-es/orderBy";
 import filter from "lodash-es/filter";
 import debounce from "lodash-es/debounce";
 
+// Utils
+import { KeyCode, Direction, Position } from "./utils.js";
+
 const MOBILE_LAYOUT_MEDIA_QUERY = "only screen and (max-width: 420px)";
-
-const KEY_CODE = {
-  ARROW_UP: 38,
-  ARROW_DOWN: 40,
-  ARROW_LEFT: 37,
-  ARROW_RIGHT: 39,
-  ENTER: 13,
-};
-
-const DIRECTION = {
-  UP: "up",
-  DOWN: "down",
-};
 
 const defaultMessages = {
   noRecords: "No Records",
@@ -346,6 +335,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = 0;
     this.messages = defaultMessages;
+    this.popoverOffset = [0, 4];
   }
 
   set messages(newValue) {
@@ -391,6 +381,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._isGroupCollapsed = Boolean(this._groups) && this._groups.some((e) => e.collapsed);
+    this._scrollToSelectedItem();
   }
 
   updated(changedProperties) {
@@ -428,12 +419,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`
         ${this.showClose
           ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>`
-          : html``}
-        ${this.heading ? html`<div class="heading">${this.heading}</div>` : html``}
+          : nothing}
+        ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
       `;
     }
 
-    return html``;
+    return nothing;
   }
 
   get _contentTemplate() {
@@ -662,15 +653,15 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   onKeydown(e) {
     e.stopPropagation();
     if (this.opened) {
-      if (e.keyCode === KEY_CODE.ARROW_UP) {
-        this._moveActivated(DIRECTION.UP);
+      if (e.keyCode === KeyCode.ARROW_UP) {
+        this._moveActivated(Direction.UP);
       }
 
-      if (e.keyCode === KEY_CODE.ARROW_DOWN) {
-        this._moveActivated(DIRECTION.DOWN);
+      if (e.keyCode === KeyCode.ARROW_DOWN) {
+        this._moveActivated(Direction.DOWN);
       }
 
-      if (e.keyCode === KEY_CODE.ENTER && this._activatedIndex > -1) {
+      if (e.keyCode === KeyCode.ENTER && this._activatedIndex > -1) {
         this._onItemClick(this._getItem(this._activatedIndex));
       }
     }
@@ -689,16 +680,42 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     let modifier = 1;
 
-    if ((isNoitemActivated || isFistItem) && direction === DIRECTION.UP) {
+    if ((isNoitemActivated || isFistItem) && direction === Direction.UP) {
       this._activatedIndex = numberOfitems - 1;
-    } else if ((isNoitemActivated || isLastItem) && direction === DIRECTION.DOWN) {
+    } else if ((isNoitemActivated || isLastItem) && direction === Direction.DOWN) {
       this._activatedIndex = 0;
     } else {
-      modifier = direction === DIRECTION.DOWN ? 1 : -1;
+      modifier = direction === Direction.DOWN ? 1 : -1;
       this._activatedIndex = this._activatedIndex + modifier;
     }
 
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
+    this._scrollToIndex(this._activatedIndex, Position.END);
+  }
+
+  /**
+   * Scroll to selected Item and set `_activatedItemIndex`
+   */
+  _scrollToSelectedItem() {
+    let selectedIndex = -1;
+    if (this.value) {
+      selectedIndex = this._items.findIndex((item) => {
+        return isEqual(item.value, this.value);
+      });
+    }
+    setTimeout(() => {
+      this._activatedIndex = selectedIndex;
+      this._scrollToIndex(selectedIndex, Position.END);
+    }, 250);
+  }
+
+  /**
+   * Scroll to given index and position
+   * @param {Number} index
+   * @param {String} position
+   */
+  _scrollToIndex(index, position = Position.NEAREST) {
+    this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(index, position);
   }
 
   willUpdate(_changedProperties) {
