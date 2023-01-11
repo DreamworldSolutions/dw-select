@@ -38,6 +38,9 @@ npm install @dreamworld/dw-select
 - Focus:
   - For searchable types, it shows a cursor. For non searchable type, doesn’t show cursor.
   - The dropdown opens when the user clicks the field using a pointing device.
+- Clear Selection:
+  - Searchable: remove all input text and it will clear the selection and dispatch a `clear-selection` event
+  - Non-Searchable: there is no way to clear the selection for non-searchable. If required,  the integrator should provide an empty item for clear selection.
 
 ## API
 
@@ -128,11 +131,12 @@ TODO
 
 ### Events
 
-| Event Name | Target             | Detail             | Description
-| ---------- | ------------------ | ------------------ | -----------
-| `selected` | `dw-list-item`     |                    | Fired when the user changed selection. It’s dispatched even when the user selects the same value as the current.
-| `invalid`  | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally.
-| `valid`    | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally.
+| Event Name         | Target             | Detail             | Description
+| ------------------ | ------------------ | ------------------ | -----------
+| `selected`         | `dw-list-item`     |                    | Fired when the user changed selection. It’s dispatched even when the user selects the same value as the current.
+| `invalid`          | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally.
+| `valid`            | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally.
+| `clear-selection`  | `dw-select`        |                    | It is fired when the user explicitly clears the selection by removing all input text.
 
 ### Methods
 
