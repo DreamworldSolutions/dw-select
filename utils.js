@@ -20,6 +20,12 @@ export const Position = {
   NEAREST: "nearest",
 };
 
+export const NEW_VALUE_STATUS = {
+  IN_PROGRESS: "IN_PROGRESS",
+  NEW_VALUE: "NEW_VALUE",
+  ERROR: "ERROR",
+};
+
 /**
  * Whether query's all words are matching with input string
  * @param {String} value string which will be matched with query string

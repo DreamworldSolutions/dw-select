@@ -1,10 +1,17 @@
-import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 // view Elements
 import { TextField } from "@material/mwc-textfield";
 import "@dreamworld/dw-ripple";
 import "@dreamworld/dw-tooltip";
+import "@material/mwc-circular-progress";
+
+// Utils
+import { NEW_VALUE_STATUS } from "./utils";
+
+// Styles
+import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
 
 /**
  * Used to edit and enter text, or only readOnly.
@@ -42,6 +49,24 @@ export class DwSelectTrigger extends TextField {
 
         #error {
           --dw-icon-color: var(--mdc-theme-error, #b00020);
+        }
+
+        .new-tag {
+          background-color: #259b24;
+          color: #ffffff;
+          display: inline-flex;
+          ${unsafeCSS(TypographyLiterals.caption)};
+          padding: 0px 8px;
+          border-radius: 4px;
+          box-sizing: border-box;
+          align-items: center;
+          height: 20px;
+          margin: 12px 14px;
+          text-transform: capitalize;
+        }
+
+        mwc-circular-progress {
+          padding: 4px;
         }
       `,
     ];
@@ -89,6 +114,8 @@ export class DwSelectTrigger extends TextField {
        * Default erro shows at hint text
        */
       errorInTooltip: { type: Boolean },
+
+      newValueStatus: { type: String },
     };
   }
 
@@ -108,13 +135,12 @@ export class DwSelectTrigger extends TextField {
 
   /** @soyTemplate */
   renderIcon(icon, isTrailingIcon = false) {
+    if (this.newValueStatus) {
+      return this._renderNewValueTrailingIcon;
+    }
     if (this.errorInTooltip && this.errorMessage && !this.isUiValid) {
       return html`
-        <dw-icon-button
-          id="error"
-          icon="error"
-          tabindex="-1"
-        ></dw-icon-button>
+        <dw-icon-button id="error" icon="error" tabindex="-1"></dw-icon-button>
         <dw-tooltip for="error">${unsafeHTML(this.errorMessage)}</dw-tooltip>
       `;
     }
@@ -123,7 +149,11 @@ export class DwSelectTrigger extends TextField {
 
   get _renderClearButton() {
     if (this.value && this.showClearSelection) {
-      return html`<dw-icon-button icon="close" @click=${this._onClearClick} tabindex=-1></dw-icon-button>`;
+      return html`<dw-icon-button
+        icon="close"
+        @click=${this._onClearClick}
+        tabindex="-1"
+      ></dw-icon-button>`;
     }
 
     return nothing;
@@ -131,8 +161,23 @@ export class DwSelectTrigger extends TextField {
 
   get _renderExpandLessMoreButton() {
     return html`
-      <dw-icon-button icon="${this.iconTrailing}" @click=${this._onExpandClick} tabindex=-1></dw-icon-button>
+      <dw-icon-button
+        icon="${this.iconTrailing}"
+        @click=${this._onExpandClick}
+        tabindex="-1"
+      ></dw-icon-button>
     `;
+  }
+
+  get _renderNewValueTrailingIcon() {
+    if (this.newValueStatus === NEW_VALUE_STATUS.IN_PROGRESS) {
+      return html`<mwc-circular-progress indeterminate density="-2"></mwc-circular-progress>`;
+    }
+
+    if (this.newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+      return html`<div class="new-tag">new</div>`;
+    }
+    return nothing;
   }
 
   _onClearClick(e) {

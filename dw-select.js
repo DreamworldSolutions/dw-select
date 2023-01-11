@@ -321,6 +321,36 @@ export class DwSelect extends LitElement {
        * Default erro shows at hint text
        */
       errorInTooltip: { type: Boolean },
+
+      /**
+       * Can be used only when “searchable=true”
+       * Whether new value is allowed or not
+       */
+      allowNewValue: { type: Boolean },
+
+      /**
+       * Provider function which return value
+       * return value could be Promise or any value
+       * Used when allowNewValue is true and _newValueStatus is not undefined
+       */
+      newValueProvider: { type: Function },
+
+      /**
+       * Enum property
+       * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
+       */
+      _newValueStatus: { type: String },
+
+      /**
+       * Represents last successful computation by newValueProvider.
+       */
+      _newValue: { type: Object },
+
+      /**
+       * Represents a Promise, corresponding to any pending result of newValueProvider call.
+       * It would be undefined if no such request is pending.
+       */
+      _newValueRequest: { type: Object },
     };
   }
 
@@ -362,6 +392,7 @@ export class DwSelect extends LitElement {
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
+    this.newValueProvider = (query) => query;
   }
 
   render() {
@@ -372,6 +403,7 @@ export class DwSelect extends LitElement {
         .helper=${this._getHelperText}
         ?helperPersistent=${this.helperPersistent}
         ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
+        .newValueStatus=${this._newValueStatus}
         .value=${this._selectedValueText}
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
@@ -415,11 +447,14 @@ export class DwSelect extends LitElement {
             ?showClose=${this.showClose}
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
+            ?allowNewValue="${this.allowNewValue}"
+            .newValueProvider="${this.newValueProvider}"
             @selected=${this._onSelect}
             @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
+            @new-value-status-changed="${this._onNewValueStausChanged}"
             .messages="${this.messages}"
             ._getItemValue=${this._getItemValue}
           ></dw-select-base-dialog>`
@@ -575,7 +610,6 @@ export class DwSelect extends LitElement {
 
   _onSelect(e) {
     this.value = e.detail.value;
-    this._query = "";
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
@@ -624,8 +658,14 @@ export class DwSelect extends LitElement {
   }
 
   _onBlur(e) {
-    this._query = "";
-    this._selectedValueText = this._getValue;
+    if (!this.allowNewValue) {
+      this._query = "";
+      this._selectedValueText = this._getValue;
+    }
+  }
+
+  _onNewValueStausChanged(e) {
+    this._newValueStatus = e.detail;
   }
 
   checkValidity() {
