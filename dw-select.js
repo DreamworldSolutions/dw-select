@@ -479,6 +479,12 @@ export class DwSelect extends LitElement {
     }
   }
 
+  firstUpdated() {
+    if (this.value) {
+      this._selectedValueText = this._getValue;
+    }
+  }
+
   willUpdate(_changedProperties) {
     if (_changedProperties.has("_opened")) {
       this._loadFragments();
