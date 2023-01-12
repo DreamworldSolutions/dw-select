@@ -37,6 +37,7 @@ class SelectDemo extends LitElement {
       <dw-select
         searchable
         .items=${country_list_with_code}
+        .value=${country_list_with_code[2]}
         .valueTextProvider=${(item) => item.name}
         .valueExpression="${"name"}"
         label="Select country"
@@ -117,6 +118,16 @@ class SelectDemo extends LitElement {
         .messages="${message}"
       ></dw-select>
 
+      <dw-select
+        .label=${"Filter By"}
+        .heading="${"Filter By"}"
+        showClose
+        .items=${this._filterBySelectItems}
+        .valueTextProvider=${(item) => item.name}
+        .value=${this._filterByValue}
+        @selected=${this._onSelect}
+      ></dw-select>
+
       <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
@@ -143,6 +154,17 @@ class SelectDemo extends LitElement {
 
   _onSelect(e) {
     console.log(e);
+  }
+
+  get _filterBySelectItems() {
+    return [
+      { name: "transactionDate", value: "TXN_DATE" },
+      { name: "dueDate", value: "DUE_DATE" },
+    ];
+  }
+
+  get _filterByValue() {
+    return this._filterBySelectItems.find((item) => item.value === "DUE_DATE");
   }
 }
 
