@@ -1,8 +1,14 @@
-import { LitElement, html, css, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { LitElement, html, css, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
 import "@dreamworld/dw-icon-button";
 
 // Styles
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
+
+// View Elements
+import "@material/mwc-circular-progress";
+
+// Utils
+import { NEW_VALUE_STATUS } from "./utils";
 
 /**
  * #Behaviours
@@ -67,6 +73,24 @@ export class DwSelectDialogInput extends LitElement {
           color: var(--mdc-theme-text-hint-on-surface, rgba(0, 0, 0, 0.38));
           ${TypographyLiterals.subtitle1};
         }
+
+        .new-tag {
+          background-color: #259b24;
+          color: #ffffff;
+          display: inline-flex;
+          ${unsafeCSS(TypographyLiterals.caption)};
+          padding: 0px 8px;
+          border-radius: 4px;
+          box-sizing: border-box;
+          align-items: center;
+          height: 20px;
+          margin: 12px 14px;
+          text-transform: capitalize;
+        }
+
+        mwc-circular-progress {
+          padding: 4px;
+        }
       `,
     ];
   }
@@ -92,12 +116,19 @@ export class DwSelectDialogInput extends LitElement {
        * Whether element has focused or not
        */
       _hasFocus: { type: Boolean, reflect: true },
+
+      /**
+       * Enum property
+       * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
+       */
+      newValueStatus: { type: String },
     };
   }
 
   constructor() {
     super();
     this.value = "";
+    this.newValueStatus = undefined;
   }
 
   render() {
@@ -111,11 +142,33 @@ export class DwSelectDialogInput extends LitElement {
           .value=${this.value}
           .placeholder="${this.searchPlaceholder}"
         />
-        ${this._hasCloseButton
-          ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>`
-          : nothing}
+        ${this._renderTrailingIcons}
       </div>
     `;
+  }
+
+  get _renderTrailingIcons() {
+    if (this.newValueStatus) {
+      return this._renderNewValueTrailingIcon;
+    }
+    return this._showClearButton;
+  }
+
+  get _renderNewValueTrailingIcon() {
+    if (this.newValueStatus === NEW_VALUE_STATUS.IN_PROGRESS) {
+      return html`<mwc-circular-progress indeterminate density="-2"></mwc-circular-progress>`;
+    }
+
+    if (this.newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+      return html`<div class="new-tag">new</div>`;
+    }
+    return nothing;
+  }
+
+  get _showClearButton() {
+    return this._hasCloseButton
+      ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>`
+      : nothing;
   }
 
   _onFocus() {

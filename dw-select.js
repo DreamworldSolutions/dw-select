@@ -444,6 +444,9 @@ export class DwSelect extends LitElement {
             .renderGroupItem=${this.renderGroupItem}
             .heading=${this.heading}
             .searchPlaceholder="${this.searchPlaceholder}"
+            .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+            .errorInTooltip=${this.errorInTooltip}
+            .helper=${this._getHelperText}
             ?showClose=${this.showClose}
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
