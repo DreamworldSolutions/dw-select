@@ -260,8 +260,6 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .expandable{
           height: 0;
           overflow: hidden;
-          /* Apply indent for sub action */
-          padding: 0px 0px 0px 16px;
         }
 
         .item.expanded {
@@ -331,6 +329,10 @@ export class DwSelectDialog extends DwSelectBaseDialog {
 
         dw-select-item[has-divider] {
           border-top: 1px solid var(--dw-select-item-divider-color, rgba(0, 0, 0, .10));
+        }
+
+        .expandable.expanded > dw-select-item {
+          padding-left: 16px;
         }
       `
     ];
