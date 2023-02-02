@@ -79,12 +79,13 @@ export class DwSelectDialogInput extends LitElement {
           color: #ffffff;
           display: inline-flex;
           ${unsafeCSS(TypographyLiterals.caption)};
-          padding: 0px 8px;
           border-radius: 4px;
           box-sizing: border-box;
           align-items: center;
           height: 20px;
-          margin: 12px 14px;
+          margin: 12px 16px;
+          padding-left: 8px;
+          padding-right: 8px;
           text-transform: capitalize;
         }
 

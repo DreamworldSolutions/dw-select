@@ -131,7 +131,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         }
 
         mwc-button {
-          width: 100%;
           --mdc-shape-small: 18px;
         }
       `,
@@ -514,6 +513,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`<mwc-button
         label="Select"
         raised
+        fullwidth
         @click=${this._onSelectButtonClick}
       ></mwc-button>`;
     }
@@ -803,7 +803,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._newValue = await this._newValueRequest;
       this._newValueRequest = undefined;
       this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
-      this._selectedValueText = this._getValue;
+      this._selectedValueText = this._computeInputText;
       if (this.type !== "fit") {
         this._fire("selected", { value: this._newValue });
       }
@@ -825,7 +825,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   /**
    * Returns String that represents current value
    */
-  get _getValue() {
+  get _computeInputText() {
     if (!this._newValue) {
       return "";
     }
