@@ -116,6 +116,14 @@ class SelectDemo extends LitElement {
         @selected=${this._onSelect}
         .searchPlaceholder="${"Search Input placeholder"}"
         .messages="${message}"
+        allowNewValue
+        .newValueProvider=${(query) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
       ></dw-select>
 
       <dw-select

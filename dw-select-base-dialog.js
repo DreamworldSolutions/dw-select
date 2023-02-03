@@ -4,6 +4,7 @@ import "@lit-labs/virtualizer";
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
 import "@material/mwc-circular-progress";
+import "@material/mwc-button";
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-list-item";
 import "./dw-select-group-item";
@@ -127,6 +128,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
             --dw-select-item-selected-bg-color,
             var(--mdc-theme-primary, #6200ee)
           );
+        }
+
+        mwc-button {
+          --mdc-shape-small: 18px;
         }
       `,
     ];
@@ -328,6 +333,29 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * It would be undefined if no such request is pending.
        */
       _newValueRequest: { type: Object },
+
+      /**
+       * Represents Dialog input value
+       */
+      _selectedValueText: { type: String },
+
+      /**
+       * Input Property
+       * Whether error message shows in tooltip or not.
+       * Default erro shows at hint text
+       */
+      errorInTooltip: { type: Boolean },
+
+      /**
+       * A Custom Error Message to be shown.
+       */
+      errorMessage: { type: String },
+
+      /**
+       * Helper text to display below the input.
+       * Display default only when focused.
+       */
+      helper: { type: String },
     };
   }
 
@@ -368,6 +396,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.messages = defaultMessages;
     this._items = [];
     this.popoverOffset = [0, 4];
+    this._selectedValueText = "";
   }
 
   set messages(newValue) {
@@ -441,7 +470,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   get _headerTemplate() {
     if (this.searchable && this.type === "fit") {
       return html`<dw-select-dialog-input
+        .value=${this._selectedValueText}
         .searchPlaceholder="${this.searchPlaceholder}"
+        .newValueStatus="${this._newValueStatus}"
         @cancel=${this._onClose}
         @input-change=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
@@ -478,6 +509,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _footerTemplate() {
+    if (this._newValueStatus === NEW_VALUE_STATUS.NEW_VALUE && this.type === "fit") {
+      return html`<mwc-button
+        label="Select"
+        raised
+        fullwidth
+        @click=${this._onSelectButtonClick}
+      ></mwc-button>`;
+    }
     return this.dialogFooterElement;
   }
 
@@ -671,6 +710,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   _onInput(e) {
     let el = this.renderRoot.querySelector("dw-select-dialog-input");
     this._query = el.value;
+    this._selectedValueText = el.value;
   }
 
   _onQueryChange(value) {
@@ -763,7 +803,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._newValue = await this._newValueRequest;
       this._newValueRequest = undefined;
       this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
-      this._fire("selected", { value: this._newValue });
+      this._selectedValueText = this._computeInputText;
+      if (this.type !== "fit") {
+        this._fire("selected", { value: this._newValue });
+      }
     } catch (error) {
       this._newValueRequest = undefined;
       this._newValueStatus = NEW_VALUE_STATUS.ERROR;
@@ -772,6 +815,27 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _fire(name, detail) {
     this.dispatchEvent(new CustomEvent(name, { detail: detail }));
+  }
+
+  _onSelectButtonClick() {
+    this._fire("selected", { value: this._newValue });
+    this.close();
+  }
+
+  /**
+   * Returns String that represents current value
+   */
+  get _computeInputText() {
+    if (!this._newValue) {
+      return "";
+    }
+    if (!this.valueTextProvider(this._newValue)) {
+      if (typeof this._newValue !== "string") {
+        return "";
+      }
+      return this._newValue;
+    }
+    return this.valueTextProvider(this._newValue);
   }
 
   willUpdate(_changedProperties) {

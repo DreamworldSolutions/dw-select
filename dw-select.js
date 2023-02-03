@@ -400,7 +400,7 @@ export class DwSelect extends LitElement {
       <dw-select-trigger
         label=${this.label}
         placeholder=${this.placeholder}
-        .helper=${this._getHelperText}
+        .helper=${this._computeHelperText()}
         ?helperPersistent=${this.helperPersistent}
         ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
         .newValueStatus=${this._newValueStatus}
@@ -444,6 +444,9 @@ export class DwSelect extends LitElement {
             .renderGroupItem=${this.renderGroupItem}
             .heading=${this.heading}
             .searchPlaceholder="${this.searchPlaceholder}"
+            .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+            .errorInTooltip=${this.errorInTooltip}
+            .helper=${this._computeHelperText()}
             ?showClose=${this.showClose}
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
@@ -576,7 +579,7 @@ export class DwSelect extends LitElement {
     return this.valueTextProvider(this.value);
   }
 
-  get _getHelperText() {
+  _computeHelperText() {
     if (
       this.helperTextProvider &&
       typeof this.helperTextProvider === "function" &&

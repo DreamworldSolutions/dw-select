@@ -32,6 +32,7 @@
     "@dreamworld/material-styles": "^3.1.0",
     "@dreamworld/pwa-helpers": "^1.14.0",
     "@lit-labs/virtualizer": "^0.7.2",
+    "@material/mwc-button": "^0.27.0",
     "@material/mwc-circular-progress": "^0.27.0",
     "@material/mwc-textfield": "^0.27.0",
     "lodash-es": "^4.17.21"
