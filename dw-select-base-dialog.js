@@ -3,25 +3,25 @@ import "@lit-labs/virtualizer";
 
 // View Elements
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
-import "@material/mwc-circular-progress";
-import "@material/mwc-button";
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-list-item";
-import "./dw-select-group-item";
+import "@material/mwc-button";
+import "@material/mwc-circular-progress";
 import "./dw-select-dialog-input";
+import "./dw-select-group-item";
 
 // Styles
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals";
 
 // Lodash Methods
+import debounce from "lodash-es/debounce";
+import filter from "lodash-es/filter";
 import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
-import filter from "lodash-es/filter";
-import debounce from "lodash-es/debounce";
 import { NEW_VALUE_STATUS } from "./utils";
 
 // Utils
-import { KeyCode, Direction, Position } from "./utils.js";
+import { Direction, KeyCode, Position } from "./utils.js";
 
 const MOBILE_LAYOUT_MEDIA_QUERY = "only screen and (max-width: 420px)";
 

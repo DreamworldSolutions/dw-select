@@ -1,14 +1,14 @@
-import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-select";
-import "../dw-select-group-item";
 import "../dw-select-dialog-input";
+import "../dw-select-group-item";
 import "../dw-select-trigger";
 import "./dw-select-extension-demo";
 
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
-import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
 import { queryFilterGenerator } from "../utils";
+import { country_list_with_code, groupList, groups, list } from "./utils";
 
 const message = {
   noMatching: "No matching records found!",
@@ -50,7 +50,6 @@ class SelectDemo extends LitElement {
         .requiredMessage=${"Required"}
         errorInTooltip
         autoValidate
-        .showClearSelection=${true}
         @selected=${this._onSelect}
         .helper=${"Simple Helper Text"}
         helperPersistent
