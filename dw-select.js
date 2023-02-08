@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, LitElement, nothing } from "@dreamworld/pwa-helpers/lit.js";
 import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 
 // View Elements
@@ -271,12 +271,6 @@ export class DwSelect extends LitElement {
       searchPlaceholder: { type: String },
 
       /**
-       * Whether clear selection button is availbale or not
-       * default false
-       */
-      showClearSelection: { type: Boolean },
-
-      /**
        * Input property
        * Function which returns hint text string
        * In the argument selected value
@@ -385,7 +379,6 @@ export class DwSelect extends LitElement {
     this.showClose = false;
     this.searchPlaceholder = "";
     this._selectedValueText = "";
-    this.showClearSelection = false;
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
 
@@ -410,13 +403,11 @@ export class DwSelect extends LitElement {
         ?required=${this.required}
         ?updatedHighlight=${this._updatedHighlight}
         ?autoValidate=${this.autoValidate}
-        .showClearSelection=${this.showClearSelection}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         .errorInTooltip=${this.errorInTooltip}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
-        @clear="${this._onClear}"
         @expand-toggle="${this._onDialogOpenToggle}"
         @invalid=${this._onInvalid}
         @valid=${this._onValid}
@@ -620,13 +611,6 @@ export class DwSelect extends LitElement {
   _onSelect(e) {
     this.value = e.detail.value;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
-  }
-
-  _onClear(e) {
-    e.stopPropagation();
-    this.value = undefined;
-    this._query = "";
-    this.dispatchEvent(new CustomEvent("clear-selection"));
   }
 
   _onInvalid(e) {
