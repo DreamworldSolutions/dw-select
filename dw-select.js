@@ -656,10 +656,12 @@ export class DwSelect extends LitElement {
       this.dispatchEvent(new CustomEvent("clear-selection"));
     }
 
-    if (!this.allowNewValue) {
-      this._query = "";
-      this._selectedValueText = this._getValue;
-    }
+    setTimeout(() => {
+      if (!this.allowNewValue) {
+        this._query = "";
+        this._selectedValueText = this._getValue;
+      }
+    }, 100)
   }
 
   _onNewValueStausChanged(e) {
