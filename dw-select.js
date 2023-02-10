@@ -638,6 +638,10 @@ export class DwSelect extends LitElement {
   _onDialogClose(e) {
     e.stopPropagation();
     this._opened = false;
+    if (!this.allowNewValue) {
+      this._query = "";
+      this._selectedValueText = this._getValue;
+    }
   }
 
   _onKeydown(e) {
@@ -655,13 +659,6 @@ export class DwSelect extends LitElement {
       this.value = undefined;
       this.dispatchEvent(new CustomEvent("clear-selection"));
     }
-
-    setTimeout(() => {
-      if (!this.allowNewValue) {
-        this._query = "";
-        this._selectedValueText = this._getValue;
-      }
-    }, 100)
   }
 
   _onNewValueStausChanged(e) {
