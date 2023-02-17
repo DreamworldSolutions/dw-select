@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
 import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import { DwSelectTrigger } from "./dw-select-trigger.js";
 
@@ -320,7 +320,7 @@ export class DwSelectTemp extends DwSelectTrigger {
   willUpdate(_changedProperties) {
     super.willUpdate(_changedProperties);
 
-    if (_changedProperties.has('searchable') || _changedProperties.has('vkb')) {
+    if (_changedProperties.has("searchable") || _changedProperties.has("vkb")) {
       this.readOnly = !(this.searchable && !this.vkb);
     }
 
@@ -448,6 +448,7 @@ export class DwSelectTemp extends DwSelectTrigger {
     this.selectedItems = e.detail.value;
     this.value = this._getValue;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.selectedItems }));
+    this.focus();
   }
 
   _onTrigger(e) {
@@ -497,6 +498,8 @@ export class DwSelectTemp extends DwSelectTrigger {
   }
 
   _onDialogOpenToggle() {
+    this.focus();
+    console.log("_onDialogOpenToggle");
     this.opened = !this.opened;
   }
 

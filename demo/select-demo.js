@@ -35,7 +35,7 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <div class="fit-dialog-container"></div>
-      <!-- <dw-select
+      <dw-select
         searchable
         .items=${country_list_with_code}
         .value=${country_list_with_code[2]}
@@ -58,10 +58,10 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve, reject) => {
-          resolve({ name: query, code: query });
-        });
-      }}
+          return new Promise((resolve, reject) => {
+            resolve({ name: query, code: query });
+          });
+        }}
       ></dw-select>
 
       <dw-select
@@ -80,13 +80,13 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(query + " +");
-          }, 3000);
-        });
-      }}
-      ></dw-select> -->
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
+      ></dw-select>
 
       <dw-select
         searchable
@@ -105,11 +105,7 @@ class SelectDemo extends LitElement {
       <dw-select-temp
         searchable
         .items=${groupList}
-        .groups=${groups.map(e => {
-          e.collapsed = false;
-          e.collapsible = false;
-          return e
-        })}
+        .groups=${groups}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
         .groupSelector=${(item) => item.label}
@@ -123,13 +119,13 @@ class SelectDemo extends LitElement {
         .newValueProvider=${(query) => {
           return new Promise((resolve) => {
             setTimeout(() => {
-              resolve(query + " +")
-            }, 3000)
-          })
+              resolve(query + " +");
+            }, 3000);
+          });
         }}
       ></dw-select-temp>
 
-      <!-- <dw-select
+      <dw-select
         vkb
         searchable
         .queryFilter=${queryFilterGenerator(["name", "code"])}
@@ -145,12 +141,12 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(query + " +");
-          }, 3000);
-        });
-      }}
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
       ></dw-select>
 
       <dw-select
@@ -161,7 +157,7 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
         @selected=${this._onSelect}
-      ></dw-select> -->
+      ></dw-select>
 
       <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
 
