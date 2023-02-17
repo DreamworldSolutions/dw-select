@@ -396,7 +396,7 @@ export class DwSelect extends LitElement {
         .helper=${this._computeHelperText()}
         ?helperPersistent=${this.helperPersistent}
         ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
-        .newValueStatus=${this._newValueStatus}
+        ._newValueStatus=${this._newValueStatus}
         .value=${this._selectedValueText}
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
@@ -656,12 +656,10 @@ export class DwSelect extends LitElement {
       this.dispatchEvent(new CustomEvent("clear-selection"));
     }
 
-    setTimeout(() => {
-      if (!this.allowNewValue) {
-        this._query = "";
-        this._selectedValueText = this._getValue;
-      }
-    }, 100);
+    if (!this.allowNewValue) {
+      this._query = "";
+      this._selectedValueText = this._getValue;
+    }
   }
 
   _onNewValueStausChanged(e) {

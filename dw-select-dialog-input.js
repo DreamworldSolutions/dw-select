@@ -1,11 +1,11 @@
-import { LitElement, html, css, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, LitElement, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
+
+// View Elements
 import "@dreamworld/dw-icon-button";
+import "@material/mwc-circular-progress";
 
 // Styles
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
-
-// View Elements
-import "@material/mwc-circular-progress";
 
 // Utils
 import { NEW_VALUE_STATUS } from "./utils";

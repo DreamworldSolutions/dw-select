@@ -87,12 +87,6 @@ export class DwSelectTrigger extends TextField {
       opened: { type: Boolean },
 
       /**
-       * When true user isn’t allowed to type anything.
-       * Default "false"
-       */
-      inputAllowed: { type: Boolean },
-
-      /**
        * When true, helper text isn’t visible. Instead `errorMesage` is shown.
        */
       error: { type: Boolean },
@@ -109,7 +103,11 @@ export class DwSelectTrigger extends TextField {
        */
       errorInTooltip: { type: Boolean },
 
-      newValueStatus: { type: String },
+      /**
+       * Enum property
+       * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
+       */
+      _newValueStatus: { type: String },
     };
   }
 
@@ -117,7 +115,6 @@ export class DwSelectTrigger extends TextField {
     super();
     this.opened = false;
     this.updatedHighlight = false;
-    this.inputAllowed = false;
     this.iconTrailing = "expand_less";
     this.errorInTooltip = false;
   }
@@ -128,7 +125,7 @@ export class DwSelectTrigger extends TextField {
 
   /** @soyTemplate */
   renderIcon(icon, isTrailingIcon = false) {
-    if (this.newValueStatus) {
+    if (this._newValueStatus) {
       return this._renderNewValueTrailingIcon;
     }
     if (this.errorInTooltip && this.errorMessage && !this.isUiValid) {
@@ -151,11 +148,11 @@ export class DwSelectTrigger extends TextField {
   }
 
   get _renderNewValueTrailingIcon() {
-    if (this.newValueStatus === NEW_VALUE_STATUS.IN_PROGRESS) {
+    if (this._newValueStatus === NEW_VALUE_STATUS.IN_PROGRESS) {
       return html`<mwc-circular-progress indeterminate density="-2"></mwc-circular-progress>`;
     }
 
-    if (this.newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+    if (this._newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
       return html`<div class="new-tag">new</div>`;
     }
     return nothing;
@@ -172,10 +169,6 @@ export class DwSelectTrigger extends TextField {
 
     if (_changedProperties.has("opened")) {
       this.iconTrailing = this.opened ? "expand_less" : "expand_more";
-    }
-
-    if (_changedProperties.has("inputAllowed")) {
-      this.readOnly = !this.inputAllowed;
     }
 
     if (_changedProperties.has("errorMessage")) {
