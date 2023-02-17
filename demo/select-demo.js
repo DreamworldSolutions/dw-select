@@ -4,6 +4,7 @@ import "../dw-select-dialog-input";
 import "../dw-select-group-item";
 import "../dw-select-trigger";
 import "./dw-select-extension-demo";
+import "../dw-select-temp.js";
 
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
@@ -100,6 +101,29 @@ class SelectDemo extends LitElement {
         .searchPlaceholder="${"Search Input placeholder"}"
         .messages="${message}"
       ></dw-select>
+
+      <dw-select-temp
+        searchable
+        .items=${groupList}
+        .groups=${groups}
+        .valueExpression="${"name"}"
+        .valueTextProvider=${(item) => item.name}
+        .groupSelector=${(item) => item.label}
+        groupExpression="type"
+        label="Contacts"
+        @selected=${this._onSelect}
+        .searchPlaceholder="${"Search Input placeholder"}"
+        .messages="${message}"
+        allowNewValue
+        outlined
+        .newValueProvider=${(query) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
+      ></dw-select-temp>
 
       <dw-select
         vkb

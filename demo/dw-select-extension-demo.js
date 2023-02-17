@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
+import { html } from "@dreamworld/pwa-helpers/lit.js";
 import { DwSelect } from "../dw-select";
 
-import { country_list, country_list_with_code, list, groupList, groups, accounts } from "./utils";
+import { country_list_with_code } from "./utils";
 
 export class DwSelectExtensionDemo extends DwSelect {
   constructor() {
