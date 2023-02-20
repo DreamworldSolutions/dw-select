@@ -546,7 +546,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       <lit-virtualizer
         .items=${this._items}
         .renderItem=${(item, index) =>
-          this.renderItem ? this.renderItem(item) : this._defaultTemplate(item, index)}
+          this.renderItem ? this.renderItem(index, item) : this._defaultTemplate(item, index)}
       ></lit-virtualizer>
     `;
   }
@@ -765,7 +765,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
-    this._scrollToIndex(this._activatedIndex, Position.END);
+    this._scrollToIndex(this._activatedIndex, Position.CENTER);
   }
 
   /**
@@ -862,6 +862,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (_changedProperties.has("_newValueStatus")) {
       this._fire("new-value-status-changed", this._newValueStatus);
+    }
+
+    if (_changedProperties.has('_activatedIndex')) {
+      this.dispatchEvent(new CustomEvent('activated-changed', {detail: this._activatedIndex}))
     }
   }
 }

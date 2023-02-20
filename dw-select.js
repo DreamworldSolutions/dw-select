@@ -345,6 +345,8 @@ export class DwSelect extends LitElement {
        * It would be undefined if no such request is pending.
        */
       _newValueRequest: { type: Object },
+
+      activatedItemIndex: { type: Number },
     };
   }
 
@@ -381,6 +383,7 @@ export class DwSelect extends LitElement {
     this._selectedValueText = "";
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
+    this.activatedItemIndex = 0;
 
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
@@ -448,6 +451,7 @@ export class DwSelect extends LitElement {
             @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             @new-value-status-changed="${this._onNewValueStausChanged}"
+            @activated-changed=${this._onActivatedItemChanged}
             .messages="${this.messages}"
             ._getItemValue=${this._getItemValue}
           ></dw-select-base-dialog>`
@@ -672,6 +676,11 @@ export class DwSelect extends LitElement {
 
   _onNewValueStausChanged(e) {
     this._newValueStatus = e.detail;
+  }
+
+  _onActivatedItemChanged(e) {
+    console.log("_onActivatedItemChanged", e);
+    this.activatedItemIndex = e.detail;
   }
 
   checkValidity() {

@@ -135,7 +135,7 @@ class SelectDemo extends LitElement {
         @selected=${this._onSelect}
       ></dw-select>
 
-      <!-- <dw-select-extension-demo></dw-select-extension-demo> -->
+      <dw-select-extension-demo></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
