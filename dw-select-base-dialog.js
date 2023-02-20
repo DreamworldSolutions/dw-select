@@ -124,10 +124,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         }
 
         dw-list-item:not([disabled])[selected]::before {
+          background-color: var(--dw-select-item-selected-bg-color, transparent);
+          opacity: var(--dw-select-selected-item-bg-opacity, 0);
+        }
+
+        dw-list-item:not([disabled])[selected][activated]::before {
           background-color: var(
             --dw-select-item-selected-bg-color,
             var(--mdc-theme-primary, #6200ee)
           );
+          opacity: 0.12;
         }
 
         mwc-button {

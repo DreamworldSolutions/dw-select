@@ -20,7 +20,6 @@ class SelectDemo extends LitElement {
       css`
         :host {
           box-sizing: border-box;
-          --dw-select-item-selected-bg-color: transparent;
           --dw-dialog-header-padding: 12px 4px 12px 16px;
         }
 
