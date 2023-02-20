@@ -411,7 +411,6 @@ export class DwSelect extends LitElement {
         @expand-toggle="${this._onDialogOpenToggle}"
         @invalid=${this._onInvalid}
         @valid=${this._onValid}
-        @blur=${this._onBlur}
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
@@ -471,7 +470,14 @@ export class DwSelect extends LitElement {
     if (this.originalValue) {
       this.value = this.originalValue;
     }
+
+    this.addEventListener('focusout', this._onFocusOut);
   }
+
+  disconnectedCallback() {
+    this.removeEventListener('focusout', this._onFocusOut);
+  }
+
 
   firstUpdated() {
     if (this.value) {
@@ -650,18 +656,18 @@ export class DwSelect extends LitElement {
     }
   }
 
-  _onBlur(e) {
+  _onFocusOut() {
     if (!this._query && !this._triggerElement.value) {
+      // console.debug("dw-select: _onFocusOut: going to clear selection.");
       this.value = undefined;
       this.dispatchEvent(new CustomEvent("clear-selection"));
     }
 
-    setTimeout(() => {
-      if (!this.allowNewValue) {
-        this._query = "";
-        this._selectedValueText = this._getValue;
-      }
-    }, 100);
+    if (!this.allowNewValue) {
+      // console.debug("dw-select: _onFocusOut: going to clear query.");
+      this._query = "";
+      this._selectedValueText = this._getValue;
+    }
   }
 
   _onNewValueStausChanged(e) {
