@@ -727,6 +727,18 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   onKeydown(e) {
     e.stopPropagation();
+    if (
+      [
+        KeyCode.ARROW_DOWN,
+        KeyCode.ARROW_UP,
+        KeyCode.ARROW_LEFT,
+        KeyCode.ARROW_RIGHT,
+        KeyCode.ENTER,
+      ].indexOf(e.code) > -1
+    ) {
+      e.preventDefault();
+    }
+
     if (this.opened) {
       if (e.keyCode === KeyCode.ARROW_UP) {
         this._moveActivated(Direction.UP);

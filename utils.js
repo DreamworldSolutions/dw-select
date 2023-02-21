@@ -6,6 +6,7 @@ export const KeyCode = {
   ARROW_DOWN: 40,
   ARROW_LEFT: 37,
   ARROW_RIGHT: 39,
+  SPACE: 32,
 };
 
 export const Direction = {

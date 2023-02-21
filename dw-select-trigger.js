@@ -164,6 +164,7 @@ export class DwSelectTrigger extends TextField {
   _onExpandClick(e) {
     e.stopPropagation();
     e.preventDefault();
+    this.focus();
     this.dispatchEvent(new CustomEvent("expand-toggle"));
   }
 
