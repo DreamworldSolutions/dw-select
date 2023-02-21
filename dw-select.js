@@ -475,17 +475,16 @@ export class DwSelect extends LitElement {
       this.value = this.originalValue;
     }
 
-    this.addEventListener('focusout', this._onFocusOut);
+    this.addEventListener("focusout", this._onFocusOut);
   }
 
   disconnectedCallback() {
-    this.removeEventListener('focusout', this._onFocusOut);
+    this.removeEventListener("focusout", this._onFocusOut);
   }
-
 
   firstUpdated() {
     if (this.value) {
-      this._selectedValueText = this._getValue;
+      this._selectedValueText = this._getValue(this.value);
     }
   }
 
@@ -497,7 +496,7 @@ export class DwSelect extends LitElement {
 
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
-      this._selectedValueText = this._getValue;
+      this._selectedValueText = this._getValue(this.value);
     }
   }
 
@@ -567,17 +566,17 @@ export class DwSelect extends LitElement {
   /**
    * Returns String that represents current value
    */
-  get _getValue() {
-    if (!this.value) {
+  _getValue(value) {
+    if (!value) {
       return "";
     }
-    if (!this.valueTextProvider(this.value)) {
-      if (typeof this.value !== "string") {
+    if (!this.valueTextProvider(value)) {
+      if (typeof value !== "string") {
         return "";
       }
-      return this.value;
+      return value;
     }
-    return this.valueTextProvider(this.value);
+    return this.valueTextProvider(value);
   }
 
   _computeHelperText() {
@@ -620,6 +619,7 @@ export class DwSelect extends LitElement {
 
   _onSelect(e) {
     this.value = e.detail.value;
+    this._selectedValueText = this._getValue(this.value);
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
@@ -661,7 +661,7 @@ export class DwSelect extends LitElement {
   }
 
   _onFocusOut() {
-    if (!this._query && !this._triggerElement.value) {
+    if (!this._query && !this._selectedValueText) {
       // console.debug("dw-select: _onFocusOut: going to clear selection.");
       this.value = undefined;
       this.dispatchEvent(new CustomEvent("clear-selection"));
@@ -670,7 +670,7 @@ export class DwSelect extends LitElement {
     if (!this.allowNewValue) {
       // console.debug("dw-select: _onFocusOut: going to clear query.");
       this._query = "";
-      this._selectedValueText = this._getValue;
+      this._selectedValueText = this._getValue(this.value);
     }
   }
 
@@ -679,7 +679,6 @@ export class DwSelect extends LitElement {
   }
 
   _onActivatedItemChanged(e) {
-    console.log("_onActivatedItemChanged", e);
     this.activatedItemIndex = e.detail;
   }
 

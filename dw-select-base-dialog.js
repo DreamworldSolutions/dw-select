@@ -546,7 +546,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       <lit-virtualizer
         .items=${this._items}
         .renderItem=${(item, index) =>
-          this.renderItem ? this.renderItem(index, item) : this._defaultTemplate(item, index)}
+          this.renderItem ? this.renderItem(item, index) : this._defaultTemplate(item, index)}
       ></lit-virtualizer>
     `;
   }
