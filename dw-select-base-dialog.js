@@ -551,20 +551,25 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     return html`
       <lit-virtualizer
         .items=${this._items}
-        .renderItem=${(item, index) =>
-          this.renderItem ? this.renderItem(item, index) : this._defaultTemplate(item, index)}
+        .renderItem=${(item, index) => {
+          const isSelected = this._isItemSelected(item.value);
+          const isActivated = this._isItemActivated(index);
+          return this.renderItem
+            ? this.renderItem(item, isSelected, isActivated, this._query)
+            : this._defaultTemplate(item, isSelected, isActivated, this._query);
+        }}
       ></lit-virtualizer>
     `;
   }
 
-  _defaultTemplate(item, index) {
+  _defaultTemplate(item, selected, activated, query) {
     if (item.type === "ITEM") {
       return html`<dw-list-item
         title1=${this._getItemValue(item.value)}
         .highlight=${this._query}
         @click=${() => this._onItemClick(item)}
-        ?activated=${index === this._activatedIndex}
-        ?selected=${this._isItemSelected(item.value)}
+        ?activated=${activated}
+        ?selected=${selected}
         .leadingIcon=${this._getLeadingIcon(item.value)}
         ?hasLeadingIcon=${this._hasLeadingIcon()}
         .trailingIcon=${this.selectedTrailingIcon}
@@ -577,8 +582,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`<dw-select-group-item
         .name="${item.value.name}"
         .label="${this._getGroupValue(item.value)}"
-        .index="${index}"
-        ?activated=${index === this._activatedIndex}
+        ?activated=${activated}
         ?collapsible=${item.value.collapsible}
         ?collapsed=${item.value.collapsed}
         @click=${(e) => this._onGroupClick(e, item.value)}
@@ -608,7 +612,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   /**
    *
    * @param {Object} item Selected item, one of the `items`
-   * @returns whether item is selected or not.
+   * @returns {Boolean} whether item is selected or not.
    */
   _isItemSelected(item) {
     if (this.value && this.valueExpression) {
@@ -620,6 +624,15 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     return false;
+  }
+
+  /**
+   * returns whether given item's index is activated or not
+   * @param {Number} index
+   * @returns {Boolean}
+   */
+  _isItemActivated(index) {
+    return index === this._activatedIndex;
   }
 
   _onItemClick(item) {
@@ -783,7 +796,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
-    this._scrollToIndex(this._activatedIndex, Position.END);
+    this._scrollToIndex(this._activatedIndex, Position.CENTER);
   }
 
   /**
@@ -798,7 +811,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
     setTimeout(() => {
       this._activatedIndex = selectedIndex;
-      this._scrollToIndex(selectedIndex, Position.END);
+      this._scrollToIndex(selectedIndex, Position.CENTER);
     }, 250);
   }
 
