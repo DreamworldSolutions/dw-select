@@ -390,6 +390,7 @@ export class DwSelect extends LitElement {
   render() {
     return html`
       <dw-select-trigger
+        name=${this.name}
         label=${this.label}
         placeholder=${this.placeholder}
         .helper=${this._computeHelperText()}
