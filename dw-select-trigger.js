@@ -251,3 +251,4 @@ export class DwSelectTrigger extends TextField {
 }
 
 customElements.define("dw-select-trigger", DwSelectTrigger);
+
