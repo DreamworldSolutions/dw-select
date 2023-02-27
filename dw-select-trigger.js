@@ -234,7 +234,7 @@ export class DwSelectTrigger extends TextField {
     super.updated(_changedProperties);
 
     if (_changedProperties.has("value")) {
-      this.error = !this.checkValidity();
+      this.error = this.value ? !this.reportValidity() : !this.checkValidity();
 
       if (!this.error) {
         this.dispatchEvent(new CustomEvent("valid"));
@@ -251,3 +251,4 @@ export class DwSelectTrigger extends TextField {
 }
 
 customElements.define("dw-select-trigger", DwSelectTrigger);
+
