@@ -4,7 +4,7 @@ import { Typography } from '@dreamworld/material-styles/typography';
 import './dw-select-dialog';
 import '@dreamworld/dw-icon';
 import '@dreamworld/dw-icon-button';
-import { DwFormElement } from '@dreamworld/dw-form/dw-form-element'; 
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import { dwSelectStyle, externalStyle } from './dw-select-css.js';
 import '@dreamworld/dw-button';
 import tippy from 'tippy.js';
@@ -16,7 +16,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   static get styles() {
     return [
-      Typography, 
+      Typography,
       dwSelectStyle
     ];
   }
@@ -229,7 +229,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Input property.
        * Remove default trigger element.
        * Passed as a icon name like `navigation.more_vert`.
-       * New trigger element as a icon. 
+       * New trigger element as a icon.
        */
       triggerIcon: {type: String, reflect: true, attribute: 'trigger-icon'},
 
@@ -246,7 +246,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * This work only if `mobileMode` property is false.
        * Dropdown element in which content will be appened. Default is parent element of trigger element.
        */
-      appendTo: { type: Object },
+      appendTo: { type: Object }, 
 
       /**
        * Input property.
@@ -276,7 +276,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * When true, Show overlay, otherwise hide overlay.
        */
       _overlay: { type: Boolean, reflect: true, attribute: 'overlay' },
-      
+
       /**
        * Icon to be shown for back button. (e.g "close", "arrow_back")
        * Proxy to "dw-select-dialog". Default value : `close`.
@@ -298,7 +298,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * default iconsize is 24
        */
-      backIconSize: { type: String }, 
+      backIconSize: { type: String },
 
       /**
        * default iconsize is 18
@@ -333,7 +333,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       _dropdownRendered: { type: Boolean },
 
       /**
-       * Input property. 
+       * Input property.
        * When it's provided, renders this template into footer.
        */
       customFooterTemplate: { type: Object }
@@ -409,12 +409,12 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
     return invalid;
   }
-  
+
   render() {
     if(this.opened){
       this._dropdownRendered = true;
     }
-    
+
     return html`
       <div id="overlay"></div>
       ${this._renderTriggerElement()}
@@ -463,7 +463,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       ></dw-select-dialog>
     `;
   }
-  
+
   _renderTriggerElement() {
     return html `
       <div class="main-container" @mousedown="${this._onClick}">
@@ -492,7 +492,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   updated(changedProps) {
     if (changedProps.has('opened')) {
       if (this.opened && this._positionTarget && !this.mobileMode) {
-        this._openDialog(this._positionTarget);  
+        this._openDialog(this._positionTarget);
       } else {
         this._tippyInstance && this._tippyInstance.destroy();
       }
@@ -568,7 +568,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             const newPlacement = placement.replace('bottom', 'top');
             tippyBox.setAttribute('data-placement', newPlacement);
             instance.setProps({ placement: newPlacement });
-            
+
           } else {
             maxHeight = window.innerHeight - tippyBox.getBoundingClientRect().top;
           }
@@ -605,7 +605,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         }
       },
       animation: this.animation,
-      
+
     });
     this._tippyInstance.show();
   }
@@ -645,8 +645,8 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _getDropDownArrowIcon() {
     return html `
-      <dw-icon 
-        .size="${this.dropdownIconSize}" 
+      <dw-icon
+        .size="${this.dropdownIconSize}"
         name="arrow_drop_down" >
       </dw-icon>
     `
@@ -691,7 +691,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _getTriggerIconWithLabel(){
     return html `
       <dw-button class="trigger-icon-label">
-        <dw-icon .size="${this.triggerIconSize}" name="${this.triggerIcon}"></dw-icon> 
+        <dw-icon .size="${this.triggerIconSize}" name="${this.triggerIcon}"></dw-icon>
         ${this.triggerLabel}
       </dw-button>`
   }
@@ -741,7 +741,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       </div>
       <div class="dropdown-input">
         <div class="value-container">
-          ${!selectedText ? 
+          ${!selectedText ?
                 html`<div class="placeholder field">${this.placeholder}</div>`
                 : html`<div class="value field">${selectedText}</div>`}
         </div>
@@ -767,7 +767,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _valueChanged(e) {
     this.value = e.detail.value;
     this.selected = e.detail.selected;
-    
+
     this.dispatchEvent(new CustomEvent('value-changed', {
       detail: e.detail
     }));
