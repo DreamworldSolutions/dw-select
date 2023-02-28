@@ -554,30 +554,33 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         .renderItem=${(item, index) => {
           const isSelected = this._isItemSelected(item.value);
           const isActivated = this._isItemActivated(index);
-          return this.renderItem
-            ? this.renderItem(item, isSelected, isActivated, this._query)
-            : this._defaultTemplate(item, isSelected, isActivated, this._query);
+          return this._renderItem(item, isSelected, isActivated, this._query);
         }}
       ></lit-virtualizer>
     `;
   }
 
-  _defaultTemplate(item, selected, activated, query) {
+  _renderItem(item, selected, activated, query) {
     if (item.type === "ITEM") {
-      return html`<dw-list-item
-        title1=${this._getItemValue(item.value)}
-        .highlight=${this._query}
-        @click=${() => this._onItemClick(item)}
-        ?activated=${activated}
-        ?selected=${selected}
-        .leadingIcon=${this._getLeadingIcon(item.value)}
-        ?hasLeadingIcon=${this._hasLeadingIcon()}
-        .trailingIcon=${this.selectedTrailingIcon}
-        ?hasTrailingIcon=${this._isTrailingIconAvailable(item.value)}
-        .focusable=${false}
-      ></dw-list-item>`;
+      if (this.renderItem) {
+        return this.renderItem(item, selected, activated, query);
+      }
+      return html`
+        <dw-list-item
+          title1=${this._getItemValue(item.value)}
+          .highlight=${this._query}
+          @click=${() => this._onItemClick(item)}
+          ?activated=${activated}
+          ?selected=${selected}
+          .leadingIcon=${this._getLeadingIcon(item.value)}
+          ?hasLeadingIcon=${this._hasLeadingIcon()}
+          .trailingIcon=${this.selectedTrailingIcon}
+          ?hasTrailingIcon=${this._isTrailingIconAvailable(item.value)}
+          .focusable=${false}
+        ></dw-list-item>
+      `;
     }
-    // Render Group
+
     if (item.type === "GROUP") {
       return html`<dw-select-group-item
         .name="${item.value.name}"
@@ -588,6 +591,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         @click=${(e) => this._onGroupClick(e, item.value)}
       ></dw-select-group-item>`;
     }
+
+    return nothing;
   }
 
   _getLeadingIcon(item) {
