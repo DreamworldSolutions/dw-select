@@ -241,14 +241,6 @@ export class DwSelectTrigger extends TextField {
       }
     }
   }
-
-  onInputBlur() {
-    setTimeout(() => {
-      this.focused = false;
-      this.reportValidity();
-    }, 100);
-  }
 }
 
 customElements.define("dw-select-trigger", DwSelectTrigger);
-

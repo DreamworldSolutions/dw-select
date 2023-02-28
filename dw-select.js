@@ -616,6 +616,7 @@ export class DwSelect extends LitElement {
   _onSelect(e) {
     this.value = e.detail.value;
     this._selectedValueText = this._getValue(this.value);
+    this._triggerElement.focus();
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
 
