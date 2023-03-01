@@ -1,3 +1,4 @@
+import "@dreamworld/dw-list-item";
 import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-select";
 import "../dw-select-dialog-input";
@@ -96,6 +97,29 @@ class SelectDemo extends LitElement {
         groupExpression="type"
         label="Contacts"
         @selected=${this._onSelect}
+        .renderItem=${(item, selected, activated, query, onClick) =>
+          html`<dw-list-item
+            .title1=${item.type + "#" + item.name}
+            .title2=${item?.code || ""}
+            twoLine
+            ?selected=${selected}
+            .trailingIcon=${"done"}
+            .leadingIconFont=${"OUTLINED"}
+            ?hasTrailingIcon=${selected}
+            .highlight=${query}
+            ?activated=${activated}
+            @click=${() => onClick(item)}
+          ></dw-list-item>`}
+        .renderGroupItem=${(item, activated, groupClick) =>
+          html`<dw-select-group-item
+            .name="${item.name}"
+            .label="${item.label}"
+            ?collapsible=${item.collapsible}
+            ?collapsed=${item.collapsed}
+            ?activated=${activated}
+            @click=${() => groupClick(item)}
+          >
+          </dw-select-group-item>`}
         .searchPlaceholder="${"Search Input placeholder"}"
         .messages="${message}"
       ></dw-select>
@@ -134,7 +158,7 @@ class SelectDemo extends LitElement {
         @selected=${this._onSelect}
       ></dw-select>
 
-      <dw-select-extension-demo @selection-done=${this._onSelect}></dw-select-extension-demo>
+      <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 

@@ -13,15 +13,15 @@ export class DwSelectExtensionDemo extends DwSelect {
     this.label = "Extenstion Select";
     this.layout = "small";
     this.searchable = true;
-    this.renderItem = (item, selected, activated, query) =>
-      this._renderProductListItem(item, selected, activated, query);
+    this.renderItem = (item, selected, activated, query, onClick) =>
+      this._renderProductListItem(item, selected, activated, query, onClick);
   }
 
-  _renderProductListItem(item, selected, activated, query) {
+  _renderProductListItem(item, selected, activated, query, onClick) {
     return html`
       <dw-list-item
-        .title1=${item.value.name}
-        title2="${item.value?.code || ""}"
+        .title1=${item.name}
+        title2="${item?.code || ""}"
         twoLine
         ?selected=${selected}
         .trailingIcon=${"done"}
@@ -29,7 +29,7 @@ export class DwSelectExtensionDemo extends DwSelect {
         ?hasTrailingIcon=${selected}
         .highlight=${query}
         ?activated=${activated}
-        @click=${(e) => this._onClick(item.value)}
+        @click=${() => onClick(item)}
       ></dw-list-item>
     `;
   }

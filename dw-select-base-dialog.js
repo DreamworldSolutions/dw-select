@@ -31,6 +31,11 @@ const defaultMessages = {
   loading: "Loading...",
 };
 
+const ItemTypes = {
+  ITEM: "ITEM",
+  GROUP: "GROUP",
+};
+
 /**
  * Renders the list of choices on temporary Composite Dialog.
  * Using `dw-list-item` or custom template provider `renderItem` to render List of Items
@@ -561,15 +566,24 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _renderItem(item, selected, activated, query) {
-    if (item.type === "ITEM") {
-      if (this.renderItem) {
-        return this.renderItem(item, selected, activated, query);
+    if (item.type === ItemTypes.ITEM) {
+      if (this.renderItem && typeof this.renderItem === "function") {
+        return this.renderItem(
+          item.value,
+          selected,
+          activated,
+          query,
+          this._onItemClick.bind(this)
+        );
       }
+
+      if (this.renderItem) console.warn("renderItem is not function");
+
       return html`
         <dw-list-item
           title1=${this._getItemValue(item.value)}
           .highlight=${this._query}
-          @click=${() => this._onItemClick(item)}
+          @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
           ?selected=${selected}
           .leadingIcon=${this._getLeadingIcon(item.value)}
@@ -581,14 +595,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       `;
     }
 
-    if (item.type === "GROUP") {
+    if (item.type === ItemTypes.GROUP) {
+      if (this.renderGroupItem && typeof this.renderGroupItem === "function") {
+        return this.renderGroupItem(item.value, activated, this._onGroupClick.bind(this));
+      }
+
+      if (this.renderGroupItem) console.warn("renderGroupItem is not function");
+
       return html`<dw-select-group-item
         .name="${item.value.name}"
         .label="${this._getGroupValue(item.value)}"
         ?activated=${activated}
         ?collapsible=${item.value.collapsible}
         ?collapsed=${item.value.collapsed}
-        @click=${(e) => this._onGroupClick(e, item.value)}
+        @click=${() => this._onGroupClick(item.value)}
       ></dw-select-group-item>`;
     }
 
@@ -645,7 +665,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.close();
   }
 
-  _onGroupClick(e, item) {
+  _onGroupClick(item) {
     let groups = this._groups;
     const index = groups.findIndex((group) => group.name === item.name);
     if (groups[index].collapsible) {
@@ -687,13 +707,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         if (filteredArray.length !== 0) {
           // First push group item
           if (groupsLength !== 1) {
-            array.push({ type: "GROUP", value: group });
+            array.push({ type: ItemTypes.GROUP, value: group });
           }
 
-          if (!group.collapsed) {
+          if (!group.collapsible || !group.collapsed) {
             // Push every items
             filteredArray.forEach((item) => {
-              array.push({ type: "ITEM", value: item });
+              array.push({ type: ItemTypes.ITEM, value: item });
             });
           }
         }
@@ -703,7 +723,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     // If group does not exist
     if (!Array.isArray(this._groups)) {
       sortedArray.forEach((item) => {
-        array.push({ type: "ITEM", value: item });
+        array.push({ type: ItemTypes.ITEM, value: item });
       });
     }
 
@@ -773,7 +793,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       }
 
       if (e.keyCode === KeyCode.ENTER && this._activatedIndex > -1) {
-        this._onItemClick(this._getItem(this._activatedIndex));
+        const item = this._getItem(this._activatedIndex);
+        if (item.type === ItemTypes.ITEM) {
+          this._onItemClick(item.value);
+        }
+        if (item.type === ItemTypes.GROUP && item.value.collapsible) {
+          this._onGroupClick(item.value);
+        }
       }
     }
   }
@@ -783,24 +809,31 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return;
     }
 
+    let activatedIndex = this._activatedIndex;
+
     let numberOfitems = this._items.length;
 
-    let isFistItem = this._activatedIndex === 0;
-    let isLastItem = this._activatedIndex === numberOfitems - 1;
-    let isNoitemActivated = this._activatedIndex === -1;
+    let isFistItem = activatedIndex === 0;
+    let isLastItem = activatedIndex === numberOfitems - 1;
+    let isNoitemActivated = activatedIndex === -1;
 
     let modifier = 1;
 
     if ((isNoitemActivated || isFistItem) && direction === Direction.UP) {
-      this._activatedIndex = numberOfitems - 1;
+      activatedIndex = numberOfitems - 1;
     } else if ((isNoitemActivated || isLastItem) && direction === Direction.DOWN) {
-      this._activatedIndex = 0;
+      activatedIndex = 0;
     } else {
       modifier = direction === Direction.DOWN ? 1 : -1;
-      this._activatedIndex = this._activatedIndex + modifier;
+      activatedIndex = activatedIndex + modifier;
     }
 
-    this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(this._activatedIndex, "center");
+    const activatedItem = this._getItem(activatedIndex);
+    if (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+      activatedIndex = activatedIndex + modifier;
+    }
+    this._activatedIndex = activatedIndex;
+
     this._scrollToIndex(this._activatedIndex, Position.CENTER);
   }
 
