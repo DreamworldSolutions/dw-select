@@ -189,6 +189,11 @@ export class DwSelect extends LitElement {
       valueExpression: { type: String },
 
       /**
+       * Computed property from valueProvider and valueExpression
+       */
+      _valueProvider: { type: Function },
+
+      /**
        * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
        * current `value`.
        * default: `(item) -> item`.
@@ -380,6 +385,7 @@ export class DwSelect extends LitElement {
     this._selectedValueText = "";
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
+    this._valueProvider = (item) => item;
 
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
@@ -420,7 +426,7 @@ export class DwSelect extends LitElement {
             .triggerElement=${this._triggerElement}
             .value=${this.value}
             .items="${this.items}"
-            .valueProvider=${this.valueProvider}
+            .valueProvider=${this._valueProvider}
             .valueExpression=${this.valueExpression}
             .valueTextProvider=${this.valueTextProvider}
             .groups=${this.groups}
@@ -480,7 +486,8 @@ export class DwSelect extends LitElement {
 
   firstUpdated() {
     if (this.value) {
-      this._selectedValueText = this._getValue(this.value);
+      const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
+      this._selectedValueText = this._getValue(selectedItem);
     }
   }
 
@@ -492,15 +499,12 @@ export class DwSelect extends LitElement {
 
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
-      this._selectedValueText = this._getValue(this.value);
+      const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
+      this._selectedValueText = this._getValue(selectedItem);
     }
-  }
 
-  updated(_change) {
-    if (_change.has("items") && this.value && this.valueExpression) {
-      this.value = this.items.find(
-        (item) => item[this.valueExpression] === this.value[this.valueExpression]
-      );
+    if (_changedProperties.has("valueProvider") || _changedProperties.has("valueExpression")) {
+      this._computeValueProvider();
     }
   }
 
@@ -614,8 +618,8 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    this.value = e.detail;
-    this._selectedValueText = this._getValue(this.value);
+    this.value = this._valueProvider(e.detail);
+    this._selectedValueText = this._getValue(e.detail);
     this._triggerElement.focus();
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
@@ -667,8 +671,25 @@ export class DwSelect extends LitElement {
     if (!this.allowNewValue) {
       // console.debug("dw-select: _onFocusOut: going to clear query.");
       this._query = "";
-      this._selectedValueText = this._getValue(this.value);
+      const selectedItem = this.value
+        ? this.items.find((item) => this._valueProvider(item) === this.value)
+        : undefined;
+      this._selectedValueText = this._getValue(selectedItem);
     }
+  }
+
+  _computeValueProvider() {
+    if (!this.valueProvider && !this.valueExpression) {
+      this._valueProvider = (item) => item;
+      return;
+    }
+
+    if (this.valueExpression) {
+      this._valueProvider = (item) => item[this.valueExpression];
+      return;
+    }
+
+    this._valueProvider = this.valueProvider;
   }
 
   _onNewValueStausChanged(e) {

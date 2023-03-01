@@ -640,15 +640,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @returns {Boolean} whether item is selected or not.
    */
   _isItemSelected(item) {
-    if (this.value && this.valueExpression) {
-      return item[this.valueExpression] === this.value[this.valueExpression];
-    }
-
-    if (this.value) {
-      return isEqual(item, this.value);
-    }
-
-    return false;
+    return this.valueProvider(item) === this.value;
   }
 
   /**

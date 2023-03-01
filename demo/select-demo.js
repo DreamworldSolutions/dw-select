@@ -34,36 +34,19 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <div class="fit-dialog-container"></div>
-      <dw-select
-        searchable
-        .items=${country_list_with_code}
-        .value=${country_list_with_code[2]}
-        .valueTextProvider=${(item) => item.name}
-        .valueExpression="${"name"}"
-        label="Select country"
-        placeholder="placeholder"
-        helper="helper text"
-        selectedTrailingIcon="done"
-        .heading=${"Download"}
-        showClose
-        required
-        .requiredMessage=${"Required"}
-        errorInTooltip
-        autoValidate
-        @selected=${this._onSelect}
-        .helper=${"Simple Helper Text"}
-        helperPersistent
-        .helperTextProvider=${this._helperTextProvider}
-        .messages="${message}"
-        allowNewValue
-        .newValueProvider=${(query) => {
-          return new Promise((resolve, reject) => {
-            resolve({ name: query, code: query });
-          });
-        }}
-      ></dw-select>
+      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect}></dw-select>
 
       <dw-select
+        label="Select"
+        outlined
+        .items=${country_list_with_code}
+        .valueTextProvider=${(item) => item.name}
+        .valueProvider=${(item) => item.name + " " + item.code}
+        .value=${"Algeria DZ"}
+        @selected=${this._onSelect}
+      ></dw-select>
+
+      <!-- <dw-select
         .items=${list}
         .valueTextProvider=${(item) => item}
         label="Download"
@@ -79,15 +62,15 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(query + " +");
-            }, 3000);
-          });
-        }}
-      ></dw-select>
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(query + " +");
+          }, 3000);
+        });
+      }}
+      ></dw-select> -->
 
-      <dw-select
+      <!-- <dw-select
         searchable
         .items=${groupList}
         .groups=${groups}
@@ -98,33 +81,33 @@ class SelectDemo extends LitElement {
         label="Contacts"
         @selected=${this._onSelect}
         .renderItem=${(item, selected, activated, query, onClick) =>
-          html`<dw-list-item
-            .title1=${item.type + "#" + item.name}
-            .title2=${item?.code || ""}
-            twoLine
-            ?selected=${selected}
-            .trailingIcon=${"done"}
-            .leadingIconFont=${"OUTLINED"}
-            ?hasTrailingIcon=${selected}
-            .highlight=${query}
-            ?activated=${activated}
-            @click=${() => onClick(item)}
-          ></dw-list-item>`}
+        html`<dw-list-item
+          .title1=${item.type + "#" + item.name}
+          .title2=${item?.code || ""}
+          twoLine
+          ?selected=${selected}
+          .trailingIcon=${"done"}
+          .leadingIconFont=${"OUTLINED"}
+          ?hasTrailingIcon=${selected}
+          .highlight=${query}
+          ?activated=${activated}
+          @click=${() => onClick(item)}
+        ></dw-list-item>`}
         .renderGroupItem=${(item, activated, groupClick) =>
-          html`<dw-select-group-item
-            .name="${item.name}"
-            .label="${item.label}"
-            ?collapsible=${item.collapsible}
-            ?collapsed=${item.collapsed}
-            ?activated=${activated}
-            @click=${() => groupClick(item)}
-          >
-          </dw-select-group-item>`}
+        html`<dw-select-group-item
+          .name="${item.name}"
+          .label="${item.label}"
+          ?collapsible=${item.collapsible}
+          ?collapsed=${item.collapsed}
+          ?activated=${activated}
+          @click=${() => groupClick(item)}
+        >
+        </dw-select-group-item>`}
         .searchPlaceholder="${"Search Input placeholder"}"
         .messages="${message}"
-      ></dw-select>
+      ></dw-select> -->
 
-      <dw-select
+      <!-- <dw-select
         vkb
         searchable
         .queryFilter=${queryFilterGenerator(["name", "code"])}
@@ -140,15 +123,15 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(query + " +");
-            }, 3000);
-          });
-        }}
-      ></dw-select>
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(query + " +");
+          }, 3000);
+        });
+      }}
+      ></dw-select> -->
 
-      <dw-select
+      <!-- <dw-select
         .label=${"Filter By"}
         .heading="${"Filter By"}"
         showClose
@@ -156,9 +139,9 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
         @selected=${this._onSelect}
-      ></dw-select>
+      ></dw-select> -->
 
-      <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
+      <!-- <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo> -->
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
