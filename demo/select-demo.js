@@ -36,8 +36,9 @@ class SelectDemo extends LitElement {
       <div class="fit-dialog-container"></div>
       <dw-select
         searchable
+        outlined
         .items=${country_list_with_code}
-        .value=${country_list_with_code[2]}
+        .value=${country_list_with_code[100]}
         .valueTextProvider=${(item) => item.name}
         .valueExpression="${"name"}"
         label="Select country"
@@ -89,6 +90,7 @@ class SelectDemo extends LitElement {
 
       <dw-select
         searchable
+        outlined
         .items=${groupList}
         .groups=${groups}
         .valueExpression="${"name"}"
@@ -109,6 +111,7 @@ class SelectDemo extends LitElement {
             .highlight=${query}
             ?activated=${activated}
             @click=${() => onClick(item)}
+            .focusable=${false}
           ></dw-list-item>`}
         .renderGroupItem=${(item, activated, groupClick) =>
           html`<dw-select-group-item
@@ -127,6 +130,7 @@ class SelectDemo extends LitElement {
       <dw-select
         vkb
         searchable
+        outlined
         .queryFilter=${queryFilterGenerator(["name", "code"])}
         .items=${groupList}
         .groups=${groups}

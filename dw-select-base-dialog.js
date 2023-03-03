@@ -215,12 +215,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       _items: { type: Array },
 
       /**
-       * Activated item
-       * One of the Item from _items, by reference.
-       */
-      _activatedItem: { type: Object },
-
-      /**
        * Provides value that actually represent in list items
        */
       valueProvider: { type: Function },
@@ -294,6 +288,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * default: -1
        */
       _activatedIndex: { type: Number },
+
+      /**
+       * Activated item
+       * One of the Item from _items, by reference.
+       */
+      _activatedItem: { type: Object },
 
       /**
        * Custom footer template as property
@@ -770,70 +770,57 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   onKeydown(e) {
-    e.stopPropagation();
-    if (
-      [
-        KeyCode.ARROW_DOWN,
-        KeyCode.ARROW_UP,
-        KeyCode.ARROW_LEFT,
-        KeyCode.ARROW_RIGHT,
-        KeyCode.ENTER,
-      ].indexOf(e.code) > -1
-    ) {
-      e.preventDefault();
+    if (!this.opened) {
+      return;
     }
 
-    if (this.opened) {
-      if (e.keyCode === KeyCode.ARROW_UP) {
+    e.stopPropagation();
+    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } = KeyCode;
+    const { keyCode } = e;
+
+    switch (keyCode) {
+      case ARROW_UP:
         this._moveActivated(Direction.UP);
-      }
-
-      if (e.keyCode === KeyCode.ARROW_DOWN) {
+        return;
+      case ARROW_DOWN:
         this._moveActivated(Direction.DOWN);
-      }
+        return;
+      case ENTER:
+        if (this._activatedIndex > -1) {
+          const item = this._activatedItem;
+          if (item.type === ItemTypes.ITEM) {
+            this._onItemClick(item.value);
+            return;
+          }
+          if (item.type === ItemTypes.GROUP && item.value.collapsible) {
+            this._onGroupClick(item.value);
+            return;
+          }
+        }
+        break;
+    }
 
-      if (e.keyCode === KeyCode.ENTER && this._activatedIndex > -1) {
-        const item = this._getItem(this._activatedIndex);
-        if (item.type === ItemTypes.ITEM) {
-          this._onItemClick(item.value);
-        }
-        if (item.type === ItemTypes.GROUP && item.value.collapsible) {
-          this._onGroupClick(item.value);
-        }
-      }
+    if ([ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
+      e.preventDefault();
     }
   }
 
   _moveActivated(direction) {
-    if (this._items.length === 0) {
+    const numberOfItems = this._items.length;
+    if (numberOfItems === 0) {
       return;
     }
 
     let activatedIndex = this._activatedIndex;
+    let activatedItem = this._activatedItem;
+    let modifier = direction === Direction.UP ? -1 : 1;
 
-    let numberOfitems = this._items.length;
+    do {
+      activatedIndex = (activatedIndex + modifier + numberOfItems) % numberOfItems;
+      activatedItem = this._getItem(activatedIndex);
+    } while (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible);
 
-    let isFistItem = activatedIndex === 0;
-    let isLastItem = activatedIndex === numberOfitems - 1;
-    let isNoitemActivated = activatedIndex === -1;
-
-    let modifier = 1;
-
-    if ((isNoitemActivated || isFistItem) && direction === Direction.UP) {
-      activatedIndex = numberOfitems - 1;
-    } else if ((isNoitemActivated || isLastItem) && direction === Direction.DOWN) {
-      activatedIndex = 0;
-    } else {
-      modifier = direction === Direction.DOWN ? 1 : -1;
-      activatedIndex = activatedIndex + modifier;
-    }
-
-    const activatedItem = this._getItem(activatedIndex);
-    if (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
-      activatedIndex = activatedIndex + modifier;
-    }
     this._activatedIndex = activatedIndex;
-
     this._scrollToIndex(this._activatedIndex, Position.CENTER);
   }
 
@@ -841,15 +828,19 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * Scroll to selected Item and set `_activatedItemIndex`
    */
   _scrollToSelectedItem() {
-    let selectedIndex = -1;
     if (this.value) {
-      selectedIndex = this._items.findIndex((item) => {
+      this._activatedIndex = this._items.findIndex((item) => {
         return isEqual(item.value, this.value);
       });
     }
+
+    let activatedItem = this._getItem(this._activatedIndex);
+    while (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+      this._activatedIndex++;
+      activatedItem = this._getItem(this._activatedIndex);
+    }
     setTimeout(() => {
-      this._activatedIndex = selectedIndex;
-      this._scrollToIndex(selectedIndex, Position.CENTER);
+      this._scrollToIndex(this._activatedIndex, Position.CENTER);
     }, 250);
   }
 
@@ -931,6 +922,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (_changedProperties.has("_newValueStatus")) {
       this._fire("new-value-status-changed", this._newValueStatus);
+    }
+
+    if (_changedProperties.has("_activatedIndex")) {
+      this._activatedItem = this._getItem(this._activatedIndex);
     }
   }
 }
