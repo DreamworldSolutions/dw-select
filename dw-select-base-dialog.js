@@ -824,6 +824,19 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this._scrollToIndex(this._activatedIndex, Position.CENTER);
   }
 
+  _moveActivatedToFirstItem() {
+    if (this._items && this._items.length === 0) {
+      return;
+    }
+    
+    if (this._items[0].type === ItemTypes.GROUP) {
+      this._activatedIndex = 1;
+      return;
+    }
+
+    this._activatedIndex = 0;
+  }
+
   /**
    * Scroll to selected Item and set `_activatedItemIndex`
    */
@@ -904,6 +917,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (_changedProperties.has("_query")) {
       this._onQueryChange(this._query);
       this._getItems();
+      this._moveActivatedToFirstItem()
     }
 
     if (_changedProperties.has("heading") || _changedProperties.has("showClose")) {
@@ -925,6 +939,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (_changedProperties.has("_activatedIndex")) {
+      console.log("_activatedIndex", this._activatedIndex);
       this._activatedItem = this._getItem(this._activatedIndex);
     }
   }
