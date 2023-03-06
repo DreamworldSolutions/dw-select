@@ -826,6 +826,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _moveActivatedToFirstItem() {
     if (this._items && this._items.length === 0) {
+      this._activatedIndex = -1;
       return;
     }
 
