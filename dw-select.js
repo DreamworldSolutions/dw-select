@@ -3,6 +3,7 @@ import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 
 // View Elements
 import "./dw-select-trigger.js";
+import "./dw-select-base-dialog.js";
 
 // Lodash Methods
 import debounce from "lodash-es/debounce";
@@ -416,7 +417,7 @@ export class DwSelect extends LitElement {
       ${this._opened
         ? html`<dw-select-base-dialog
             id="selectDialog"
-            .opened=${true}
+            .opened=${this._opened}
             .triggerElement=${this._triggerElement}
             .value=${this.value}
             .items="${this.items}"
@@ -486,7 +487,6 @@ export class DwSelect extends LitElement {
 
   willUpdate(_changedProperties) {
     if (_changedProperties.has("_opened")) {
-      this._loadFragments();
       this._setPopoverDialogWidth();
     }
 
@@ -501,15 +501,6 @@ export class DwSelect extends LitElement {
       this.value = this.items.find(
         (item) => item[this.valueExpression] === this.value[this.valueExpression]
       );
-    }
-  }
-
-  /**
-   * Import manually
-   */
-  _loadFragments() {
-    if (true) {
-      import("./dw-select-base-dialog.js");
     }
   }
 
@@ -648,11 +639,10 @@ export class DwSelect extends LitElement {
   }
 
   _onKeydown(e) {
-    if (
-      e.keyCode === KeyCode.ENTER ||
-      e.keyCode === KeyCode.ARROW_DOWN ||
-      e.keyCode === KeyCode.ARROW_UP
-    ) {
+    const { ENTER, ARROW_DOWN, ARROW_UP } = KeyCode;
+    const { keyCode } = e;
+    if ([ENTER, ARROW_DOWN, ARROW_UP].includes(keyCode) && !this._opened) {
+      if (!this._opened) e.stopPropagation();
       this._onTrigger(e);
     }
   }
