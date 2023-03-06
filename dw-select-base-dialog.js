@@ -828,13 +828,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (this._items && this._items.length === 0) {
       return;
     }
-    
-    if (this._items[0].type === ItemTypes.GROUP) {
-      this._activatedIndex = 1;
-      return;
-    }
 
-    this._activatedIndex = 0;
+    for (let i = 0; i < this._items.length - 1; i++) {
+      if (this._items[i].type !== ItemTypes.GROUP) {
+        this._activatedIndex = i;
+        break;
+      }
+    }
   }
 
   /**
@@ -848,7 +848,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     let activatedItem = this._getItem(this._activatedIndex);
-    while (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+    while (
+      activatedItem &&
+      activatedItem.type === ItemTypes.GROUP &&
+      !activatedItem.value.collapsible
+    ) {
       this._activatedIndex++;
       activatedItem = this._getItem(this._activatedIndex);
     }
@@ -917,7 +921,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (_changedProperties.has("_query")) {
       this._onQueryChange(this._query);
       this._getItems();
-      this._moveActivatedToFirstItem()
+      this._moveActivatedToFirstItem();
     }
 
     if (_changedProperties.has("heading") || _changedProperties.has("showClose")) {
@@ -939,7 +943,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (_changedProperties.has("_activatedIndex")) {
-      console.log("_activatedIndex", this._activatedIndex);
       this._activatedItem = this._getItem(this._activatedIndex);
     }
   }
