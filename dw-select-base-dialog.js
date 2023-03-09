@@ -825,17 +825,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivatedToFirstItem() {
-    if (this._items && this._items.length === 0) {
-      this._activatedIndex = -1;
-      return;
-    }
-
-    for (let i = 0; i < this._items.length - 1; i++) {
-      if (this._items[i].type !== ItemTypes.GROUP) {
-        this._activatedIndex = i;
-        break;
-      }
-    }
+    this._activatedIndex = this._items?.findIndex(({ type }) => type === ItemTypes.ITEM) ?? -1;
   }
 
   /**
@@ -943,7 +933,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._fire("new-value-status-changed", this._newValueStatus);
     }
 
-    if (_changedProperties.has("_activatedIndex")) {
+    if (_changedProperties.has("_activatedIndex") || _changedProperties.has("_items")) {
       this._activatedItem = this._getItem(this._activatedIndex);
     }
   }
