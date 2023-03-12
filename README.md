@@ -68,13 +68,13 @@ TODO
 | `disabled`                | `boolean`                     | `false`            | Whether or not to show the `disabled` variant.
 | `searchable`              | `boolean`                     | `false`            | Whether or not to show the `searchable` variant.
 | `vkb`                     | `boolean`                     | `false`            | `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual KeyBoard.
-| `groups`                  | [`Group[]`](#group)                     | `null`             | List of groups.
+| `groups`                  | [`Group[]`](#group)           | `null`             | List of groups.
 | `groupSelector`           | `fn()`                        |                    | returns GroupName. Group selector provides a path of groupName in Items
 | `groupExpression`         | `string`                      | `""`               | 
 | `items`                   | `object[]`                    | `undefined`        | List of selectable items.
-| `valueProvider`           | `fn()`                        |                    | Provides Value
-| `valueExpression`         | `string`                      | `_id`              | 
-| `valueTextProvider`       | `fn()`                        |                    | returns String. Provides value that represents in list item
+| `valueProvider`           | [`function`](#valueprovider-and-valueexpression)   | `undefined`        | Provides Value
+| `valueExpression`         | [`string`](#valueprovider-and-valueexpression)     | `undefined`        | 
+| `valueTextProvider`       | `function`                    | `undefined`        | returns String. Provides value that represents in list item
 | `dialogWidth`             | `number`                      | `undefined`        | By default, the pop-over dialog is rendered in the width of the host element; And the fit dialog is rendered in a fixed-width specified by –dw-select-fit-dialog-width css property. <br>__But:__ when this is specified, both dialogs are shown in this width. <br>__Note:__ BottomSheet dialog is always in full width, so this doesn’t affect it.
 | `renderItem`              | `HTMLTemplate`                | `undefined`        | Provides any Block element to represent list items. Should show its hover effect, and ripple on click. Highlight text based on `query`. Integrator listens to the ‘click’ event to know whether the selection is changed or not. <br>__Note:__ It must not be focusable.
 | `renderGroupItem`         | `HTMLTemplate`                | `undefined`        | Provides any Block elements to represent group items. name property should be set to input name. Should show hover & ripple effects only if it’s collapsible. Integrator listens on ‘click’ event to toggle collapsed status.
@@ -112,6 +112,13 @@ TODO
   collapsed: false
 }
 ```
+
+### ValueProvider and ValueExpression
+
+- Provides a value based on the input received from either the `valueProvider` function or the `valueExpression`.
+- If neither of these inputs are provided, the original item will be passed as the default value.
+- If only one of these inputs is provided, the value will be computed based on that input.
+- If both inputs are provided, the value will be computed from the `valueExpression`, and the `valueProvider` function will be ignored.
 
 ### Messages
 

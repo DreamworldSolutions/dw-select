@@ -63,8 +63,19 @@ class SelectDemo extends LitElement {
           });
         }}
       ></dw-select>
+      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect}></dw-select>
 
       <dw-select
+        label="Select"
+        outlined
+        .items=${country_list_with_code}
+        .valueTextProvider=${(item) => item.name}
+        .valueProvider=${(item) => item.name + " " + item.code}
+        .value=${"Algeria DZ"}
+        @selected=${this._onSelect}
+      ></dw-select>
+
+      <!-- <dw-select
         .items=${list}
         .valueTextProvider=${(item) => item}
         label="Download"
@@ -80,15 +91,15 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(query + " +");
-            }, 3000);
-          });
-        }}
-      ></dw-select>
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(query + " +");
+          }, 3000);
+        });
+      }}
+      ></dw-select> -->
 
-      <dw-select
+      <!-- <dw-select
         searchable
         outlined
         .items=${groupList}
@@ -113,21 +124,9 @@ class SelectDemo extends LitElement {
             @click=${() => onClick(item)}
             .focusable=${false}
           ></dw-list-item>`}
-        .renderGroupItem=${(item, activated, groupClick) =>
-          html`<dw-select-group-item
-            .name="${item.name}"
-            .label="${item.label}"
-            ?collapsible=${item.collapsible}
-            ?collapsed=${item.collapsed}
-            ?activated=${activated}
-            @click=${() => groupClick(item)}
-          >
-          </dw-select-group-item>`}
-        .searchPlaceholder="${"Search Input placeholder"}"
-        .messages="${message}"
-      ></dw-select>
+        
 
-      <dw-select
+      <!-- <dw-select
         vkb
         searchable
         outlined
@@ -144,15 +143,15 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(query + " +");
-            }, 3000);
-          });
-        }}
-      ></dw-select>
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(query + " +");
+          }, 3000);
+        });
+      }}
+      ></dw-select> -->
 
-      <dw-select
+      <!-- <dw-select
         .label=${"Filter By"}
         .heading="${"Filter By"}"
         showClose
@@ -160,9 +159,9 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
         @selected=${this._onSelect}
-      ></dw-select>
+      ></dw-select> -->
 
-      <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
+      <!-- <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo> -->
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
