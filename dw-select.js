@@ -478,6 +478,8 @@ export class DwSelect extends LitElement {
       this.value = this.originalValue;
     }
 
+    this._computeValueProvider();
+
     this.addEventListener("focusout", this._onFocusOut);
   }
 
