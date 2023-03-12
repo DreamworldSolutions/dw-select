@@ -499,8 +499,10 @@ export class DwSelect extends LitElement {
 
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
-      const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
-      this._selectedValueText = this._getValue(selectedItem);
+      if (!this._newValueStatus) {
+        const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
+        this._selectedValueText = this._getValue(selectedItem);
+      }
     }
 
     if (_changedProperties.has("valueProvider") || _changedProperties.has("valueExpression")) {
@@ -609,8 +611,9 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    this.value = this._valueProvider(e.detail);
-    this._selectedValueText = this._getValue(e.detail);
+    const text = e.detail;
+    this.value = this._valueProvider(text);
+    this._selectedValueText = this._getValue(this.value);
     this._triggerElement.focus();
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
   }
