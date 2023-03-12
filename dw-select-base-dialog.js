@@ -865,7 +865,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
       this._selectedValueText = this._computeInputText;
       if (this.type !== "fit") {
-        this._fire("selected", { value: this._newValue });
+        this._fire("selected", this._newValue);
       }
     } catch (error) {
       this._newValueRequest = undefined;
@@ -878,7 +878,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onSelectButtonClick() {
-    this._fire("selected", { value: this._newValue });
+    this._fire("selected", this._newValue);
     this.close();
   }
 
