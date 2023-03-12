@@ -500,7 +500,9 @@ export class DwSelect extends LitElement {
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
       if (!this._newValueStatus) {
-        const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
+        const selectedItem = this.items.find((item) => {
+          return this.valueEquator(this._valueProvider(item), this.value);
+        });
         this._selectedValueText = this._getValue(selectedItem);
       }
     }
