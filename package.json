@@ -23,18 +23,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dreamworld/dw-button": "^3.0.3",
     "@dreamworld/dw-dialog": "^5.3.0",
     "@dreamworld/dw-icon": "^4.1.0",
     "@dreamworld/dw-icon-button": "^3.0.0",
+    "@dreamworld/dw-input": "^3.3.0-dense-style-update.1",
     "@dreamworld/dw-list-item": "^4.1.1",
     "@dreamworld/dw-ripple": "^3.1.0",
     "@dreamworld/dw-tooltip": "^3.1.0",
     "@dreamworld/material-styles": "^3.1.0",
     "@dreamworld/pwa-helpers": "^1.14.0",
     "@lit-labs/virtualizer": "^0.7.2",
-    "@material/mwc-button": "^0.27.0",
     "@material/mwc-circular-progress": "^0.27.0",
-    "@material/mwc-textfield": "^0.27.0",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {

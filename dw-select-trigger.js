@@ -1,13 +1,11 @@
 import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { live } from "lit/directives/live.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 // view Elements
+import { DwInput } from "@dreamworld/dw-input/dw-input.js";
 import "@dreamworld/dw-ripple";
 import "@dreamworld/dw-tooltip";
 import "@material/mwc-circular-progress";
-import { TextField } from "@material/mwc-textfield";
 
 // Utils
 import { NEW_VALUE_STATUS } from "./utils";
@@ -21,13 +19,17 @@ import * as TypographyLiterals from "@dreamworld/material-styles/typography-lite
  * [`select-dialog-doc`](docs/select-trigger.md)
  */
 
-export class DwSelectTrigger extends TextField {
+export class DwSelectTrigger extends DwInput {
   static get styles() {
     return [
-      TextField.styles,
+      DwInput.styles,
       css`
         :host {
           display: block;
+        }
+        
+        :host([readOnly]) {
+          --dw-input-outlined-readonly-idle-border-color: transparent;
         }
 
         :host([updatedHighlight]:not([outlined])) {
@@ -129,58 +131,66 @@ export class DwSelectTrigger extends TextField {
     this.errorInTooltip = false;
   }
 
-  renderTrailingIcon() {
-    return this.iconTrailing ? this.renderIcon(this.iconTrailing, true) : nothing;
+  /**
+   * Returns suffix template based on `iconTrailing` and `suffixText` property
+   */
+  get _getSuffixTemplate() {
+    if (this.type === "password" && this._showVisibilityIcon) {
+      const icon = this._type === "text" ? "visibility" : "visibility_off";
+      return html`
+        <dw-icon-button
+          @click=${this._toggleType}
+          class="mdc-text-field__icon"
+          icon="${icon}"
+          .iconSize=${this.iconSize}
+          tabindex=""
+        ></dw-icon-button>
+      `;
+    }
+
+    if (this.iconTrailing) {
+      return this.renderIcon(this.iconTrailing, true);
+    }
+
+    if (this.suffixText) {
+      return html` <span class="suffix-text">${this.suffixText}</span> `;
+    }
   }
 
-  // Override renderInput to disable autocomplete for input
-  /** @soyTemplate */
-  renderInput(shouldRenderHelperText) {
-    const minOrUndef = this.minLength === -1 ? undefined : this.minLength;
-    const maxOrUndef = this.maxLength === -1 ? undefined : this.maxLength;
-    const autocapitalizeOrUndef = this.autocapitalize ? this.autocapitalize : undefined;
-    const showValidationMessage = this.validationMessage && !this.isUiValid;
-    const ariaLabelledbyOrUndef = !!this.label ? "label" : undefined;
-    const ariaControlsOrUndef = shouldRenderHelperText ? "helper-text" : undefined;
-    const ariaDescribedbyOrUndef =
-      this.focused || this.helperPersistent || showValidationMessage ? "helper-text" : undefined;
-    // TODO: live() directive needs casting for lit-analyzer
-    // https://github.com/runem/lit-analyzer/pull/91/files
-    // TODO: lit-analyzer labels min/max as (number|string) instead of string
-    return html` <input
-      aria-labelledby=${ifDefined(ariaLabelledbyOrUndef)}
-      aria-controls="${ifDefined(ariaControlsOrUndef)}"
-      aria-describedby="${ifDefined(ariaDescribedbyOrUndef)}"
-      class="mdc-text-field__input"
-      type="${this.type}"
-      .value="${live(this.value)}"
-      ?disabled="${this.disabled}"
-      placeholder="${this.placeholder}"
-      ?required="${this.required}"
-      ?readonly="${this.readOnly}"
-      minlength="${ifDefined(minOrUndef)}"
-      maxlength="${ifDefined(maxOrUndef)}"
-      pattern="${ifDefined(this.pattern ? this.pattern : undefined)}"
-      min="${ifDefined(this.min === "" ? undefined : this.min)}"
-      max="${ifDefined(this.max === "" ? undefined : this.max)}"
-      step="${ifDefined(this.step === null ? undefined : this.step)}"
-      size="${ifDefined(this.size === null ? undefined : this.size)}"
-      name="${ifDefined(this.name === "" ? undefined : this.name)}"
-      inputmode="${ifDefined(this.inputMode)}"
-      autocapitalize="${ifDefined(autocapitalizeOrUndef)}"
-      autocomplete="off"
-      @input="${this.handleInputChange}"
-      @focus="${this.onInputFocus}"
-      @blur="${this.onInputBlur}"
-    />`;
+  get inputTemplate() {
+    return html`
+      <input
+        .type="${this._type || this.type}"
+        max=${this.maxNumber}
+        min=${this.minNumber}
+        id="tf-outlined"
+        class="mdc-text-field__input"
+        .name="${this.name}"
+        ?disabled="${this.disabled}"
+        ?required="${this.required}"
+        ?readonly="${this.readOnly || !this.inputAllowed}"
+        .pattern="${this.pattern}"
+        .placeholder="${this.placeholder}"
+        minlength=${this.minLength}
+        .maxLength="${this.maxLength}"
+        ?charCounter="${this.charCounter}"
+        autocomplete="off"
+        @keypress="${this._preventInvalidInput}"
+        @paste="${this._preventInvalidInput}"
+        @keydown="${this._onKeyDown}"
+        @input="${this._onInput}"
+        @change="${this._onChange}"
+        @blur="${this._onInputBlur}"
+        @focus="${this._onFocus}"
+      />
+    `;
   }
 
-  /** @soyTemplate */
   renderIcon(icon, isTrailingIcon = false) {
     if (this.newValueStatus) {
       return this._renderNewValueTrailingIcon;
     }
-    if (this.errorInTooltip && this.errorMessage && !this.isUiValid) {
+    if (this.errorInTooltip && this.errorMessage && this.invalid) {
       return html`
         <dw-icon-button id="error" icon="error" tabindex="-1"></dw-icon-button>
         <dw-tooltip for="error">${unsafeHTML(this.errorMessage)}</dw-tooltip>
@@ -190,6 +200,9 @@ export class DwSelectTrigger extends TextField {
   }
 
   get _renderExpandLessMoreButton() {
+    if (this.readOnly) {
+      return nothing;
+    }
     return html`
       <dw-icon-button
         icon="${this.iconTrailing}"
@@ -222,10 +235,6 @@ export class DwSelectTrigger extends TextField {
 
     if (_changedProperties.has("opened")) {
       this.iconTrailing = this.opened ? "expand_less" : "expand_more";
-    }
-
-    if (_changedProperties.has("inputAllowed")) {
-      this.readOnly = !this.inputAllowed;
     }
 
     if (_changedProperties.has("errorMessage")) {
