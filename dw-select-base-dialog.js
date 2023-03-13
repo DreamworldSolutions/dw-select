@@ -5,7 +5,7 @@ import "@lit-labs/virtualizer";
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-list-item";
-import "@material/mwc-button";
+import "@dreamworld/dw-button";
 import "@material/mwc-circular-progress";
 import "./dw-select-dialog-input";
 import "./dw-select-group-item";
@@ -141,7 +141,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           opacity: 0.12;
         }
 
-        mwc-button {
+        dw-button {
           --mdc-shape-small: 18px;
         }
       `,
@@ -521,12 +521,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   get _footerTemplate() {
     if (this._newValueStatus === NEW_VALUE_STATUS.NEW_VALUE && this.type === "fit") {
-      return html`<mwc-button
+      return html`<dw-button
         label="Select"
         raised
         fullwidth
         @click=${this._onSelectButtonClick}
-      ></mwc-button>`;
+      ></dw-button>`;
     }
     return this.dialogFooterElement;
   }

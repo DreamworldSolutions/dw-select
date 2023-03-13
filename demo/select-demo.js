@@ -50,7 +50,6 @@ class SelectDemo extends LitElement {
         required
         .requiredMessage=${"Required"}
         errorInTooltip
-        autoValidate
         @selected=${this._onSelect}
         .helper=${"Simple Helper Text"}
         helperPersistent
