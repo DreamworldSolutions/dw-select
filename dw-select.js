@@ -639,6 +639,12 @@ export class DwSelect extends LitElement {
   _onDialogOpen(e) {
     e.stopPropagation();
 
+    if (this._dialogElement && this._dialogElement.type !== "popover") {
+      this.dispatchEvent(
+        new CustomEvent("dw-select-opened", { bubbles: true, composed: true, detail: e.detail })
+      );
+    }
+
     if (this._dialogElement && this._dialogElement.type === "popover") {
       this._setPopoverHeight();
     }
@@ -646,6 +652,13 @@ export class DwSelect extends LitElement {
 
   _onDialogClose(e) {
     e.stopPropagation();
+
+    if (this._dialogElement && this._dialogElement.type !== "popover") {
+      this.dispatchEvent(
+        new CustomEvent("dw-select-closed", { bubbles: true, composed: true, detail: e.detail })
+      );
+    }
+
     this._opened = false;
   }
 
