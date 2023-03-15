@@ -449,6 +449,7 @@ export class DwSelect extends LitElement {
             .dialogFooterElement=${this._footerTemplate}
             ?allowNewValue="${this.allowNewValue}"
             .newValueProvider="${this.newValueProvider}"
+            .valueEquator=${this.valueEquator}
             @selected=${this._onSelect}
             @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
