@@ -367,6 +367,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Display default only when focused.
        */
       helper: { type: String },
+
+      /**
+       * Set this to configure custom logic to detect whether value is changed or not.
+       * Default: compares both values by strict equality (by reference) `v1 === v2`.
+       * It must return a Boolean.
+       * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
+       */
+      valueEquator: { type: Function },
     };
   }
 
@@ -653,15 +661,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onItemClick(item) {
-    this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    const isSame = this.valueEquator(this.value, this.valueProvider(item));
+    if (!isSame) this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
   }
 
   _onGroupClick(item) {
     let groups = this._groups;
     const index = groups.findIndex((group) => group.name === item.name);
-    if (groups[index].collapsible) {
-      groups[index].collapsed = groups[index].collapsed ? false : true;
+    if (index !== -1 && groups[index].collapsible) {
+      groups[index].collapsed = !groups[index].collapsed;
     }
 
     this._groups = groups;
@@ -826,7 +835,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   _scrollToSelectedItem() {
     if (this.value) {
       this._activatedIndex = this._items.findIndex((item) => {
-        return isEqual(item.value, this.value);
+        return this.valueEquator(this.valueProvider(item.value), this.value);
       });
     }
 
