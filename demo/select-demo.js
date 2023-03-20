@@ -75,7 +75,7 @@ class SelectDemo extends LitElement {
         @selected=${this._onSelect}
       ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         .items=${list}
         .valueTextProvider=${(item) => item}
         label="Download"
@@ -91,15 +91,15 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(query + " +");
-          }, 3000);
-        });
-      }}
-      ></dw-select> -->
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         searchable
         outlined
         .items=${groupList}
@@ -124,9 +124,9 @@ class SelectDemo extends LitElement {
             @click=${() => onClick(item)}
             .focusable=${false}
           ></dw-list-item>`}
-        
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         vkb
         searchable
         outlined
@@ -143,15 +143,15 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(query + " +");
-          }, 3000);
-        });
-      }}
-      ></dw-select> -->
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         .label=${"Filter By"}
         .heading="${"Filter By"}"
         showClose
@@ -159,9 +159,9 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
         @selected=${this._onSelect}
-      ></dw-select> -->
+      ></dw-select>
 
-      <!-- <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo> -->
+      <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
