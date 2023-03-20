@@ -939,7 +939,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (_changedProperties.has("_query")) {
       if (this.allowNewValue && this._query && this._items.length == 0) {
         this._findNewValue();
-        this._newValueStatus = NEW_VALUE_STATUS.IN_PROGRESS;
       } else {
         this._newValueStatus = undefined;
         this._newValueRequest = undefined;
