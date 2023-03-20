@@ -944,6 +944,15 @@
     lodash-es "^4.17.15"
     tippy.js "^6.2.7"
 
+"@dreamworld/dw-form@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-4.1.1.tgz#7fd27cd8aa5bd19ab4b80368b7998b198b6402f5"
+  integrity sha512-sRUAEWzZWbODglBrVIxp7bKURIqcHIWSqbzTlpkokShIzUyRJSogSHUbzV2Z5kIfyUwJFz5uYc0+8ASfxkyjpQ==
+  dependencies:
+    "@dreamworld/material-styles" "^3.0.0"
+    "@dreamworld/pwa-helpers" "^1.13.1"
+    lodash-es "^4.17.15"
+
 "@dreamworld/dw-icon-button@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-3.0.0.tgz#b540a13b848da46a50f37d4a83427181f675d119"
