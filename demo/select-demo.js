@@ -5,6 +5,7 @@ import "../dw-select-dialog-input";
 import "../dw-select-group-item";
 import "../dw-select-trigger";
 import "./dw-select-extension-demo";
+import "@dreamworld/dw-form";
 
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
@@ -35,36 +36,39 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <div class="fit-dialog-container"></div>
-      <dw-select
-        searchable
-        outlined
-        .items=${country_list_with_code}
-        .value=${country_list_with_code[100].name}
-        .valueTextProvider=${(item) => item.name}
-        .valueExpression="${"name"}"
-        label="Select country"
-        placeholder="placeholder"
-        helper="helper text"
-        selectedTrailingIcon="done"
-        .heading=${"Download"}
-        showClose
-        required
-        .requiredMessage=${"Required"}
-        errorInTooltip
-        autoValidate
-        @selected=${this._onSelected}
-        @change=${this._onChange}
-        .helper=${"Simple Helper Text"}
-        helperPersistent
-        .helperTextProvider=${this._helperTextProvider}
-        .messages="${message}"
-        allowNewValue
-        .newValueProvider=${(query) => {
-          return new Promise((resolve, reject) => {
-            resolve({ name: query, code: query });
-          });
-        }}
-      ></dw-select>
+      <dw-form>
+        <dw-select
+          name="country"
+          searchable
+          outlined
+          .items=${country_list_with_code}
+          .value=${country_list_with_code[100].name}
+          .valueTextProvider=${(item) => item.name}
+          .valueExpression="${"name"}"
+          label="Select country"
+          placeholder="placeholder"
+          helper="helper text"
+          selectedTrailingIcon="done"
+          .heading=${"Download"}
+          showClose
+          required
+          .requiredMessage=${"Required"}
+          errorInTooltip
+          autoValidate
+          @selected=${this._onSelected}
+          @change=${this._onChange}
+          .helper=${"Simple Helper Text"}
+          helperPersistent
+          .helperTextProvider=${this._helperTextProvider}
+          .messages="${message}"
+          allowNewValue
+          .newValueProvider=${(query) => {
+            return new Promise((resolve, reject) => {
+              resolve({ name: query, code: query });
+            });
+          }}
+        ></dw-select>
+      </dw-form>
       <dw-select label="Select" outlined .items=${list} @selected=${this._onSelected} required></dw-select>
 
       <dw-select
