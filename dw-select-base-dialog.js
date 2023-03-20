@@ -444,6 +444,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+    this._findNewValue = debounce(this._findNewValue.bind(this), 100);
     window.addEventListener("keydown", this.onKeydown.bind(this));
   }
 
@@ -489,7 +490,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`<dw-select-dialog-input
         .value=${this._selectedValueText}
         .searchPlaceholder="${this.searchPlaceholder}"
-        .newValueStatus="${this._newValueStatus}"
+        .newValueStatus="${this._newValueStatus || ""}"
         @cancel=${this._onClose}
         @input-change=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
@@ -936,9 +937,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (_changedProperties.has("_query")) {
-      this._newValueRequest = undefined;
       if (this.allowNewValue && this._query && this._items.length == 0) {
         this._findNewValue();
+        this._newValueStatus = NEW_VALUE_STATUS.IN_PROGRESS;
       } else {
         this._newValueStatus = undefined;
         this._newValueRequest = undefined;
