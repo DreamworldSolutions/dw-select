@@ -38,9 +38,8 @@ class SelectDemo extends LitElement {
         searchable
         outlined
         .items=${country_list_with_code}
-        .value=${"India"}
-        .valueTextProvider=${(item) => `${item.name} - ${item.code}`}
-        .valueExpression="${"name"}"
+        .value=${country_list_with_code[100]}
+        .valueTextProvider=${(item) => `${item.name}`}
         label="Select country"
         placeholder="placeholder"
         helper="helper text"
@@ -63,11 +62,18 @@ class SelectDemo extends LitElement {
           });
         }}
       ></dw-select>
-      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect}></dw-select>
+      <dw-select label="Select" searchable outlined allowNewValue .items=${list} @selected=${this._onSelect} .newValueProvider=${(query) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }} ></dw-select>
 
       <dw-select
         label="Select"
         outlined
+        searchable
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
         .valueProvider=${(item) => item.name + " " + item.code}
