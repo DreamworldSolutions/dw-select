@@ -489,10 +489,8 @@ export class DwSelect extends LitElement {
   }
 
   firstUpdated() {
-    if (this.value) {
-      const selectedItem = this._getSelectedItem(this.value);
-      this._selectedValueText = this._getValue(selectedItem);
-    }
+    const selectedItem = this._getSelectedItem(this.value);
+    this._selectedValueText = this._getValue(selectedItem);
   }
 
   willUpdate(_changedProperties) {
@@ -623,9 +621,6 @@ export class DwSelect extends LitElement {
   }
 
   _getSelectedItem(value) {
-    if (!value || !this.items.length) {
-      return null;
-    }
     return this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
   }
 
