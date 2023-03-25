@@ -367,6 +367,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Display default only when focused.
        */
       helper: { type: String },
+
+      /**
+       * Set this to configure custom logic to detect whether value is changed or not.
+       * Default: compares both values by strict equality (by reference) `v1 === v2`.
+       * It must return a Boolean.
+       * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
+       */
+      valueEquator: { type: Function },
     };
   }
 
@@ -640,7 +648,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @returns {Boolean} whether item is selected or not.
    */
   _isItemSelected(item) {
-    return this.valueProvider(item) === this.value;
+    return this.valueEquator(this.valueProvider(item), this.value);
   }
 
   /**

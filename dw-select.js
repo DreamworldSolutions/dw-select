@@ -489,7 +489,7 @@ export class DwSelect extends LitElement {
 
   firstUpdated() {
     if (this.value) {
-      const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
+      const selectedItem = this._getSelectedItem(this.value);
       this._selectedValueText = this._getValue(selectedItem);
     }
   }
@@ -615,11 +615,17 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    const text = e.detail;
-    this.value = this._valueProvider(text);
-    this._selectedValueText = this._getValue(this.value);
+    this.value = this._valueProvider(e.detail);
+    this._selectedValueText = this._getValue(this._getSelectedItem(this.value));
     this._triggerElement.focus();
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+  }
+
+  _getSelectedItem(value) {
+    if (!value || !this.items.length) {
+      return null;
+    }
+    return this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
   }
 
   _onInvalid(e) {
@@ -681,10 +687,10 @@ export class DwSelect extends LitElement {
     if (!this.allowNewValue) {
       // console.debug("dw-select: _onFocusOut: going to clear query.");
       this._query = "";
-      const selectedItem = this.value
-        ? this.items.find((item) => this._valueProvider(item) === this.value)
-        : undefined;
-      this._selectedValueText = this._getValue(selectedItem);
+      const selectedItem = this._getSelectedItem(this.value);
+      if (selectedItem && this._getValue(selectedItem) !== this._selectedValueText) {
+        this._selectedValueText = this._getValue(selectedItem);
+      }
     }
   }
 
