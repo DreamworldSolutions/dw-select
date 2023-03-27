@@ -430,6 +430,7 @@ export class DwSelect extends LitElement {
             .valueProvider=${this._valueProvider}
             .valueExpression=${this.valueExpression}
             .valueTextProvider=${this.valueTextProvider}
+            .valueEquator=${this.valueEquator}
             .groups=${this.groups}
             .groupSelector=${this.groupSelector}
             .groupExpression=${this.groupExpression}
@@ -488,10 +489,8 @@ export class DwSelect extends LitElement {
   }
 
   firstUpdated() {
-    if (this.value) {
-      const selectedItem = this.items.find((item) => this._valueProvider(item) === this.value);
-      this._selectedValueText = this._getValue(selectedItem);
-    }
+    const selectedItem = this._getSelectedItem(this.value);
+    this._selectedValueText = this._getValue(selectedItem);
   }
 
   willUpdate(_changedProperties) {
@@ -501,7 +500,7 @@ export class DwSelect extends LitElement {
 
     if (_changedProperties.has("value")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
-      if (!this._newValueStatus) {
+      if (!this._newValueStatus && this.items && this.items.length > 0) {
         const selectedItem = this.items.find((item) => {
           return this.valueEquator(this._valueProvider(item), this.value);
         });
@@ -615,11 +614,14 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    const text = e.detail;
-    this.value = this._valueProvider(text);
-    this._selectedValueText = this._getValue(this.value);
+    this.value = this._valueProvider(e.detail);
+    this._selectedValueText = this._getValue(this._getSelectedItem(this.value));
     this._triggerElement.focus();
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+  }
+
+  _getSelectedItem(value) {
+    return this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
   }
 
   _onInvalid(e) {
@@ -681,10 +683,10 @@ export class DwSelect extends LitElement {
     if (!this.allowNewValue) {
       // console.debug("dw-select: _onFocusOut: going to clear query.");
       this._query = "";
-      const selectedItem = this.value
-        ? this.items.find((item) => this._valueProvider(item) === this.value)
-        : undefined;
-      this._selectedValueText = this._getValue(selectedItem);
+      const selectedItem = this._getSelectedItem(this.value);
+      if (selectedItem && this._getValue(selectedItem) !== this._selectedValueText) {
+        this._selectedValueText = this._getValue(selectedItem);
+      }
     }
   }
 

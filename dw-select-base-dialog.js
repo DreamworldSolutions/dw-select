@@ -16,7 +16,6 @@ import * as TypographyLiterals from "@dreamworld/material-styles/typography-lite
 // Lodash Methods
 import debounce from "lodash-es/debounce";
 import filter from "lodash-es/filter";
-import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
 import { NEW_VALUE_STATUS } from "./utils";
 
@@ -367,6 +366,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Display default only when focused.
        */
       helper: { type: String },
+
+      /**
+       * Set this to configure custom logic to detect whether value is changed or not.
+       * Default: compares both values by strict equality (by reference) `v1 === v2`.
+       * It must return a Boolean.
+       * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
+       */
+      valueEquator: { type: Function },
     };
   }
 
@@ -444,8 +451,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   firstUpdated() {
     if (this.value && this._groups && this._groups.length > 0) {
+      const value = this._getItemUsingValue(this.value);
       this._groups = this._groups.map((group) => {
-        if (group.name === this.value[this.groupExpression]) {
+        if (group.name === value[this.groupExpression]) {
           return { ...group, collapsed: false };
         }
         return group;
@@ -553,11 +561,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (this.type === "popover" && !this._tippyShown) {
       return;
     }
+    const selectedItemIndex = this._items.findIndex((item) =>
+      this.valueEquator(this.valueProvider(item.value), this.value)
+    );
     return html`
       <lit-virtualizer
         .items=${this._items}
         .renderItem=${(item, index) => {
-          const isSelected = this._isItemSelected(item.value);
+          const isSelected = this._isItemSelected(selectedItemIndex, index);
           const isActivated = this._isItemActivated(index);
           return this._renderItem(item, isSelected, isActivated, this._query);
         }}
@@ -589,7 +600,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           .leadingIcon=${this._getLeadingIcon(item.value)}
           ?hasLeadingIcon=${this._hasLeadingIcon()}
           .trailingIcon=${this.selectedTrailingIcon}
-          ?hasTrailingIcon=${this._isTrailingIconAvailable(item.value)}
+          ?hasTrailingIcon=${this._isTrailingIconAvailable(selected)}
           .focusable=${false}
         ></dw-list-item>
       `;
@@ -627,9 +638,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     return Boolean(this.groups && this.groups.some((group) => group.icon));
   }
 
-  _isTrailingIconAvailable(item) {
+  _isTrailingIconAvailable(selected) {
     if (this.selectedTrailingIcon) {
-      return this._isItemSelected(item);
+      return selected;
     }
     return false;
   }
@@ -639,8 +650,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {Object} item Selected item, one of the `items`
    * @returns {Boolean} whether item is selected or not.
    */
-  _isItemSelected(item) {
-    return this.valueProvider(item) === this.value;
+  _isItemSelected(selectedIndex, index) {
+    return selectedIndex === index;
   }
 
   /**
@@ -826,7 +837,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   _scrollToSelectedItem() {
     if (this.value) {
       this._activatedIndex = this._items.findIndex((item) => {
-        return isEqual(item.value, this.value);
+        return this.valueEquator(this.valueProvider(item.value), this.value);
       });
     }
 
@@ -896,6 +907,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return this._newValue;
     }
     return this.valueTextProvider(this._newValue);
+  }
+
+  _getItemUsingValue(value) {
+    return this.items.find((item) => this.valueEquator(this.valueProvider(item), value));
   }
 
   willUpdate(_changedProperties) {

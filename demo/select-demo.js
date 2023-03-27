@@ -10,6 +10,7 @@ import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
 import { queryFilterGenerator } from "../utils";
 import { country_list_with_code, groupList, groups, list } from "./utils";
+import { isEqual } from "lodash-es";
 
 const message = {
   noMatching: "No matching records found!",
@@ -38,7 +39,7 @@ class SelectDemo extends LitElement {
         searchable
         outlined
         .items=${country_list_with_code}
-        .value=${country_list_with_code[100]}
+        .value=${country_list_with_code[100].name}
         .valueTextProvider=${(item) => item.name}
         .valueExpression="${"name"}"
         label="Select country"
@@ -70,14 +71,16 @@ class SelectDemo extends LitElement {
         outlined
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
-        .valueProvider=${(item) => item.name + " " + item.code}
-        .value=${"Algeria DZ"}
+        .valueProvider=${(item) => item.name}
+        .value=${"Afghanistan"}
+        .selectedTrailingIcon=${"done"}
         @selected=${this._onSelect}
       ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         .items=${list}
         .valueTextProvider=${(item) => item}
+        .value=${list[2]}
         label="Download"
         placeholder="Placeholder"
         helper="helper text"
@@ -91,18 +94,19 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(query + " +");
-          }, 3000);
-        });
-      }}
-      ></dw-select> -->
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         searchable
         outlined
         .items=${groupList}
+        .value=${groupList[0].name}
         .groups=${groups}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
@@ -124,14 +128,15 @@ class SelectDemo extends LitElement {
             @click=${() => onClick(item)}
             .focusable=${false}
           ></dw-list-item>`}
-        
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         vkb
         searchable
         outlined
         .queryFilter=${queryFilterGenerator(["name", "code"])}
         .items=${groupList}
+        .value=${groupList[1].name}
         .groups=${groups}
         .valueExpression="${"name"}"
         .valueTextProvider=${(item) => item.name}
@@ -143,25 +148,26 @@ class SelectDemo extends LitElement {
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(query + " +");
-          }, 3000);
-        });
-      }}
-      ></dw-select> -->
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }}
+      ></dw-select>
 
-      <!-- <dw-select
+      <dw-select
         .label=${"Filter By"}
         .heading="${"Filter By"}"
         showClose
         .items=${this._filterBySelectItems}
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
+        .valueEquator=${(v1, v2) => isEqual(v1, v2)}
         @selected=${this._onSelect}
-      ></dw-select> -->
+      ></dw-select>
 
-      <!-- <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo> -->
+      <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
