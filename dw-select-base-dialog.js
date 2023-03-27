@@ -16,7 +16,6 @@ import * as TypographyLiterals from "@dreamworld/material-styles/typography-lite
 // Lodash Methods
 import debounce from "lodash-es/debounce";
 import filter from "lodash-es/filter";
-import isEqual from "lodash-es/isEqual";
 import orderBy from "lodash-es/orderBy";
 import { NEW_VALUE_STATUS } from "./utils";
 
@@ -452,8 +451,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   firstUpdated() {
     if (this.value && this._groups && this._groups.length > 0) {
+      const value = this._getItemUsingValue(this.value);
       this._groups = this._groups.map((group) => {
-        if (group.name === this.value[this.groupExpression]) {
+        if (group.name === value[this.groupExpression]) {
           return { ...group, collapsed: false };
         }
         return group;
@@ -561,7 +561,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (this.type === "popover" && !this._tippyShown) {
       return;
     }
-    const selectedItemIndex = this._items.findIndex((item) => this.valueEquator(this.valueProvider(item.value), this.value));
+    const selectedItemIndex = this._items.findIndex((item) =>
+      this.valueEquator(this.valueProvider(item.value), this.value)
+    );
     return html`
       <lit-virtualizer
         .items=${this._items}
@@ -638,7 +640,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _isTrailingIconAvailable(selected) {
     if (this.selectedTrailingIcon) {
-      return selected
+      return selected;
     }
     return false;
   }
@@ -649,7 +651,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @returns {Boolean} whether item is selected or not.
    */
   _isItemSelected(selectedIndex, index) {
-    return selectedIndex === index
+    return selectedIndex === index;
   }
 
   /**
@@ -835,7 +837,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   _scrollToSelectedItem() {
     if (this.value) {
       this._activatedIndex = this._items.findIndex((item) => {
-        return isEqual(item.value, this.value);
+        return this.valueEquator(this.valueProvider(item.value), this.value);
       });
     }
 
@@ -905,6 +907,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return this._newValue;
     }
     return this.valueTextProvider(this._newValue);
+  }
+
+  _getItemUsingValue(value) {
+    return this.items.find((item) => this.valueEquator(this.valueProvider(item), value));
   }
 
   willUpdate(_changedProperties) {
