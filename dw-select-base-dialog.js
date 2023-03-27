@@ -561,11 +561,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (this.type === "popover" && !this._tippyShown) {
       return;
     }
+    const selectedItemIndex = this._items.findIndex((item) => this.valueEquator(this.valueProvider(item.value), this.value));
     return html`
       <lit-virtualizer
         .items=${this._items}
         .renderItem=${(item, index) => {
-          const isSelected = this._isItemSelected(item.value);
+          const isSelected = this._isItemSelected(selectedItemIndex, index);
           const isActivated = this._isItemActivated(index);
           return this._renderItem(item, isSelected, isActivated, this._query);
         }}
@@ -597,7 +598,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           .leadingIcon=${this._getLeadingIcon(item.value)}
           ?hasLeadingIcon=${this._hasLeadingIcon()}
           .trailingIcon=${this.selectedTrailingIcon}
-          ?hasTrailingIcon=${this._isTrailingIconAvailable(item.value)}
+          ?hasTrailingIcon=${this._isTrailingIconAvailable(selected)}
           .focusable=${false}
         ></dw-list-item>
       `;
@@ -635,9 +636,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     return Boolean(this.groups && this.groups.some((group) => group.icon));
   }
 
-  _isTrailingIconAvailable(item) {
+  _isTrailingIconAvailable(selected) {
     if (this.selectedTrailingIcon) {
-      return this._isItemSelected(item);
+      return selected
     }
     return false;
   }
@@ -647,8 +648,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {Object} item Selected item, one of the `items`
    * @returns {Boolean} whether item is selected or not.
    */
-  _isItemSelected(item) {
-    return this.valueEquator(this.valueProvider(item), this.value);
+  _isItemSelected(selectedIndex, index) {
+    return selectedIndex === index
   }
 
   /**

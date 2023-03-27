@@ -70,8 +70,9 @@ class SelectDemo extends LitElement {
         outlined
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
-        .valueProvider=${(item) => item.name + " " + item.code}
-        .value=${"Algeria DZ"}
+        .valueProvider=${(item) => item.name}
+        .value=${"Afghanistan"}
+        .selectedTrailingIcon=${"done"}
         @selected=${this._onSelect}
       ></dw-select>
 
