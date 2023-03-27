@@ -37,13 +37,20 @@ export class DwSelectTrigger extends TextField {
           );
         }
 
+        :host([dense]) .mdc-text-field--outlined {
+          height: var(--dw-select-trigger-height, 48px);
+        }
+
+        :host([dense]) .mdc-text-field .mdc-floating-label--float-above {
+          top: var(--dw-select-focused-label-top, 60%);
+        }
+
         .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--trailing {
           color: var(--dw-icon-color, rgba(0, 0, 0, 0.54));
         }
 
         .mdc-text-field--outlined {
           align-items: center;
-          height: var(--dw-select-trigger-height, 56px);
         }
 
         dw-icon-button {
@@ -70,10 +77,6 @@ export class DwSelectTrigger extends TextField {
 
         mwc-circular-progress {
           padding: 4px;
-        }
-
-        .mdc-text-field .mdc-floating-label--float-above {
-          top: var(--dw-select-focused-label-top, 60%);
         }
       `,
     ];
@@ -117,6 +120,12 @@ export class DwSelectTrigger extends TextField {
       errorInTooltip: { type: Boolean },
 
       newValueStatus: { type: String },
+
+      dense: {
+        type: Boolean,
+        reflect: true,
+        attribute: "dense"
+      },
     };
   }
 
