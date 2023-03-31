@@ -2,8 +2,8 @@ import { css, html, LitElement, nothing } from "@dreamworld/pwa-helpers/lit.js";
 import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 
 // View Elements
-import "./dw-select-trigger.js";
 import "./dw-select-base-dialog.js";
+import "./dw-select-trigger.js";
 
 // Lodash Methods
 import debounce from "lodash-es/debounce";
@@ -498,7 +498,7 @@ export class DwSelect extends LitElement {
       this._setPopoverDialogWidth();
     }
 
-    if (_changedProperties.has("value")) {
+    if (_changedProperties.has("value") || _changedProperties.has("items")) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
       if (!this._newValueStatus && this.items && this.items.length > 0) {
         const selectedItem = this.items.find((item) => {
