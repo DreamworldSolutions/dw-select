@@ -27,7 +27,7 @@ export class DwSelectTrigger extends DwInput {
         :host {
           display: block;
         }
-        
+
         :host([readOnly]) {
           --dw-input-outlined-readonly-idle-border-color: transparent;
         }
