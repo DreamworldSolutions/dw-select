@@ -27,7 +27,7 @@ export class DwSelectTrigger extends DwInput {
         :host {
           display: block;
         }
-        
+
         :host([readOnly]) {
           --dw-input-outlined-readonly-idle-border-color: transparent;
         }
@@ -45,7 +45,6 @@ export class DwSelectTrigger extends DwInput {
 
         .mdc-text-field--outlined {
           align-items: center;
-          height: var(--dw-select-trigger-height, 56px);
         }
 
         dw-icon-button {
@@ -72,10 +71,6 @@ export class DwSelectTrigger extends DwInput {
 
         mwc-circular-progress {
           padding: 4px;
-        }
-
-        .mdc-text-field .mdc-floating-label--float-above {
-          top: var(--dw-select-focused-label-top, 60%);
         }
       `,
     ];
