@@ -351,6 +351,10 @@ export class DwSelect extends LitElement {
        * It would be undefined if no such request is pending.
        */
       _newValueRequest: { type: Object },
+
+      dense: {
+        type: Boolean,
+      }
     };
   }
 
@@ -412,6 +416,7 @@ export class DwSelect extends LitElement {
         ?autoValidate=${this.autoValidate}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         .errorInTooltip=${this.errorInTooltip}
+        .dense=${this.dense}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
         @keydown=${this._onKeydown}
