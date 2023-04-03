@@ -51,7 +51,6 @@ class SelectDemo extends LitElement {
         required
         .requiredMessage=${"Required"}
         errorInTooltip
-        autoValidate
         @selected=${this._onSelect}
         .helper=${"Simple Helper Text"}
         helperPersistent
@@ -64,17 +63,18 @@ class SelectDemo extends LitElement {
           });
         }}
       ></dw-select>
-      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect}></dw-select>
+      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect} required></dw-select>
 
       <dw-select
         label="Select"
         outlined
+        searchable
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
         .valueProvider=${(item) => item.name}
-        .value=${"Afghanistan"}
         .selectedTrailingIcon=${"done"}
         @selected=${this._onSelect}
+        required
       ></dw-select>
 
       <dw-select

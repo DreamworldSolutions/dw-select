@@ -150,6 +150,8 @@ TODO
 | Name     | Description
 | -------- | -------------
 | `checkValidity() => boolean`   | Returns `true` if the textfield passes validity checks and fires an `valid`. Returns `false` and fires an [`invalid`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/invalid_event) event on the textfield otherwise.
+| `reportValidity() => boolean`  | Runs checkValidity() method, and if it returns false, then it reports to the user that the input is invalid.
+| `validate() => boolean`        | Call this to validate input. Returns false if value is invalid.
 
 ### CSS Custom Properties
 

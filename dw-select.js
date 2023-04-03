@@ -406,7 +406,8 @@ export class DwSelect extends LitElement {
         placeholder=${this.placeholder}
         .helper=${this._computeHelperText()}
         ?helperPersistent=${this.helperPersistent}
-        ?inputAllowed=${this.searchable && !(this.readOnly || this.vkb)}
+        ?inputAllowed=${this.searchable && !this.vkb}
+        ?readOnly=${this.readOnly}
         .newValueStatus=${this._newValueStatus}
         .value=${this._selectedValueText}
         ?outlined=${this.outlined}
@@ -714,12 +715,18 @@ export class DwSelect extends LitElement {
     this._newValueStatus = e.detail;
   }
 
+  validate() {
+    return this._triggerElement && this._triggerElement.validate();
+  }
+  
   checkValidity() {
-    return this._triggerElement && this._triggerElement.checkValidity();
+    console.warn("Currently this feature is not available, instead use validate() method.");
+    // return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    return this._triggerElement && this._triggerElement.reportValidity();
+    console.warn("Currently this feature is not available, instead use validate() method.")
+    // return this._triggerElement && this._triggerElement.reportValidity();
   }
 
   focus() {
