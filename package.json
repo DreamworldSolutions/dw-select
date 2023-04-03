@@ -27,7 +27,7 @@
     "@dreamworld/dw-dialog": "^5.3.0",
     "@dreamworld/dw-icon": "^4.1.0",
     "@dreamworld/dw-icon-button": "^3.0.0",
-    "@dreamworld/dw-input": "^3.3.0-dense-style-update.1",
+    "@dreamworld/dw-input": "^3.2.1",
     "@dreamworld/dw-list-item": "^4.1.1",
     "@dreamworld/dw-ripple": "^3.1.0",
     "@dreamworld/dw-tooltip": "^3.1.0",
