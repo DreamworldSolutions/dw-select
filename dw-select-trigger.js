@@ -51,10 +51,6 @@ export class DwSelectTrigger extends DwInput {
           color: var(--dw-icon-color, rgba(0, 0, 0, 0.54));
         }
 
-        .mdc-text-field--outlined {
-          align-items: center;
-        }
-
         dw-icon-button {
           --dw-icon-color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
         }
@@ -126,7 +122,7 @@ export class DwSelectTrigger extends DwInput {
       dense: {
         type: Boolean,
         reflect: true,
-        attribute: "dense"
+        attribute: "dense",
       },
     };
   }
@@ -214,9 +210,13 @@ export class DwSelectTrigger extends DwInput {
     }
     return html`
       <dw-icon-button
+        class="mdc-text-field__icon"
         icon="${this.iconTrailing}"
-        @click=${this._onExpandClick}
+        .iconSize=${this.iconSize}
+        .buttonSize=${this.iconButtonSize}
+        ?disabled="${this.disabled}"
         tabindex="-1"
+        @click=${this._onExpandClick}
       ></dw-icon-button>
     `;
   }
