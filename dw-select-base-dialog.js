@@ -828,7 +828,17 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivatedToFirstItem() {
-    this._activatedIndex = this._items?.findIndex(({ type }) => type === ItemTypes.ITEM) ?? -1;
+    let activatedIndex = -1;
+    if (this._items && this._items.length === 0) {
+      for (let i = 0; i < this._items.length; i++) {
+        const item = this._items[i];
+        if (item.type === ItemTypes.ITEM) {
+          activatedIndex = i;
+          break;
+        }
+      }
+    }
+    this._activatedIndex = activatedIndex;
   }
 
   /**
