@@ -69,6 +69,7 @@ class SelectDemo extends LitElement {
         label="Select"
         outlined
         searchable
+        .value=${"Antigua and Barbuda"}
         .items=${country_list_with_code}
         .valueTextProvider=${(item) => item.name}
         .valueProvider=${(item) => item.name}
