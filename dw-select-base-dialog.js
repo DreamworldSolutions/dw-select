@@ -1,12 +1,11 @@
+import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
 import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
 import "@lit-labs/virtualizer";
 
 // View Elements
-import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog.js";
+import "@dreamworld/dw-button";
 import "@dreamworld/dw-icon";
 import "@dreamworld/dw-list-item";
-import "@dreamworld/dw-button";
-import "@material/mwc-circular-progress";
 import "./dw-select-dialog-input";
 import "./dw-select-group-item";
 
@@ -54,17 +53,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
         :host([type="popover"]) .dialog__content {
           padding: var(--dw-select-content-padding, 0);
-        }
-
-        .loading {
-          display: flex;
-          align-items: center;
-          padding: 16px;
-          overflow: hidden;
-        }
-
-        .loading mwc-circular-progress {
-          padding-right: 8px;
         }
 
         .no-record {
@@ -142,6 +130,17 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
         dw-button {
           --mdc-shape-small: 18px;
+        }
+
+        .shimmer {
+          display: block;
+          height: 20px;
+          background: var(--dw-select-shimmer-gradient, linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5));
+          border-radius: 6px;
+          width: 45%;
+          margin-top: 8px;
+          margin-bottom: 16px;
+          margin-left: 16px;
         }
       `,
     ];
@@ -412,7 +411,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.showClose = false;
     this._activatedIndex = 0;
     this.messages = defaultMessages;
-    this._items = [];
     this.popoverOffset = [0, 4];
     this._selectedValueText = "";
   }
@@ -540,10 +538,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _renderLoading() {
-    return html`<div class="loading">
-      <mwc-circular-progress indeterminate density="-2"></mwc-circular-progress>
-      <div>${this.messages.loading}</div>
-    </div>`;
+    return html`
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
+    `;
   }
 
   get _renderNoRecord() {
@@ -686,7 +685,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     let array = [];
 
     if (!Array.isArray(this.items)) {
-      this._items = array;
       return;
     }
 
@@ -769,7 +767,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _getItem(index) {
-    return this._items[index];
+    return this._items && this._items[index];
   }
 
   onKeydown(e) {
