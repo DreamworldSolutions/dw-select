@@ -628,7 +628,7 @@ export class DwSelect extends LitElement {
   }
 
   _getSelectedItem(value) {
-    return this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
   }
 
   _onInvalid(e) {

@@ -159,3 +159,4 @@ TODO
 | ------------------------------------------------- | ------------------------- | -----------
 | `--dw-select-updated-highlight-bg-color`          | `rgba(2, 175, 205, 0.04)` | Background Color of the trigger element when value is  Updated
 | `--dw-select-item-selected-bg-color`              | `#6200ee`                 | Background color of the selected item
+| `--dw-select-shimmer-gradient`                    | `linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5)` | Shimmer linear gradient when items is being loaded.
