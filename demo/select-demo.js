@@ -8,9 +8,9 @@ import "./dw-select-extension-demo";
 
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
+import { isEqual } from "lodash-es";
 import { queryFilterGenerator } from "../utils";
 import { country_list_with_code, groupList, groups, list } from "./utils";
-import { isEqual } from "lodash-es";
 
 const message = {
   noMatching: "No matching records found!",
@@ -39,7 +39,6 @@ class SelectDemo extends LitElement {
         searchable
         outlined
         .items=${country_list_with_code}
-        .value=${country_list_with_code[100].name}
         .valueTextProvider=${(item) => item.name}
         .valueExpression="${"name"}"
         label="Select country"
@@ -63,7 +62,13 @@ class SelectDemo extends LitElement {
           });
         }}
       ></dw-select>
-      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect} required></dw-select>
+      <dw-select
+        label="Select"
+        outlined
+        .items=${list}
+        @selected=${this._onSelect}
+        required
+      ></dw-select>
 
       <dw-select
         label="Select"

@@ -354,7 +354,7 @@ export class DwSelect extends LitElement {
 
       dense: {
         type: Boolean,
-      }
+      },
     };
   }
 
@@ -628,7 +628,9 @@ export class DwSelect extends LitElement {
   }
 
   _getSelectedItem(value) {
-    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    return (
+      this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value))
+    );
   }
 
   _onInvalid(e) {
@@ -718,14 +720,14 @@ export class DwSelect extends LitElement {
   validate() {
     return this._triggerElement && this._triggerElement.validate();
   }
-  
+
   checkValidity() {
     console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    console.warn("Currently this feature is not available, instead use validate() method.")
+    console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.reportValidity();
   }
 
