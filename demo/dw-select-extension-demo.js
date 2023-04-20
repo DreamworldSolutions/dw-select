@@ -13,6 +13,8 @@ export class DwSelectExtensionDemo extends DwSelect {
     this.label = "Extenstion Select";
     this.layout = "small";
     this.searchable = true;
+    this.value = "India";
+    this.valueExpression = "name";
     this.renderItem = (item, selected, activated, query, onClick) =>
       this._renderProductListItem(item, selected, activated, query, onClick);
   }

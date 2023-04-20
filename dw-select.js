@@ -4,7 +4,7 @@ import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 // View Elements
 import "./dw-select-base-dialog.js";
 import "./dw-select-trigger.js";
-import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
+import { DwFormElement } from "@dreamworld/dw-form/dw-form-element.js";
 
 // Lodash Methods
 import debounce from "lodash-es/debounce";
@@ -353,9 +353,10 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       _newValueRequest: { type: Object },
 
-      dense: {
-        type: Boolean,
-      }
+      /**
+       * Whther the trigger element is dense or not
+       */
+      dense: { type: Boolean },
     };
   }
 
@@ -573,7 +574,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     var text;
     try {
       text = this.valueTextProvider(value);
-    } catch(e) {
+    } catch (e) {
       return "";
     }
 
@@ -633,15 +634,25 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._selectedValueText = this._getValue(this.value);
     this._triggerElement.focus();
     this._query = undefined;
-    this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+    this.dispatchEvent(
+      new CustomEvent("selected", {
+        detail: { value: this.value, item: this._getSelectedItem(this.value) },
+      })
+    );
 
     if (!this.valueEquator(value, this.value)) {
-      this.dispatchEvent(new CustomEvent("change"));
+      this.dispatchEvent(
+        new CustomEvent("change", {
+          detail: { value: this.value, item: this._getSelectedItem(this.value) },
+        })
+      );
     }
   }
 
   _getSelectedItem(value) {
-    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    return (
+      this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value))
+    );
   }
 
   _onInvalid(e) {
@@ -731,14 +742,14 @@ export class DwSelect extends DwFormElement(LitElement) {
   validate() {
     return this._triggerElement && this._triggerElement.validate();
   }
-  
+
   checkValidity() {
     console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    console.warn("Currently this feature is not available, instead use validate() method.")
+    console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.reportValidity();
   }
 
