@@ -585,9 +585,9 @@ export class DwSelect extends LitElement {
     if (
       this.helperTextProvider &&
       typeof this.helperTextProvider === "function" &&
-      this.helperTextProvider(this.value)
+      this.helperTextProvider(this._getSelectedItem(this.value))
     ) {
-      return this.helperTextProvider(this.value);
+      return this.helperTextProvider(this._getSelectedItem(this.value));
     }
     return this.helper;
   }
