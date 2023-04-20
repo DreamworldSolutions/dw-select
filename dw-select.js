@@ -352,9 +352,10 @@ export class DwSelect extends LitElement {
        */
       _newValueRequest: { type: Object },
 
-      dense: {
-        type: Boolean,
-      }
+      /**
+       * Whther the trigger element is dense or not
+       */
+      dense: { type: Boolean },
     };
   }
 
@@ -624,11 +625,17 @@ export class DwSelect extends LitElement {
     this._selectedValueText = this._getValue(this._getSelectedItem(this.value));
     this._triggerElement.focus();
     this._query = undefined;
-    this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+    this.dispatchEvent(
+      new CustomEvent("selected", {
+        detail: { value: this.value, item: this._getSelectedItem(this.value) },
+      })
+    );
   }
 
   _getSelectedItem(value) {
-    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    return (
+      this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value))
+    );
   }
 
   _onInvalid(e) {
@@ -718,14 +725,14 @@ export class DwSelect extends LitElement {
   validate() {
     return this._triggerElement && this._triggerElement.validate();
   }
-  
+
   checkValidity() {
     console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    console.warn("Currently this feature is not available, instead use validate() method.")
+    console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.reportValidity();
   }
 
