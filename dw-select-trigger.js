@@ -101,11 +101,6 @@ export class DwSelectTrigger extends DwInput {
       inputAllowed: { type: Boolean },
 
       /**
-       * When true, helper text isn’t visible. Instead `errorMesage` is shown.
-       */
-      error: { type: Boolean },
-
-      /**
        * Message to show in the error color at helper text when the textfield is invalid.
        */
       errorMessage: { type: String },
@@ -124,6 +119,11 @@ export class DwSelectTrigger extends DwInput {
         reflect: true,
         attribute: "dense",
       },
+
+      /**
+       * Reports validity on value change rather than only on blur.
+       */
+      autoValidate: { type: Boolean },
     };
   }
 
@@ -257,10 +257,8 @@ export class DwSelectTrigger extends DwInput {
     super.updated(_changedProperties);
 
     if (_changedProperties.has("value")) {
-      this.error = this.value ? !this.reportValidity() : !this.checkValidity();
-
-      if (!this.error) {
-        this.dispatchEvent(new CustomEvent("valid"));
+      if (this.autoValidate) {
+        this.validate();
       }
     }
   }
