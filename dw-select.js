@@ -635,7 +635,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._query = undefined;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
 
-    if (value !== this.value) {
+    if (!this.valueEquator(value, this.value)) {
       this.dispatchEvent(new CustomEvent("change"));
     }
   }

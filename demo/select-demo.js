@@ -42,8 +42,8 @@ class SelectDemo extends LitElement {
           searchable
           outlined
           .items=${country_list_with_code}
-          .value=${country_list_with_code[100].name}
-          .valueTextProvider=${(item) => item.name}
+          .value=${"India"}
+          .valueTextProvider=${(item) => `${item.name} - ${item.code}`}
           .valueExpression="${"name"}"
           label="Select country"
           placeholder="placeholder"
@@ -171,6 +171,7 @@ class SelectDemo extends LitElement {
         .label=${"Filter By"}
         .heading="${"Filter By"}"
         showClose
+        outlined
         .items=${this._filterBySelectItems}
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
@@ -179,7 +180,7 @@ class SelectDemo extends LitElement {
         @change=${this._onChange}
       ></dw-select>
 
-      <dw-select-extension-demo @selected=${this._onSelected}></dw-select-extension-demo>
+      <dw-select-extension-demo outlined @selected=${this._onSelected}></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 

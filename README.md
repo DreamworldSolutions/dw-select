@@ -140,7 +140,7 @@ TODO
 
 | Event Name         | Target             | Detail             | Description |
 | ------------------ | ------------------ | ------------------ | ----------- |
-| `selected`         | `dw-list-item`     |                    | Fired when the user changed selection. It’s dispatched even when user selects the same value as the current. |
+| `selected`         | `dw-list-item`     |                    | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. **DEPRECATED! use `change` instead.** |
 | `change`           | `dw-list-item`     |                    | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. |
 | `invalid`          | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally. |
 | `valid`            | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally. |

@@ -663,15 +663,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onItemClick(item) {
-    this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    const isSame = this.valueEquator(this.value, this.valueProvider(item));
+    if (!isSame) this.dispatchEvent(new CustomEvent("selected", { detail: item }));
     this.close();
   }
 
   _onGroupClick(item) {
     let groups = this._groups;
     const index = groups.findIndex((group) => group.name === item.name);
-    if (groups[index].collapsible) {
-      groups[index].collapsed = groups[index].collapsed ? false : true;
+    if (index !== -1 && groups[index].collapsible) {
+      groups[index].collapsed = !groups[index].collapsed;
     }
 
     this._groups = groups;
