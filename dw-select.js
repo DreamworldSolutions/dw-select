@@ -569,16 +569,16 @@ export class DwSelect extends LitElement {
    * Returns String that represents current value
    */
   _getValue(value) {
-    if (!value) {
-      return "";
+    const text = this.valueTextProvider(value);
+    if (text) {
+      return text;
     }
-    if (!this.valueTextProvider(value)) {
-      if (typeof value !== "string") {
-        return "";
-      }
+
+    if (typeof value === "string") {
       return value;
     }
-    return this.valueTextProvider(value);
+
+    return "";
   }
 
   _computeHelperText() {
@@ -620,11 +620,17 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    this.value = this._valueProvider(e.detail);
-    this._selectedValueText = this._getValue(this._getSelectedItem(this.value));
+    const value = this.value;
+    const selectedItem = e.detail;
+    this.value = this._valueProvider(selectedItem);
+    this._selectedValueText = this._getValue(this.value);
     this._triggerElement.focus();
     this._query = undefined;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+
+    if (value !== this.value) {
+      this.dispatchEvent(new CustomEvent("change"));
+    }
   }
 
   _getSelectedItem(value) {
