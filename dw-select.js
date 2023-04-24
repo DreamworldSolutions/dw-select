@@ -4,6 +4,7 @@ import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 // View Elements
 import "./dw-select-base-dialog.js";
 import "./dw-select-trigger.js";
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
 
 // Lodash Methods
 import debounce from "lodash-es/debounce";
@@ -50,7 +51,7 @@ import { filter, KeyCode } from "./utils.js";
  *  TODO - write documentation
  */
 
-export class DwSelect extends LitElement {
+export class DwSelect extends DwFormElement(LitElement) {
   static get properties() {
     return {
       /**

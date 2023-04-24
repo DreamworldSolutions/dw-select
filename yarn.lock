@@ -952,7 +952,7 @@
     lodash-es "^4.17.15"
     tippy.js "^6.2.7"
 
-"@dreamworld/dw-form@^4.0.0":
+"@dreamworld/dw-form@^4.0.0", "@dreamworld/dw-form@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-4.1.1.tgz#7fd27cd8aa5bd19ab4b80368b7998b198b6402f5"
   integrity sha512-sRUAEWzZWbODglBrVIxp7bKURIqcHIWSqbzTlpkokShIzUyRJSogSHUbzV2Z5kIfyUwJFz5uYc0+8ASfxkyjpQ==
