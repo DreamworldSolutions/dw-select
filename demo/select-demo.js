@@ -65,7 +65,7 @@ class SelectDemo extends LitElement {
           });
         }}
       ></dw-select>
-      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelect} required></dw-select>
+      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelected} required></dw-select>
 
       <dw-select
         label="Select"
@@ -76,7 +76,7 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .valueProvider=${(item) => item.name}
         .selectedTrailingIcon=${"done"}
-        @selected=${this._onSelect}
+        @selected=${this._onSelected}
         @change=${this._onChange}
         required
       ></dw-select>
@@ -173,9 +173,9 @@ class SelectDemo extends LitElement {
         .valueEquator=${(v1, v2) => isEqual(v1, v2)}
         @selected=${this._onSelected}
         @change=${this._onChange}
-      ></dw-select> -->
+      ></dw-select>
 
-      <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
+      <dw-select-extension-demo @selected=${this._onSelected}></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
