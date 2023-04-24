@@ -51,7 +51,9 @@ class SelectDemo extends LitElement {
         required
         .requiredMessage=${"Required"}
         errorInTooltip
-        @selected=${this._onSelect}
+        autoValidate
+        @selected=${this._onSelected}
+        @change=${this._onChange}
         .helper=${"Simple Helper Text"}
         helperPersistent
         .helperTextProvider=${this._helperTextProvider}
@@ -75,6 +77,7 @@ class SelectDemo extends LitElement {
         .valueProvider=${(item) => item.name}
         .selectedTrailingIcon=${"done"}
         @selected=${this._onSelect}
+        @change=${this._onChange}
         required
       ></dw-select>
 
@@ -91,7 +94,8 @@ class SelectDemo extends LitElement {
         searchable
         outlined
         autoValidate
-        @selected=${this._onSelect}
+        @selected=${this._onSelected}
+        @change=${this._onChange}
         .messages="${message}"
         allowNewValue
         .newValueProvider=${(query) => {
@@ -114,7 +118,8 @@ class SelectDemo extends LitElement {
         .groupSelector=${(item) => item.label}
         groupExpression="type"
         label="Contacts"
-        @selected=${this._onSelect}
+        @selected=${this._onSelected}
+        @change=${this._onChange}
         .renderItem=${(item, selected, activated, query, onClick) =>
           html`<dw-list-item
             .title1=${item.type + "#" + item.name}
@@ -144,7 +149,8 @@ class SelectDemo extends LitElement {
         .groupSelector=${(item) => item.label}
         groupExpression="type"
         label="Contacts"
-        @selected=${this._onSelect}
+        @selected=${this._onSelected}
+        @change=${this._onChange}
         .searchPlaceholder="${"Search Input placeholder"}"
         .messages="${message}"
         allowNewValue
@@ -165,8 +171,9 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .value=${this._filterByValue}
         .valueEquator=${(v1, v2) => isEqual(v1, v2)}
-        @selected=${this._onSelect}
-      ></dw-select>
+        @selected=${this._onSelected}
+        @change=${this._onChange}
+      ></dw-select> -->
 
       <dw-select-extension-demo @selected=${this._onSelect}></dw-select-extension-demo>
 
@@ -192,8 +199,12 @@ class SelectDemo extends LitElement {
     }
   }
 
-  _onSelect(e) {
-    console.log(e);
+  _onSelected(e) {
+    console.log('_onSelected', e);
+  }
+
+  _onChange(e) {
+    console.log('_onChange', e);
   }
 
   get _filterBySelectItems() {

@@ -620,12 +620,17 @@ export class DwSelect extends LitElement {
   }
 
   _onSelect(e) {
-    this.value = this._valueProvider(e.detail);
-    this._selectedValueText = this._getValue(this._getSelectedItem(this.value));
+    const value = this.value;
+    const selectedItem = e.detail;
+    this.value = this._valueProvider(selectedItem);
+    this._selectedValueText = this._getValue(this.value);
     this._triggerElement.focus();
     this._query = undefined;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
-    this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+    
+    if (value !== this.value) {
+      this.dispatchEvent(new CustomEvent("change", { detail: this.value }));
+    }
   }
 
   _getSelectedItem(value) {

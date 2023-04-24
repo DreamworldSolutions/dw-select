@@ -138,12 +138,13 @@ TODO
 
 ### Events
 
-| Event Name         | Target             | Detail             | Description
-| ------------------ | ------------------ | ------------------ | -----------
-| `selected`         | `dw-list-item`     |                    | Fired when the user changed selection. It’s dispatched even when the user selects the same value as the current.
-| `invalid`          | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally.
-| `valid`            | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally.
-| `clear-selection`  | `dw-select`        |                    | It is fired when the user explicitly clears the selection by removing all input text.
+| Event Name         | Target             | Detail             | Description |
+| ------------------ | ------------------ | ------------------ | ----------- |
+| `selected`         | `dw-list-item`     |                    | Fired when the user changed selection. It’s dispatched even when the user selects the same value as the current. |
+| `change`           | `dw-list-item`     |                    | Fired when the user changed selection. It’s NOT dispatched when the user selects the same value as the current. |
+| `invalid`          | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally. |
+| `valid`            | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally. |
+| `clear-selection`  | `dw-select`        |                    | It is fired when the user explicitly clears the selection by removing all input text. |
 
 ### Methods
 
