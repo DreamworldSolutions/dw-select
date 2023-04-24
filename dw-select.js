@@ -569,16 +569,16 @@ export class DwSelect extends LitElement {
    * Returns String that represents current value
    */
   _getValue(value) {
-    if (!value) {
-      return "";
+    const text = this.valueTextProvider(value);
+    if (text) {
+      return text;
     }
-    if (!this.valueTextProvider(value)) {
-      if (typeof value !== "string") {
-        return "";
-      }
+
+    if (typeof value === "string") {
       return value;
     }
-    return this.valueTextProvider(value);
+
+    return "";
   }
 
   _computeHelperText() {
