@@ -570,7 +570,13 @@ export class DwSelect extends DwFormElement(LitElement) {
    * Returns String that represents current value
    */
   _getValue(value) {
-    const text = this.valueTextProvider(value);
+    var text;
+    try {
+      text = this.valueTextProvider(value);
+    } catch(e) {
+      return "";
+    }
+
     if (text) {
       return text;
     }
