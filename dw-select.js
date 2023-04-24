@@ -437,7 +437,6 @@ export class DwSelect extends DwFormElement(LitElement) {
             .valueProvider=${this._valueProvider}
             .valueExpression=${this.valueExpression}
             .valueTextProvider=${this.valueTextProvider}
-            .valueEquator=${this.valueEquator}
             .groups=${this.groups}
             .groupSelector=${this.groupSelector}
             .groupExpression=${this.groupExpression}
