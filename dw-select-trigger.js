@@ -39,6 +39,10 @@ export class DwSelectTrigger extends DwInput {
           );
         }
 
+        :host(:not([inputallowed])) input {
+          cursor: pointer;
+        }
+
         :host([dense]) .mdc-text-field--outlined {
           height: var(--dw-select-trigger-height, 48px);
         }
@@ -98,7 +102,7 @@ export class DwSelectTrigger extends DwInput {
        * When true user isn’t allowed to type anything.
        * Default "false"
        */
-      inputAllowed: { type: Boolean },
+      inputAllowed: { type: Boolean, reflect: true },
 
       /**
        * When true, helper text isn’t visible. Instead `errorMesage` is shown.
