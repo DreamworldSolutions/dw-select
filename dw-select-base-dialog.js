@@ -664,8 +664,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onItemClick(item) {
-    const isSame = this.valueEquator(this.value, this.valueProvider(item));
-    if (!isSame) this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    const changed = !this.valueEquator(this.value, this.valueProvider(item));
+    if (changed) {
+      this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    }
     this.close();
   }
 
