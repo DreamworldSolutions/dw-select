@@ -490,7 +490,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`<dw-select-dialog-input
         .value=${this._selectedValueText}
         .searchPlaceholder="${this.searchPlaceholder}"
-        .newValueStatus="${this._newValueStatus || ""}"
+        .newValueStatus="${this._newValueStatus}"
         @cancel=${this._onClose}
         @input-change=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
@@ -589,10 +589,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       }
 
       if (this.renderItem) console.warn("renderItem is not function");
-
       return html`
         <dw-list-item
-          title1=${this._getItemValue(item.value)}
+          title1=${this.valueTextProvider(item.value)}
           .highlight=${this._query}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}

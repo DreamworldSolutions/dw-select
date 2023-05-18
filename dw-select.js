@@ -389,13 +389,13 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.showClose = false;
     this.searchPlaceholder = "";
     this._selectedValueText = "";
-    this.valueTextProvider = () => {};
+    this.valueTextProvider = (item) => item;
     this.groupSelector = () => {};
     this._valueProvider = (item) => item;
 
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
-    this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
+    this.queryFilter = (item, query) => filter(this.valueTextProvider(item), query);
     this.newValueProvider = (query) => query;
   }
 
@@ -465,7 +465,6 @@ export class DwSelect extends DwFormElement(LitElement) {
             @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
             @new-value-status-changed="${this._onNewValueStausChanged}"
             .messages="${this.messages}"
-            ._getItemValue=${this._getItemValue}
           ></dw-select-base-dialog>`
         : nothing}
     `;
@@ -598,18 +597,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       return this.helperTextProvider(this._getSelectedItem(this.value));
     }
     return this.helper;
-  }
-
-  /**
-   * Compute label of the item
-   * @param {Object | String} item
-   * @returns {String} returns string that actually represents in list item
-   */
-  _getItemValue(item) {
-    if (!this.valueTextProvider(item)) {
-      return item;
-    }
-    return this.valueTextProvider(item);
   }
 
   _onTrigger(e) {
