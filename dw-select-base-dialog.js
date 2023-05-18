@@ -679,9 +679,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _getItems() {
-    let sortedArray = filter(this.items, (item) => {
-      return this.queryFilter(item, this._query);
-    });
+    let sortedArray = []
+    if (this.searchable) {
+      sortedArray = filter(this.items, (item) => {
+        return this.queryFilter(item, this._query);
+      });
+    } else {
+      sortedArray = this.items;
+    }
 
     let array = [];
 
