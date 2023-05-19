@@ -52,8 +52,8 @@ TODO
 | Name                      | Type                          | Default            | Description
 | ------------------------- | ----------------------------- | ------------------ | -----------
 | `name`                    | `string`                      | `""`               | Sets the `name` attribute on the internal input. The name property should only be used for browser autofill as webcomponent form participation does not currently consider the `name` attribute.
-| `value`                   | `object\|object[]`            | `null`             | Selected list item object. `object` in case of single selection; `object[]` in case of multiple selections.
-| `item`                   | `object\|object[]`            |             | A read-only property. Returns an Item corresponding to the current `value`.
+| `value`                   | `object`            | `null`             | Represents current value. Integrator may change this proprty, to change current selected Item. And when User changes selection through mouser/keyboard interaction, it's changed corresponding to the selected item by the User.
+| `item`                   | `object`            |             | A read-only property. Returns an Item corresponding to the current `value`.
 | `originalValue`           | `object`                      | `null`             | Input property. __Note:__ When `originalValue` is specified (not `undefined`) & its value is different than this; then highlight is shown. (Comparison is done by reference)
 | `outlined`                | `boolean`                     | `false`            | Whether or not to show the `outlined` variant.
 | `label`                   | `string`                      | `""`               | Sets floating label value. __Note:__ The label will not float if the selected item has a false value property.
