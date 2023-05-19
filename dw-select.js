@@ -360,6 +360,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     };
   }
 
+  get item() {
+    this._getSelectedItem(this.value);
+  }
+
   /**
    * Trigger Element Getter
    */
@@ -634,25 +638,15 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._selectedValueText = this._getValue(this.value);
     this._triggerElement.focus();
     this._query = undefined;
-    this.dispatchEvent(
-      new CustomEvent("selected", {
-        detail: { value: this.value, item: this._getSelectedItem(this.value) },
-      })
-    );
+    this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
 
     if (!this.valueEquator(value, this.value)) {
-      this.dispatchEvent(
-        new CustomEvent("change", {
-          detail: { value: this.value, item: this._getSelectedItem(this.value) },
-        })
-      );
+      this.dispatchEvent(new CustomEvent("change"));
     }
   }
 
   _getSelectedItem(value) {
-    return (
-      this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value))
-    );
+    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
   }
 
   _onInvalid(e) {
