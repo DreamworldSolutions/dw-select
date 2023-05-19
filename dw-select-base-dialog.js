@@ -444,6 +444,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
+    this._findNewValue = debounce(this._findNewValue.bind(this), 100);
     window.addEventListener("keydown", this.onKeydown.bind(this));
   }
 
@@ -588,10 +589,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       }
 
       if (this.renderItem) console.warn("renderItem is not function");
-
       return html`
         <dw-list-item
-          title1=${this._getItemValue(item.value)}
+          title1=${this.valueTextProvider(item.value)}
           .highlight=${this._query}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
@@ -663,8 +663,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onItemClick(item) {
-    const isSame = this.valueEquator(this.value, this.valueProvider(item));
-    if (!isSame) this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    const changed = !this.valueEquator(this.value, this.valueProvider(item));
+    if (changed) {
+      this.dispatchEvent(new CustomEvent("selected", { detail: item }));
+    }
     this.close();
   }
 
@@ -936,7 +938,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (_changedProperties.has("_query")) {
-      this._newValueRequest = undefined;
       if (this.allowNewValue && this._query && this._items.length == 0) {
         this._findNewValue();
       } else {

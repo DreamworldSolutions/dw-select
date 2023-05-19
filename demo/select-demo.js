@@ -36,40 +36,41 @@ class SelectDemo extends LitElement {
   render() {
     return html`
       <div class="fit-dialog-container"></div>
-      <dw-form>
-        <dw-select
-          name="country"
-          searchable
-          outlined
-          .items=${country_list_with_code}
-          .value=${"India"}
-          .valueTextProvider=${(item) => `${item.name} - ${item.code}`}
-          .valueExpression="${"name"}"
-          label="Select country"
-          placeholder="placeholder"
-          helper="helper text"
-          selectedTrailingIcon="done"
-          .heading=${"Download"}
-          showClose
-          required
-          .requiredMessage=${"Required"}
-          errorInTooltip
-          autoValidate
-          @selected=${this._onSelected}
-          @change=${this._onChange}
-          .helper=${"Simple Helper Text"}
-          helperPersistent
-          .helperTextProvider=${this._helperTextProvider}
-          .messages="${message}"
-          allowNewValue
-          .newValueProvider=${(query) => {
-            return new Promise((resolve, reject) => {
-              resolve({ name: query, code: query });
-            });
-          }}
-        ></dw-select>
-      </dw-form>
-      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelected} required></dw-select>
+      <dw-select
+        searchable
+        outlined
+        .items=${country_list_with_code}
+        .value=${country_list_with_code[100]}
+        .valueTextProvider=${(item) => `${item.name}`}
+        label="Select country"
+        placeholder="placeholder"
+        helper="helper text"
+        selectedTrailingIcon="done"
+        .heading=${"Download"}
+        showClose
+        required
+        .requiredMessage=${"Required"}
+        errorInTooltip
+        autoValidate
+        @selected=${this._onSelect}
+        .helper=${"Simple Helper Text"}
+        helperPersistent
+        .helperTextProvider=${this._helperTextProvider}
+        .messages="${message}"
+        allowNewValue
+        .newValueProvider=${(query) => {
+          return new Promise((resolve, reject) => {
+            resolve({ name: query, code: query });
+          });
+        }}
+      ></dw-select>
+      <dw-select label="Select" searchable outlined allowNewValue .items=${list} @selected=${this._onSelect} .newValueProvider=${(query) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(query + " +");
+            }, 3000);
+          });
+        }} ></dw-select>
 
       <dw-select
         label="Select"
