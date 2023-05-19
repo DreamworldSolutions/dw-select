@@ -941,10 +941,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-button" "0.27.0"
 
-"@dreamworld/dw-dialog@^5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.3.0.tgz#250ea4616de3a65b149981dc27995af799d5deaa"
-  integrity sha512-7mJ+GQFbQRIAcPYqLvQKeTDevfxaiklJ1iDQLXSw9Jp07lGwBJO/hXukut8FrWa/8DZuWxCxGuQtc6XXTeFjGA==
+"@dreamworld/dw-dialog@^5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.6.1.tgz#15c6e4855357c0fb7aa9c2655d0456c0afefd1a4"
+  integrity sha512-vYFb+P+7kNt/2OD6Ee0oI4xV9KbIWco183F+oYfqlDnu28w7saeG4yDwylCFjQYoA5moUgIfKzGfDfL8VrIvrw==
   dependencies:
     "@dreamworld/material-styles" "^3.1.0"
     "@dreamworld/pwa-helpers" "^1.14.0"

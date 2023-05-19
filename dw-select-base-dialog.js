@@ -557,7 +557,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _renderList() {
-    if (this.type === "popover" && !this._tippyShown) {
+    if (this.type === "popover" && !this._openAnimationCompleted) {
       return;
     }
     const selectedItemIndex = this._items.findIndex((item) =>
