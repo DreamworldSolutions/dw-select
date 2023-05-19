@@ -52,7 +52,8 @@ TODO
 | Name                      | Type                          | Default            | Description
 | ------------------------- | ----------------------------- | ------------------ | -----------
 | `name`                    | `string`                      | `""`               | Sets the `name` attribute on the internal input. The name property should only be used for browser autofill as webcomponent form participation does not currently consider the `name` attribute.
-| `value`                   | `object\|object[]`            | `null`             | Selected list item object. `object` in case of single selection; `object[]` in case of multiple selections.
+| `value`                   | `object`            | `null`             | Represents current value. Integrator may change this proprty, to change current selected Item. And when User changes selection through mouser/keyboard interaction, it's changed corresponding to the selected item by the User.
+| `item`                   | `object`            |             | A read-only property. Returns an Item corresponding to the current `value`.
 | `originalValue`           | `object`                      | `null`             | Input property. __Note:__ When `originalValue` is specified (not `undefined`) & its value is different than this; then highlight is shown. (Comparison is done by reference)
 | `outlined`                | `boolean`                     | `false`            | Whether or not to show the `outlined` variant.
 | `label`                   | `string`                      | `""`               | Sets floating label value. __Note:__ The label will not float if the selected item has a false value property.
@@ -140,8 +141,8 @@ TODO
 
 | Event Name         | Target             | Detail             | Description |
 | ------------------ | ------------------ | ------------------ | ----------- |
-| `selected`         | `dw-list-item`     |                    | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. **DEPRECATED! use `change` instead.** |
-| `change`           | `dw-list-item`     |                    | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. |
+| `selected`         | `dw-list-item`     | none    | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. **DEPRECATED! use `change` instead.** |
+| `change`           | `dw-list-item`     | none    | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. |
 | `invalid`          | `dw-select`        | validity           | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally. |
 | `valid`            | `dw-select`        | validity           | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally. |
 | `clear-selection`  | `dw-select`        |                    | It is fired when the user explicitly clears the selection by removing all input text. |

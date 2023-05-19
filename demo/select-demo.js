@@ -55,7 +55,6 @@ class SelectDemo extends LitElement {
           .requiredMessage=${"Required"}
           errorInTooltip
           autoValidate
-          @selected=${this._onSelected}
           @change=${this._onChange}
           .helper=${"Simple Helper Text"}
           helperPersistent
@@ -69,7 +68,14 @@ class SelectDemo extends LitElement {
           }}
         ></dw-select>
       </dw-form>
-      <dw-select label="Select" outlined .items=${list} @selected=${this._onSelected} required></dw-select>
+      <dw-select
+        label="Select"
+        outlined
+        .items=${list}
+        .value="${"PDF"}"
+        @change=${this._onChange}
+        required
+      ></dw-select>
 
       <dw-select
         label="Select"
@@ -80,7 +86,6 @@ class SelectDemo extends LitElement {
         .valueTextProvider=${(item) => item.name}
         .valueProvider=${(item) => item.name}
         .selectedTrailingIcon=${"done"}
-        @selected=${this._onSelected}
         @change=${this._onChange}
         required
       ></dw-select>
@@ -98,7 +103,6 @@ class SelectDemo extends LitElement {
         searchable
         outlined
         autoValidate
-        @selected=${this._onSelected}
         @change=${this._onChange}
         .messages="${message}"
         allowNewValue
@@ -122,7 +126,6 @@ class SelectDemo extends LitElement {
         .groupSelector=${(item) => item.label}
         groupExpression="type"
         label="Contacts"
-        @selected=${this._onSelected}
         @change=${this._onChange}
         .renderItem=${(item, selected, activated, query, onClick) =>
           html`<dw-list-item
@@ -153,7 +156,6 @@ class SelectDemo extends LitElement {
         .groupSelector=${(item) => item.label}
         groupExpression="type"
         label="Contacts"
-        @selected=${this._onSelected}
         @change=${this._onChange}
         .searchPlaceholder="${"Search Input placeholder"}"
         .messages="${message}"
@@ -174,13 +176,12 @@ class SelectDemo extends LitElement {
         outlined
         .items=${this._filterBySelectItems}
         .valueTextProvider=${(item) => item.name}
-        .value=${this._filterByValue}
-        .valueEquator=${(v1, v2) => isEqual(v1, v2)}
-        @selected=${this._onSelected}
+        .valueExpression="${"value"}"
+        .value=${"DUE_DATE"}
         @change=${this._onChange}
       ></dw-select>
 
-      <dw-select-extension-demo outlined @selected=${this._onSelected}></dw-select-extension-demo>
+      <dw-select-extension-demo outlined @change=${this._onChange}></dw-select-extension-demo>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
@@ -204,23 +205,15 @@ class SelectDemo extends LitElement {
     }
   }
 
-  _onSelected(e) {
-    console.log('_onSelected', e);
-  }
-
   _onChange(e) {
-    console.log('_onChange', e);
+    console.log("_onChange", e);
   }
 
   get _filterBySelectItems() {
     return [
-      { name: "transactionDate", value: "TXN_DATE" },
-      { name: "dueDate", value: "DUE_DATE" },
+      { name: "Transaction Date", value: "TXN_DATE" },
+      { name: "Due Date", value: "DUE_DATE" },
     ];
-  }
-
-  get _filterByValue() {
-    return this._filterBySelectItems.find((item) => item.value === "DUE_DATE");
   }
 }
 

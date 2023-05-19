@@ -4,7 +4,7 @@ import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 // View Elements
 import "./dw-select-base-dialog.js";
 import "./dw-select-trigger.js";
-import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
+import { DwFormElement } from "@dreamworld/dw-form/dw-form-element.js";
 
 // Lodash Methods
 import debounce from "lodash-es/debounce";
@@ -353,10 +353,15 @@ export class DwSelect extends DwFormElement(LitElement) {
        */
       _newValueRequest: { type: Object },
 
-      dense: {
-        type: Boolean,
-      }
+      /**
+       * Whther the trigger element is dense or not
+       */
+      dense: { type: Boolean },
     };
+  }
+
+  get item() {
+    this._getSelectedItem(this.value);
   }
 
   /**
@@ -573,7 +578,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     var text;
     try {
       text = this.valueTextProvider(value);
-    } catch(e) {
+    } catch (e) {
       return "";
     }
 
@@ -731,14 +736,14 @@ export class DwSelect extends DwFormElement(LitElement) {
   validate() {
     return this._triggerElement && this._triggerElement.validate();
   }
-  
+
   checkValidity() {
     console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    console.warn("Currently this feature is not available, instead use validate() method.")
+    console.warn("Currently this feature is not available, instead use validate() method.");
     // return this._triggerElement && this._triggerElement.reportValidity();
   }
 
