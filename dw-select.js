@@ -11,6 +11,7 @@ import debounce from "lodash-es/debounce";
 
 // Utils
 import { filter, KeyCode } from "./utils.js";
+import { NEW_VALUE_STATUS } from "./utils";
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -330,11 +331,17 @@ export class DwSelect extends DwFormElement(LitElement) {
       allowNewValue: { type: Boolean },
 
       /**
-       * Provider function which return value
-       * return value could be Promise or any value
-       * Used when allowNewValue is true and _newValueStatus is not undefined
+       * An Input property.
+       * 
+       * A function used to compute new value (an Item) from the query string.
+       * (query) => {item: Item, hint: ""}
+       * 
+       * Function may return an Object or Promise which is resolved to the object later.
+       * When no item can be built from the given query (e.g. User hasn't yet finished typing), it must return either `undefined` or `{item: undefined, hint: ""}`. When hint is available, it's shown on input.
+       * For any error, Promise should be resolved to an error; or exception should be thrown. In this case, Input will show
+       *  the error message thrown out.
        */
-      newValueProvider: { type: Function },
+      newItemProvider: { type: Function },
 
       /**
        * Enum property
@@ -343,12 +350,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       _newValueStatus: { type: String },
 
       /**
-       * Represents last successful computation by newValueProvider.
+       * Represents last successful computation by newItemProvider.
        */
       _newValue: { type: Object },
 
       /**
-       * Represents a Promise, corresponding to any pending result of newValueProvider call.
+       * Represents a Promise, corresponding to any pending result of newItemProvider call.
        * It would be undefined if no such request is pending.
        */
       _newValueRequest: { type: Object },
@@ -401,7 +408,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = (value) => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
-    this.newValueProvider = (query) => query;
+    this.newItemProvider = (query) => query;
   }
 
   render() {
@@ -461,7 +468,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
             .dialogFooterElement=${this._footerTemplate}
             ?allowNewValue="${this.allowNewValue}"
-            .newValueProvider="${this.newValueProvider}"
+            .newItemProvider="${this.newItemProvider}"
             @selected=${this._onSelect}
             @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
             @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
@@ -701,17 +708,45 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onFocusOut() {
     if (!this._query && !this._selectedValueText) {
       // console.debug("dw-select: _onFocusOut: going to clear selection.");
-      this.value = undefined;
+      this.value = null;
+      //TODO: If value is changed, dispatch `change` event too.
       this.dispatchEvent(new CustomEvent("clear-selection"));
     }
 
     if (!this.allowNewValue) {
-      // console.debug("dw-select: _onFocusOut: going to clear query.");
-      this._query = "";
-      const selectedItem = this._getSelectedItem(this.value);
-      if (selectedItem && this._getValue(selectedItem) !== this._selectedValueText) {
-        this._selectedValueText = this._getValue(selectedItem);
+      this._resetToCurValue();
+      return;
+    }
+
+    //Allow New Value - START
+
+    window.setTimeout(async () => {
+      await (this._dialogElement._newValueRequest || this._dialogElement._findNewValue());
+      if (!this._newValueStatus) {
+        this._resetToCurValue();
+        return;
       }
+
+      if (this._newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+        //TODO: Change value & dispatch 'change' and 'selected' event
+        return;
+      }
+
+      if (this._newValueStatus === NEW_VALUE_STATUS.ERROR) {
+        const query = this._query;
+        this.value = null;
+        //TODO: Restore query after timeout; as on setting value, it might be resetted too.
+      }
+    });
+    //Allow New Value - END
+  }
+
+  _resetToCurValue() {
+    // console.debug("dw-select: _onFocusOut: going to clear query.");
+    this._query = "";
+    const selectedItem = this._getSelectedItem(this.value);
+    if (selectedItem) {
+      this._selectedValueText = this._getValue(selectedItem);
     }
   }
 
