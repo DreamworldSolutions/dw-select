@@ -324,7 +324,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * return value could be Promise or any value
        * Used when allowNewValue is true and _newValueStatus is not undefined
        */
-      newValueProvider: { type: Function },
+      newItemProvider: { type: Function },
 
       /**
        * Enum property
@@ -333,12 +333,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       _newValueStatus: { type: String },
 
       /**
-       * Represents last successful computation by newValueProvider.
+       * Represents last successful computation by newItemProvider.
        */
       _newValue: { type: Object },
 
       /**
-       * Represents a Promise, corresponding to any pending result of newValueProvider call.
+       * Represents a Promise, corresponding to any pending result of newItemProvider call.
        * It would be undefined if no such request is pending.
        */
       _newValueRequest: { type: Object },
@@ -874,22 +874,27 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   async _findNewValue() {
-    let result = this.newValueProvider(this._query);
+    const query = this._query;
+    let result = this.newItemProvider(this._query);
     this._newValueRequest = result instanceof Promise ? result : Promise.resolve(result);
     this._newValueStatus = NEW_VALUE_STATUS.IN_PROGRESS;
     this._newValue = undefined;
 
     try {
-      this._newValue = await this._newValueRequest;
-      this._newValueRequest = undefined;
-      this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
-      this._selectedValueText = this._computeInputText;
-      if (this.type !== "fit") {
-        this._fire("selected", this._newValue);
+      const {item, hint} = await this._newValueRequest;
+      
+      //if query has been changed after the request was sent, do nothing.
+      if (query !== this._query) {
+        return;
       }
+
+      this._newValue = item;
+      //TODO: Show hint if available.
+      this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
     } catch (error) {
-      this._newValueRequest = undefined;
       this._newValueStatus = NEW_VALUE_STATUS.ERROR;
+    } finally {
+      this._newValueRequest = undefined;
     }
   }
 
