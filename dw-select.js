@@ -361,7 +361,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   get item() {
-    this._getSelectedItem(this.value);
+    return this._getSelectedItem(this.value);
   }
 
   /**
