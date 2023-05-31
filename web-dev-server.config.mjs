@@ -8,6 +8,7 @@ export default {
   open: true,
   nodeResolve: true,
   port: 8005,
+  watch: true,
   // esbuildTarget: "auto",
   plugins: [commonjs()],
 };

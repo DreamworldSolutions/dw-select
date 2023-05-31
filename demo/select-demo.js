@@ -1,16 +1,18 @@
-import '@dreamworld/dw-form';
-import '@dreamworld/dw-list-item';
-import { css, html, LitElement } from '@dreamworld/pwa-helpers/lit.js';
-import '../dw-select';
-import '../dw-select-dialog-input';
-import '../dw-select-group-item';
-import '../dw-select-trigger';
-import './dw-select-extension-demo';
+import "@dreamworld/dw-form";
+import "@dreamworld/dw-list-item";
+import { ThemeStyle } from "@dreamworld/material-styles/theme";
+import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
+import "../dw-select";
+import "../dw-select-dialog-input";
+import "../dw-select-group-item";
+import "../dw-select-trigger";
+import "./dw-select-extension-demo";
 
-import { DwCompositeDialog } from '@dreamworld/dw-dialog/dw-composite-dialog';
+import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
-import { queryFilterGenerator } from '../utils';
-import { country_list_with_code, groupList, groups, list } from './utils';
+import { DWTooltip, DWTooltipStyle } from "@dreamworld/dw-tooltip";
+import { queryFilterGenerator } from "../utils";
+import { country_list_with_code, groupList, groups, list } from "./utils";
 
 const message = {
   noMatching: 'No matching records found!',
@@ -19,6 +21,7 @@ const message = {
 class SelectDemo extends LitElement {
   static get styles() {
     return [
+      ThemeStyle,
       css`
         :host {
           box-sizing: border-box;
@@ -28,6 +31,10 @@ class SelectDemo extends LitElement {
         dw-select,
         dw-select-extension-demo {
           margin-bottom: 24px;
+        }
+
+        .tippy-box {
+          ${DWTooltipStyle}
         }
       `,
     ];
@@ -82,7 +89,16 @@ class SelectDemo extends LitElement {
         .valueProvider=${item => item.name}
         .selectedTrailingIcon=${'done'}
         @change=${this._onChange}
+        @action=${this._onAction}
         required
+        requiredMessage="Required"
+        warningText="warning text"
+        warningInTooltip
+        errorInTooltip
+        .tooltipActions=${[
+          { name: "UPDATE", label: "Update" },
+          { name: "CLEAR", label: "Clear", danger: true },
+        ]}
       ></dw-select>
 
       <dw-select
@@ -206,6 +222,9 @@ class SelectDemo extends LitElement {
   firstUpdated() {
     let elFitDialogContainer = this.shadowRoot.querySelector('.fit-dialog-container');
     DwCompositeDialog.setAppendTo(elFitDialogContainer);
+
+    let elTippyContainer = this.shadowRoot;
+    DWTooltip.setAppendTo(elTippyContainer);
   }
 
   _helperTextProvider(value) {
@@ -216,6 +235,10 @@ class SelectDemo extends LitElement {
 
   _onChange(e) {
     console.log('_onChange', e);
+  }
+
+  _onAction(e) {
+    console.log("_onAction", e.detail);
   }
 
   get _filterBySelectItems() {
