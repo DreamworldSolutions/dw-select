@@ -28,10 +28,10 @@
     "@dreamworld/dw-form": "^4.1.1",
     "@dreamworld/dw-icon": "^4.1.0",
     "@dreamworld/dw-icon-button": "^3.0.0",
-    "@dreamworld/dw-input": "^3.2.1",
-    "@dreamworld/dw-list-item": "^4.1.1",
+    "@dreamworld/dw-input": "^3.6.0-warning-error-in-tooltip.1",
+    "@dreamworld/dw-list-item": "^4.3.1",
     "@dreamworld/dw-ripple": "^3.1.0",
-    "@dreamworld/dw-tooltip": "^3.1.0",
+    "@dreamworld/dw-tooltip": "^3.1.1",
     "@dreamworld/material-styles": "^3.1.0",
     "@dreamworld/pwa-helpers": "^1.14.0",
     "@lit-labs/virtualizer": "^0.7.2",
@@ -43,6 +43,10 @@
     "@rollup/plugin-commonjs": "^23.0.2",
     "@web/dev-server": "^0.1.35",
     "semantic-release": "^19.0.5"
+  },
+  "resolutions": {
+    "tslib": "2.1.0",
+    "@dreamworld/dw-tooltip": "^3.1.1"
   },
   "publishConfig": {
     "access": "public"
@@ -57,8 +61,5 @@
         "channel": "${name.replace(/^feature\\//g,\"\")}"
       }
     ]
-  },
-  "resolutions": {
-    "tslib": "2.1.0"
   }
 }

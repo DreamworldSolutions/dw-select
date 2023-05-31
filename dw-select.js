@@ -2,9 +2,9 @@ import { css, html, LitElement, nothing } from "@dreamworld/pwa-helpers/lit.js";
 import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 
 // View Elements
+import { DwFormElement } from "@dreamworld/dw-form/dw-form-element.js";
 import "./dw-select-base-dialog.js";
 import "./dw-select-trigger.js";
-import { DwFormElement } from "@dreamworld/dw-form/dw-form-element.js";
 
 // Lodash Methods
 import debounce from "lodash-es/debounce";
@@ -324,6 +324,23 @@ export class DwSelect extends DwFormElement(LitElement) {
       errorInTooltip: { type: Boolean },
 
       /**
+       * Whether to show warning in tooltip
+       * tip trigger on hover of error icon button at trail.
+       */
+      warningInTooltip: { type: Boolean },
+
+      /**
+       * Tooltip actions
+       * Actions are show right aligned
+       */
+      tooltipActions: { type: Array },
+
+      /**
+       * Text to show the warning message.
+       */
+      warningText: { type: String },
+
+      /**
        * Can be used only when “searchable=true”
        * Whether new value is allowed or not
        */
@@ -421,8 +438,11 @@ export class DwSelect extends DwFormElement(LitElement) {
         ?required=${this.required}
         ?updatedHighlight=${this._updatedHighlight}
         ?autoValidate=${this.autoValidate}
+        .warningText=${this.warningText}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
         .errorInTooltip=${this.errorInTooltip}
+        .warningInTooltip="${this.warningInTooltip}"
+        .tooltipActions="${this.tooltipActions}"
         .dense=${this.dense}
         @click=${this._onTrigger}
         @input=${this._onUserInteraction}
@@ -430,6 +450,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         @expand-toggle="${this._onDialogOpenToggle}"
         @invalid=${this._onInvalid}
         @valid=${this._onValid}
+        @action=${this._onAction}
         ?opened="${this._opened}"
       ></dw-select-trigger>
       ${this._opened
@@ -646,7 +667,9 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _getSelectedItem(value) {
-    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    return (
+      this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value))
+    );
   }
 
   _onInvalid(e) {
@@ -749,6 +772,10 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   focus() {
     this._triggerElement && this._triggerElement.focus();
+  }
+
+  _onAction(e) {
+    this.dispatchEvent(new CustomEvent("action", { detail: e.detail }));
   }
 }
 

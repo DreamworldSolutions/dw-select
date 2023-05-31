@@ -157,6 +157,29 @@ export class DwSelectTrigger extends DwInput {
       `;
     }
 
+    if (this.errorInTooltip && this.invalid) {
+      return html`
+        <dw-icon-button id="error" class=" error" icon="${"error"}" tabindex="-1"></dw-icon-button>
+        <dw-tooltip for="error" .extraOptions=${this._extraOptions}>
+          ${unsafeHTML(this.errorMessage)} ${this._renderTooltipActions}
+        </dw-tooltip>
+      `;
+    }
+
+    if (this.warningInTooltip && this.warningText) {
+      return html`
+        <dw-icon-button
+          id="warning"
+          class=" warning"
+          icon="${"warning"}"
+          tabindex="-1"
+        ></dw-icon-button>
+        <dw-tooltip for="warning" .extraOptions=${this._extraOptions}>
+          ${unsafeHTML(this.warningText)} ${this._renderTooltipActions}
+        </dw-tooltip>
+      `;
+    }
+
     if (this.iconTrailing) {
       return this.renderIcon(this.iconTrailing, true);
     }
@@ -199,12 +222,7 @@ export class DwSelectTrigger extends DwInput {
     if (this.newValueStatus) {
       return this._renderNewValueTrailingIcon;
     }
-    if (this.errorInTooltip && this.errorMessage && this.invalid) {
-      return html`
-        <dw-icon-button id="error" icon="error" tabindex="-1"></dw-icon-button>
-        <dw-tooltip for="error">${unsafeHTML(this.errorMessage)}</dw-tooltip>
-      `;
-    }
+
     return html` ${this._renderExpandLessMoreButton} `;
   }
 
