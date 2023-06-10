@@ -579,7 +579,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     try {
       text = this.valueTextProvider(value);
     } catch (e) {
-      return "";
+      text = "";
     }
 
     if (text) {
@@ -635,7 +635,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     const value = this.value;
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
-    this._selectedValueText = this._getValue(this.value);
+    this._selectedValueText = this._getValue(selectedItem);
     this._triggerElement.focus();
     this._query = undefined;
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
@@ -699,6 +699,11 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onFocusOut() {
+    //If select isn't searchable, nothings is to be done. 
+    if (!this.searchable) {
+      return;
+    }
+
     if (!this._query && !this._selectedValueText) {
       // console.debug("dw-select: _onFocusOut: going to clear selection.");
       this.value = undefined;
