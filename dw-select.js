@@ -546,7 +546,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (_changedProperties.has("_query") || _changedProperties.has("_items")) {
       this._newItemRequest = undefined;
-      if (this.allowNewValue && this._query && this._items.length == 0) {
+      if (this.allowNewValue && this._query && this._items?.length === 0) {
         this._findNewItem();
       } else {
         this._newItemStatus = undefined;
@@ -759,12 +759,13 @@ export class DwSelect extends DwFormElement(LitElement) {
     //   return;
     // }
 
+    this._opened = false;
+
     if (!this._query && !this._selectedValueText) {
       //clear selection & dispatch event.
       // console.log("dw-select: _onFocusOut: going to clear selection.");
       const prevValue = this.value;
       this.value = null;
-      this._opened = false;
       if (prevValue !== this.value) {
         this._dispatchSelected(prevValue);
         this.dispatchEvent(new CustomEvent("clear-selection"));
@@ -850,7 +851,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     } else {
       this._selectedValueText = '';
     }
-    this._opened = false;
   }
 
   _computeValueProvider() {
