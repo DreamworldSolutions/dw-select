@@ -320,28 +320,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       allowNewValue: { type: Boolean },
 
       /**
-       * Provider function which return value
-       * return value could be Promise or any value
-       * Used when allowNewValue is true and _newValueStatus is not undefined
-       */
-      newValueProvider: { type: Function },
-
-      /**
        * Enum property
        * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
        */
-      _newValueStatus: { type: String },
+      _newItemStatus: { type: String },
 
       /**
-       * Represents last successful computation by newValueProvider.
+       * Represents the value of currently typed new item.
        */
-      _newValue: { type: Object },
+      _newItem: { type: Object },
 
-      /**
-       * Represents a Promise, corresponding to any pending result of newValueProvider call.
-       * It would be undefined if no such request is pending.
-       */
-      _newValueRequest: { type: Object },
 
       /**
        * Represents Dialog input value
@@ -489,7 +477,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`<dw-select-dialog-input
         .value=${this._selectedValueText}
         .searchPlaceholder="${this.searchPlaceholder}"
-        .newValueStatus="${this._newValueStatus}"
+        .newValueStatus="${this._newItemStatus}"
         @cancel=${this._onClose}
         @input-change=${this._onUserInteraction}
       ></dw-select-dialog-input>`;
@@ -526,7 +514,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _footerTemplate() {
-    if (this._newValueStatus === NEW_VALUE_STATUS.NEW_VALUE && this.type === "fit") {
+    if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE && this.type === "fit") {
       return html`<dw-button
         label="Select"
         raised
@@ -730,6 +718,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._items = array;
+    this._fire('_items-changed', this._items);
   }
 
   _getGroupValue(item) {
@@ -873,49 +862,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(index, position);
   }
 
-  async _findNewValue() {
-    let result = this.newValueProvider(this._query);
-    this._newValueRequest = result instanceof Promise ? result : Promise.resolve(result);
-    this._newValueStatus = NEW_VALUE_STATUS.IN_PROGRESS;
-    this._newValue = undefined;
-
-    try {
-      this._newValue = await this._newValueRequest;
-      this._newValueRequest = undefined;
-      this._newValueStatus = NEW_VALUE_STATUS.NEW_VALUE;
-      this._selectedValueText = this._computeInputText;
-      if (this.type !== "fit") {
-        this._fire("selected", this._newValue);
-      }
-    } catch (error) {
-      this._newValueRequest = undefined;
-      this._newValueStatus = NEW_VALUE_STATUS.ERROR;
-    }
-  }
-
   _fire(name, detail) {
     this.dispatchEvent(new CustomEvent(name, { detail: detail }));
   }
 
   _onSelectButtonClick() {
-    this._fire("selected", this._newValue);
+    this._fire("selected", this._newItem);
     this.close();
-  }
-
-  /**
-   * Returns String that represents current value
-   */
-  get _computeInputText() {
-    if (!this._newValue) {
-      return "";
-    }
-    if (!this.valueTextProvider(this._newValue)) {
-      if (typeof this._newValue !== "string") {
-        return "";
-      }
-      return this._newValue;
-    }
-    return this.valueTextProvider(this._newValue);
   }
 
   _getItemUsingValue(value) {
@@ -933,20 +886,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (_changedProperties.has("heading") || _changedProperties.has("showClose")) {
       this._showHeader = Boolean(this.heading) || this.showClose;
-    }
-
-    if (_changedProperties.has("_query")) {
-      this._newValueRequest = undefined;
-      if (this.allowNewValue && this._query && this._items.length == 0) {
-        this._findNewValue();
-      } else {
-        this._newValueStatus = undefined;
-        this._newValueRequest = undefined;
-      }
-    }
-
-    if (_changedProperties.has("_newValueStatus")) {
-      this._fire("new-value-status-changed", this._newValueStatus);
     }
 
     if (_changedProperties.has("_activatedIndex") || _changedProperties.has("_items")) {
