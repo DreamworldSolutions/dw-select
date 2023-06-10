@@ -525,7 +525,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   willUpdate(_changedProperties) {
     super.willUpdate && super.willUpdate(_changedProperties);
-    console.log('willUpdate', _changedProperties);
 
     if (_changedProperties.has("_opened")) {
       this._setPopoverDialogWidth();
@@ -551,7 +550,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         this._findNewItem();
       } else {
         this._newItemStatus = undefined;
-        console.log('_newItemStatus = undefined');
+        // console.log('_newItemStatus = undefined');
       }
     }
   }
@@ -753,7 +752,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (!this.searchable) {
       return;
     }
-    
+
     //TODO: If query is NOT dirty, nothing is to be done.
 
     // if (this._query == this._selectedValueText) {
@@ -762,7 +761,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (!this._query && !this._selectedValueText) {
       //clear selection & dispatch event.
-      console.log("dw-select: _onFocusOut: going to clear selection.");
+      // console.log("dw-select: _onFocusOut: going to clear selection.");
       const prevValue = this.value;
       this.value = null;
       this._opened = false;
@@ -845,7 +844,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _resetToCurValue() {
     this._query = "";
     const selectedItem = this._getSelectedItem(this.value);
-    console.log("dw-select: _onFocusOut: going to clear query.", selectedItem, this.value);
+    // console.log("dw-select: _onFocusOut: going to clear query.", selectedItem, this.value);
     if (selectedItem) {
       this._selectedValueText = this._getValue(selectedItem);
     } else {
