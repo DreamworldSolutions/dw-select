@@ -743,12 +743,12 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   checkValidity() {
-    console.warn("Currently this feature is not available, instead use validate() method.");
+    return this._triggerElement && this._triggerElement.validate();
     // return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    console.warn("Currently this feature is not available, instead use validate() method.");
+    return this._triggerElement && this._triggerElement.validate();
     // return this._triggerElement && this._triggerElement.reportValidity();
   }
 
