@@ -658,7 +658,13 @@ export class DwSelect extends DwFormElement(LitElement) {
 
 
   _getSelectedItem(value) {
-    return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    const item = this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    if (item !== undefined || !this._newValue) {
+      return item;
+    }
+    
+    //search in _newValue
+    return this.valueEquator(this._valueProvider(this._newValue), value);
   }
 
   _onInvalid(e) {
