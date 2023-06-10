@@ -645,12 +645,17 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._selectedValueText = this._getValue(selectedItem);
     this._triggerElement.focus();
     this._query = undefined;
+    this._dispatchSelected(value);
+  }
+
+  _dispatchSelected(prevValue) {
     this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
 
-    if (!this.valueEquator(value, this.value)) {
+    if (!this.valueEquator(prevValue, this.value)) {
       this.dispatchEvent(new CustomEvent("change"));
     }
   }
+
 
   _getSelectedItem(value) {
     return this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
@@ -712,10 +717,14 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     if (!this._query && !this._selectedValueText) {
+      //clear selection & dispatch event.
       // console.debug("dw-select: _onFocusOut: going to clear selection.");
+      const value = this.value;
       this.value = null;
-      //TODO: If value is changed, dispatch `change` event too.
-      this.dispatchEvent(new CustomEvent("clear-selection"));
+      if (value !== this.value) {
+        this._dispatchSelected(value);
+        this.dispatchEvent(new CustomEvent("clear-selection"));
+      }
     }
 
     if (!this.allowNewValue) {
@@ -733,14 +742,21 @@ export class DwSelect extends DwFormElement(LitElement) {
       }
 
       if (this._newValueStatus === NEW_VALUE_STATUS.NEW_VALUE) {
-        //TODO: Change value & dispatch 'change' and 'selected' event
+        //Change value & dispatch event
+        const value = this._value;
+        this.value = this._newValue;
+        this._dispatchSelected(value);
         return;
       }
 
       if (this._newValueStatus === NEW_VALUE_STATUS.ERROR) {
         const query = this._query;
         this.value = null;
-        //TODO: Restore query after timeout; as on setting value, it might be resetted too.
+
+        //Restore query after timeout; as on setting value, it might be resetted too.
+        window.setTimeout(() => {
+          this._selectedValueText = query;
+        });
       }
     });
     //Allow New Value - END
