@@ -476,6 +476,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .helper=${this._computeHelperText()}
             ?showClose=${this.showClose}
             .selectedTrailingIcon="${this.selectedTrailingIcon}"
+            .dialogHeaderTemplate="${this._headerTemplate}"
             .dialogFooterElement=${this._footerTemplate}
             ?allowNewValue="${this.allowNewValue}"
             ._newItemStatus="${this._newItemStatus}"
@@ -499,6 +500,14 @@ export class DwSelect extends DwFormElement(LitElement) {
    */
   get _footerTemplate() {
     return nothing;
+  }
+
+  /**
+   * Footet Template getter
+   * 
+   */
+  get _headerTemplate() {
+    return nothing
   }
 
   connectedCallback() {

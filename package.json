@@ -60,5 +60,10 @@
   },
   "resolutions": {
     "tslib": "2.1.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "printWidth": 140
   }
 }

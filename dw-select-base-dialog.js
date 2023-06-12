@@ -135,7 +135,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         .shimmer {
           display: block;
           height: 20px;
-          background: var(--dw-select-shimmer-gradient, linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5));
+          background: var(
+            --dw-select-shimmer-gradient,
+            linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5)
+          );
           border-radius: 6px;
           width: 45%;
           margin-top: 8px;
@@ -299,6 +302,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       dialogFooterElement: { type: Object },
 
       /**
+       * Custom header template as property
+       */
+      headerTemplate: { type: Object },
+
+      /**
        * Placeholder for fit dialog's search input
        */
       searchPlaceholder: { type: String },
@@ -329,7 +337,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Represents the value of currently typed new item.
        */
       _newItem: { type: Object },
-
 
       /**
        * Represents Dialog input value
@@ -473,26 +480,27 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _headerTemplate() {
-    if (this.searchable && this.type === "fit") {
-      return html`<dw-select-dialog-input
-        .value=${this._selectedValueText}
-        .searchPlaceholder="${this.searchPlaceholder}"
-        .newValueStatus="${this._newItemStatus}"
-        @cancel=${this._onClose}
-        @input-change=${this._onUserInteraction}
-      ></dw-select-dialog-input>`;
-    }
-
-    if (this.type === "modal") {
-      return html`
-        ${this.showClose
-          ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>`
-          : nothing}
-        ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
-      `;
-    }
-
-    return nothing;
+    return html`
+      ${this.searchable && this.type === "fit"
+        ? html`<dw-select-dialog-input
+            .value=${this._selectedValueText}
+            .searchPlaceholder="${this.searchPlaceholder}"
+            .newValueStatus="${this._newItemStatus}"
+            @cancel=${this._onClose}
+            @input-change=${this._onUserInteraction}
+          ></dw-select-dialog-input>`
+        : nothing}
+      ${this.type === "modal"
+        ? html`
+            ${this.showClose
+              ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>`
+              : nothing}
+            ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
+          `
+        : nothing}
+      
+      ${this.dialogHeaderTemplate ? html`<div>${this.dialogHeaderTemplate}</div>` : nothing}
+    `;
   }
 
   get _contentTemplate() {
@@ -718,7 +726,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._items = array;
-    this._fire('_items-changed', this._items);
+    this._fire("_items-changed", this._items);
   }
 
   _getGroupValue(item) {
