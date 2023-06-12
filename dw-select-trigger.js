@@ -1,17 +1,17 @@
-import { css, html, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import { css, html, nothing, unsafeCSS } from '@dreamworld/pwa-helpers/lit.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 // view Elements
-import { DwInput } from "@dreamworld/dw-input/dw-input.js";
-import "@dreamworld/dw-ripple";
-import "@dreamworld/dw-tooltip";
-import "@material/mwc-circular-progress";
+import { DwInput } from '@dreamworld/dw-input/dw-input.js';
+import '@dreamworld/dw-ripple';
+import '@dreamworld/dw-tooltip';
+import '@material/mwc-circular-progress';
 
 // Utils
-import { NEW_VALUE_STATUS } from "./utils";
+import { NEW_VALUE_STATUS } from './utils';
 
 // Styles
-import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
+import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals.js';
 
 /**
  * Used to edit and enter text, or only readOnly.
@@ -33,10 +33,7 @@ export class DwSelectTrigger extends DwInput {
         }
 
         :host([updatedHighlight]:not([outlined])) {
-          --mdc-text-field-fill-color: var(
-            --dw-select-updated-highlight-bg-color,
-            rgba(2, 175, 205, 0.04)
-          );
+          --mdc-text-field-fill-color: var(--dw-select-updated-highlight-bg-color, rgba(2, 175, 205, 0.04));
         }
 
         :host(:not([inputallowed])) input {
@@ -126,7 +123,7 @@ export class DwSelectTrigger extends DwInput {
       dense: {
         type: Boolean,
         reflect: true,
-        attribute: "dense",
+        attribute: 'dense',
       },
     };
   }
@@ -136,7 +133,7 @@ export class DwSelectTrigger extends DwInput {
     this.opened = false;
     this.updatedHighlight = false;
     this.inputAllowed = false;
-    this.iconTrailing = "expand_less";
+    this.iconTrailing = 'expand_less';
     this.errorInTooltip = false;
   }
 
@@ -144,8 +141,8 @@ export class DwSelectTrigger extends DwInput {
    * Returns suffix template based on `iconTrailing` and `suffixText` property
    */
   get _getSuffixTemplate() {
-    if (this.type === "password" && this._showVisibilityIcon) {
-      const icon = this._type === "text" ? "visibility" : "visibility_off";
+    if (this.type === 'password' && this._showVisibilityIcon) {
+      const icon = this._type === 'text' ? 'visibility' : 'visibility_off';
       return html`
         <dw-icon-button
           @click=${this._toggleType}
@@ -240,17 +237,17 @@ export class DwSelectTrigger extends DwInput {
     e.stopPropagation();
     e.preventDefault();
     this.focus();
-    this.dispatchEvent(new CustomEvent("expand-toggle"));
+    this.dispatchEvent(new CustomEvent('expand-toggle'));
   }
 
   willUpdate(_changedProperties) {
     super.willUpdate(_changedProperties);
 
-    if (_changedProperties.has("opened")) {
-      this.iconTrailing = this.opened ? "expand_less" : "expand_more";
+    if (_changedProperties.has('opened')) {
+      this.iconTrailing = this.opened ? 'expand_less' : 'expand_more';
     }
 
-    if (_changedProperties.has("errorMessage")) {
+    if (_changedProperties.has('errorMessage')) {
       if (!this.errorInTooltip) {
         this.validationMessage = this.errorMessage;
       }
@@ -260,14 +257,14 @@ export class DwSelectTrigger extends DwInput {
   updated(_changedProperties) {
     super.updated(_changedProperties);
 
-    if (_changedProperties.has("value")) {
+    if (_changedProperties.has('value')) {
       this.error = this.value ? !this.reportValidity() : !this.checkValidity();
 
       if (!this.error) {
-        this.dispatchEvent(new CustomEvent("valid"));
+        this.dispatchEvent(new CustomEvent('valid'));
       }
     }
   }
 }
 
-customElements.define("dw-select-trigger", DwSelectTrigger);
+customElements.define('dw-select-trigger', DwSelectTrigger);

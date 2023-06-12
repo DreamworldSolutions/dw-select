@@ -1,14 +1,14 @@
-import { LitElement, html, css, nothing, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
-import "@dreamworld/dw-icon-button";
+import '@dreamworld/dw-icon-button';
+import { LitElement, css, html, nothing, unsafeCSS } from '@dreamworld/pwa-helpers/lit.js';
 
 // Styles
-import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
+import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals.js';
 
 // View Elements
-import "@material/mwc-circular-progress";
+import '@material/mwc-circular-progress';
 
 // Utils
-import { NEW_VALUE_STATUS } from "./utils";
+import { NEW_VALUE_STATUS } from './utils';
 
 /**
  * #Behaviours
@@ -128,7 +128,7 @@ export class DwSelectDialogInput extends LitElement {
 
   constructor() {
     super();
-    this.value = "";
+    this.value = '';
     this.newValueStatus = undefined;
   }
 
@@ -167,9 +167,7 @@ export class DwSelectDialogInput extends LitElement {
   }
 
   get _showClearButton() {
-    return this._hasCloseButton
-      ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>`
-      : nothing;
+    return this._hasCloseButton ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>` : nothing;
   }
 
   _onFocus() {
@@ -184,17 +182,17 @@ export class DwSelectDialogInput extends LitElement {
     e.stopPropagation();
     this.value = e.target && e.target.value;
     this._hasCloseButton = Boolean(this.value);
-    this.dispatchEvent(new CustomEvent("input-change"));
+    this.dispatchEvent(new CustomEvent('input-change'));
   }
 
   _onBack() {
-    this.dispatchEvent(new CustomEvent("cancel"));
+    this.dispatchEvent(new CustomEvent('cancel'));
   }
 
   _onClear() {
-    this.value = "";
-    this.dispatchEvent(new CustomEvent("input-change"));
+    this.value = '';
+    this.dispatchEvent(new CustomEvent('input-change'));
   }
 }
 
-customElements.define("dw-select-dialog-input", DwSelectDialogInput);
+customElements.define('dw-select-dialog-input', DwSelectDialogInput);

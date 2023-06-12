@@ -1,17 +1,17 @@
-import { css, html, LitElement, nothing } from "@dreamworld/pwa-helpers/lit.js";
-import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
+import { css, html, LitElement, nothing } from '@dreamworld/pwa-helpers/lit.js';
+import { isElementAlreadyRegistered } from '@dreamworld/pwa-helpers/utils.js';
 
 // View Elements
-import "./dw-select-base-dialog.js";
-import "./dw-select-trigger.js";
-import { DwFormElement } from "@dreamworld/dw-form/dw-form-element.js";
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
+import './dw-select-base-dialog.js';
+import './dw-select-trigger.js';
 
 // Lodash Methods
-import debounce from "lodash-es/debounce";
+import debounce from 'lodash-es/debounce';
 
 // Utils
-import { filter, KeyCode } from "./utils.js";
-import { NEW_VALUE_STATUS } from "./utils";
+import { NEW_VALUE_STATUS } from './utils';
+import { filter, KeyCode } from './utils.js';
 
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
@@ -384,11 +384,11 @@ export class DwSelect extends DwFormElement(LitElement) {
    * Trigger Element Getter
    */
   get _triggerElement() {
-    return this.renderRoot.querySelector("dw-select-trigger");
+    return this.renderRoot.querySelector('dw-select-trigger');
   }
 
   get _dialogElement() {
-    return this.renderRoot.querySelector("dw-select-base-dialog");
+    return this.renderRoot.querySelector('dw-select-base-dialog');
   }
 
   static get styles() {
@@ -406,18 +406,18 @@ export class DwSelect extends DwFormElement(LitElement) {
   constructor() {
     super();
     this.searchable = false;
-    this.heading = "";
+    this.heading = '';
     this.showClose = false;
-    this.searchPlaceholder = "";
-    this._selectedValueText = "";
+    this.searchPlaceholder = '';
+    this._selectedValueText = '';
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
-    this._valueProvider = (item) => item;
+    this._valueProvider = item => item;
 
     this.valueEquator = (v1, v2) => v1 === v2;
-    this.helperTextProvider = (value) => {};
+    this.helperTextProvider = value => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
-    this.newItemProvider = (query) => query;
+    this.newItemProvider = query => query;
     this._findNewItem = debounce(this._findNewItem.bind(this), 50);
   }
 
@@ -483,10 +483,10 @@ export class DwSelect extends DwFormElement(LitElement) {
             ._newItem="${this._newItem}"
             @selected=${this._onSelect}
             @_items-changed=${this._onItemsChanged}
-            @dw-dialog-opened="${(e) => this._onDialogOpen(e)}"
-            @dw-fit-dialog-opened="${(e) => this._onDialogOpen(e)}"
-            @dw-dialog-closed="${(e) => this._onDialogClose(e)}"
-            @dw-fit-dialog-closed="${(e) => this._onDialogClose(e)}"
+            @dw-dialog-opened="${e => this._onDialogOpen(e)}"
+            @dw-fit-dialog-opened="${e => this._onDialogOpen(e)}"
+            @dw-dialog-closed="${e => this._onDialogClose(e)}"
+            @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
             .messages="${this.messages}"
             ._getItemValue=${this._getItemValue}
           ></dw-select-base-dialog>`
@@ -504,10 +504,10 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   /**
    * Footet Template getter
-   * 
+   *
    */
   get _headerTemplate() {
-    return nothing
+    return nothing;
   }
 
   connectedCallback() {
@@ -520,11 +520,11 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this._computeValueProvider();
 
-    this.addEventListener("focusout", this._onFocusOut);
+    this.addEventListener('focusout', this._onFocusOut);
   }
 
   disconnectedCallback() {
-    this.removeEventListener("focusout", this._onFocusOut);
+    this.removeEventListener('focusout', this._onFocusOut);
   }
 
   firstUpdated() {
@@ -535,25 +535,25 @@ export class DwSelect extends DwFormElement(LitElement) {
   willUpdate(_changedProperties) {
     super.willUpdate && super.willUpdate(_changedProperties);
 
-    if (_changedProperties.has("_opened")) {
+    if (_changedProperties.has('_opened')) {
       this._setPopoverDialogWidth();
     }
 
-    if (_changedProperties.has("value") || _changedProperties.has("items")) {
+    if (_changedProperties.has('value') || _changedProperties.has('items')) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
       if (!this._newItemStatus && this.items && this.items.length > 0) {
-        const selectedItem = this.items.find((item) => {
+        const selectedItem = this.items.find(item => {
           return this.valueEquator(this._valueProvider(item), this.value);
         });
         this._selectedValueText = this._getValue(selectedItem);
       }
     }
 
-    if (_changedProperties.has("valueProvider") || _changedProperties.has("valueExpression")) {
+    if (_changedProperties.has('valueProvider') || _changedProperties.has('valueExpression')) {
       this._computeValueProvider();
     }
 
-    if (_changedProperties.has("_query") || _changedProperties.has("_items")) {
+    if (_changedProperties.has('_query') || _changedProperties.has('_items')) {
       this._newItemRequest = undefined;
       if (this.allowNewValue && this._query && this._items?.length === 0) {
         this._findNewItem();
@@ -578,15 +578,15 @@ export class DwSelect extends DwFormElement(LitElement) {
    */
   _setPopoverDialogWidth() {
     if (this.dialogWidth) {
-      this.style.setProperty("--dw-popover-width", this.dialogWidth + "px");
+      this.style.setProperty('--dw-popover-width', this.dialogWidth + 'px');
       return;
     }
 
     // Trigger element getter
-    let triggerEl = this.renderRoot.querySelector("dw-select-trigger");
+    let triggerEl = this.renderRoot.querySelector('dw-select-trigger');
 
     // Set Trigger element's offSetWidth to PopOver Dialog
-    this.style.setProperty("--dw-popover-width", triggerEl.offsetWidth + "px");
+    this.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
   }
 
   _setPopoverHeight() {
@@ -596,16 +596,16 @@ export class DwSelect extends DwFormElement(LitElement) {
     let popoverMaxHeight = 0;
 
     if (isPlacementBottom) {
-      this._dialogElement.popoverPlacement = "bottom-start";
+      this._dialogElement.popoverPlacement = 'bottom-start';
       popoverMaxHeight = viewportHeight - (triggerRect.bottom + 8);
     } else {
-      this._dialogElement.popoverPlacement = "top-start";
+      this._dialogElement.popoverPlacement = 'top-start';
       this._dialogElement.popoverOffset = [0, 8];
       popoverMaxHeight = triggerRect.top - 16;
     }
 
     this._popoverMaxHeight = popoverMaxHeight;
-    this.style.setProperty("--dw-popover-max-height", popoverMaxHeight + "px");
+    this.style.setProperty('--dw-popover-max-height', popoverMaxHeight + 'px');
   }
 
   /**
@@ -613,7 +613,7 @@ export class DwSelect extends DwFormElement(LitElement) {
    * @param {Event} e
    */
   _onUserInteraction(e) {
-    if (e.type === "input") {
+    if (e.type === 'input') {
       this._onInput(e);
     }
   }
@@ -626,24 +626,24 @@ export class DwSelect extends DwFormElement(LitElement) {
     try {
       text = this.valueTextProvider(value);
     } catch (e) {
-      text = "";
+      text = '';
     }
 
     if (text) {
       return text;
     }
 
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       return value;
     }
 
-    return "";
+    return '';
   }
 
   _computeHelperText() {
     if (
       this.helperTextProvider &&
-      typeof this.helperTextProvider === "function" &&
+      typeof this.helperTextProvider === 'function' &&
       this.helperTextProvider(this._getSelectedItem(this.value))
     ) {
       return this.helperTextProvider(this._getSelectedItem(this.value));
@@ -689,32 +689,31 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _dispatchSelected(prevValue) {
-    this.dispatchEvent(new CustomEvent("selected", { detail: this.value }));
+    this.dispatchEvent(new CustomEvent('selected', { detail: this.value }));
 
     if (!this.valueEquator(prevValue, this.value)) {
-      this.dispatchEvent(new CustomEvent("change"));
+      this.dispatchEvent(new CustomEvent('change'));
     }
   }
 
-
   _getSelectedItem(value) {
-    const item = this.items && this.items.find((item) => this.valueEquator(this._valueProvider(item), value));
+    const item = this.items && this.items.find(item => this.valueEquator(this._valueProvider(item), value));
     if (item !== undefined || !this._newItem) {
       return item;
     }
-    
+
     //search in newItem
     return this.valueEquator(this._valueProvider(this._newItem), value);
   }
 
   _onInvalid(e) {
     this.validity = this._triggerElement.validity;
-    this.dispatchEvent(new CustomEvent("invalid", { detail: this.validity }));
+    this.dispatchEvent(new CustomEvent('invalid', { detail: this.validity }));
   }
 
   _onValid(e) {
     this.validity = this._triggerElement.validity;
-    this.dispatchEvent(new CustomEvent("valid", { detail: this.validity }));
+    this.dispatchEvent(new CustomEvent('valid', { detail: this.validity }));
   }
 
   _onDialogOpenToggle() {
@@ -724,13 +723,11 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onDialogOpen(e) {
     e.stopPropagation();
 
-    if (this._dialogElement && this._dialogElement.type !== "popover") {
-      this.dispatchEvent(
-        new CustomEvent("dw-select-opened", { bubbles: true, composed: true, detail: e.detail })
-      );
+    if (this._dialogElement && this._dialogElement.type !== 'popover') {
+      this.dispatchEvent(new CustomEvent('dw-select-opened', { bubbles: true, composed: true, detail: e.detail }));
     }
 
-    if (this._dialogElement && this._dialogElement.type === "popover") {
+    if (this._dialogElement && this._dialogElement.type === 'popover') {
       this._setPopoverHeight();
     }
   }
@@ -738,10 +735,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onDialogClose(e) {
     e.stopPropagation();
 
-    if (this._dialogElement && this._dialogElement.type !== "popover") {
-      this.dispatchEvent(
-        new CustomEvent("dw-select-closed", { bubbles: true, composed: true, detail: e.detail })
-      );
+    if (this._dialogElement && this._dialogElement.type !== 'popover') {
+      this.dispatchEvent(new CustomEvent('dw-select-closed', { bubbles: true, composed: true, detail: e.detail }));
     }
 
     this._opened = false;
@@ -757,7 +752,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onFocusOut() {
-    //If select isn't searchable, nothings is to be done. 
+    //If select isn't searchable, nothings is to be done.
     if (!this.searchable) {
       return;
     }
@@ -777,7 +772,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       this.value = null;
       if (prevValue !== this.value) {
         this._dispatchSelected(prevValue);
-        this.dispatchEvent(new CustomEvent("clear-selection"));
+        this.dispatchEvent(new CustomEvent('clear-selection'));
       }
       return;
     }
@@ -829,7 +824,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._newItemRequest = result instanceof Promise ? result : Promise.resolve(result);
     this._newItemStatus = NEW_VALUE_STATUS.IN_PROGRESS;
     this._newItem = undefined;
-    
+
     try {
       const item = await this._newItemRequest;
       // const {item, hint} = //TODO: Consider 'hint' too.
@@ -852,7 +847,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _resetToCurValue() {
-    this._query = "";
+    this._query = '';
     const selectedItem = this._getSelectedItem(this.value);
     // console.log("dw-select: _onFocusOut: going to clear query.", selectedItem, this.value);
     if (selectedItem) {
@@ -864,12 +859,12 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _computeValueProvider() {
     if (!this.valueProvider && !this.valueExpression) {
-      this._valueProvider = (item) => item;
+      this._valueProvider = item => item;
       return;
     }
 
     if (this.valueExpression) {
-      this._valueProvider = (item) => item[this.valueExpression];
+      this._valueProvider = item => item[this.valueExpression];
       return;
     }
 
@@ -895,8 +890,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 }
 
-if (isElementAlreadyRegistered("dw-select")) {
+if (isElementAlreadyRegistered('dw-select')) {
   console.warn("lit: 'dw-select' is already registered, so registration skipped.");
 } else {
-  customElements.define("dw-select", DwSelect);
+  customElements.define('dw-select', DwSelect);
 }
