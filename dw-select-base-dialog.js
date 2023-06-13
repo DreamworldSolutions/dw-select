@@ -139,6 +139,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           margin-bottom: 16px;
           margin-left: 16px;
         }
+
+        .custom-header {
+          flex: 1;
+        }
       `,
     ];
   }
@@ -490,7 +494,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
             ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
           `
         : nothing}
-      ${this.dialogHeaderTemplate ? html`<div>${this.dialogHeaderTemplate}</div>` : nothing}
+      ${this.dialogHeaderTemplate ? html`<div class="custom-header">${this.dialogHeaderTemplate}</div>` : nothing}
     `;
   }
 
