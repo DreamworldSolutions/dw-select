@@ -1,11 +1,11 @@
-import { LitElement, html, css, unsafeCSS } from "@dreamworld/pwa-helpers/lit.js";
+import { LitElement, css, html, unsafeCSS } from '@dreamworld/pwa-helpers/lit.js';
 
 // View Elements
-import "@dreamworld/dw-icon";
-import "@dreamworld/dw-ripple";
+import '@dreamworld/dw-icon';
+import '@dreamworld/dw-ripple';
 
 // Styles
-import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals";
+import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 /**
  * # Behaviour
@@ -86,7 +86,7 @@ export class DwSelectGroupItem extends LitElement {
     if (this.collapsible) {
       return html`
         <dw-ripple></dw-ripple>
-        <dw-icon name=${this.collapsed ? "expand_more" : "expand_less"}></dw-icon>
+        <dw-icon name=${this.collapsed ? 'expand_more' : 'expand_less'}></dw-icon>
       `;
     }
 
@@ -94,4 +94,4 @@ export class DwSelectGroupItem extends LitElement {
   }
 }
 
-customElements.define("dw-select-group-item", DwSelectGroupItem);
+customElements.define('dw-select-group-item', DwSelectGroupItem);
