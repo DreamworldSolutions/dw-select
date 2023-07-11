@@ -73,6 +73,7 @@ TODO
 | `groupSelector`           | `fn()`                        |                    | returns GroupName. Group selector provides a path of groupName in Items
 | `groupExpression`         | `string`                      | `""`               | 
 | `items`                   | `object[]`                    | `undefined`        | List of selectable items.
+| `prependItems`            | `object[]`                    | `undefined`        | Items on top of the items. e.g. `All`, `None` etc...
 | `valueProvider`           | [`function`](#valueprovider-and-valueexpression)   | `undefined`        | Provides Value
 | `valueExpression`         | [`string`](#valueprovider-and-valueexpression)     | `undefined`        | 
 | `valueTextProvider`       | `function`                    | `undefined`        | returns String. Provides value that represents in list item
