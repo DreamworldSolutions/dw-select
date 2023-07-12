@@ -432,7 +432,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   connectedCallback() {
-    
     // Set initial _groups value that actually used to compute list of choices
     this._groups = this.groups;
 
@@ -709,8 +708,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     const aPrependItems = [];
     forEach(this.prependItems, e => {
-      aPrependItems.push({type: ItemTypes.ITEM, value: e})
-    })
+      aPrependItems.push({ type: ItemTypes.ITEM, value: e });
+    });
 
     this._items = [...aPrependItems, ...array];
     this._fire('_items-changed', this._items);
@@ -828,6 +827,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * Scroll to selected Item and set `_activatedItemIndex`
    */
   _scrollToSelectedItem() {
+    if (!this._items) return;
+
     if (this.value) {
       this._activatedIndex = this._items.findIndex(item => {
         return this.valueEquator(this.valueProvider(item.value), this.value);
@@ -864,7 +865,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _getItemUsingValue(value) {
     const prependItem = this.prependItems.find(item => this.valueEquator(this.valueProvider(item), value));
-    if(prependItem){
+    if (prependItem) {
       return prependItem;
     }
     return this.items.find(item => this.valueEquator(this.valueProvider(item), value));
