@@ -1,5 +1,6 @@
 import { css, html, LitElement, nothing } from '@dreamworld/pwa-helpers/lit.js';
 import { isElementAlreadyRegistered } from '@dreamworld/pwa-helpers/utils.js';
+import DeviceInfo from '@dreamworld/device-info';
 
 // View Elements
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
@@ -177,6 +178,12 @@ export class DwSelect extends DwFormElement(LitElement) {
        * List of total available items under drop-down.
        */
       items: { type: Array },
+
+      /**
+       * Input property.
+       * Items to be prepended on top of the items.
+       */
+      prependItems: { type: Array },
 
       /**
        * A function `(item) -> value` to indetify value of any item.
@@ -373,6 +380,11 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Whther the trigger element is dense or not
        */
       dense: { type: Boolean },
+
+      /**
+       * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
+       */
+      _layout: { type: String },
     };
   }
 
@@ -410,6 +422,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.showClose = false;
     this.searchPlaceholder = '';
     this._selectedValueText = '';
+    this.prependItems = [];
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
     this._valueProvider = item => item;
@@ -456,6 +469,8 @@ export class DwSelect extends DwFormElement(LitElement) {
             .triggerElement=${this._triggerElement}
             .value=${this.value}
             .items="${this.items}"
+            .prependItems=${this.prependItems}
+            .layout=${this._layout}
             .valueProvider=${this._valueProvider}
             .valueExpression=${this.valueExpression}
             .valueTextProvider=${this.valueTextProvider}
@@ -521,6 +536,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._computeValueProvider();
 
     this.addEventListener('focusout', this._onFocusOut);
+    this._layout = DeviceInfo.info().layout;
   }
 
   disconnectedCallback() {
@@ -542,9 +558,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (_changedProperties.has('value') || _changedProperties.has('items')) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
       if (!this._newItemStatus && this.items && this.items.length > 0) {
-        const selectedItem = this.items.find(item => {
-          return this.valueEquator(this._valueProvider(item), this.value);
-        });
+        const selectedItem = this._getSelectedItem(this.value);
         this._selectedValueText = this._getValue(selectedItem);
       }
     }
@@ -697,11 +711,16 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _getSelectedItem(value) {
+    const prependItem = this.prependItems.find(item => this.valueEquator(this._valueProvider(item), value));
+    if(prependItem){
+      return prependItem;
+    }
+
     const item = this.items && this.items.find(item => this.valueEquator(this._valueProvider(item), value));
     if (item !== undefined || !this._newItem) {
       return item;
     }
-
+    
     //search in newItem
     return this.valueEquator(this._valueProvider(this._newItem), value);
   }
@@ -753,7 +772,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _onFocusOut() {
     //If select isn't searchable, nothings is to be done.
-    if (!this.searchable) {
+    if (!this.searchable || this._layout === 'small') {
       return;
     }
 

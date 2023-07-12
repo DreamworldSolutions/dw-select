@@ -16,12 +16,11 @@ import * as TypographyLiterals from '@dreamworld/material-styles/typography-lite
 import debounce from 'lodash-es/debounce';
 import filter from 'lodash-es/filter';
 import orderBy from 'lodash-es/orderBy';
+import forEach from 'lodash-es/forEach.js';
 import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
 import { Direction, KeyCode, Position } from './utils.js';
-
-const MOBILE_LAYOUT_MEDIA_QUERY = 'only screen and (max-width: 420px)';
 
 const defaultMessages = {
   noRecords: 'No Records',
@@ -205,6 +204,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Original List of selectable items.
        */
       items: { type: Array },
+
+      /**
+       * Input property.
+       * Items to be prepended on top of the items.
+       */
+      prependItems: { type: Array },
 
       /**
        * Represents items to be rendered by lit-virtualizer.
@@ -427,7 +432,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   connectedCallback() {
-    this.layout = window.matchMedia(MOBILE_LAYOUT_MEDIA_QUERY).matches ? 'small' : '';
     // Set initial _groups value that actually used to compute list of choices
     this._groups = this.groups;
 
@@ -662,7 +666,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (!Array.isArray(this.items)) {
       return;
     }
-
     // If group is exist
     if (Array.isArray(this._groups)) {
       let groups = this._groups;
@@ -703,7 +706,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       });
     }
 
-    this._items = array;
+    const aPrependItems = [];
+    forEach(this.prependItems, e => {
+      aPrependItems.push({ type: ItemTypes.ITEM, value: e });
+    });
+
+    this._items = [...aPrependItems, ...array];
     this._fire('_items-changed', this._items);
   }
 
@@ -819,6 +827,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * Scroll to selected Item and set `_activatedItemIndex`
    */
   _scrollToSelectedItem() {
+    if (!this._items) return;
+
     if (this.value) {
       this._activatedIndex = this._items.findIndex(item => {
         return this.valueEquator(this.valueProvider(item.value), this.value);
@@ -854,6 +864,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _getItemUsingValue(value) {
+    const prependItem = this.prependItems.find(item => this.valueEquator(this.valueProvider(item), value));
+    if (prependItem) {
+      return prependItem;
+    }
     return this.items.find(item => this.valueEquator(this.valueProvider(item), value));
   }
 
