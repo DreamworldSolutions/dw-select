@@ -772,7 +772,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _onFocusOut() {
     //If select isn't searchable, nothings is to be done.
-    if (!this.searchable || this._layout === 'small') {
+    if (!this.searchable || this.vkb || this._layout === 'small') {
       return;
     }
 
