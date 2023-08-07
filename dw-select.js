@@ -89,6 +89,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       label: { type: String },
 
       /**
+       * Computed label that show
+       * Computed on label and required property
+       */
+      _label: { type: String },
+
+      /**
        * Sets disappearing input placeholder.
        */
       placeholder: { type: String },
@@ -385,6 +391,11 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       _layout: { type: String },
+
+      /**
+       * To show invalid state to trigger elements
+       */
+      _invalid: { type: Boolean },
     };
   }
 
@@ -418,6 +429,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   constructor() {
     super();
     this.searchable = false;
+    this.label = '';
+    this._label = '';
     this.heading = '';
     this.showClose = false;
     this.searchPlaceholder = '';
@@ -438,7 +451,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     return html`
       <dw-select-trigger
         name=${this.name}
-        label=${this.label}
+        label=${this._label}
         placeholder=${this.placeholder}
         .hint=${this._computeHelperText()}
         ?hintPersistent=${this.helperPersistent}
@@ -448,7 +461,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         .value=${this._selectedValueText}
         ?outlined=${this.outlined}
         ?disabled=${this.disabled}
-        ?required=${this.required}
+        ?invalid=${this._invalid}
         ?updatedHighlight=${this._updatedHighlight}
         ?autoValidate=${this.autoValidate}
         .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
@@ -550,6 +563,12 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   willUpdate(_changedProperties) {
     super.willUpdate && super.willUpdate(_changedProperties);
+
+    if (_changedProperties.has('label') || _changedProperties.has('required')) {
+      let label = this.label;
+      if (this.required) label = label + ' *';
+      this._label = label;
+    }
 
     if (_changedProperties.has('_opened')) {
       this._setPopoverDialogWidth();
@@ -699,6 +718,8 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._selectedValueText = this._getValue(selectedItem);
     this._triggerElement.focus();
     this._query = undefined;
+
+    this._checkValidation();
     this._dispatchSelected(value);
   }
 
@@ -712,7 +733,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _getSelectedItem(value) {
     const prependItem = this.prependItems.find(item => this.valueEquator(this._valueProvider(item), value));
-    if(prependItem){
+    if (prependItem) {
       return prependItem;
     }
 
@@ -720,7 +741,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (item !== undefined || !this._newItem) {
       return item;
     }
-    
+
     //search in newItem
     return this.valueEquator(this._valueProvider(this._newItem), value);
   }
@@ -771,64 +792,13 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onFocusOut() {
-    //If select isn't searchable, nothings is to be done.
-    if (!this.searchable || this.vkb || this._layout === 'small') {
-      return;
+    //If select is searchable, clear selection and allow new value possible
+    if (this.searchable || !this.vkb || !this._layout === 'small') {
+      this._clearSelection();
+      this._allowNewValue();
     }
-
-    //TODO: If query is NOT dirty, nothing is to be done.
-
-    // if (this._query == this._selectedValueText) {
-    //   return;
-    // }
-
     this._opened = false;
-
-    if (!this._query && !this._selectedValueText) {
-      //clear selection & dispatch event.
-      // console.log("dw-select: _onFocusOut: going to clear selection.");
-      const prevValue = this.value;
-      this.value = null;
-      if (prevValue !== this.value) {
-        this._dispatchSelected(prevValue);
-        this.dispatchEvent(new CustomEvent('clear-selection'));
-      }
-      return;
-    }
-
-    if (!this.allowNewValue) {
-      this._resetToCurValue();
-      return;
-    }
-
-    //Allow New Value - START
-
-    window.setTimeout(async () => {
-      await (this._newItemRequest || this._findNewItem());
-      if (!this._newItemStatus) {
-        this._resetToCurValue();
-        return;
-      }
-
-      if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE) {
-        //Change value & dispatch event
-        const value = this._value;
-        this.value = this._newItem;
-        this._dispatchSelected(value);
-        return;
-      }
-
-      if (this._newItemStatus === NEW_VALUE_STATUS.ERROR) {
-        const query = this._query;
-        this.value = null;
-
-        //Restore query after timeout; as on setting value, it might be resetted too.
-        window.setTimeout(() => {
-          this._selectedValueText = query;
-        });
-      }
-    });
-    //Allow New Value - END
+    this._checkValidation();
   }
 
   async _findNewItem() {
@@ -906,6 +876,68 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   focus() {
     this._triggerElement && this._triggerElement.focus();
+  }
+
+  _clearSelection() {
+    //TODO: If query is NOT dirty, nothing is to be done.
+
+    // if (this._query == this._selectedValueText) {
+    //   return;
+    // }
+
+    if (!this._query && !this._selectedValueText) {
+      //clear selection & dispatch event.
+      // console.log("dw-select: _onFocusOut: going to clear selection.");
+      const prevValue = this.value;
+      this.value = null;
+      if (prevValue !== this.value) {
+        this._dispatchSelected(prevValue);
+        this.dispatchEvent(new CustomEvent('clear-selection'));
+      }
+      return;
+    }
+  }
+
+  _allowNewValue() {
+    if (!this.allowNewValue) {
+      this._resetToCurValue();
+      return;
+    }
+
+    //Allow New Value - START
+
+    window.setTimeout(async () => {
+      await (this._newItemRequest || this._findNewItem());
+      if (!this._newItemStatus) {
+        this._resetToCurValue();
+        return;
+      }
+
+      if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+        //Change value & dispatch event
+        const value = this._value;
+        this.value = this._newItem;
+        this._dispatchSelected(value);
+        return;
+      }
+
+      if (this._newItemStatus === NEW_VALUE_STATUS.ERROR) {
+        const query = this._query;
+        this.value = null;
+
+        //Restore query after timeout; as on setting value, it might be resetted too.
+        window.setTimeout(() => {
+          this._selectedValueText = query;
+        });
+      }
+    });
+    //Allow New Value - END
+  }
+
+  _checkValidation() {
+    if (this.required) {
+      this._invalid = !this.value;
+    }
   }
 }
 

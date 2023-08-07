@@ -159,7 +159,6 @@ export class DwSelectTrigger extends DwInput {
         class="mdc-text-field__input"
         .name="${this.name}"
         ?disabled="${this.disabled}"
-        ?required="${this.required}"
         ?readonly="${this.readOnly || !this.inputAllowed}"
         .pattern="${this.pattern}"
         .placeholder="${this.placeholder}"
