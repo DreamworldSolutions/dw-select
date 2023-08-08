@@ -448,78 +448,81 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   render() {
-    return html`
-      <dw-select-trigger
-        name=${this.name}
-        label=${this._label}
-        placeholder=${this.placeholder}
-        .hint=${this._computeHelperText()}
-        ?hintPersistent=${this.helperPersistent}
-        ?inputAllowed=${this.searchable && !this.vkb}
-        ?readOnly=${this.readOnly}
-        .newValueStatus=${this._newItemStatus}
-        .value=${this._selectedValueText}
-        ?outlined=${this.outlined}
-        ?disabled=${this.disabled}
-        ?invalid=${this._invalid}
-        ?updatedHighlight=${this._updatedHighlight}
-        ?autoValidate=${this.autoValidate}
-        .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
-        .errorInTooltip=${this.errorInTooltip}
-        .dense=${this.dense}
-        @click=${this._onTrigger}
-        @input=${this._onUserInteraction}
-        @keydown=${this._onKeydown}
-        @expand-toggle="${this._onDialogOpenToggle}"
-        @invalid=${this._onInvalid}
-        @valid=${this._onValid}
-        ?opened="${this._opened}"
-      ></dw-select-trigger>
-      ${this._opened
-        ? html`<dw-select-base-dialog
-            id="selectDialog"
-            .opened=${this._opened}
-            .triggerElement=${this._triggerElement}
-            .value=${this.value}
-            .items="${this.items}"
-            .prependItems=${this.prependItems}
-            .layout=${this._layout}
-            .valueProvider=${this._valueProvider}
-            .valueExpression=${this.valueExpression}
-            .valueTextProvider=${this.valueTextProvider}
-            .valueEquator=${this.valueEquator}
-            .groups=${this.groups}
-            .groupSelector=${this.groupSelector}
-            .groupExpression=${this.groupExpression}
-            .queryFilter=${this.queryFilter}
-            _query=${this._query}
-            ?vkb=${this.vkb}
-            ?searchable=${this.searchable}
-            .renderItem=${this.renderItem}
-            .renderGroupItem=${this.renderGroupItem}
-            .heading=${this.heading}
-            .searchPlaceholder="${this.searchPlaceholder}"
-            .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
-            .errorInTooltip=${this.errorInTooltip}
-            .helper=${this._computeHelperText()}
-            ?showClose=${this.showClose}
-            .selectedTrailingIcon="${this.selectedTrailingIcon}"
-            .dialogHeaderTemplate="${this._headerTemplate}"
-            .dialogFooterElement=${this._footerTemplate}
-            ?allowNewValue="${this.allowNewValue}"
-            ._newItemStatus="${this._newItemStatus}"
-            ._newItem="${this._newItem}"
-            @selected=${this._onSelect}
-            @_items-changed=${this._onItemsChanged}
-            @dw-dialog-opened="${e => this._onDialogOpen(e)}"
-            @dw-fit-dialog-opened="${e => this._onDialogOpen(e)}"
-            @dw-dialog-closed="${e => this._onDialogClose(e)}"
-            @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
-            .messages="${this.messages}"
-            ._getItemValue=${this._getItemValue}
-          ></dw-select-base-dialog>`
-        : nothing}
-    `;
+    return html` ${this._triggerTemplate} ${this._opened ? this._dialogTemplate : nothing} `;
+  }
+
+  get _triggerTemplate() {
+    return html`<dw-select-trigger
+      name=${this.name}
+      label=${this._label}
+      placeholder=${this.placeholder}
+      .hint=${this._computeHelperText()}
+      ?hintPersistent=${this.helperPersistent}
+      ?inputAllowed=${this.searchable && !this.vkb}
+      ?readOnly=${this.readOnly}
+      .newValueStatus=${this._newItemStatus}
+      .value=${this._selectedValueText}
+      ?outlined=${this.outlined}
+      ?disabled=${this.disabled}
+      ?invalid=${this._invalid}
+      ?updatedHighlight=${this._updatedHighlight}
+      ?autoValidate=${this.autoValidate}
+      .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+      .errorInTooltip=${this.errorInTooltip}
+      .dense=${this.dense}
+      @click=${this._onTrigger}
+      @input=${this._onUserInteraction}
+      @keydown=${this._onKeydown}
+      @expand-toggle="${this._onDialogOpenToggle}"
+      @invalid=${this._onInvalid}
+      @valid=${this._onValid}
+      ?opened="${this._opened}"
+    ></dw-select-trigger>`;
+  }
+
+  get _dialogTemplate() {
+    return html`<dw-select-base-dialog
+      id="selectDialog"
+      .opened=${this._opened}
+      .triggerElement=${this._triggerElement}
+      .value=${this.value}
+      .items="${this.items}"
+      .prependItems=${this.prependItems}
+      .layout=${this._layout}
+      .valueProvider=${this._valueProvider}
+      .valueExpression=${this.valueExpression}
+      .valueTextProvider=${this.valueTextProvider}
+      .valueEquator=${this.valueEquator}
+      .groups=${this.groups}
+      .groupSelector=${this.groupSelector}
+      .groupExpression=${this.groupExpression}
+      .queryFilter=${this.queryFilter}
+      _query=${this._query}
+      ?vkb=${this.vkb}
+      ?searchable=${this.searchable}
+      .renderItem=${this.renderItem}
+      .renderGroupItem=${this.renderGroupItem}
+      .heading=${this.heading}
+      .searchPlaceholder="${this.searchPlaceholder}"
+      .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+      .errorInTooltip=${this.errorInTooltip}
+      .helper=${this._computeHelperText()}
+      ?showClose=${this.showClose}
+      .selectedTrailingIcon="${this.selectedTrailingIcon}"
+      .dialogHeaderTemplate="${this._headerTemplate}"
+      .dialogFooterElement=${this._footerTemplate}
+      ?allowNewValue="${this.allowNewValue}"
+      ._newItemStatus="${this._newItemStatus}"
+      ._newItem="${this._newItem}"
+      @selected=${this._onSelect}
+      @_items-changed=${this._onItemsChanged}
+      @dw-dialog-opened="${e => this._onDialogOpen(e)}"
+      @dw-fit-dialog-opened="${e => this._onDialogOpen(e)}"
+      @dw-dialog-closed="${e => this._onDialogClose(e)}"
+      @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
+      .messages="${this.messages}"
+      ._getItemValue=${this._getItemValue}
+    ></dw-select-base-dialog>`;
   }
 
   /**
@@ -793,11 +796,11 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _onFocusOut() {
     //If select is searchable, clear selection and allow new value possible
-    if (this.searchable || !this.vkb || !this._layout === 'small') {
+    if (!(!this.searchable || this.vkb || this._layout === 'small')) {
+      this._opened = false;
       this._clearSelection();
       this._allowNewValue();
     }
-    this._opened = false;
     this._checkValidation();
   }
 
