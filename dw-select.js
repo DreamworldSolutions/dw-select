@@ -453,9 +453,9 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   get _triggerTemplate() {
     return html`<dw-select-trigger
-      name=${this.name}
-      label=${this._label}
-      placeholder=${this.placeholder}
+      .name="${this.name}"
+      .label="${this._label}"
+      .placeholder="${this.placeholder}"
       .hint=${this._computeHelperText()}
       ?hintPersistent=${this.helperPersistent}
       ?inputAllowed=${this.searchable && !this.vkb}
@@ -553,9 +553,11 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this.addEventListener('focusout', this._onFocusOut);
     this._layout = DeviceInfo.info().layout;
+    this._computeLabel();
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.removeEventListener('focusout', this._onFocusOut);
   }
 
@@ -568,9 +570,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     super.willUpdate && super.willUpdate(_changedProperties);
 
     if (_changedProperties.has('label') || _changedProperties.has('required')) {
-      let label = this.label;
-      if (this.required) label = label + ' *';
-      this._label = label;
+      this._computeLabel();
     }
 
     if (_changedProperties.has('_opened')) {
@@ -861,6 +861,12 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     this._valueProvider = this.valueProvider;
+  }
+
+  _computeLabel() {
+    let label = this.label;
+    if (this.required) label = label + ' *';
+    this._label = label;
   }
 
   validate() {
