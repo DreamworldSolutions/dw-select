@@ -864,7 +864,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   validate() {
-    return this._triggerElement && this._triggerElement.validate();
+    this._checkValidation();
+    return !this._invalid;
   }
 
   checkValidity() {
