@@ -432,6 +432,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.label = '';
     this._label = '';
     this.heading = '';
+    this.placeholder = '';
     this.showClose = false;
     this.searchPlaceholder = '';
     this._selectedValueText = '';
