@@ -14,6 +14,19 @@ import debounce from 'lodash-es/debounce';
 import { NEW_VALUE_STATUS } from './utils';
 import { filter, KeyCode } from './utils.js';
 
+const defValueTextProvider = (item) => {
+  //For any complext type we can't generate it's string representation, so it returns blank string.
+  if (typeof item === 'object') {
+    console.warn(
+      'Your item seems an Object, but `valueTextProvider` is not specified or it is not providing proper value for this item',
+      item
+    );
+    return '';
+  }
+  
+  return toString(item);
+};
+
 /**
  * A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
  *
@@ -437,13 +450,13 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.searchPlaceholder = '';
     this._selectedValueText = '';
     this.prependItems = [];
-    this.valueTextProvider = () => {};
+    this.valueTextProvider = defValueTextProvider;
     this.groupSelector = () => {};
     this._valueProvider = item => item;
 
     this.valueEquator = (v1, v2) => v1 === v2;
     this.helperTextProvider = value => {};
-    this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
+    this.queryFilter = (item, query) => filter(this._valueTextProvider(item), query);
     this.newItemProvider = query => query;
     this._findNewItem = debounce(this._findNewItem.bind(this), 50);
   }
@@ -522,7 +535,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @dw-dialog-closed="${e => this._onDialogClose(e)}"
       @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
       .messages="${this.messages}"
-      ._getItemValue=${this._getItemValue}
+      ._valueTextProvider=${this._valueTextProvider}
     ></dw-select-base-dialog>`;
   }
 
@@ -564,7 +577,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   firstUpdated() {
     const selectedItem = this._getSelectedItem(this.value);
-    this._selectedValueText = this._getValue(selectedItem);
+    this._selectedValueText = this._valueTextProvider(selectedItem);
   }
 
   willUpdate(_changedProperties) {
@@ -582,7 +595,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
       if (!this._newItemStatus && this.items && this.items.length > 0) {
         const selectedItem = this._getSelectedItem(this.value);
-        this._selectedValueText = this._getValue(selectedItem);
+        this._selectedValueText = this._valueTextProvider(selectedItem);
       }
     }
 
@@ -655,28 +668,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  /**
-   * Returns String that represents current value
-   */
-  _getValue(value) {
-    var text;
-    try {
-      text = this.valueTextProvider(value);
-    } catch (e) {
-      text = '';
-    }
-
-    if (text) {
-      return text;
-    }
-
-    if (typeof value === 'string') {
-      return value;
-    }
-
-    return '';
-  }
-
   _computeHelperText() {
     if (
       this.helperTextProvider &&
@@ -689,15 +680,19 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   /**
-   * Compute label of the item
+   * Returns String representation of an Item. 
+   * In case of failure, it returns empty string as fallback and logs an error.
+   * 
    * @param {Object | String} item
    * @returns {String} returns string that actually represents in list item
    */
-  _getItemValue(item) {
-    if (!this.valueTextProvider(item)) {
-      return item;
+  _valueTextProvider(item) {
+    try {
+      return this.valueTextProvider(item);
+    } catch (e) {
+      console.error('_valueTextProvider: failed, so used fallback value.', e);
+      return '';
     }
-    return this.valueTextProvider(item);
   }
 
   _onTrigger(e) {
@@ -719,7 +714,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     const value = this.value;
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
-    this._selectedValueText = this._getValue(selectedItem);
+    this._selectedValueText = this._valueTextProvider(selectedItem);
     this._triggerElement.focus();
     this._query = undefined;
 
@@ -844,7 +839,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = this._getSelectedItem(this.value);
     // console.log("dw-select: _onFocusOut: going to clear query.", selectedItem, this.value);
     if (selectedItem) {
-      this._selectedValueText = this._getValue(selectedItem);
+      this._selectedValueText = this._valueTextProvider(selectedItem);
     } else {
       this._selectedValueText = '';
     }

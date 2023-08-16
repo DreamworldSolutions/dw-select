@@ -569,7 +569,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       return html`
         <dw-list-item
-          title1=${this._getItemValue(item.value)}
+          title1=${this._valueTextProvider(item.value)}
           .highlight=${this._query}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
