@@ -1,4 +1,5 @@
 import forEach from "lodash-es/forEach";
+import toString from "lodash-es/toString";
 
 export const KeyCode = {
   ENTER: 13,
@@ -34,6 +35,7 @@ export const NEW_VALUE_STATUS = {
  * @returns return true if query string's any word is matched with input string
  */
 export const filter = (value, query = "") => {
+  value = toString(value); //Safe guard against Numeric value or any other type.
   value = value.trim().toLowerCase();
   const queryArray = query.trim().toLowerCase().split(" ");
 
@@ -52,7 +54,7 @@ export const queryFilterGenerator = (keys) => {
     let str = "";
     if (keys && keys.length > 0) {
       keys.forEach((key) => {
-        if (item.hasOwnProperty(key)) {
+        if (item.hasOwnProperty(key)  && item[key]) {
           str = str + " " + item[key];
         }
       });
