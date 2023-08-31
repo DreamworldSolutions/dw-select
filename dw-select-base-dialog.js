@@ -21,6 +21,7 @@ import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
 import { Direction, KeyCode, Position } from './utils.js';
+import DeviceInfo from '@dreamworld/device-info';
 
 const defaultMessages = {
   noRecords: 'No Records',
@@ -171,6 +172,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       layout: { type: String },
+
+      /**
+       * Whether currenct device is touch or not
+       */
+      _touch: { type: Boolean },
 
       /**
        * `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual keyboard or not.
@@ -407,7 +413,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.valueExpression = '_id';
     this.heading = '';
     this.showClose = false;
-    this._activatedIndex = 0;
+    this._activatedIndex = -1;
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
     this._selectedValueText = '';
@@ -439,6 +445,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     // Determine Dialog type
     this._determineType();
 
+    this._touch = DeviceInfo.info().touch;
+    if (!this._touch) {
+      this._activatedIndex = 0;
+    }
+    
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
     window.addEventListener('keydown', this.onKeydown.bind(this));
@@ -827,7 +838,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * Scroll to selected Item and set `_activatedItemIndex`
    */
   _scrollToSelectedItem() {
-    if (!this._items) return;
+    if (!this._items || this._touch) return;
 
     if (this.value) {
       this._activatedIndex = this._items.findIndex(item => {
