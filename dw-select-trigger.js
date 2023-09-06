@@ -225,6 +225,10 @@ export class DwSelectTrigger extends DwInput {
     this.dispatchEvent(new CustomEvent('expand-toggle'));
   }
 
+  validate() {
+    return this.invalid;
+  }
+
   willUpdate(_changedProperties) {
     super.willUpdate(_changedProperties);
 
