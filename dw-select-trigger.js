@@ -226,7 +226,7 @@ export class DwSelectTrigger extends DwInput {
   }
 
   validate() {
-    return this.invalid;
+    return !this.invalid;
   }
 
   willUpdate(_changedProperties) {
