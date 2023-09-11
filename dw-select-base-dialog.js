@@ -74,8 +74,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         :host([type='modal']) .mdc-dialog .mdc-dialog__title {
           max-height: 56px;
           display: flex;
-          flex-direction: row-reverse;
           ${unsafeCSS(TypographyLiterals.headline6)};
+        }
+
+        :host([type='modal'][full-height]) #dialog-header {
+          --dw-dialog-header-padding: 4px;
+          gap: 4px;
         }
 
         :host([type='modal']) .mdc-dialog--scrollable .mdc-dialog__title {
@@ -494,8 +498,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         : nothing}
       ${this.type === 'modal'
         ? html`
-            ${this.showClose ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>` : nothing}
+            ${this.showClose && this._fullHeight ? html`<dw-icon-button icon="arrow_back" @click=${() => this.close()}></dw-icon-button>` : nothing}
             ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
+            ${this.showClose && !this._fullHeight ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>` : nothing}
           `
         : nothing}
       ${this.dialogHeaderTemplate ? html`<div class="custom-header">${this.dialogHeaderTemplate}</div>` : nothing}
