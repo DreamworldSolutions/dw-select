@@ -21,6 +21,7 @@ import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
 import { Direction, KeyCode, Position } from './utils.js';
+import DeviceInfo from '@dreamworld/device-info';
 
 const defaultMessages = {
   noRecords: 'No Records',
@@ -175,6 +176,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       layout: { type: String },
+
+      /**
+       * Whether currenct device is touch or not
+       */
+      _touch: { type: Boolean },
 
       /**
        * `vkb` stands for Virtual KeyBoard. Whether the Device has Virtual keyboard or not.
@@ -411,7 +417,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.valueExpression = '_id';
     this.heading = '';
     this.showClose = false;
-    this._activatedIndex = 0;
+    this._activatedIndex = -1;
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
     this._selectedValueText = '';
@@ -442,6 +448,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     // this.type = "popover"
     // Determine Dialog type
     this._determineType();
+
+    this._touch = DeviceInfo.info().touch;
+    if (!this._touch) {
+      this._activatedIndex = 0;
+    }
 
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
@@ -508,7 +519,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _contentTemplate() {
-    if (this.allowNewValue && this._items.length === 0) {
+    if (this.allowNewValue && this._items?.length === 0) {
       return nothing;
     }
     // Render Loading view when _items is `undefined`
@@ -815,8 +826,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivatedToFirstItem() {
+    if (!this._query || this._touch) return;
     let activatedIndex = -1;
-    if (this._items && this._items.length === 0) {
+    if (this._items && this._items.length > 0) {
       for (let i = 0; i < this._items.length; i++) {
         const item = this._items[i];
         if (item.type === ItemTypes.ITEM) {
@@ -834,19 +846,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   _scrollToSelectedItem() {
     if (!this._items) return;
 
+    let selectedItemIndex;
     if (this.value) {
-      this._activatedIndex = this._items.findIndex(item => {
+      selectedItemIndex = this._items.findIndex(item => {
         return this.valueEquator(this.valueProvider(item.value), this.value);
       });
     }
 
-    let activatedItem = this._getItem(this._activatedIndex);
+    let activatedItem = this._getItem(selectedItemIndex);
     while (activatedItem && activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
-      this._activatedIndex++;
-      activatedItem = this._getItem(this._activatedIndex);
+      selectedItemIndex++;
+      activatedItem = this._getItem(selectedItemIndex);
     }
     setTimeout(() => {
-      this._scrollToIndex(this._activatedIndex, Position.CENTER);
+      this._scrollToIndex(selectedItemIndex, Position.CENTER);
     }, 250);
   }
 

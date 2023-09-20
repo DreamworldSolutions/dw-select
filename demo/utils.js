@@ -37,21 +37,21 @@ export const groups = [
   {
     name: "BANK_ACCOUNT",
     label: "Bank Accounts",
-    collapsible: true,
+    collapsible: false,
     collapsed: true,
     icon: "account_balance",
   },
   {
     name: "CONTACT",
     label: "Contacts",
-    collapsible: true,
+    collapsible: false,
     collapsed: true,
     icon: "person",
   },
   {
     name: "ACCOUNT",
     label: "Custom Accounts",
-    collapsible: true,
+    collapsible: false,
     collapsed: true,
   },
 ];
