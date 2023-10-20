@@ -25,7 +25,8 @@ class SelectDemo extends LitElement {
           --dw-dialog-header-padding: 12px 4px 12px 16px;
         }
 
-        dw-select {
+        dw-select,
+        dw-select-extension-demo {
           margin-bottom: 24px;
         }
       `,
@@ -42,6 +43,7 @@ class SelectDemo extends LitElement {
           outlined
           .items=${country_list_with_code}
           .value=${'India'}
+          .originalValue="${'India'}"
           .valueTextProvider=${item => `${item.name} - ${item.code}`}
           .valueExpression="${'name'}"
           label="Select country"
@@ -51,6 +53,7 @@ class SelectDemo extends LitElement {
           .heading=${'Download'}
           showClose
           required
+          highlightChanged
           .requiredMessage=${'Required'}
           errorInTooltip
           autoValidate
@@ -174,6 +177,20 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select-extension-demo outlined @change=${this._onChange}></dw-select-extension-demo>
+
+      <dw-select
+        .label=${'Highlight'}
+        .heading="${'Country'}"
+        showClose
+        outlined
+        .items=${country_list_with_code}
+        .valueTextProvider=${item => item.name}
+        .valueExpression="${'code'}"
+        .value=${'IN'}
+        .originalValue="${'IN'}"
+        highlightChanged
+        @change=${this._onChange}
+      ></dw-select>
 
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
