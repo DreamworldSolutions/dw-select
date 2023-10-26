@@ -396,6 +396,13 @@ export class DwSelect extends DwFormElement(LitElement) {
        * To show invalid state to trigger elements
        */
       _invalid: { type: Boolean },
+
+      /**
+       * Set to true to highLight textfield when value is changed
+       * Make sure to provide `originalValue` when setting this to true
+       * It will highLight field when `value` and `originalValue` is not same
+       */
+      highlightChanged: { type: Boolean },
     };
   }
 
@@ -463,11 +470,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       ?readOnly=${this.readOnly}
       .newValueStatus=${this._newItemStatus}
       .value=${this._selectedValueText}
+      .originalValue="${this._originalValueText}"
       ?outlined=${this.outlined}
       ?disabled=${this.disabled}
       ?invalid=${this._invalid}
-      ?updatedHighlight=${this._updatedHighlight}
       ?autoValidate=${this.autoValidate}
+      ?highlightChanged="${this.highlightChanged}"
       .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
       .errorInTooltip=${this.errorInTooltip}
       .dense=${this.dense}
@@ -542,6 +550,11 @@ export class DwSelect extends DwFormElement(LitElement) {
     return nothing;
   }
 
+  get _originalValueText() {
+    const originalItem = this._getSelectedItem(this.originalValue);
+    return this._getValue(originalItem);
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
@@ -579,7 +592,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     if (_changedProperties.has('value') || _changedProperties.has('items')) {
-      this._updatedHighlight = !this.valueEquator(this.value, this.originalValue);
       if (!this._newItemStatus && this.items && this.items.length > 0) {
         const selectedItem = this._getSelectedItem(this.value);
         this._selectedValueText = this._getValue(selectedItem);

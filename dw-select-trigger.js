@@ -32,10 +32,6 @@ export class DwSelectTrigger extends DwInput {
           --dw-input-outlined-readonly-idle-border-color: transparent;
         }
 
-        :host([updatedHighlight]:not([outlined])) {
-          --mdc-text-field-fill-color: var(--dw-select-updated-highlight-bg-color, rgba(2, 175, 205, 0.04));
-        }
-
         :host(:not([inputallowed])) input {
           cursor: pointer;
         }
@@ -75,11 +71,6 @@ export class DwSelectTrigger extends DwInput {
 
   static get properties() {
     return {
-      /**
-       * Input Property. When true, shows updated highlights
-       * Default "false"
-       */
-      updatedHighlight: { type: Boolean, reflect: true },
 
       /**
        * Whether or not to show the temprory select dialog.
@@ -117,7 +108,6 @@ export class DwSelectTrigger extends DwInput {
   constructor() {
     super();
     this.opened = false;
-    this.updatedHighlight = false;
     this.inputAllowed = false;
     this.iconTrailing = 'expand_less';
     this.errorInTooltip = false;
