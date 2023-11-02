@@ -132,6 +132,14 @@ export class DwSelectDialogInput extends LitElement {
     this.newValueStatus = undefined;
   }
 
+  willUpdate(_changedProperties) {
+    super.willUpdate(_changedProperties);
+
+    if (_changedProperties.has('value')) {
+      this._hasCloseButton = Boolean(this.value);
+    }
+  }
+
   render() {
     return html`
       <div class="container">
@@ -181,7 +189,6 @@ export class DwSelectDialogInput extends LitElement {
   _onInput(e) {
     e.stopPropagation();
     this.value = e.target && e.target.value;
-    this._hasCloseButton = Boolean(this.value);
     this.dispatchEvent(new CustomEvent('input-change'));
   }
 
@@ -191,7 +198,7 @@ export class DwSelectDialogInput extends LitElement {
 
   _onClear() {
     this.value = '';
-    this.dispatchEvent(new CustomEvent('input-change'));
+    this.dispatchEvent(new CustomEvent('clear-selection'));
   }
 }
 

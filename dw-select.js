@@ -485,6 +485,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @expand-toggle="${this._onDialogOpenToggle}"
       @invalid=${this._onInvalid}
       @valid=${this._onValid}
+      @clear-selection="${this._onClearSelection}"
       ?opened="${this._opened}"
     ></dw-select-trigger>`;
   }
@@ -529,6 +530,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @dw-fit-dialog-opened="${e => this._onDialogOpen(e)}"
       @dw-dialog-closed="${e => this._onDialogClose(e)}"
       @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
+      @clear-selection="${this._onClearSelection}"
       .messages="${this.messages}"
       ._getItemValue=${this._getItemValue}
     ></dw-select-base-dialog>`;
@@ -770,6 +772,12 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onValid(e) {
     this.validity = this._triggerElement.validity;
     this.dispatchEvent(new CustomEvent('valid', { detail: this.validity }));
+  }
+
+  _onClearSelection() {
+    this.value = undefined;
+    this._query = '';
+    this._opened = false;
   }
 
   _onDialogOpenToggle() {
