@@ -768,21 +768,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     return this._items && this._items[index];
   }
 
-  _getItemByValue(value) {
-    const prependItem = this.prependItems.find(item => this.valueEquator(this.valueProvider(item), value));
-    if (prependItem) {
-      return prependItem;
-    }
-
-    const item = this.items && this.items.find(item => this.valueEquator(this.valueProvider(item), value));
-    if (item !== undefined || !this._newItem) {
-      return item;
-    }
-
-    //search in newItem
-    return this.valueEquator(this.valueProvider(this._newItem), value);
-  }
-
   /**
    * Returns String that represents current value
    */
@@ -919,7 +904,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (prependItem) {
       return prependItem;
     }
-    return this.items.find(item => this.valueEquator(this.valueProvider(item), value));
+
+    const item = this.items && this.items.find(item => this.valueEquator(this.valueProvider(item), value));
+    if (item !== undefined || !this._newItem) {
+      return item;
+    }
+
+    //search in newItem
+    return this.valueEquator(this.valueProvider(this._newItem), value);
   }
 
   willUpdate(_changedProperties) {
@@ -940,7 +932,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (_changedProperties.has('value')) {
-      this._selectedValueText = this._getTextByItem(this._getItemByValue(this.value));
+      const selectedItem = this._getItemUsingValue(this.value);
+      this._selectedValueText = this._getTextByItem(selectedItem);
     }
   }
 }
