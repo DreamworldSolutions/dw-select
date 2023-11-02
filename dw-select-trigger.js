@@ -40,6 +40,18 @@ export class DwSelectTrigger extends DwInput {
           color: var(--dw-icon-color, rgba(0, 0, 0, 0.54));
         }
 
+        .mdc-text-field__icon[tabindex='-1'] {
+          pointer-events: unset;
+        }
+
+        .up-down-arrow {
+          transition: 0.2s ease-in-out;
+        }
+
+        :host([opened]) .up-down-arrow {
+          rotate: 180deg;
+        }
+
         dw-icon-button {
           --dw-icon-color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
         }
@@ -75,7 +87,7 @@ export class DwSelectTrigger extends DwInput {
        * Whether or not to show the temprory select dialog.
        * Default false
        */
-      opened: { type: Boolean },
+      opened: { type: Boolean, reflect: true },
 
       /**
        * When true user isn’t allowed to type anything.
@@ -101,6 +113,11 @@ export class DwSelectTrigger extends DwInput {
       errorInTooltip: { type: Boolean },
 
       newValueStatus: { type: String },
+
+      /**
+       * Whether component is focused or not
+       */
+      _focused: { type: Boolean, reflect: true, attribute: 'focused' },
     };
   }
 
@@ -108,8 +125,22 @@ export class DwSelectTrigger extends DwInput {
     super();
     this.opened = false;
     this.inputAllowed = false;
-    this.iconTrailing = 'expand_less';
+    this.iconTrailing = 'expand_more';
     this.errorInTooltip = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.addEventListener('focusin', this._onFocusIn);
+    this.addEventListener('focusout', this._onFocusOut);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    this.removeEventListener('focusin', this._onFocusIn);
+    this.removeEventListener('focusout', this._onFocusOut);
   }
 
   /**
@@ -222,9 +253,22 @@ export class DwSelectTrigger extends DwInput {
     if (this.readOnly) {
       return nothing;
     }
+    if (this._focused && this.value && this.inputAllowed) {
+      return html`
+        <dw-icon-button
+          class="mdc-text-field__icon"
+          icon="${'close'}"
+          .iconSize=${this.iconSize}
+          .buttonSize=${this.iconButtonSize}
+          ?disabled="${this.disabled}"
+          tabindex="-1"
+          @click=${this._onClose}
+        ></dw-icon-button>
+      `;
+    }
     return html`
       <dw-icon-button
-        class="mdc-text-field__icon"
+        class="mdc-text-field__icon up-down-arrow"
         icon="${this.iconTrailing}"
         .iconSize=${this.iconSize}
         .buttonSize=${this.iconButtonSize}
@@ -260,10 +304,6 @@ export class DwSelectTrigger extends DwInput {
   willUpdate(_changedProperties) {
     super.willUpdate(_changedProperties);
 
-    if (_changedProperties.has('opened')) {
-      this.iconTrailing = this.opened ? 'expand_less' : 'expand_more';
-    }
-
     if (_changedProperties.has('errorMessage')) {
       if (!this.errorInTooltip) {
         this.validationMessage = this.errorMessage;
@@ -281,6 +321,19 @@ export class DwSelectTrigger extends DwInput {
         this.dispatchEvent(new CustomEvent('valid'));
       }
     }
+  }
+
+  _onFocusIn() {
+    this._focused = true;
+  }
+
+  _onFocusOut() {
+    this._focused = false;
+  }
+
+  _onClose(e) {
+    e.stopPropagation();
+    this.dispatchEvent(new Event('clear-selection'));
   }
 }
 

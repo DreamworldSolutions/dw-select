@@ -536,6 +536,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @expand-toggle="${this._onDialogOpenToggle}"
       @invalid=${this._onInvalid}
       @valid=${this._onValid}
+      @clear-selection="${this._onClearSelection}"
       @action="${this._onTipAction}"
       ?opened="${this._opened}"
     ></dw-select-trigger>`;
@@ -581,6 +582,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @dw-fit-dialog-opened="${e => this._onDialogOpen(e)}"
       @dw-dialog-closed="${e => this._onDialogClose(e)}"
       @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
+      @clear-selection="${this._onClearSelection}"
       .messages="${this.messages}"
       ._getItemValue=${this._getItemValue}
     ></dw-select-base-dialog>`;
@@ -827,6 +829,11 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onTipAction(e) {
     const action = e.detail;
     this.dispatchEvent(new CustomEvent('action', { detail: action }));
+}
+  _onClearSelection() {
+    this.value = undefined;
+    this._query = '';
+    this._opened = false;
   }
 
   _onDialogOpenToggle() {

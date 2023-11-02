@@ -494,13 +494,18 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
             .newValueStatus="${this._newItemStatus}"
             @cancel=${this._onClose}
             @input-change=${this._onUserInteraction}
+            @clear-selection="${this._onUserInteraction}"
           ></dw-select-dialog-input>`
         : nothing}
       ${this.type === 'modal'
         ? html`
-            ${this.showClose && this._fullHeight ? html`<dw-icon-button icon="arrow_back" @click=${() => this.close()}></dw-icon-button>` : nothing}
+            ${this.showClose && this._fullHeight
+              ? html`<dw-icon-button icon="arrow_back" @click=${() => this.close()}></dw-icon-button>`
+              : nothing}
             ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
-            ${this.showClose && !this._fullHeight ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>` : nothing}
+            ${this.showClose && !this._fullHeight
+              ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>`
+              : nothing}
           `
         : nothing}
       ${this.dialogHeaderTemplate ? html`<div class="custom-header">${this.dialogHeaderTemplate}</div>` : nothing}
@@ -735,6 +740,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (e.type === 'input-change') {
       this._onInput(e);
     }
+
+    if (e.type === 'clear-selection') {
+      this.dispatchEvent(new Event('clear-selection'));
+    }
   }
 
   _onClose() {
@@ -757,6 +766,43 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _getItem(index) {
     return this._items && this._items[index];
+  }
+
+  _getItemByValue(value) {
+    const prependItem = this.prependItems.find(item => this.valueEquator(this.valueProvider(item), value));
+    if (prependItem) {
+      return prependItem;
+    }
+
+    const item = this.items && this.items.find(item => this.valueEquator(this.valueProvider(item), value));
+    if (item !== undefined || !this._newItem) {
+      return item;
+    }
+
+    //search in newItem
+    return this.valueEquator(this.valueProvider(this._newItem), value);
+  }
+
+  /**
+   * Returns String that represents current value
+   */
+  _getTextByItem(item) {
+    var text;
+    try {
+      text = this.valueTextProvider(item);
+    } catch (e) {
+      text = '';
+    }
+
+    if (text) {
+      return text;
+    }
+
+    if (typeof item === 'string') {
+      return item;
+    }
+
+    return '';
   }
 
   onKeydown(e) {
@@ -891,6 +937,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (_changedProperties.has('_activatedIndex') || _changedProperties.has('_items')) {
       this._activatedItem = this._getItem(this._activatedIndex);
+    }
+
+    if (_changedProperties.has('value')) {
+      this._selectedValueText = this._getTextByItem(this._getItemByValue(this.value));
     }
   }
 }
