@@ -34,10 +34,17 @@ class SelectDemo extends LitElement {
         }
 
         .tippy-box {
-          ${DWTooltipStyle}
+          ${DWTooltipStyle};
         }
       `,
     ];
+  }
+
+  get _tipActions() {
+    return [
+      {name: "UPDATE", label: "Update"},
+      {name: "CLEAR", label: "Clear", danger: true}
+    ]
   }
 
   render() {
@@ -62,9 +69,16 @@ class SelectDemo extends LitElement {
           required
           highlightChanged
           .requiredMessage=${'Required'}
+          hintInTooltip
+          .hintTooltipActions="${this._tipActions}"
           errorInTooltip
+          .errorTooltipActions="${this._tipActions}"
+          .warningText="${"Warning"}"
+          warningInTooltip
+          .warningTooltipActions="${this._tipActions}"
           autoValidate
           @change=${this._onChange}
+          @action="${(e) => console.log(e.detail)}"
           .helper=${'Simple Helper Text'}
           helperPersistent
           .helperTextProvider=${this._helperTextProvider}
