@@ -94,6 +94,23 @@ TODO
 | `errorInTooltip`        | `boolean`                                        | `false`                 | Show error meesage in error trailling icon hover tooltip.                                                                                                                                                                                                                                                                                            |
 | `allowNewValue`         | `boolean`                                        | `false`                 | Whether new value is allowed or not. Can be used only when select is `searchable`                                                                                                                                                                                                                                                                    |
 | `newValueProvider`      | `function`                                       | (query) => query        | Value provider function. Used when `allowNewValue` is available, and `query` does not match with any options. Default it returns searched `query`. <br>**Note:** Return value could be any except function. Including `Promise`.                                                                                                                     |
+| `hintInTooltip` | `boolean` | `false` | Allow to show hint text in tooltip and tip trigger on info(grey) icon.
+| `errorInTooltip` | `boolean` | `false` | Allow to show error text in tooltip. It trigger on error(red) icon.
+| `warningInTooltip` | `boolean` | `false` | Allow to show warning text in tooltip. It trigger on warning(orange) icon.
+| `hintTooltipActions` | [`Action[]`](#action) | `undefined` | Allow to add tip action while hint text in tip. on action click event named `action` dispatch.
+| `errorTooltipActions` | [`Action[]`](#action) | `undefined` | Allow to add tip action while error text in tip. on action click event named `action` dispatch.
+| `warningTooltipActions` | [`Action[]`](#action) | `undefined` | Allow to add tip action while warning text in tip. on action click event named `action` dispatch.
+| `tipPlacement` | `string` | `""` | Tooltip placement for more see [tippyJs doc](https://atomiks.github.io/tippyjs/v6/all-props/#placement).
+
+#### Action
+
+```js
+{
+  name: string,
+  lable: string,
+  danger: boolean
+}
+```
 
 ### Group
 

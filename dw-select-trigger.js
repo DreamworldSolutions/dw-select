@@ -71,7 +71,6 @@ export class DwSelectTrigger extends DwInput {
 
   static get properties() {
     return {
-
       /**
        * Whether or not to show the temprory select dialog.
        * Default false
@@ -127,6 +126,45 @@ export class DwSelectTrigger extends DwInput {
           .iconSize=${this.iconSize}
           tabindex=""
         ></dw-icon-button>
+      `;
+    }
+
+    if (this.invalid) {
+      return html`
+        ${this.errorInTooltip
+          ? html`<dw-icon-button id="error" class="error" icon="${'error'}" tabindex="-1" .iconFont="${this.iconFont}"></dw-icon-button>
+              <dw-tooltip for="error" .extraOptions=${this._extraOptions} .placement="${this.tipPlacement}">
+                ${unsafeHTML(this.errorMessage)} ${this._renderTooltipActions(this.errorTooltipActions)}
+              </dw-tooltip>`
+          : nothing}
+      `;
+    }
+
+    if (this.warningText) {
+      return html`
+        ${this.warningInTooltip
+          ? html`<dw-icon-button
+                id="warning"
+                class="warning"
+                icon="${'warning'}"
+                tabindex="-1"
+                .iconFont="${this.iconFont}"
+              ></dw-icon-button>
+              <dw-tooltip for="warning" .extraOptions=${this._extraOptions} .placement="${this.tipPlacement}">
+                ${unsafeHTML(this.warningText)} ${this._renderTooltipActions(this.warningTooltipActions)}
+              </dw-tooltip>`
+          : nothing}
+      `;
+    }
+
+    if (this.hint) {
+      return html`
+        ${this.hintInTooltip
+          ? html`<dw-icon-button id="info" class="info" icon="${'info'}" tabindex="-1" .iconFont="${this.iconFont}"></dw-icon-button>
+              <dw-tooltip for="info" .extraOptions=${this._extraOptions} .placement="${this.tipPlacement}">
+                ${unsafeHTML(this.hint)} ${this._renderTooltipActions(this.hintTooltipActions)}
+              </dw-tooltip>`
+          : nothing}
       `;
     }
 

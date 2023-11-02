@@ -949,7 +949,7 @@
     "@dreamworld/pwa-helpers" "^1.16.1"
     lodash-es "^4.17.21"
 
-"@dreamworld/dw-button@^3.0.4":
+"@dreamworld/dw-button@^3.0.3", "@dreamworld/dw-button@^3.0.4":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-button/-/dw-button-3.0.4.tgz#038cce70596bc05e6975f85ef71342ee9cb406e4"
   integrity sha512-j1CQrHyha3ss1+KdYFgap3sYJkQqzditFbv/LF77NsQkU6JURu3Nup4fP20dRvn6/q7dk6gLrChXjETU6bsHng==
@@ -1005,14 +1005,16 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@3.5.8", "@dreamworld/dw-input@^3.5.8":
-  version "3.5.8"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.5.8.tgz#2dc56e76a4541144c886c34ff581b3c33d9e8dc3"
-  integrity sha512-uBmzZ+CyBqLxkXMPQNAaD2sOuwFRCjTofhlYcNUOKdC9oPxpRDRfh6dhJxBSOETeifFVYhjYqRqv2jUIKqhfHA==
+"@dreamworld/dw-input@3.6.1", "@dreamworld/dw-input@^3.6.1":
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.6.1.tgz#0bdffb8b25e1aad7cc4f5d54e9a9f711729aa33c"
+  integrity sha512-8J0j8zJkBsr42OmoZW8UVr4w5lBC5/Mcvfvq1MOG1XHsviVt/FzVgyBvHxreOhyPA3iqahbEkLS1NgYE07z0jw==
   dependencies:
+    "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"
     "@dreamworld/dw-icon" "^4.0.0"
     "@dreamworld/dw-icon-button" "^3.0.0"
+    "@dreamworld/dw-tooltip" "^3.1.1"
     "@material/textfield" "^14.0.0"
 
 "@dreamworld/dw-list-item@^4.3.1":

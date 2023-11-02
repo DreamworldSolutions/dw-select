@@ -331,6 +331,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       _selectedValueText: { type: String },
 
       /**
+       * Text to show the warning message.
+       */
+      warningText: { type: String },
+
+      /**
        * Input Property
        * Whether error message shows in tooltip or not.
        * Default erro shows at hint text
@@ -403,6 +408,45 @@ export class DwSelect extends DwFormElement(LitElement) {
        * It will highLight field when `value` and `originalValue` is not same
        */
       highlightChanged: { type: Boolean },
+
+      /**
+       * Whether to show hint in tooltip
+       * tip trigger on hover of info, warning, and error icon button at trail.
+       */
+      hintInTooltip: { type: Boolean },
+
+      /**
+       * Whether to show error in tooltip
+       * tip trigger on hover of info, warning, and error icon button at trail.
+       */
+      errorInTooltip: { type: Boolean },
+
+      /**
+       * Whether to show warning in tooltip
+       * tip trigger on hover of info, warning, and error icon button at trail.
+       */
+      warningInTooltip: { type: Boolean },
+
+      /**
+       * Tooltip actions for hint text
+       */
+      hintTooltipActions: { type: Array },
+
+      /**
+       * Tooltip actions for error text
+       */
+      errorTooltipActions: { type: Array },
+
+      /**
+       * Tooltip actions for warning text
+       */
+      warningTooltipActions: { type: Array },
+
+      /**
+       * Tooltip placement
+       * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
+       */
+      tipPlacement: { type: String },
     };
   }
 
@@ -477,7 +521,14 @@ export class DwSelect extends DwFormElement(LitElement) {
       ?autoValidate=${this.autoValidate}
       ?highlightChanged="${this.highlightChanged}"
       .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+      .warningText="${this.warningText}"
+      .hintInTooltip="${this.hintInTooltip}"
       .errorInTooltip=${this.errorInTooltip}
+      .warningInTooltip="${this.warningInTooltip}"
+      .hintTooltipActions="${this.hintTooltipActions}"
+      .errorTooltipActions="${this.errorTooltipActions}"
+      .warningTooltipActions="${this.warningTooltipActions}"
+      .tipPlacement="${this.tipPlacement}"
       .dense=${this.dense}
       @click=${this._onTrigger}
       @input=${this._onUserInteraction}
@@ -485,6 +536,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @expand-toggle="${this._onDialogOpenToggle}"
       @invalid=${this._onInvalid}
       @valid=${this._onValid}
+      @action="${this._onTipAction}"
       ?opened="${this._opened}"
     ></dw-select-trigger>`;
   }
@@ -770,6 +822,11 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onValid(e) {
     this.validity = this._triggerElement.validity;
     this.dispatchEvent(new CustomEvent('valid', { detail: this.validity }));
+  }
+
+  _onTipAction(e) {
+    const action = e.detail;
+    this.dispatchEvent(new CustomEvent('action', { detail: action }));
   }
 
   _onDialogOpenToggle() {
