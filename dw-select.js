@@ -403,6 +403,8 @@ export class DwSelect extends DwFormElement(LitElement) {
        * It will highLight field when `value` and `originalValue` is not same
        */
       highlightChanged: { type: Boolean },
+
+      dialogType: { type: Boolean },
     };
   }
 
@@ -493,6 +495,8 @@ export class DwSelect extends DwFormElement(LitElement) {
     return html`<dw-select-base-dialog
       id="selectDialog"
       .opened=${this._opened}
+      .type=${this._dialogType}
+      .placement=${this._dialogPlacement}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
       .items="${this.items}"
@@ -553,6 +557,22 @@ export class DwSelect extends DwFormElement(LitElement) {
   get _originalValueText() {
     const originalItem = this._getSelectedItem(this.originalValue);
     return this._getValue(originalItem);
+  }
+
+  get _dialogType(){
+    if(this.dialogType) return this.dialogType;
+
+    if (this.vkb && this.searchable) return 'fit';
+
+    if (this.layout === 'small') return 'modal';
+
+    return 'popover';
+  }
+
+  get _dialogPlacement() {
+    if(this.layout === 'small' && !this.searchable) return 'bottom';
+
+    return 'center';
   }
 
   connectedCallback() {

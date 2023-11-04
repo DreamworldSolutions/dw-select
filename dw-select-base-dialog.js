@@ -439,10 +439,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     // Set initial _groups value that actually used to compute list of choices
     this._groups = this.groups;
 
-    // this.type = "popover"
-    // Determine Dialog type
-    this._determineType();
-
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
     window.addEventListener('keydown', this.onKeydown.bind(this));
@@ -468,21 +464,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (changedProperties.has('items')) {
       this._getItems();
     }
-  }
-
-  _determineType() {
-    if (this.vkb && this.searchable) {
-      this.type = 'fit';
-      return;
-    }
-
-    if (this.layout === 'small') {
-      this.type = 'modal';
-      this.placement = 'bottom';
-      return;
-    }
-
-    this.type = 'popover';
   }
 
   get _headerTemplate() {
