@@ -160,45 +160,6 @@ export class DwSelectTrigger extends DwInput {
       `;
     }
 
-    if (this.invalid) {
-      return html`
-        ${this.errorInTooltip
-          ? html`<dw-icon-button id="error" class="error" icon="${'error'}" tabindex="-1" .iconFont="${this.iconFont}"></dw-icon-button>
-              <dw-tooltip for="error" .extraOptions=${this._extraOptions} .placement="${this.tipPlacement}">
-                ${unsafeHTML(this.errorMessage)} ${this._renderTooltipActions(this.errorTooltipActions)}
-              </dw-tooltip>`
-          : nothing}
-      `;
-    }
-
-    if (this.warningText) {
-      return html`
-        ${this.warningInTooltip
-          ? html`<dw-icon-button
-                id="warning"
-                class="warning"
-                icon="${'warning'}"
-                tabindex="-1"
-                .iconFont="${this.iconFont}"
-              ></dw-icon-button>
-              <dw-tooltip for="warning" .extraOptions=${this._extraOptions} .placement="${this.tipPlacement}">
-                ${unsafeHTML(this.warningText)} ${this._renderTooltipActions(this.warningTooltipActions)}
-              </dw-tooltip>`
-          : nothing}
-      `;
-    }
-
-    if (this.hint) {
-      return html`
-        ${this.hintInTooltip
-          ? html`<dw-icon-button id="info" class="info" icon="${'info'}" tabindex="-1" .iconFont="${this.iconFont}"></dw-icon-button>
-              <dw-tooltip for="info" .extraOptions=${this._extraOptions} .placement="${this.tipPlacement}">
-                ${unsafeHTML(this.hint)} ${this._renderTooltipActions(this.hintTooltipActions)}
-              </dw-tooltip>`
-          : nothing}
-      `;
-    }
-
     if (this.iconTrailing) {
       return this.renderIcon(this.iconTrailing, true);
     }
@@ -240,12 +201,6 @@ export class DwSelectTrigger extends DwInput {
     if (this.newValueStatus) {
       return this._renderNewValueTrailingIcon;
     }
-    if (this.errorInTooltip && this.errorMessage && this.invalid) {
-      return html`
-        <dw-icon-button id="error" icon="error" tabindex="-1"></dw-icon-button>
-        <dw-tooltip for="error">${unsafeHTML(this.errorMessage)}</dw-tooltip>
-      `;
-    }
     return html` ${this._renderExpandLessMoreButton} `;
   }
 
@@ -274,7 +229,7 @@ export class DwSelectTrigger extends DwInput {
         .buttonSize=${this.iconButtonSize}
         ?disabled="${this.disabled}"
         tabindex="-1"
-        @click=${this._onExpandClick}
+        @mousedown=${this._onExpandClick}
       ></dw-icon-button>
     `;
   }

@@ -559,7 +559,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .groupSelector=${this.groupSelector}
       .groupExpression=${this.groupExpression}
       .queryFilter=${this.queryFilter}
-      _query=${this._query}
+      ._query=${this._query}
       ?vkb=${this.vkb}
       ?searchable=${this.searchable}
       .renderItem=${this.renderItem}
