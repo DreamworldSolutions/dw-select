@@ -447,6 +447,8 @@ export class DwSelect extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
+      
+      popover: { type: Boolean },
     };
   }
 
@@ -546,6 +548,8 @@ export class DwSelect extends DwFormElement(LitElement) {
     return html`<dw-select-base-dialog
       id="selectDialog"
       .opened=${this._opened}
+      .type=${this._dialogType}
+      .placement=${this._dialogPlacement}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
       .items="${this.items}"
@@ -607,6 +611,20 @@ export class DwSelect extends DwFormElement(LitElement) {
   get _originalValueText() {
     const originalItem = this._getSelectedItem(this.originalValue);
     return this._getValue(originalItem);
+  }
+
+  get _dialogType(){
+    if (this.vkb && this.searchable) return 'fit';
+
+    if (this.layout === 'small' && !this.popover) return 'modal';
+
+    return 'popover';
+  }
+
+  get _dialogPlacement() {
+    if(this.layout === 'small' && !this.searchable) return 'bottom';
+
+    return 'center';
   }
 
   connectedCallback() {
