@@ -89,12 +89,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       label: { type: String },
 
       /**
-       * Computed label that show
-       * Computed on label and required property
-       */
-      _label: { type: String },
-
-      /**
        * Sets disappearing input placeholder.
        */
       placeholder: { type: String },
@@ -122,13 +116,14 @@ export class DwSelect extends DwFormElement(LitElement) {
 
       /**
        * A Custom Error Message to be shown.
+       * It could be `String` or `Function`.
        */
-      errorMessage: { type: String },
+      error: { type: Object },
 
       /**
        * Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.
        */
-      requiredMessage: { type: String },
+      errorMessages: { type: Object },
 
       /**
        * Whether or not to show the `required` error message.
@@ -333,7 +328,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Text to show the warning message.
        */
-      warningText: { type: String },
+      warning: { type: String },
 
       /**
        * Input Property
@@ -483,7 +478,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     super();
     this.searchable = false;
     this.label = '';
-    this._label = '';
     this.heading = '';
     this.placeholder = '';
     this.showClose = false;
@@ -508,7 +502,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   get _triggerTemplate() {
     return html`<dw-select-trigger
       .name="${this.name}"
-      .label="${this._label}"
+      .label="${this.label}"
       .placeholder="${this.placeholder}"
       .hint=${this._computeHelperText()}
       ?hintPersistent=${this.helperPersistent}
@@ -517,13 +511,15 @@ export class DwSelect extends DwFormElement(LitElement) {
       .newValueStatus=${this._newItemStatus}
       .value=${this._selectedValueText}
       .originalValue="${this._originalValueText}"
+      ?required="${this.required}"
       ?outlined=${this.outlined}
       ?disabled=${this.disabled}
       ?invalid=${this._invalid}
       ?autoValidate=${this.autoValidate}
       ?highlightChanged="${this.highlightChanged}"
-      .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
-      .warningText="${this.warningText}"
+      .error=${this.error}
+      .errorMessages="${this.errorMessages}"
+      .warning="${this.warning}"
       .hintInTooltip="${this.hintInTooltip}"
       .errorInTooltip=${this.errorInTooltip}
       .warningInTooltip="${this.warningInTooltip}"
@@ -570,7 +566,8 @@ export class DwSelect extends DwFormElement(LitElement) {
       .renderGroupItem=${this.renderGroupItem}
       .heading=${this.heading}
       .searchPlaceholder="${this.searchPlaceholder}"
-      .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+      .error=${this.error}
+      .errorMessages="${this.errorMessages}"
       .errorInTooltip=${this.errorInTooltip}
       .helper=${this._computeHelperText()}
       ?showClose=${this.showClose}
@@ -639,7 +636,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this.addEventListener('focusout', this._onFocusOut);
     this._layout = DeviceInfo.info().layout;
-    this._computeLabel();
   }
 
   disconnectedCallback() {
@@ -654,10 +650,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   willUpdate(_changedProperties) {
     super.willUpdate && super.willUpdate(_changedProperties);
-
-    if (_changedProperties.has('label') || _changedProperties.has('required')) {
-      this._computeLabel();
-    }
 
     if (_changedProperties.has('_opened')) {
       this._setPopoverDialogWidth();
@@ -680,7 +672,6 @@ export class DwSelect extends DwFormElement(LitElement) {
         this._findNewItem();
       } else {
         this._newItemStatus = undefined;
-        // console.log('_newItemStatus = undefined');
       }
     }
   }
@@ -799,15 +790,16 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  _onSelect(e) {
+  async _onSelect(e) {
     const value = this.value;
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
     this._triggerElement.focus();
     this._query = undefined;
+    await this.updateComplete;
 
-    this._checkValidation();
+    this.reportValidity();
     this._dispatchSelected(value);
   }
 
@@ -896,7 +888,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       this._clearSelection();
       this._allowNewValue();
     }
-    this._checkValidation();
+    this.reportValidity();
   }
 
   async _findNewItem() {
@@ -918,11 +910,9 @@ export class DwSelect extends DwFormElement(LitElement) {
 
       //if query has been changed after the request was sent, do nothing.
       if (query !== this._query) {
-        // console.log('_findNewItem: Query has been changed');
         return;
       }
 
-      // console.log('_findNewItem: item', item);
       this._newItem = item;
       //TODO: Show hint if available.
       this._newItemStatus = item !== undefined ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
@@ -936,7 +926,6 @@ export class DwSelect extends DwFormElement(LitElement) {
   _resetToCurValue() {
     this._query = '';
     const selectedItem = this._getSelectedItem(this.value);
-    // console.log("dw-select: _onFocusOut: going to clear query.", selectedItem, this.value);
     if (selectedItem) {
       this._selectedValueText = this._getValue(selectedItem);
     } else {
@@ -958,25 +947,16 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._valueProvider = this.valueProvider;
   }
 
-  _computeLabel() {
-    let label = this.label;
-    if (this.required) label = label + ' *';
-    this._label = label;
-  }
-
   validate() {
-    this._checkValidation();
-    return !this._invalid;
+    return this.reportValidity();
   }
 
   checkValidity() {
-    return this._triggerElement && this._triggerElement.validate();
-    // return this._triggerElement && this._triggerElement.checkValidity();
+    return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    return this._triggerElement && this._triggerElement.validate();
-    // return this._triggerElement && this._triggerElement.reportValidity();
+    return this._triggerElement && this._triggerElement.reportValidity();
   }
 
   focus() {
@@ -992,7 +972,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (!this._query && !this._selectedValueText) {
       //clear selection & dispatch event.
-      // console.log("dw-select: _onFocusOut: going to clear selection.");
       const prevValue = this.value;
       this.value = null;
       if (prevValue !== this.value) {
@@ -1037,12 +1016,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       }
     });
     //Allow New Value - END
-  }
-
-  _checkValidation() {
-    if (this.required) {
-      this._invalid = !this.value;
-    }
   }
 }
 

@@ -96,16 +96,6 @@ export class DwSelectTrigger extends DwInput {
       inputAllowed: { type: Boolean, reflect: true },
 
       /**
-       * When true, helper text isn’t visible. Instead `errorMesage` is shown.
-       */
-      error: { type: Boolean },
-
-      /**
-       * Message to show in the error color at helper text when the textfield is invalid.
-       */
-      errorMessage: { type: String },
-
-      /**
        * Input Property
        * Whether error message shows in tooltip or not.
        * Default erro shows at hint text
@@ -179,6 +169,7 @@ export class DwSelectTrigger extends DwInput {
         class="mdc-text-field__input"
         .name="${this.name}"
         ?disabled="${this.disabled}"
+        ?required="${this.required}"
         ?readonly="${this.readOnly || !this.inputAllowed}"
         .pattern="${this.pattern}"
         .placeholder="${this.placeholder}"
@@ -192,8 +183,7 @@ export class DwSelectTrigger extends DwInput {
         @input="${this._onInput}"
         @change="${this._onChange}"
         @blur="${this._onInputBlur}"
-        @focus="${this._onFocus}"
-      />
+        @focus="${this._onFocus}">
     `;
   }
 
@@ -230,6 +220,7 @@ export class DwSelectTrigger extends DwInput {
         ?disabled="${this.disabled}"
         tabindex="-1"
         @mousedown=${this._onExpandClick}
+        @click="${(e) => e.stopPropagation()}"
       ></dw-icon-button>
     `;
   }
