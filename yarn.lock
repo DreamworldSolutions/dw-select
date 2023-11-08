@@ -1005,10 +1005,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@3.6.3", "@dreamworld/dw-input@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.6.3.tgz#252c820a6ab25d9a5b4dac04ea64611463686123"
-  integrity sha512-9l8vDqvugS5BPfkHsHrB3wR/wmpKWLfLvCAU25nxn8A7rvnQj6DLEeENubABxIeLK1CbB31U+IbdfZY+DLtZHg==
+"@dreamworld/dw-input@^3.7.0-standardize-form-validation.4":
+  version "3.7.0-standardize-form-validation.4"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.7.0-standardize-form-validation.4.tgz#15d8533bdd846809129b71e721978b4deb48c1cf"
+  integrity sha512-6t1CCcKwsfoqiLdEgYJio/7drcW4WNSLD+jctNVWHQiAynxVIAp5Bn1dLgsm0Ck6m8XkHI8QGskiQCPRSyrz0w==
   dependencies:
     "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"
@@ -1016,6 +1016,7 @@
     "@dreamworld/dw-icon-button" "^3.0.0"
     "@dreamworld/dw-tooltip" "^3.1.1"
     "@material/textfield" "^14.0.0"
+    lodash-es "^4.17.21"
 
 "@dreamworld/dw-list-item@^4.3.1":
   version "4.3.1"

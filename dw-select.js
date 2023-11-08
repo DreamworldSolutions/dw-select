@@ -123,12 +123,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * A Custom Error Message to be shown.
        */
-      errorMessage: { type: String },
+      error: { type: String },
 
       /**
        * Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.
        */
-      requiredMessage: { type: String },
+      errorMessages: { type: Object },
 
       /**
        * Whether or not to show the `required` error message.
@@ -333,7 +333,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Text to show the warning message.
        */
-      warningText: { type: String },
+      warning: { type: String },
 
       /**
        * Input Property
@@ -517,13 +517,15 @@ export class DwSelect extends DwFormElement(LitElement) {
       .newValueStatus=${this._newItemStatus}
       .value=${this._selectedValueText}
       .originalValue="${this._originalValueText}"
+      ?required="${this.required}"
       ?outlined=${this.outlined}
       ?disabled=${this.disabled}
       ?invalid=${this._invalid}
       ?autoValidate=${this.autoValidate}
       ?highlightChanged="${this.highlightChanged}"
-      .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
-      .warningText="${this.warningText}"
+      .error=${this.error}
+      .errorMessages="${this.errorMessages}"
+      .warning="${this.warning}"
       .hintInTooltip="${this.hintInTooltip}"
       .errorInTooltip=${this.errorInTooltip}
       .warningInTooltip="${this.warningInTooltip}"
@@ -570,7 +572,8 @@ export class DwSelect extends DwFormElement(LitElement) {
       .renderGroupItem=${this.renderGroupItem}
       .heading=${this.heading}
       .searchPlaceholder="${this.searchPlaceholder}"
-      .errorMessage=${this.required ? this.requiredMessage : this.errorMessage}
+      .error=${this.error}
+      .errorMessages="${this.errorMessages}"
       .errorInTooltip=${this.errorInTooltip}
       .helper=${this._computeHelperText()}
       ?showClose=${this.showClose}
@@ -807,7 +810,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._triggerElement.focus();
     this._query = undefined;
 
-    this._checkValidation();
+    this.reportValidity();
     this._dispatchSelected(value);
   }
 
@@ -896,7 +899,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       this._clearSelection();
       this._allowNewValue();
     }
-    this._checkValidation();
+    this.reportValidity();
   }
 
   async _findNewItem() {
@@ -965,18 +968,15 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   validate() {
-    this._checkValidation();
-    return !this._invalid;
+    return this.reportValidity();
   }
 
   checkValidity() {
-    return this._triggerElement && this._triggerElement.validate();
-    // return this._triggerElement && this._triggerElement.checkValidity();
+    return this._triggerElement && this._triggerElement.checkValidity();
   }
 
   reportValidity() {
-    return this._triggerElement && this._triggerElement.validate();
-    // return this._triggerElement && this._triggerElement.reportValidity();
+    return this._triggerElement && this._triggerElement.reportValidity();
   }
 
   focus() {
@@ -1037,12 +1037,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       }
     });
     //Allow New Value - END
-  }
-
-  _checkValidation() {
-    if (this.required) {
-      this._invalid = !this.value;
-    }
   }
 }
 
