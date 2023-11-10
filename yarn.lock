@@ -1005,10 +1005,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@3.6.3", "@dreamworld/dw-input@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.6.3.tgz#252c820a6ab25d9a5b4dac04ea64611463686123"
-  integrity sha512-9l8vDqvugS5BPfkHsHrB3wR/wmpKWLfLvCAU25nxn8A7rvnQj6DLEeENubABxIeLK1CbB31U+IbdfZY+DLtZHg==
+"@dreamworld/dw-input@^3.6.4-hint-text-not-shown-when-error-msg-set.1":
+  version "3.6.4-hint-text-not-shown-when-error-msg-set.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.6.4-hint-text-not-shown-when-error-msg-set.1.tgz#ce897c9a7ff92a33ea4c3e2395650604b7f8aa37"
+  integrity sha512-Jr3f8AF5Gq6z9NgIy+R4jY2ZvWxSZDK4h1BqFQFWdrNzBrX/tefyQbe2IJgEEsFEUqfcWInHG16tZC2sbcXzMg==
   dependencies:
     "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"

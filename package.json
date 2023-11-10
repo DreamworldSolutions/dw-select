@@ -29,7 +29,7 @@
     "@dreamworld/dw-form": "^4.1.1",
     "@dreamworld/dw-icon": "^4.1.1",
     "@dreamworld/dw-icon-button": "^3.2.4",
-    "@dreamworld/dw-input": "^3.6.3",
+    "@dreamworld/dw-input": "^3.6.4-hint-text-not-shown-when-error-msg-set.1",
     "@dreamworld/dw-list-item": "^4.3.1",
     "@dreamworld/dw-ripple": "^3.1.4",
     "@dreamworld/dw-tooltip": "^3.1.1",
@@ -64,7 +64,6 @@
     "@dreamworld/dw-ellipsis": "1.2.0",
     "@dreamworld/dw-icon": "4.1.1",
     "@dreamworld/dw-icon-button": "3.2.4",
-    "@dreamworld/dw-input": "3.6.3",
     "@dreamworld/dw-ripple": "3.1.4",
     "@dreamworld/dw-tooltip": "3.1.1",
     "@dreamworld/material-styles": "3.2.3"
