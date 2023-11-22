@@ -89,12 +89,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       label: { type: String },
 
       /**
-       * Computed label that show
-       * Computed on label and required property
-       */
-      _label: { type: String },
-
-      /**
        * Sets disappearing input placeholder.
        */
       placeholder: { type: String },
@@ -483,7 +477,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     super();
     this.searchable = false;
     this.label = '';
-    this._label = '';
     this.heading = '';
     this.placeholder = '';
     this.showClose = false;
@@ -508,7 +501,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   get _triggerTemplate() {
     return html`<dw-select-trigger
       .name="${this.name}"
-      .label="${this._label}"
+      .label="${this.label}"
       .placeholder="${this.placeholder}"
       .hint=${this._computeHelperText()}
       ?hintPersistent=${this.helperPersistent}
@@ -642,7 +635,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this.addEventListener('focusout', this._onFocusOut);
     this._layout = DeviceInfo.info().layout;
-    this._computeLabel();
   }
 
   disconnectedCallback() {
@@ -657,10 +649,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   willUpdate(_changedProperties) {
     super.willUpdate && super.willUpdate(_changedProperties);
-
-    if (_changedProperties.has('label') || _changedProperties.has('required')) {
-      this._computeLabel();
-    }
 
     if (_changedProperties.has('_opened')) {
       this._setPopoverDialogWidth();
@@ -802,15 +790,17 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  _onSelect(e) {
+  async _onSelect(e) {
     const value = this.value;
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
     this._triggerElement.focus();
     this._query = undefined;
+    await this.updateComplete;
 
     this.reportValidity();
+    console.log("on select");
     this._dispatchSelected(value);
   }
 
@@ -961,12 +951,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._valueProvider = this.valueProvider;
   }
 
-  _computeLabel() {
-    let label = this.label;
-    if (this.required) label = label + ' *';
-    this._label = label;
-  }
-
   validate() {
     return this.reportValidity();
   }
@@ -976,6 +960,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   reportValidity() {
+    console.log(this._triggerElement, this._triggerElement.value);
     return this._triggerElement && this._triggerElement.reportValidity();
   }
 

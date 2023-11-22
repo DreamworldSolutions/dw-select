@@ -1018,6 +1018,19 @@
     "@material/textfield" "^14.0.0"
     lodash-es "^4.17.21"
 
+"@dreamworld/dw-input@^3.8.0-standardize-form-validation.4":
+  version "3.8.0-standardize-form-validation.4"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.8.0-standardize-form-validation.4.tgz#549b1dc799ad6aeca3d4101f2adfb21d7f7adf43"
+  integrity sha512-tff8NsL/KHU0Xd4XNX8mMK4qQBKxGkU4dq7a75SjBtVH7/X1I8Mdg03+R9mBa8Q0HnMDFpxiD9YFXjzFjOKD9Q==
+  dependencies:
+    "@dreamworld/dw-button" "^3.0.3"
+    "@dreamworld/dw-form" "^4.0.0"
+    "@dreamworld/dw-icon" "^4.0.0"
+    "@dreamworld/dw-icon-button" "^3.0.0"
+    "@dreamworld/dw-tooltip" "^3.1.1"
+    "@material/textfield" "^14.0.0"
+    lodash-es "^4.17.21"
+
 "@dreamworld/dw-list-item@^4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.3.1.tgz#680fa59ffa933dc38dc8372f8e8d1ae390166f28"

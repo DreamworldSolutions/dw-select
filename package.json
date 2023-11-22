@@ -29,7 +29,7 @@
     "@dreamworld/dw-form": "^4.1.1",
     "@dreamworld/dw-icon": "^4.1.1",
     "@dreamworld/dw-icon-button": "^3.2.4",
-    "@dreamworld/dw-input": "^3.7.0-standardize-form-validation.4",
+    "@dreamworld/dw-input": "^3.8.0-standardize-form-validation.4",
     "@dreamworld/dw-list-item": "^4.3.1",
     "@dreamworld/dw-ripple": "^3.1.4",
     "@dreamworld/dw-tooltip": "^3.1.1",
