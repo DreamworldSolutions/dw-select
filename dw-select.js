@@ -841,9 +841,11 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.dispatchEvent(new CustomEvent('action', { detail: action }));
 }
   _onClearSelection() {
+    const value = this.value;
     this.value = undefined;
     this._query = '';
     this._opened = false;
+    this._dispatchSelected(value);
   }
 
   _onDialogOpenToggle() {
