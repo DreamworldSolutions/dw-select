@@ -442,7 +442,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
-      
+
       popover: { type: Boolean },
     };
   }
@@ -610,7 +610,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     return this._getValue(originalItem);
   }
 
-  get _dialogType(){
+  get _dialogType() {
     if (this._vkb && this.searchable) return 'fit';
 
     if (this._layout === 'small' && !this.popover) return 'modal';
@@ -619,7 +619,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   get _dialogPlacement() {
-    if(this._layout === 'small' && !this.searchable) return 'bottom';
+    if (this._layout === 'small' && !this.searchable) return 'bottom';
 
     return 'center';
   }
@@ -674,6 +674,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       } else {
         this._newItemStatus = undefined;
       }
+    }
+  }
+
+  updated(_changedProperties) {
+    if (_changedProperties.has('_opened') && !this._opened && this._dialogType === 'fit') {
+      this.reportValidity();
     }
   }
 
@@ -840,7 +846,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onTipAction(e) {
     const action = e.detail;
     this.dispatchEvent(new CustomEvent('action', { detail: action }));
-}
+  }
   _onClearSelection() {
     const value = this.value;
     this.value = undefined;
@@ -873,10 +879,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       this.dispatchEvent(new CustomEvent('dw-select-closed', { bubbles: true, composed: true, detail: e.detail }));
     }
 
-    if (dialogType === 'fit') {
-      this.reportValidity();
-    }
-    
     this._opened = false;
   }
 

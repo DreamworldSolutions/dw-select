@@ -172,6 +172,7 @@ class SelectDemo extends LitElement {
         vkb
         searchable
         outlined
+        required
         .queryFilter=${queryFilterGenerator(['name', 'code'])}
         .items=${groupList}
         .value=${groupList[1].name}
