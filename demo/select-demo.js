@@ -223,6 +223,20 @@ class SelectDemo extends LitElement {
         @change=${this._onChange}
       ></dw-select>
 
+      <dw-select
+        .label=${'Filter By'}
+        .heading="${'Filter By'}"
+        showClose
+        outlined
+        .items=${this._filterBySelectItems}
+        .valueTextProvider=${item => item.name}
+        .valueExpression="${'value'}"
+        .value=${'DUE_DATE'}
+        @change=${this._onChange}
+      >
+        <dw-icon-button slot="trigger-template" id="selectTrigger" icon="edit" @click=${this._onEdit}></dw-icon-button>
+      </dw-select>
+      
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
       <!-- <dw-select-dialog-input
