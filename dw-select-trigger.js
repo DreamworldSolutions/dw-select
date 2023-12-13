@@ -77,6 +77,10 @@ export class DwSelectTrigger extends DwInput {
         mwc-circular-progress {
           padding: 4px;
         }
+
+        :host(:not([inputAllowed])) #tf-outlined {
+          pointer-events: none;
+        }
       `,
     ];
   }
@@ -170,7 +174,7 @@ export class DwSelectTrigger extends DwInput {
         .name="${this.name}"
         ?disabled="${this.disabled}"
         ?required="${this.required}"
-        ?readonly="${this.readOnly || !this.inputAllowed}"
+        ?readonly="${this.readOnly}"
         .pattern="${this.pattern}"
         .placeholder="${this.placeholder}"
         minlength=${this.minLength}

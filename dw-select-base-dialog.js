@@ -551,6 +551,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _renderItem(item, selected, activated, query) {
+    if (!item) return nothing;
     if (item.type === ItemTypes.ITEM) {
       if (this.renderItem && typeof this.renderItem === 'function') {
         return this.renderItem(item.value, selected, activated, query, this._onItemClick.bind(this));

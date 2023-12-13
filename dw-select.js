@@ -155,7 +155,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * `vkb` stands for Virtual KeyBoard.
        * Whether the Device has Virtual KeyBoard.
        */
-      vkb: { type: Boolean },
+      _vkb: { type: Boolean },
 
       /**
        * Specify various available/possible groups of the Items.
@@ -442,7 +442,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
-      
+
       popover: { type: Boolean },
     };
   }
@@ -506,7 +506,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .placeholder="${this.placeholder}"
       .hint=${this._computeHelperText()}
       ?hintPersistent=${this.helperPersistent}
-      ?inputAllowed=${this.searchable && !this.vkb}
+      ?inputAllowed=${this.searchable && !this._vkb}
       ?readOnly=${this.readOnly}
       .newValueStatus=${this._newItemStatus}
       .value=${this._selectedValueText}
@@ -560,7 +560,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .groupExpression=${this.groupExpression}
       .queryFilter=${this.queryFilter}
       ._query=${this._query}
-      ?vkb=${this.vkb}
+      ?vkb=${this._vkb}
       ?searchable=${this.searchable}
       .renderItem=${this.renderItem}
       .renderGroupItem=${this.renderGroupItem}
@@ -610,16 +610,16 @@ export class DwSelect extends DwFormElement(LitElement) {
     return this._getValue(originalItem);
   }
 
-  get _dialogType(){
-    if (this.vkb && this.searchable) return 'fit';
+  get _dialogType() {
+    if (this._vkb && this.searchable) return 'fit';
 
-    if (this.layout === 'small' && !this.popover) return 'modal';
+    if (this._layout === 'small' && !this.popover) return 'modal';
 
     return 'popover';
   }
 
   get _dialogPlacement() {
-    if(this.layout === 'small' && !this.searchable) return 'bottom';
+    if (this._layout === 'small' && !this.searchable) return 'bottom';
 
     return 'center';
   }
@@ -636,6 +636,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this.addEventListener('focusout', this._onFocusOut);
     this._layout = DeviceInfo.info().layout;
+    this._vkb = DeviceInfo.info().vkb;
   }
 
   disconnectedCallback() {
@@ -673,6 +674,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       } else {
         this._newItemStatus = undefined;
       }
+    }
+  }
+
+  updated(_changedProperties) {
+    if (_changedProperties.has('_opened') && !this._opened && this._dialogType === 'fit') {
+      this.reportValidity();
     }
   }
 
@@ -839,7 +846,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onTipAction(e) {
     const action = e.detail;
     this.dispatchEvent(new CustomEvent('action', { detail: action }));
-}
+  }
   _onClearSelection() {
     const value = this.value;
     this.value = undefined;
@@ -867,7 +874,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onDialogClose(e) {
     e.stopPropagation();
 
-    if (this._dialogElement && this._dialogElement.type !== 'popover') {
+    const dialogType = this._dialogElement && this._dialogElement.type;
+    if (dialogType && dialogType !== 'popover') {
       this.dispatchEvent(new CustomEvent('dw-select-closed', { bubbles: true, composed: true, detail: e.detail }));
     }
 
@@ -885,7 +893,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _onFocusOut() {
     //If select is searchable, clear selection and allow new value possible
-    if (!(!this.searchable || this.vkb || this._layout === 'small')) {
+    if (!(!this.searchable || this._vkb || this._layout === 'small')) {
       this._opened = false;
       this._clearSelection();
       this._allowNewValue();
