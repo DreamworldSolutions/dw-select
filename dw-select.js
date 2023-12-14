@@ -455,7 +455,11 @@ export class DwSelect extends DwFormElement(LitElement) {
    * Trigger Element Getter
    */
   get _triggerElement() {
-    return this.renderRoot.querySelector('dw-select-trigger');
+    if (this._isSlotTemplateAvaible) {
+      return this.querySelector('#selectTrigger');
+    }
+
+    return this.renderRoot.querySelector('#selectTrigger');
   }
 
   get _dialogElement() {
@@ -500,7 +504,11 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   get _triggerTemplate() {
-    return html`<dw-select-trigger
+    return html`
+      <div @click="${this._onTrigger}"><slot name="trigger-template"></slot></div>
+      ${!this._isSlotTemplateAvaible ? html`
+      <dw-select-trigger
+      id="selectTrigger"
       .name="${this.name}"
       .label="${this.label}"
       .placeholder="${this.placeholder}"
@@ -537,7 +545,8 @@ export class DwSelect extends DwFormElement(LitElement) {
       @clear-selection="${this._onClearSelection}"
       @action="${this._onTipAction}"
       ?opened="${this._opened}"
-    ></dw-select-trigger>`;
+    ></dw-select-trigger>` : nothing}
+    `;
   }
 
   get _dialogTemplate() {
@@ -548,6 +557,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .placement=${this._dialogPlacement}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
+      .appendTo=${this.renderRoot}
       .items="${this.items}"
       .prependItems=${this.prependItems}
       .layout=${this._layout}
@@ -587,6 +597,10 @@ export class DwSelect extends DwFormElement(LitElement) {
       .messages="${this.messages}"
       ._getItemValue=${this._getItemValue}
     ></dw-select-base-dialog>`;
+  }
+
+  get _isSlotTemplateAvaible() {
+    return !!this.querySelector('[slot="trigger-template"]');
   }
 
   /**
@@ -702,25 +716,27 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     // Trigger element getter
-    let triggerEl = this.renderRoot.querySelector('dw-select-trigger');
+    let triggerEl = this.renderRoot.querySelector('#selectTrigger');
 
     // Set Trigger element's offSetWidth to PopOver Dialog
-    this.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
+    if (triggerEl) {
+      this.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
+    }
   }
 
   _setPopoverHeight() {
     const viewportHeight = window.innerHeight;
-    const triggerRect = this._triggerElement.getBoundingClientRect();
-    const isPlacementBottom = triggerRect.bottom <= viewportHeight / 2;
+    const triggerRect = this._triggerElement?.getBoundingClientRect();
+    const isPlacementBottom = triggerRect?.bottom <= viewportHeight / 2;
     let popoverMaxHeight = 0;
 
     if (isPlacementBottom) {
       this._dialogElement.popoverPlacement = 'bottom-start';
-      popoverMaxHeight = viewportHeight - (triggerRect.bottom + 8);
+      popoverMaxHeight = viewportHeight - (triggerRect?.bottom + 8);
     } else {
       this._dialogElement.popoverPlacement = 'top-start';
       this._dialogElement.popoverOffset = [0, 8];
-      popoverMaxHeight = triggerRect.top - 16;
+      popoverMaxHeight = triggerRect?.top - 16;
     }
 
     this._popoverMaxHeight = popoverMaxHeight;
@@ -790,8 +806,8 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _onInput(e) {
     e.stopPropagation();
-    this._query = this._triggerElement.value;
-    this._selectedValueText = this._triggerElement.value;
+    this._query = this._triggerElement?.value;
+    this._selectedValueText = this._triggerElement?.value;
     if (this._query && !this._opened) {
       this._opened = true;
     }
@@ -802,7 +818,9 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
-    this._triggerElement.focus();
+    if (this._triggerElement && this._triggerElement.focus && typeof this._triggerElement.focus === 'function') {
+      this._triggerElement.focus();
+    }
     this._query = undefined;
     await this.updateComplete;
 
@@ -834,11 +852,13 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onInvalid(e) {
+    if (!this._triggerElement) return;
     this.validity = this._triggerElement.validity;
     this.dispatchEvent(new CustomEvent('invalid', { detail: this.validity }));
   }
 
   _onValid(e) {
+    if (!this._triggerElement) return;
     this.validity = this._triggerElement.validity;
     this.dispatchEvent(new CustomEvent('valid', { detail: this.validity }));
   }
@@ -962,15 +982,23 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   checkValidity() {
-    return this._triggerElement && this._triggerElement.checkValidity();
+    if (this._triggerElement && this._triggerElement.checkValidity && typeof this._triggerElement.checkValidity === "function") {
+      return this._triggerElement.checkValidity();
+    }
+    return true;
   }
 
   reportValidity() {
-    return this._triggerElement && this._triggerElement.reportValidity();
+    if (this._triggerElement && this._triggerElement.reportValidity && typeof this._triggerElement.reportValidity === "function") {
+      return this._triggerElement.reportValidity();
+    } 
+    return true;
   }
 
   focus() {
-    this._triggerElement && this._triggerElement.focus();
+    if (this._triggerElement && this._triggerElement.focus && typeof this._triggerElement.focus === 'function') {
+      this._triggerElement && this._triggerElement.focus();
+    }
   }
 
   _clearSelection() {
