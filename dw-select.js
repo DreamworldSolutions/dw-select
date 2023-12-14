@@ -555,7 +555,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .opened=${this._opened}
       .type=${this._dialogType}
       .placement=${this._dialogPlacement}
-      .triggerElement=${this.triggerEl || this._triggerElement}
+      .triggerElement=${this._triggerElement}
       .value=${this.value}
       .appendTo=${this.renderRoot}
       .items="${this.items}"
@@ -726,13 +726,13 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _setPopoverHeight() {
     const viewportHeight = window.innerHeight;
-    const triggerRect = this._triggerElement?.getBoundingClientRect() || this.triggerEl?.getBoundingClientRect();
-    const isPlacementBottom = !this.triggerEl ? triggerRect.bottom <= viewportHeight / 2 : false;
+    const triggerRect = this._triggerElement?.getBoundingClientRect();
+    const isPlacementBottom = triggerRect?.bottom <= viewportHeight / 2;
     let popoverMaxHeight = 0;
 
     if (isPlacementBottom) {
       this._dialogElement.popoverPlacement = 'bottom-start';
-      popoverMaxHeight = viewportHeight - (triggerRect.bottom + 8);
+      popoverMaxHeight = viewportHeight - (triggerRect?.bottom + 8);
     } else {
       this._dialogElement.popoverPlacement = 'top-start';
       this._dialogElement.popoverOffset = [0, 8];

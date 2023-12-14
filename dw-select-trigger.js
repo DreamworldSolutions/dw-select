@@ -247,32 +247,6 @@ export class DwSelectTrigger extends DwInput {
     this.dispatchEvent(new CustomEvent('expand-toggle'));
   }
 
-  validate() {
-    return !this.invalid;
-  }
-
-  willUpdate(_changedProperties) {
-    super.willUpdate(_changedProperties);
-
-    if (_changedProperties.has('errorMessage')) {
-      if (!this.errorInTooltip) {
-        this.validationMessage = this.errorMessage;
-      }
-    }
-  }
-
-  updated(_changedProperties) {
-    super.updated(_changedProperties);
-
-    if (_changedProperties.has('value')) {
-      this.error = this.value ? !this.reportValidity() : !this.checkValidity();
-
-      if (!this.error) {
-        this.dispatchEvent(new CustomEvent('valid'));
-      }
-    }
-  }
-
   _onFocusIn() {
     this._focused = true;
   }
