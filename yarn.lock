@@ -998,10 +998,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@4.0.6", "@dreamworld/dw-input@^4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.0.6.tgz#abefc009796b4578f12a80440336873587474e8e"
-  integrity sha512-VDD3IBpKtPDcrxqBcrYhIp5dEOjSHnzr6SzDfUnNCn9ifVYGxpbRA7THFfILuymy8uExt4dhkg5g642ALmRgjw==
+"@dreamworld/dw-input@4.0.8", "@dreamworld/dw-input@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.0.8.tgz#5896fda8f1f3a15ab19dc77dbe94f7d49fac6807"
+  integrity sha512-9P5NY4MLdwjGQf+jLNK5JToZTj4TVVkKaatga3xsohzAUL6Jf+3B8Qy8F8vxdfiek4fVGatjXl3EdNY/g2IxIg==
   dependencies:
     "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"
