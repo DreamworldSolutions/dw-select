@@ -642,10 +642,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
 
-    if (this.originalValue) {
-      this.value = this.originalValue;
-    }
-
     this._computeValueProvider();
 
     this.addEventListener('focusout', this._onFocusOut);
