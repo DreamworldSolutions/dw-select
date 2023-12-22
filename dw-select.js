@@ -907,13 +907,14 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  _onFocusOut() {
+  async _onFocusOut() {
     //If select is searchable, clear selection and allow new value possible
     if (!(!this.searchable || this._vkb || this._layout === 'small')) {
       this._opened = false;
       this._clearSelection();
       this._allowNewValue();
     }
+    await this.updateComplete;
     this.reportValidity();
   }
 

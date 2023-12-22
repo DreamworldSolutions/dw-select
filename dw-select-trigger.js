@@ -259,6 +259,12 @@ export class DwSelectTrigger extends DwInput {
     e.stopPropagation();
     this.dispatchEvent(new Event('clear-selection'));
   }
+
+  /**
+   * @override
+   * Its overridden to prevent `reportValidity` call.
+   */
+  _onInputBlur() {}
 }
 
 customElements.define('dw-select-trigger', DwSelectTrigger);
