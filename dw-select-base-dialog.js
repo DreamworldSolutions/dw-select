@@ -146,6 +146,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         .custom-header {
           flex: 1;
         }
+
+        .highlight {
+          color: var(--dw-select-highlight-text-color);
+          background-color: var(--dw-select-highlight-bg-color);
+          font-weight: var(--dw-select-highlight-font-weight);
+        }
       `,
     ];
   }
