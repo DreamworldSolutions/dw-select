@@ -506,46 +506,47 @@ export class DwSelect extends DwFormElement(LitElement) {
   get _triggerTemplate() {
     return html`
       <div @click="${this._onTrigger}"><slot name="trigger-template"></slot></div>
-      ${!this._isSlotTemplateAvaible ? html`
-      <dw-select-trigger
-      id="selectTrigger"
-      .name="${this.name}"
-      .label="${this.label}"
-      .placeholder="${this.placeholder}"
-      .hint=${this._computeHelperText()}
-      ?hintPersistent=${this.helperPersistent}
-      ?inputAllowed=${this.searchable && !this._vkb}
-      ?readOnly=${this.readOnly}
-      .newValueStatus=${this._newItemStatus}
-      .value=${this._selectedValueText}
-      .originalValue="${this._originalValueText}"
-      ?required="${this.required}"
-      ?outlined=${this.outlined}
-      ?disabled=${this.disabled}
-      ?invalid=${this._invalid}
-      ?autoValidate=${this.autoValidate}
-      ?highlightChanged="${this.highlightChanged}"
-      .error=${this.error}
-      .errorMessages="${this.errorMessages}"
-      .warning="${this.warning}"
-      .hintInTooltip="${this.hintInTooltip}"
-      .errorInTooltip=${this.errorInTooltip}
-      .warningInTooltip="${this.warningInTooltip}"
-      .hintTooltipActions="${this.hintTooltipActions}"
-      .errorTooltipActions="${this.errorTooltipActions}"
-      .warningTooltipActions="${this.warningTooltipActions}"
-      .tipPlacement="${this.tipPlacement}"
-      .dense=${this.dense}
-      @click=${this._onTrigger}
-      @input=${this._onUserInteraction}
-      @keydown=${this._onKeydown}
-      @expand-toggle="${this._onDialogOpenToggle}"
-      @invalid=${this._onInvalid}
-      @valid=${this._onValid}
-      @clear-selection="${this._onClearSelection}"
-      @action="${this._onTipAction}"
-      ?opened="${this._opened}"
-    ></dw-select-trigger>` : nothing}
+      ${!this._isSlotTemplateAvaible
+        ? html` <dw-select-trigger
+            id="selectTrigger"
+            .name="${this.name}"
+            .label="${this.label}"
+            .placeholder="${this.placeholder}"
+            .hint=${this._computeHelperText()}
+            ?hintPersistent=${this.helperPersistent}
+            ?inputAllowed=${this.searchable && !this._vkb}
+            ?readOnly=${this.readOnly}
+            .newValueStatus=${this._newItemStatus}
+            .value=${this._selectedValueText}
+            .originalValue="${this._originalValueText}"
+            ?required="${this.required}"
+            ?outlined=${this.outlined}
+            ?disabled=${this.disabled}
+            ?invalid=${this._invalid}
+            ?autoValidate=${this.autoValidate}
+            ?highlightChanged="${this.highlightChanged}"
+            .error=${this.error}
+            .errorMessages="${this.errorMessages}"
+            .warning="${this.warning}"
+            .hintInTooltip="${this.hintInTooltip}"
+            .errorInTooltip=${this.errorInTooltip}
+            .warningInTooltip="${this.warningInTooltip}"
+            .hintTooltipActions="${this.hintTooltipActions}"
+            .errorTooltipActions="${this.errorTooltipActions}"
+            .warningTooltipActions="${this.warningTooltipActions}"
+            .tipPlacement="${this.tipPlacement}"
+            .dense=${this.dense}
+            @click=${this._onTrigger}
+            @input=${this._onUserInteraction}
+            @keydown=${this._onKeydown}
+            @expand-toggle="${this._onDialogOpenToggle}"
+            @invalid=${this._onInvalid}
+            @valid=${this._onValid}
+            @clear-selection="${this._onClearSelection}"
+            @action="${this._onTipAction}"
+            ?opened="${this._opened}"
+          ></dw-select-trigger>`
+        : nothing}
     `;
   }
 
@@ -979,16 +980,16 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   checkValidity() {
-    if (this._triggerElement && this._triggerElement.checkValidity && typeof this._triggerElement.checkValidity === "function") {
+    if (this._triggerElement && this._triggerElement.checkValidity && typeof this._triggerElement.checkValidity === 'function') {
       return this._triggerElement.checkValidity();
     }
     return true;
   }
 
   reportValidity() {
-    if (this._triggerElement && this._triggerElement.reportValidity && typeof this._triggerElement.reportValidity === "function") {
+    if (this._triggerElement && this._triggerElement.reportValidity && typeof this._triggerElement.reportValidity === 'function') {
       return this._triggerElement.reportValidity();
-    } 
+    }
     return true;
   }
 
