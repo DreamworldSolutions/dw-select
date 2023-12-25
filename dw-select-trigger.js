@@ -187,7 +187,8 @@ export class DwSelectTrigger extends DwInput {
         @input="${this._onInput}"
         @change="${this._onChange}"
         @blur="${this._onInputBlur}"
-        @focus="${this._onFocus}">
+        @focus="${this._onFocus}"
+      />
     `;
   }
 
@@ -224,7 +225,7 @@ export class DwSelectTrigger extends DwInput {
         ?disabled="${this.disabled}"
         tabindex="-1"
         @mousedown=${this._onExpandClick}
-        @click="${(e) => e.stopPropagation()}"
+        @click="${e => e.stopPropagation()}"
       ></dw-icon-button>
     `;
   }
