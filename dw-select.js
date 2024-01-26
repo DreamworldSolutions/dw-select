@@ -815,7 +815,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
-    if (this._triggerElement && this._triggerElement.focus && typeof this._triggerElement.focus === 'function') {
+    if (!this._vkb && typeof this._triggerElement?.focus === 'function') {
       this._triggerElement.focus();
     }
     this._query = undefined;
@@ -900,11 +900,16 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onKeydown(e) {
-    const { ENTER, ARROW_DOWN, ARROW_UP } = KeyCode;
+    const { ENTER, ARROW_DOWN, ARROW_UP, TAB, SHIFT } = KeyCode;
     const { keyCode } = e;
     if ([ENTER, ARROW_DOWN, ARROW_UP].includes(keyCode) && !this._opened) {
-      if (!this._opened) e.stopPropagation();
+      e.stopPropagation();
       this._onTrigger(e);
+      return;
+    }
+
+    if(!this.searchable && ![TAB, SHIFT].includes(keyCode)) {
+      e.preventDefault();
     }
   }
 
