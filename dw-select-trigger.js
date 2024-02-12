@@ -112,6 +112,11 @@ export class DwSelectTrigger extends DwInput {
        * Whether component is focused or not
        */
       _focused: { type: Boolean, reflect: true, attribute: 'focused' },
+
+      /**
+       * 
+       */
+      autoComplete: { type: Boolean },
     };
   }
 
@@ -193,6 +198,7 @@ export class DwSelectTrigger extends DwInput {
   }
 
   renderIcon(icon, isTrailingIcon = false) {
+    if (this.autoComplete) return;
     if (this.newValueStatus) {
       return this._renderNewValueTrailingIcon;
     }
