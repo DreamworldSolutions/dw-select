@@ -446,15 +446,15 @@ export class DwSelect extends DwFormElement(LitElement) {
       popover: { type: Boolean },
 
       /**
-       * 
+       *
        */
       autoComplete: { type: Boolean },
     };
   }
 
-  // get item() {
-  //   return this._getSelectedItem(this.value);
-  // }
+  get item() {
+    return this._getSelectedItem(this.value);
+  }
 
   /**
    * Trigger Element Getter
@@ -917,7 +917,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       return;
     }
 
-    if(!this.searchable && ![TAB, SHIFT].includes(keyCode)) {
+    if (!this.searchable && ![TAB, SHIFT].includes(keyCode)) {
       e.preventDefault();
     }
   }
