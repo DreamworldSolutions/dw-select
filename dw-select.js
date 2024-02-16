@@ -483,6 +483,12 @@ export class DwSelect extends DwFormElement(LitElement) {
     ];
   }
 
+  firstUpdated() {
+    const selectedItem = this._getSelectedItem(this.value);
+    this._selectedValueText = this._getValue(selectedItem);
+  }
+
+
   constructor() {
     super();
     this.searchable = false;
