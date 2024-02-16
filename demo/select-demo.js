@@ -49,6 +49,16 @@ class SelectDemo extends LitElement {
 
   render() {
     return html`
+      <dw-select
+        name="country"
+        outlined
+        .items=${country_list_with_code}
+        .valueTextProvider=${item => `${item.name} - ${item.code}`}
+        .valueExpression="${'name'}"
+        label="Select country"
+        autoComplete
+        @selected=${this._onCountryChange}
+      ></dw-select>
       <div class="fit-dialog-container"></div>
       <dw-form>
         <dw-select
@@ -262,6 +272,9 @@ class SelectDemo extends LitElement {
     }
   }
 
+  _onCountryChange(e) {
+    console.log('_onCountryChange', e.detail);
+  }
   _onChange(e) {
     console.log('_onChange', e);
   }

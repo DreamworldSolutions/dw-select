@@ -354,7 +354,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * For any error, Promise should be resolved to an error; or exception should be thrown. In this case, Input will show
        *  the error message thrown out.
        */
-      newItemProvider: { type: Function },
+      newItemProvider: { type: Object },
 
       /**
        * Enum property
@@ -444,6 +444,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       tipPlacement: { type: String },
 
       popover: { type: Boolean },
+
+      /**
+       *
+       */
+      autoComplete: { type: Boolean },
     };
   }
 
@@ -477,6 +482,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       `,
     ];
   }
+
+  firstUpdated() {
+    const selectedItem = this._getSelectedItem(this.value);
+    this._selectedValueText = this._getValue(selectedItem);
+  }
+
 
   constructor() {
     super();
@@ -514,7 +525,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .placeholder="${this.placeholder}"
             .hint=${this._computeHelperText()}
             ?hintPersistent=${this.helperPersistent}
-            ?inputAllowed=${this.searchable && !this._vkb}
+            ?inputAllowed=${this.autoComplete || (this.searchable && !this._vkb)}
             ?readOnly=${this.readOnly}
             .newValueStatus=${this._newItemStatus}
             .value=${this._selectedValueText}
@@ -536,6 +547,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .warningTooltipActions="${this.warningTooltipActions}"
             .tipPlacement="${this.tipPlacement}"
             .dense=${this.dense}
+            .autoComplete=${this.autoComplete}
             @click=${this._onTrigger}
             @input=${this._onUserInteraction}
             @keydown=${this._onKeydown}
@@ -605,18 +617,18 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   /**
-   * Footer Template getter
-   * Used when this element is used by `Extension` To override this method
+   * Headet Template getter
+   *
    */
-  get _footerTemplate() {
+  get _headerTemplate() {
     return nothing;
   }
 
   /**
-   * Footet Template getter
-   *
+   * Footer Template getter
+   * Used when this element is used by `Extension` To override this method
    */
-  get _headerTemplate() {
+  get _footerTemplate() {
     return nothing;
   }
 
@@ -626,6 +638,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   get _dialogType() {
+    if (this.autoComplete) return 'popover';
+
     if (this._vkb && this.searchable) return 'fit';
 
     if (this._layout === 'small' && !this.popover) return 'modal';
@@ -655,11 +669,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.removeEventListener('focusout', this._onFocusOut);
   }
 
-  firstUpdated() {
-    const selectedItem = this._getSelectedItem(this.value);
-    this._selectedValueText = this._getValue(selectedItem);
-  }
-
   willUpdate(_changedProperties) {
     super.willUpdate && super.willUpdate(_changedProperties);
 
@@ -685,6 +694,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       } else {
         this._newItemStatus = undefined;
       }
+    }
+
+    if (_changedProperties.has('autoComplete')) {
+      this.popover = true;
+      this.searchable = true;
+      this.allowNewValue = true;
     }
   }
 
@@ -796,7 +811,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onTrigger(e) {
-    if (!this.readOnly) {
+    if (!this.readOnly && !this.autoComplete) {
       this._opened = true;
     }
   }
@@ -908,17 +923,17 @@ export class DwSelect extends DwFormElement(LitElement) {
       return;
     }
 
-    if(!this.searchable && ![TAB, SHIFT].includes(keyCode)) {
+    if (!this.searchable && ![TAB, SHIFT].includes(keyCode)) {
       e.preventDefault();
     }
   }
 
   async _onFocusOut() {
     //If select is searchable, clear selection and allow new value possible
-    if (!(!this.searchable || this._vkb || this._layout === 'small')) {
+    if (this.searchable && !this._vkb && this._layout !== 'small') {
       this._opened = false;
       this._clearSelection();
-      this._allowNewValue();
+      this._setNewValue();
     }
     await this.updateComplete;
     this.reportValidity();
@@ -961,8 +976,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = this._getSelectedItem(this.value);
     if (selectedItem) {
       this._selectedValueText = this._getValue(selectedItem);
-    } else {
-      this._selectedValueText = '';
     }
   }
 
@@ -1023,7 +1036,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  _allowNewValue() {
+  _setNewValue() {
     if (!this.allowNewValue) {
       this._resetToCurValue();
       return;
@@ -1040,9 +1053,8 @@ export class DwSelect extends DwFormElement(LitElement) {
 
       if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE) {
         //Change value & dispatch event
-        const value = this._value;
         this.value = this._newItem;
-        this._dispatchSelected(value);
+        this._dispatchSelected(this.value);
         return;
       }
 
