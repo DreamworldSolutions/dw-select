@@ -485,9 +485,8 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   firstUpdated() {
     const selectedItem = this._getSelectedItem(this.value);
-    this._selectedValueText = this._getValue(selectedItem);
+    this._selectedValueText = this._getValue(selectedItem || this.value );
   }
-
 
   constructor() {
     super();
@@ -700,6 +699,10 @@ export class DwSelect extends DwFormElement(LitElement) {
       this.popover = true;
       this.searchable = true;
       this.allowNewValue = true;
+    }
+    
+    if (_changedProperties.has('value') && this.value && this.allowNewValue) {
+      this._selectedValueText = this._getValue(this.value);
     }
   }
 
