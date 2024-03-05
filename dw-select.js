@@ -700,7 +700,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       this.searchable = true;
       this.allowNewValue = true;
     }
-    
+
     if (_changedProperties.has('value') && this.value && this.allowNewValue) {
       this._selectedValueText = this._getValue(this.value);
     }
@@ -933,7 +933,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   async _onFocusOut() {
     //If select is searchable, clear selection and allow new value possible
-    if (this.searchable && !this._vkb && this._layout !== 'small') {
+    if (this.searchable && (this.autoComplete || (!this._vkb && this._layout !== 'small'))) {
       this._opened = false;
       this._clearSelection();
       this._setNewValue();
