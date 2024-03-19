@@ -897,8 +897,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onDialogOpen(e) {
     e.stopPropagation();
 
-    if (this._dialogElement && this._dialogElement.type !== 'popover') {
-      this.dispatchEvent(new CustomEvent('dw-select-opened', { bubbles: true, composed: true, detail: e.detail }));
+    if (this._dialogElement) {
+      this.dispatchEvent(new CustomEvent('dw-select-opened', { bubbles: true, composed: true, detail: {...e.detail, dialogType: this._dialogElement.type} }));
     }
 
     if (this._dialogElement && this._dialogElement.type === 'popover') {
@@ -909,9 +909,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   _onDialogClose(e) {
     e.stopPropagation();
 
-    const dialogType = this._dialogElement && this._dialogElement.type;
-    if (dialogType && dialogType !== 'popover') {
-      this.dispatchEvent(new CustomEvent('dw-select-closed', { bubbles: true, composed: true, detail: e.detail }));
+    if (this._dialogElement && this._dialogElement.type) {
+      this.dispatchEvent(new CustomEvent('dw-select-closed', { bubbles: true, composed: true, detail: {...e.detail, dialogType: this._dialogElement.type} }));
     }
 
     this._opened = false;
