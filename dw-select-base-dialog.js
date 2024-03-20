@@ -1,6 +1,7 @@
 import { DwCompositeDialog } from '@dreamworld/dw-dialog/dw-composite-dialog.js';
 import { css, html, nothing, unsafeCSS } from '@dreamworld/pwa-helpers/lit.js';
 import '@lit-labs/virtualizer';
+import { repeat } from 'lit/directives/repeat.js';
 
 // View Elements
 import '@dreamworld/dw-button';
@@ -13,15 +14,15 @@ import './dw-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import debounce from 'lodash-es/debounce';
-import filter from 'lodash-es/filter';
-import orderBy from 'lodash-es/orderBy';
-import forEach from 'lodash-es/forEach.js';
+import { get, debounce, filter, orderBy, forEach } from 'lodash-es';
 import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
-import { Direction, KeyCode, Position } from './utils.js';
+import { Direction, KeyCode } from './utils.js';
 
+const VIRTUAL_LIST_MIN_LENGTH = 500;
+const VIRTUAL_LIST_AUTO_SCROLL_DELAY = 500;
+const REGULAR_LIST_SCROLL_DELAY = 300;
 const defaultMessages = {
   noRecords: 'No Records',
   noMatching: 'No matching records found!',
@@ -110,8 +111,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         }
 
         dw-list-item,
-        dw-select-group-item {
+        dw-select-group-item,
+        .list-item,
+        .group-item {
           width: 100%;
+          box-sizing: border-box;
         }
 
         dw-list-item[selected] {
@@ -381,6 +385,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
        */
       valueEquator: { type: Function },
+
+      /**
+       * `true` when items count is more than 500.
+       */
+      _virtualList: { type: Boolean }
     };
   }
 
@@ -405,8 +414,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   /**
    * Get lit virtulizer element
    */
-  get _litVirtulizerEl() {
-    return this.renderRoot.querySelector('lit-virtualizer');
+  get _listEl() {
+    return this.renderRoot.querySelector('#list');
   }
 
   constructor() {
@@ -421,6 +430,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
     this._selectedValueText = '';
+    this.OPEN_ANIMATION_TIME = 300; //In milliseconds.
   }
 
   set messages(newValue) {
@@ -450,7 +460,35 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     window.addEventListener('keydown', this.onKeydown.bind(this));
   }
 
-  firstUpdated() {
+  willUpdate(changedProps) {
+    super.willUpdate(changedProps);
+
+    if (changedProps.has('items')) {
+      this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
+    }
+
+    if (changedProps.has('_query')) {
+      this._onQueryChange(this._query);
+      this._getItems();
+      this._moveActivatedToFirstItem();
+    }
+
+    if (changedProps.has('heading') || changedProps.has('showClose')) {
+      this._showHeader = Boolean(this.heading) || this.showClose;
+    }
+
+    if (changedProps.has('_activatedIndex') || changedProps.has('_items')) {
+      this._activatedItem = this._getItem(this._activatedIndex);
+    }
+
+    if (changedProps.has('value')) {
+      const selectedItem = this._getItemUsingValue(this.value);
+      this._selectedValueText = this._getTextByItem(selectedItem);
+    }
+  }
+
+  firstUpdated(changedProps) {
+    super.firstUpdated(changedProps);
     if (this.value && this._groups && this._groups.length > 0) {
       const value = this._getItemUsingValue(this.value);
       this._groups = this._groups.map(group => {
@@ -465,9 +503,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this._scrollToSelectedItem();
   }
 
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    if (changedProperties.has('items')) {
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('items')) {
+      this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
       this._getItems();
     }
   }
@@ -540,20 +579,25 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _renderList() {
-    if (this.type === 'popover' && !this._openAnimationCompleted) {
+    if (this.type === 'popover' && this._virtualList && !this._openAnimationCompleted) {
       return;
     }
     const selectedItemIndex = this._items.findIndex(item => this.valueEquator(this.valueProvider(item.value), this.value));
-    return html`
-      <lit-virtualizer
-        .items=${this._items}
-        .renderItem=${(item, index) => {
-          const isSelected = this._isItemSelected(selectedItemIndex, index);
-          const isActivated = this._isItemActivated(index);
-          return this._renderItem(item, isSelected, isActivated, this._query);
-        }}
-      ></lit-virtualizer>
-    `;
+    
+    const renderItem = (item, index) => {
+      const isSelected = this._isItemSelected(selectedItemIndex, index);
+      const isActivated = this._isItemActivated(index);
+      return this._renderItem(item, isSelected, isActivated, this._query);
+    }
+    if(!this._virtualList) {
+      return html`<div id="list">${repeat(this._items, renderItem)}</div>`;
+    }
+
+    return html`<lit-virtualizer
+      id="list"
+      .items=${this._items}
+      .renderItem=${renderItem}
+    ></lit-virtualizer>`
   }
 
   _renderItem(item, selected, activated, query) {
@@ -567,6 +611,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       return html`
         <dw-list-item
+          class="list-item"
           title1=${this._getItemValue(item.value)}
           .highlight=${this._query}
           @click=${() => this._onItemClick(item.value)}
@@ -591,6 +636,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`<dw-select-group-item
         .name="${item.value.name}"
         .label="${this._getGroupValue(item.value)}"
+        class="group-item"
         ?activated=${activated}
         ?collapsible=${item.value.collapsible}
         ?collapsed=${item.value.collapsed}
@@ -830,7 +876,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     } while (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible);
 
     this._activatedIndex = activatedIndex;
-    this._scrollToIndex(this._activatedIndex, Position.CENTER);
+    this._scrollToIndex(this._activatedIndex);
   }
 
   _moveActivatedToFirstItem() {
@@ -865,8 +911,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       activatedItem = this._getItem(this._activatedIndex);
     }
     setTimeout(() => {
-      this._scrollToIndex(this._activatedIndex, Position.CENTER);
-    }, 250);
+      this._scrollToIndex(this._activatedIndex);
+    }, this._virtualList ? VIRTUAL_LIST_AUTO_SCROLL_DELAY : REGULAR_LIST_SCROLL_DELAY);
   }
 
   /**
@@ -874,8 +920,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {Number} index
    * @param {String} position
    */
-  _scrollToIndex(index, position = Position.NEAREST) {
-    this._litVirtulizerEl && this._litVirtulizerEl.scrollToIndex(index, position);
+  _scrollToIndex(index) {
+    if(index < 0) return;
+    
+    const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
+    const scrollOptions = { behavior: 'smooth', block: 'center' };
+    itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
   _fire(name, detail) {
@@ -900,29 +950,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     //search in newItem
     return this.valueEquator(this.valueProvider(this._newItem), value);
-  }
-
-  willUpdate(_changedProperties) {
-    super.willUpdate(_changedProperties);
-
-    if (_changedProperties.has('_query')) {
-      this._onQueryChange(this._query);
-      this._getItems();
-      this._moveActivatedToFirstItem();
-    }
-
-    if (_changedProperties.has('heading') || _changedProperties.has('showClose')) {
-      this._showHeader = Boolean(this.heading) || this.showClose;
-    }
-
-    if (_changedProperties.has('_activatedIndex') || _changedProperties.has('_items')) {
-      this._activatedItem = this._getItem(this._activatedIndex);
-    }
-
-    if (_changedProperties.has('value')) {
-      const selectedItem = this._getItemUsingValue(this.value);
-      this._selectedValueText = this._getTextByItem(selectedItem);
-    }
   }
 }
 
