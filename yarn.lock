@@ -1011,10 +1011,10 @@
     "@material/textfield" "^14.0.0"
     lodash-es "^4.17.21"
 
-"@dreamworld/dw-list-item@^4.3.1":
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.3.1.tgz#680fa59ffa933dc38dc8372f8e8d1ae390166f28"
-  integrity sha512-BGVgAb3Apum42Oix/8zlj2Lw5OduqGjPDnzE/e03qyTJJxwCfAcFzbFX1/jnpt/9kHpMhI2C59KhtjidUNQKQg==
+"@dreamworld/dw-list-item@^4.3.3":
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.3.3.tgz#a936046486d313f62238d08393cd74ee6bb00f70"
+  integrity sha512-qMYcaXlPoTZh+GQtHMwsG2n7YNg0naO7fzCFQsUb91QkiGM16BoYjvZPOGp5wNRS2nso9Ma5wagfrx1xfSrLiQ==
   dependencies:
     "@dreamworld/dw-ellipsis" "^1.2.0"
     "@dreamworld/dw-icon" "^4.1.0"
