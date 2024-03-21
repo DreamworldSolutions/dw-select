@@ -446,6 +446,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       popover: { type: Boolean },
 
       /**
+       * Input property.
+       * External styles to be applied on popover dialog
+       */
+      popoverStyles: { type: Object },
+
+      /**
        *
        */
       autoComplete: { type: Boolean },
@@ -478,6 +484,10 @@ export class DwSelect extends DwFormElement(LitElement) {
           display: block;
           --dw-popover-min-width: 0px;
           --dw-select-highlight-bg-color: #fde293;
+        }
+
+        :host(:not([inputallowed])) #selectTrigger {
+          cursor: pointer;
         }
       `,
     ];
@@ -515,7 +525,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   get _triggerTemplate() {
     return html`
-      <div @click="${this._onTrigger}"><slot name="trigger-template"></slot></div>
+      <div @mousedown="${this._onTrigger}"><slot name="trigger-template"></slot></div>
       ${!this._isSlotTemplateAvaible
         ? html` <dw-select-trigger
             id="selectTrigger"
@@ -547,7 +557,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .tipPlacement="${this.tipPlacement}"
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
-            @click=${this._onTrigger}
+            @mousedown=${this._onTrigger}
             @input=${this._onUserInteraction}
             @keydown=${this._onKeydown}
             @expand-toggle="${this._onDialogOpenToggle}"
@@ -599,6 +609,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       ?allowNewValue="${this.allowNewValue}"
       ._newItemStatus="${this._newItemStatus}"
       ._newItem="${this._newItem}"
+      .popoverStyles=${this._popoverStyles}
       @selected=${this._onSelect}
       @_items-changed=${this._onItemsChanged}
       @dw-dialog-opened="${e => this._onDialogOpen(e)}"
@@ -650,6 +661,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (this._layout === 'small' && !this.searchable) return 'bottom';
 
     return 'center';
+  }
+
+  get _popoverStyles() {
+    return this.popoverStyles;
   }
 
   connectedCallback() {
@@ -737,25 +752,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (triggerEl) {
       this.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
     }
-  }
-
-  _setPopoverHeight() {
-    const viewportHeight = window.innerHeight;
-    const triggerRect = this._triggerElement?.getBoundingClientRect();
-    const isPlacementBottom = triggerRect?.bottom <= viewportHeight / 2;
-    let popoverMaxHeight = 0;
-
-    if (isPlacementBottom) {
-      this._dialogElement.popoverPlacement = 'bottom-start';
-      popoverMaxHeight = viewportHeight - (triggerRect?.bottom + 8);
-    } else {
-      this._dialogElement.popoverPlacement = 'top-start';
-      this._dialogElement.popoverOffset = [0, 8];
-      popoverMaxHeight = triggerRect?.top - 16;
-    }
-
-    this._popoverMaxHeight = popoverMaxHeight;
-    this.style.setProperty('--dw-popover-max-height', popoverMaxHeight + 'px');
   }
 
   /**
@@ -905,10 +901,6 @@ export class DwSelect extends DwFormElement(LitElement) {
           detail: { ...e.detail, dialogType: this._dialogElement.type },
         })
       );
-    }
-
-    if (this._dialogElement && this._dialogElement.type === 'popover') {
-      this._setPopoverHeight();
     }
   }
 

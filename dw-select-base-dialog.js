@@ -49,6 +49,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         :host {
           display: block;
           --dw-dialog-content-padding: 0;
+          --dw-popover-max-height: 50vh;
         }
 
         :host([type='popover']) .dialog__content {
