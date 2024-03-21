@@ -250,7 +250,9 @@ export class DwSelectTrigger extends DwInput {
   _onExpandClick(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.focus();
+    if(this.inputAllowed) {
+      this.focus();
+    }
     this.dispatchEvent(new CustomEvent('expand-toggle'));
   }
 

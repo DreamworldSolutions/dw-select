@@ -49,7 +49,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         :host {
           display: block;
           --dw-dialog-content-padding: 0;
-          --dw-popover-max-height: 50vh;
+          --dw-popover-max-height: calc(50vh - 24px);
         }
 
         :host([type='popover']) .dialog__content {
@@ -428,6 +428,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.heading = '';
     this.showClose = false;
     this._activatedIndex = 0;
+    this._firstItemIndex = 0;
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
     this._selectedValueText = '';
@@ -863,35 +864,38 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _moveActivated(direction) {
     const numberOfItems = this._items.length;
-    if (numberOfItems === 0) {
-      return;
-    }
+    if (numberOfItems === 0) return;
+
+    if(direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
+
+    if(direction === Direction.DOWN && this._activatedIndex === (numberOfItems - 1) ) return;
 
     let activatedIndex = this._activatedIndex;
     let activatedItem = this._activatedItem;
-    let modifier = direction === Direction.UP ? -1 : 1;
 
-    do {
-      activatedIndex = (activatedIndex + modifier + numberOfItems) % numberOfItems;
-      activatedItem = this._getItem(activatedIndex);
-    } while (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible);
+    activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex -1 ) : Math.min(this._activatedIndex + 1, numberOfItems);
+    activatedItem = this._getItem(activatedIndex);
+    if(activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+      activatedIndex = direction === Direction.UP ? Math.max(this._firstItemIndex, this._activatedIndex -1 ) : Math.min(this._activatedIndex + 1, numberOfItems);
+    }
 
     this._activatedIndex = activatedIndex;
     this._scrollToIndex(this._activatedIndex);
   }
 
   _moveActivatedToFirstItem() {
+    if(!this._items?.length) return;
+
     let activatedIndex = -1;
-    if (this._items && this._items.length === 0) {
-      for (let i = 0; i < this._items.length; i++) {
-        const item = this._items[i];
-        if (item.type === ItemTypes.ITEM) {
-          activatedIndex = i;
-          break;
-        }
+    for (let i = 0; i < this._items.length; i++) {
+      const item = this._items[i];
+      if (item.type === ItemTypes.ITEM) {
+        activatedIndex = i;
+        break;
       }
     }
-    this._activatedIndex = activatedIndex;
+    this._firstItemIndex = this._activatedIndex = activatedIndex;
+    this._scrollToIndex(this._activatedIndex);
   }
 
   /**
