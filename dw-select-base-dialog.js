@@ -517,7 +517,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     return html`
       ${this.searchable && this.type === 'fit'
         ? html`<dw-select-dialog-input
-            .value=${this._selectedValueText}
+            .value=${this._query || ''}
             .searchPlaceholder="${this.searchPlaceholder}"
             .newValueStatus="${this._newItemStatus}"
             @cancel=${this._onClose}
@@ -788,7 +788,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _onInput(e) {
     let el = this.renderRoot.querySelector('dw-select-dialog-input');
-    this._query = el.value;
+    this._query = el.value || '';
     this._selectedValueText = el.value;
   }
 
