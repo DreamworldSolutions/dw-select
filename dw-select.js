@@ -525,7 +525,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   get _triggerTemplate() {
     return html`
-      <div @mousedown="${this._onTrigger}"><slot name="trigger-template"></slot></div>
+      <div @mousedown="${this._onTrigger}" @focus=${this._onTrigger}><slot name="trigger-template"></slot></div>
       ${!this._isSlotTemplateAvaible
         ? html` <dw-select-trigger
             id="selectTrigger"
@@ -557,6 +557,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .tipPlacement="${this.tipPlacement}"
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
+            @focus=${this._onTrigger}
             @mousedown=${this._onTrigger}
             @input=${this._onUserInteraction}
             @keydown=${this._onKeydown}
@@ -829,9 +830,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
-    if (!this._vkb && typeof this._triggerElement?.focus === 'function') {
-      this._triggerElement.focus();
-    }
     this._query = undefined;
     await this.updateComplete;
 
@@ -882,7 +880,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     const value = this.value;
     this.value = undefined;
     this._query = '';
-    this._opened = false;
     this._dispatchSelected(value);
   }
 
@@ -935,9 +932,12 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   async _onFocusOut() {
+    if(!this._vkb) {
+      this._opened = false;
+    }
+
     //If select is searchable, clear selection and allow new value possible
     if (this.searchable && (this.autoComplete || (!this._vkb && this._layout !== 'small'))) {
-      this._opened = false;
       this._clearSelection();
       this._setNewValue();
     }

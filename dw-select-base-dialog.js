@@ -778,6 +778,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     if (e.type === 'clear-selection') {
+      this._query = '';
       this.dispatchEvent(new Event('clear-selection'));
     }
   }
@@ -785,6 +786,25 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   _onClose() {
     this.close();
   }
+
+    /**
+   * On TAB, close dialog & prevent close on `ESC` key for searchable dialog.
+   * @override
+   * @param {Object} e Event
+   */
+    __onKeyDown(e) {
+      if(!this.searchable) {
+        super.__onKeyDown(e);
+      }
+
+      const keyCode = e.keyCode || e.which;
+      if(keyCode === 9) {
+        e.preventDefault();
+        e.stopPropagation();
+        const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
+        lastOpenedDialog && lastOpenedDialog.close();
+      }
+    }
 
   _onInput(e) {
     let el = this.renderRoot.querySelector('dw-select-dialog-input');
