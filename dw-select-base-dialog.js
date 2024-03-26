@@ -799,8 +799,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       const keyCode = e.keyCode || e.which;
       if(keyCode === 9) {
-        e.preventDefault();
-        e.stopPropagation();
         const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
         lastOpenedDialog && lastOpenedDialog.close();
       }
