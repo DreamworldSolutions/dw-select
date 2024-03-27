@@ -303,6 +303,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       _query: { type: String },
 
       /**
+       * Input property. Default value is `true`.
+       * When `false`, doesn't highlight matched words.
+       */
+      highlightQuery: { type: Boolean},
+
+      /**
        * index of activated Item
        * default: -1
        */
@@ -422,6 +428,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   constructor() {
     super();
     this._query = '';
+    this.highlightQuery = true;
     this.type = 'popover';
     this.showTrigger = true;
     this.valueExpression = '_id';
@@ -615,7 +622,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         <dw-list-item
           class="list-item"
           title1=${this._getItemValue(item.value)}
-          .highlight=${this._query}
+          .highlight=${this.highlightQuery ? this._query : ''}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
           ?selected=${selected}

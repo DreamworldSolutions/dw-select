@@ -315,6 +315,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       _query: { type: String },
 
       /**
+       * Input property. Default value is `true`.
+       * When `false`, doesn't highlight matched words.
+       */
+      highlightQuery: { type: Boolean},
+
+      /**
        * When true, shows updated highlights.
        */
       _updatedHighlight: { type: Boolean },
@@ -501,6 +507,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   constructor() {
     super();
     this.searchable = false;
+    this.highlightQuery = true;
     this.label = '';
     this.heading = '';
     this.placeholder = '';
@@ -593,6 +600,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .groupExpression=${this.groupExpression}
       .queryFilter=${this.queryFilter}
       ._query=${this._query}
+      .highlightQuery=${this.highlightQuery}
       ?vkb=${this._vkb}
       ?searchable=${this.searchable}
       .renderItem=${this.renderItem}
@@ -811,7 +819,10 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onFocus() {
-    this._onTrigger();
+    if(this._dialogType !== 'fit') {
+      this._onTrigger();
+    }
+
     if(this.searchable && this._dialogType === 'popover') {
       this._triggerElement?.selectText && this._triggerElement?.selectText();
     }
