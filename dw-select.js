@@ -532,7 +532,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   get _triggerTemplate() {
     return html`
-      <div @mousedown="${this._onTrigger}" @focus=${this._onFocus}><slot name="trigger-template"></slot></div>
+      <div @mousedown="${this._onTrigger}" @focusin=${this._onFocus}><slot name="trigger-template"></slot></div>
       ${!this._isSlotTemplateAvaible
         ? html` <dw-select-trigger
             id="selectTrigger"
@@ -950,10 +950,6 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   async _onFocusOut() {
-    if(!this._vkb) {
-      this._opened = false;
-    }
-
     //If select is searchable, clear selection and allow new value possible
     if (this.searchable && (this.autoComplete || (!this._vkb && this._layout !== 'small'))) {
       this._clearSelection();
