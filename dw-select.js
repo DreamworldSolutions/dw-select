@@ -525,7 +525,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   get _triggerTemplate() {
     return html`
-      <div @mousedown="${this._onTrigger}" @focus=${this._onTrigger}><slot name="trigger-template"></slot></div>
+      <div @mousedown="${this._onTrigger}" @focus=${this._onFocus}><slot name="trigger-template"></slot></div>
       ${!this._isSlotTemplateAvaible
         ? html` <dw-select-trigger
             id="selectTrigger"
@@ -557,7 +557,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .tipPlacement="${this.tipPlacement}"
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
-            @focus=${this._onTrigger}
+            @focus=${this._onFocus}
             @mousedown=${this._onTrigger}
             @input=${this._onUserInteraction}
             @keydown=${this._onKeydown}
@@ -808,6 +808,13 @@ export class DwSelect extends DwFormElement(LitElement) {
       return item;
     }
     return this.valueTextProvider(item);
+  }
+
+  _onFocus() {
+    this._onTrigger();
+    if(this.searchable && this._dialogType === 'popover') {
+      this._triggerElement?.selectText && this._triggerElement?.selectText();
+    }
   }
 
   _onTrigger(e) {
