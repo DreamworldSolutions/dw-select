@@ -8,7 +8,7 @@ import './dw-select-base-dialog.js';
 import './dw-select-trigger.js';
 
 // Lodash Methods
-import debounce from 'lodash-es/debounce';
+import { find, debounce } from 'lodash-es';
 
 // Utils
 import { NEW_VALUE_STATUS } from './utils';
@@ -523,7 +523,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.helperTextProvider = value => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
     this.newItemProvider = query => query;
-    this._findNewItem = debounce(this._findNewItem.bind(this), 50);
   }
 
   render() {
@@ -683,14 +682,12 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this._computeValueProvider();
 
-    this.addEventListener('focusout', this._onFocusOut);
     this._layout = DeviceInfo.info().layout;
     this._vkb = DeviceInfo.info().vkb;
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('focusout', this._onFocusOut);
   }
 
   willUpdate(_changedProperties) {
@@ -709,15 +706,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (_changedProperties.has('valueProvider') || _changedProperties.has('valueExpression')) {
       this._computeValueProvider();
-    }
-
-    if (_changedProperties.has('_query') || _changedProperties.has('_items')) {
-      this._newItemRequest = undefined;
-      if (this.allowNewValue && this._query && this._items?.length === 0) {
-        this._findNewItem();
-      } else {
-        this._newItemStatus = undefined;
-      }
     }
 
     if (_changedProperties.has('autoComplete')) {
@@ -826,12 +814,6 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if(this.searchable && this._dialogType === 'popover') {
       this._triggerElement?.selectText && this._triggerElement?.selectText();
-    }
-  }
-
-  _onBlur(e) {
-    if(!this.allowNewValue) {
-      this._resetToCurValue();
     }
   }
 
@@ -965,50 +947,31 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  async _onFocusOut() {
-    //If select is searchable, clear selection and allow new value possible
-    if (this.searchable && (this.autoComplete || (!this._vkb && this._layout !== 'small'))) {
-      this._clearSelection();
-      this._setNewValue();
+  async _onBlur() {
+    if(!this.searchable) return;
+
+    if(!this.allowNewValue) {
+      this._resetToCurValue();
+      return;
     }
+
+    const matchedItem = find(this._items, (item) => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
+    if(matchedItem) {
+      this.value = this._valueProvider(matchedItem.value);
+      this._selectedValueText = this._getValue(matchedItem.value);
+      this._query = '';
+      this._newItemStatus = undefined;
+    } else {
+      await this._setNewValue();
+    }
+    
     await this.updateComplete;
     this.reportValidity();
   }
 
-  async _findNewItem() {
-    //As it's debounced, it may be invoked after _items are reset to 0.
-    //So, return if it's already reset to 0.
-    if (this._items?.length > 0) {
-      return;
-    }
-
-    const query = this._query;
-    let result = this.newItemProvider(this._query);
-    this._newItemRequest = result instanceof Promise ? result : Promise.resolve(result);
-    this._newItemStatus = NEW_VALUE_STATUS.IN_PROGRESS;
-    this._newItem = undefined;
-
-    try {
-      const item = await this._newItemRequest;
-      // const {item, hint} = //TODO: Consider 'hint' too.
-
-      //if query has been changed after the request was sent, do nothing.
-      if (query !== this._query) {
-        return;
-      }
-
-      this._newItem = item;
-      //TODO: Show hint if available.
-      this._newItemStatus = item !== undefined ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
-    } catch (error) {
-      this._newItemStatus = NEW_VALUE_STATUS.ERROR;
-    } finally {
-      this._newItemRequest = undefined;
-    }
-  }
-
   _resetToCurValue() {
     this._query = '';
+    console.log('newItem', this._newItem);
     const selectedItem = this._getSelectedItem(this.value);
     this._selectedValueText = selectedItem ? this._getValue(selectedItem) : '';
   }
@@ -1051,57 +1014,55 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  _clearSelection() {
-    //TODO: If query is NOT dirty, nothing is to be done.
+  
+  async _findNewItem() {
+    const query = this._query || this._selectedValueText;
+    let result = this.newItemProvider(query);
+    this._newItemRequest = result instanceof Promise ? result : Promise.resolve(result);
+    this._newItemStatus = NEW_VALUE_STATUS.IN_PROGRESS;
+    this._newItem = undefined;
 
-    // if (this._query == this._selectedValueText) {
-    //   return;
-    // }
+    try {
+      const item = await this._newItemRequest;
+      // const {item, hint} = //TODO: Consider 'hint' too.
 
-    if (!this._query && !this._selectedValueText) {
-      //clear selection & dispatch event.
-      const prevValue = this.value;
-      this.value = null;
-      if (prevValue !== this.value) {
-        this._dispatchSelected(prevValue);
-        this.dispatchEvent(new CustomEvent('clear-selection'));
-      }
-      return;
+      this._newItem = item;
+      //TODO: Show hint if available.
+      this._newItemStatus = item !== undefined ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
+    } catch (error) {
+      this._newItemStatus = NEW_VALUE_STATUS.ERROR;
+    } finally {
+      this._newItemRequest = undefined;
     }
   }
 
-  _setNewValue() {
-    if (!this.allowNewValue) {
+  async _setNewValue() {
+    //Allow New Value - START
+
+    await (this._newItemRequest || this._findNewItem());
+    if (!this._newItemStatus) {
       this._resetToCurValue();
       return;
     }
 
-    //Allow New Value - START
+    if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE) {
+      //Change value & dispatch event
+      this.value = this._newItem;
+      this._dispatchSelected(this.value);
+      this._query = '';
+      return;
+    }
 
-    window.setTimeout(async () => {
-      await (this._newItemRequest || this._findNewItem());
-      if (!this._newItemStatus) {
-        this._resetToCurValue();
-        return;
-      }
+    if (this._newItemStatus === NEW_VALUE_STATUS.ERROR) {
+      const query = this._query;
+      this.value = null;
 
-      if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE) {
-        //Change value & dispatch event
-        this.value = this._newItem;
-        this._dispatchSelected(this.value);
-        return;
-      }
-
-      if (this._newItemStatus === NEW_VALUE_STATUS.ERROR) {
-        const query = this._query;
-        this.value = null;
-
-        //Restore query after timeout; as on setting value, it might be resetted too.
-        window.setTimeout(() => {
-          this._selectedValueText = query;
-        });
-      }
-    });
+      //Restore query after timeout; as on setting value, it might be resetted too.
+      window.setTimeout(() => {
+        this._selectedValueText = query;
+        this._query = '';
+      });
+    }
     //Allow New Value - END
   }
 }

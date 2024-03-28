@@ -52,6 +52,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           --dw-popover-max-height: calc(50vh - 24px);
         }
 
+        :host([hidden]) #popover_dialog__surface {
+          display: none;
+        }
+
         :host([type='popover']) .dialog__content {
           padding: var(--dw-select-content-padding, 0);
         }
@@ -351,6 +355,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        */
       allowNewValue: { type: Boolean },
 
+      _hidden: { type: Boolean, reflect: true, attribute: 'hidden'},
+
       /**
        * Enum property
        * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
@@ -493,6 +499,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (changedProps.has('value')) {
       const selectedItem = this._getItemUsingValue(this.value);
       this._selectedValueText = this._getTextByItem(selectedItem);
+    }
+
+    if(this.allowNewValue && changedProps.has('_items') && this.type === 'popover') {
+      this._hidden = !this._items?.length;
     }
   }
 
