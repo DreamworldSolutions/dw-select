@@ -855,6 +855,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
+    this._triggerElement.value = this._selectedValueText;
     this._query = undefined;
     await this.updateComplete;
 
