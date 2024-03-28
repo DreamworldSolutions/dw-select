@@ -8,7 +8,8 @@ export const KeyCode = {
   ARROW_RIGHT: 39,
   SPACE: 32,
   SHIFT: 16,
-  TAB: 9
+  TAB: 9,
+  ESC: 27
 };
 
 export const Direction = {

@@ -695,7 +695,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   _onItemClick(item) {
     const isSame = this.valueEquator(this.value, this.valueProvider(item));
-    if (!isSame) this.dispatchEvent(new CustomEvent('selected', { detail: item }));
+    this.dispatchEvent(new CustomEvent('selected', { detail: item }));
     this.close();
   }
 
@@ -800,10 +800,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {Object} e Event
    */
     __onKeyDown(e) {
+      // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
       if(!this.searchable) {
         super.__onKeyDown(e);
       }
 
+      // On TAB, close always.
       const keyCode = e.keyCode || e.which;
       if(keyCode === 9) {
         const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
