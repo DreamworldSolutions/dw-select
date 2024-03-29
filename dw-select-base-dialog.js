@@ -795,7 +795,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (e.type === 'clear-selection') {
       this._query = '';
-      this.dispatchEvent(new Event('clear-selection'));
     }
   }
 
