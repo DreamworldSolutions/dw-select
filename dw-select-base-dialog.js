@@ -52,6 +52,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           --dw-popover-max-height: calc(50vh - 24px);
         }
 
+        :host([hidden]) #popover_dialog__surface {
+          display: none;
+        }
+
         :host([type='popover']) .dialog__content {
           padding: var(--dw-select-content-padding, 0);
         }
@@ -351,6 +355,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        */
       allowNewValue: { type: Boolean },
 
+      _hidden: { type: Boolean, reflect: true, attribute: 'hidden'},
+
       /**
        * Enum property
        * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
@@ -494,6 +500,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       const selectedItem = this._getItemUsingValue(this.value);
       this._selectedValueText = this._getTextByItem(selectedItem);
     }
+
+    if(this.allowNewValue && changedProps.has('_items') && this.type === 'popover') {
+      this._hidden = !this._items?.length;
+    }
   }
 
   firstUpdated(changedProps) {
@@ -566,7 +576,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _footerTemplate() {
-    if (this._newItemStatus === NEW_VALUE_STATUS.NEW_VALUE && this.type === 'fit') {
+    if (this.allowNewValue && this._query && this.type === 'fit') {
       return html`<dw-button label="Select" raised fullwidth @click=${this._onSelectButtonClick}></dw-button>`;
     }
     return this.dialogFooterElement;
@@ -764,7 +774,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     });
 
     this._items = [...aPrependItems, ...array];
-    this._fire('_items-changed', this._items);
+    this.dispatchEvent(new CustomEvent('_items-changed', { detail: this._items }));
   }
 
   _getGroupValue(item) {
@@ -955,16 +965,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if(index < 0) return;
     
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
-    const scrollOptions = { behavior: 'smooth', block: 'center' };
+    const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'center' };
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
-  _fire(name, detail) {
-    this.dispatchEvent(new CustomEvent(name, { detail: detail }));
-  }
-
   _onSelectButtonClick() {
-    this._fire('selected', this._newItem);
+    this.dispatchEvent(new CustomEvent('select-new-value', { detail: { value: this._query } }));
     this.close();
   }
 
