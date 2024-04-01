@@ -977,20 +977,18 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (!this.allowNewValue) {
       this._resetToCurValue();
-      return;
-    }
-
-    const matchedItem = find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
-    if (matchedItem) {
-      this.value = this._valueProvider(matchedItem.value);
-      this._selectedValueText = this._getValue(matchedItem.value);
-      this._query = '';
-      this._newItemStatus = undefined;
-      this._dispatchSelected();
     } else {
-      await this._setNewValue();
+      const matchedItem = find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
+      if (matchedItem) {
+        this.value = this._valueProvider(matchedItem.value);
+        this._selectedValueText = this._getValue(matchedItem.value);
+        this._query = '';
+        this._newItemStatus = undefined;
+        this._dispatchSelected();
+      } else {
+        await this._setNewValue();
+      }
     }
-
     await this.updateComplete;
     this.reportValidity();
   }
