@@ -878,7 +878,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         this._moveActivated(Direction.DOWN);
         return;
       case ENTER:
-        if (this._activatedIndex > -1) {
+        if (this._activatedItem ) {
           const item = this._activatedItem;
           if (item.type === ItemTypes.ITEM) {
             this._onItemClick(item.value);
