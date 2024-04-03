@@ -614,7 +614,8 @@ export class DwSelect extends DwFormElement(LitElement) {
       ?showClose=${this.showClose}
       .selectedTrailingIcon="${this.selectedTrailingIcon}"
       .dialogHeaderTemplate="${this._headerTemplate}"
-      .dialogFooterElement=${this._footerTemplate}
+      .dialogContentTemplate="${this._contentTemplate}"
+      .dialogFooterTemplate=${this._footerTemplate}
       ?allowNewValue="${this.allowNewValue}"
       ._newItemStatus="${this._newItemStatus}"
       ._newItem="${this._newItem}"
@@ -627,6 +628,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @dw-dialog-closed="${e => this._onDialogClose(e)}"
       @dw-fit-dialog-closed="${e => this._onDialogClose(e)}"
       @clear-selection="${this._onClearSelection}"
+      @query-change="${this._onDialogQueryChanged}"
       .messages="${this.messages}"
       ._getItemValue=${this._getItemValue}
     ></dw-select-base-dialog>`;
@@ -641,6 +643,14 @@ export class DwSelect extends DwFormElement(LitElement) {
    *
    */
   get _headerTemplate() {
+    return nothing;
+  }
+
+  /**
+   * content Template getter
+   *
+   */
+  get _contentTemplate() {
     return nothing;
   }
 
@@ -840,6 +850,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (this._query && !this._opened) {
       this._opened = true;
     }
+  }
+
+  _onDialogQueryChanged(e) {
+    this._query = e?.detail?.value;
   }
 
   async _onSelect(e) {
