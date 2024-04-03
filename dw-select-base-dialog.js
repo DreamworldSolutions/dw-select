@@ -165,7 +165,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         .content-action-button {
           display: flex;
           align-items: center;
-          height: var(--dw-fit-dialog-content-action-button, 56px);
+          height: var(--dw-fit-dialog-content-action-button-height, 56px);
           padding: var(--dw-fit-dialog-content-action-button-padding, 0 16px);
         }
       `,
