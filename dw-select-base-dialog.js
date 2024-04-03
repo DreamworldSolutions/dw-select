@@ -111,8 +111,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           padding: 0;
         }
 
-        :host([type='fit']) .mdc-dialog__title {
+        :host([type='fit']) #dialog-header.mdc-dialog__title {
           padding: 8px 16px;
+          z-index: 2;
         }
 
         dw-list-item,
