@@ -161,6 +161,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           background-color: var(--dw-select-highlight-bg-color);
           font-weight: var(--dw-select-highlight-font-weight);
         }
+
+        .content-action-button {
+          display: flex;
+          align-items: center;
+          height: var(--dw-fit-dialog-content-action-button, 56px);
+          padding: var(--dw-fit-dialog-content-action-button-padding, 0 16px);
+        }
       `,
     ];
   }
@@ -325,9 +332,19 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       _activatedItem: { type: Object },
 
       /**
+       * Custom header template as property
+       */
+      dialogHeaderTemplate: { type: Object },
+
+      /**
+       * Custom dialog content template as property
+       */
+      dialogContentTemplate: { type: Object },
+
+      /**
        * Custom footer template as property
        */
-      dialogFooterElement: { type: Object },
+      dialogFooterTemplate: { type: Object },
 
       /**
        * Custom header template as property
@@ -558,6 +575,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _contentTemplate() {
+    if (this.dialogContentTemplate) return;
+
     if (this.allowNewValue && this._items.length === 0) {
       return nothing;
     }
@@ -566,20 +585,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return this._renderLoading;
     }
 
-    // Render No Records view when _items's length is 0
-    if (this._items.length === 0) {
-      return this._renderNoRecord;
-    }
-
-    // Render list of choices
-    return this._renderList;
+    return html`
+      ${this._items.length === 0 ? this._renderNoRecord : this._renderList}
+      ${this.type === 'fit' ? html`<div class="content-action-button">${this.dialogFooterTemplate}</div>` : ''}
+    `;
   }
 
   get _footerTemplate() {
     if (this.allowNewValue && this._query && this.type === 'fit') {
       return html`<dw-button label="Select" raised fullwidth @click=${this._onSelectButtonClick}></dw-button>`;
     }
-    return this.dialogFooterElement;
+
+    if (this.type !== 'fit') {
+      return this.dialogFooterTemplate;
+    }
   }
 
   get _renderLoading() {
@@ -602,7 +621,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return;
     }
     const selectedItemIndex = this._items.findIndex(item => this.valueEquator(this.valueProvider(item.value), this.value));
-    
+
     const renderItem = (item, index) => {
       const isSelected = this._isItemSelected(selectedItemIndex, index);
       const isActivated = this._isItemActivated(index);
@@ -802,29 +821,30 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.close();
   }
 
-    /**
+  /**
    * On TAB, close dialog & prevent close on `ESC` key for searchable dialog.
    * @override
    * @param {Object} e Event
    */
-    __onKeyDown(e) {
-      // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
-      if(!this.searchable) {
-        super.__onKeyDown(e);
-      }
-
-      // On TAB, close always.
-      const keyCode = e.keyCode || e.which;
-      if(keyCode === 9) {
-        const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
-        lastOpenedDialog && lastOpenedDialog.close();
-      }
+  __onKeyDown(e) {
+    // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
+    if(!this.searchable) {
+      super.__onKeyDown(e);
     }
+
+    // On TAB, close always.
+    const keyCode = e.keyCode || e.which;
+    if(keyCode === 9) {
+      const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
+      lastOpenedDialog && lastOpenedDialog.close();
+    }
+  }
 
   _onInput(e) {
     let el = this.renderRoot.querySelector('dw-select-dialog-input');
     this._query = el.value || '';
     this._selectedValueText = el.value;
+    this.dispatchEvent(new CustomEvent('query-change', { detail: { value: this._query } }));
   }
 
   _onQueryChange(value) {
@@ -951,8 +971,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       activatedItem = this._getItem(this._activatedIndex);
     }
     setTimeout(() => {
-      this._scrollToIndex(this._activatedIndex);
-    }, this._virtualList ? VIRTUAL_LIST_AUTO_SCROLL_DELAY : REGULAR_LIST_SCROLL_DELAY);
+        this._scrollToIndex(this._activatedIndex);
+      }, this._virtualList ? VIRTUAL_LIST_AUTO_SCROLL_DELAY : REGULAR_LIST_SCROLL_DELAY);
   }
 
   /**
@@ -962,7 +982,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    */
   _scrollToIndex(index) {
     if(index < 0) return;
-    
+
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
     const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'center' };
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
