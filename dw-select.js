@@ -1064,7 +1064,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
       this._newItem = item;
       //TODO: Show hint if available.
-      this._newItemStatus = item !== undefined ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
+      this._newItemStatus = item ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
     } catch (error) {
       this._newItemStatus = NEW_VALUE_STATUS.ERROR;
     } finally {
