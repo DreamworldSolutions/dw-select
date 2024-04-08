@@ -740,7 +740,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   updated(_changedProperties) {
-    if (_changedProperties.has('_opened') && !this._opened && this._dialogType === 'fit') {
+    if (_changedProperties.has('_opened') && !this._opened) {
       this.reportValidity();
     }
   }
@@ -878,7 +878,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._query = this._selectedValueText = value;
     this._onBlur();
   }
-  
+
 
   _dispatchSelected(prevValue) {
     this.dispatchEvent(new CustomEvent('selected', { detail: this.value }));
