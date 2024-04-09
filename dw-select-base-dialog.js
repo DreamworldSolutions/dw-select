@@ -942,6 +942,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if(!this._items?.length) return;
 
     let activatedIndex = -1;
+
+    if (!this.searchable && this.type === 'modal') {
+      this._activatedIndex = activatedIndex;
+      return;
+    }
+
     for (let i = 0; i < this._items.length; i++) {
       const item = this._items[i];
       if (item.type === ItemTypes.ITEM) {
