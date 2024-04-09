@@ -352,6 +352,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        */
       headerTemplate: { type: Object },
 
+      inputSuffixTemplate: { tpye: Object },
+
       /**
        * Placeholder for fit dialog's search input
        */
@@ -554,6 +556,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         ? html`<dw-select-dialog-input
             .value=${this._query || ''}
             .searchPlaceholder="${this.searchPlaceholder}"
+            .newValueStatus="${this._newItemStatus}"
             @cancel=${this._onClose}
             @input-change=${this._onUserInteraction}
             @clear-selection="${this._onUserInteraction}"
@@ -575,7 +578,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _contentTemplate() {
-    if (this.dialogContentTemplate) return;
+    if (this.dialogContentTemplate) {
+      return this.dialogContentTemplate;
+    }
 
     if (this.allowNewValue && this._items.length === 0) {
       return nothing;
