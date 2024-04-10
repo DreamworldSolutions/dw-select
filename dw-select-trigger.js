@@ -172,6 +172,7 @@ export class DwSelectTrigger extends DwInput {
     return html`
       <input
         .type="${this._type || this.type}"
+        tabindex=${this.readOnly ? -1 : 0 }
         max=${this.maxNumber}
         min=${this.minNumber}
         id="tf-outlined"
