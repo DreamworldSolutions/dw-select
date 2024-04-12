@@ -556,7 +556,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         ? html`<dw-select-dialog-input
             .value=${this._query || ''}
             .searchPlaceholder="${this.searchPlaceholder}"
-            .newValueStatus="${this._newItemStatus}"
+            .suffixTemplate=${this.inputSuffixTemplate}
             @cancel=${this._onClose}
             @input-change=${this._onUserInteraction}
             @clear-selection="${this._onUserInteraction}"
