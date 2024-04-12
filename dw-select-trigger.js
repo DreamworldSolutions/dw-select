@@ -117,6 +117,8 @@ export class DwSelectTrigger extends DwInput {
        * 
        */
       autoComplete: { type: Boolean },
+
+      suffixTemplate: { type: Object }
     };
   }
 
@@ -146,6 +148,10 @@ export class DwSelectTrigger extends DwInput {
    * Returns suffix template based on `iconTrailing` and `suffixText` property
    */
   get _getSuffixTemplate() {
+    if(this.suffixTemplate) {
+      return this.suffixTemplate;
+    }
+    
     if (this.type === 'password' && this._showVisibilityIcon) {
       const icon = this._type === 'text' ? 'visibility' : 'visibility_off';
       return html`

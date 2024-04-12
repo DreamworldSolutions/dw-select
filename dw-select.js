@@ -563,6 +563,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .tipPlacement="${this.tipPlacement}"
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
+            .suffixTemplate=${this._inputSuffixTemplate}
             @focus=${this._onFocus}
             @blur=${this._onBlur}
             @mousedown=${this._onTrigger}
@@ -619,6 +620,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       ?allowNewValue="${this.allowNewValue}"
       ._newItemStatus="${this._newItemStatus}"
       ._newItem="${this._newItem}"
+      .inputSuffixTemplate=${this._inputSuffixTemplate}
       .popoverStyles=${this._popoverStyles}
       @selected=${this._onSelect}
       @select-new-value=${this._onSelectNewValue}
@@ -651,6 +653,10 @@ export class DwSelect extends DwFormElement(LitElement) {
    *
    */
   get _contentTemplate() {
+    return nothing;
+  }
+
+  get _inputSuffixTemplate() {
     return nothing;
   }
 

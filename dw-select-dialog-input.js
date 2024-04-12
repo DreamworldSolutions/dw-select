@@ -118,6 +118,8 @@ export class DwSelectDialogInput extends LitElement {
        */
       _hasFocus: { type: Boolean, reflect: true },
 
+      suffixTemplate: { type: Object },
+
       /**
        * Enum property
        * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
@@ -151,7 +153,7 @@ export class DwSelectDialogInput extends LitElement {
           .value=${this.value}
           .placeholder="${this.searchPlaceholder}"
         />
-        ${this._renderTrailingIcons}
+        ${this.suffixTemplate ? this.suffixTemplate : this._renderTrailingIcons}
       </div>
     `;
   }
