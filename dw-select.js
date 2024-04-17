@@ -724,7 +724,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           selectedItem = this.value;
         }
         this._selectedValueText = this._getValue(selectedItem);
-        if(!this._selectedValueText) {
+        if (!this._selectedValueText) {
           this._newItemStatus = undefined;
         }
       }
@@ -834,10 +834,6 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onFocus() {
-    if (this._dialogType !== 'fit') {
-      this._onTrigger();
-    }
-
     if (this.searchable && this._dialogType === 'popover') {
       this._triggerElement?.selectText && this._triggerElement?.selectText();
     }
@@ -867,6 +863,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
     this._selectedValueText = this._getValue(selectedItem);
+    if (!this._vkb && typeof this._triggerElement?.focus === 'function') {
+      this._triggerElement.focus();
+    }
+
     if (this._triggerElement) {
       this._triggerElement.value = this._selectedValueText;
     }
@@ -884,7 +884,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._query = this._selectedValueText = value;
     this._onBlur();
   }
-
 
   _dispatchSelected(prevValue) {
     this.dispatchEvent(new CustomEvent('selected', { detail: this.value }));
