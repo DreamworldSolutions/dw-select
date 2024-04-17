@@ -961,12 +961,12 @@
     lodash-es "^4.17.15"
     tippy.js "^6.2.7"
 
-"@dreamworld/dw-ellipsis@1.2.0", "@dreamworld/dw-ellipsis@^1.2.7":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ellipsis/-/dw-ellipsis-1.2.0.tgz#aaf9dd26a84fccb34e5661f3a52e9c899013e5c6"
-  integrity sha512-Ey0asWggvZDIuT5iD4K4qeiP2//PciN5byHyayJ83VeZ7aVqoL/SDYtUoLu64t7rjyIBz8NBqycH6ew0pTrJ2A==
+"@dreamworld/dw-ellipsis@1.2.8", "@dreamworld/dw-ellipsis@^1.2.7":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ellipsis/-/dw-ellipsis-1.2.8.tgz#d9eb1f767ef5c1fb0d1b3e04fd9c5d2c6608047e"
+  integrity sha512-1ArEmoqNTljMT/6EFQeN63bij2PqphUuhHSBAZbLJxDFg17egZ1iVFlc0dHMy+BUZXAQNI6uTMsj2HSBsfpwbA==
   dependencies:
-    "@dreamworld/dw-tooltip" "^3.0.0"
+    "@dreamworld/dw-tooltip" "^3.1.2"
     "@dreamworld/pwa-helpers" "^1.13.1"
     bowser "^2.11.0"
 
@@ -1032,7 +1032,7 @@
     "@dreamworld/pwa-helpers" "^1.16.5"
     "@material/mwc-ripple" "0.27.0"
 
-"@dreamworld/dw-tooltip@3.1.1", "@dreamworld/dw-tooltip@^3.0.0", "@dreamworld/dw-tooltip@^3.1.1":
+"@dreamworld/dw-tooltip@3.1.1", "@dreamworld/dw-tooltip@^3.1.1", "@dreamworld/dw-tooltip@^3.1.2":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-3.1.1.tgz#ccf7488b79cc08c6edc9f752446a50ba0a3be9c8"
   integrity sha512-PbOhFO51tjd3ASLRi9wEupA4ClMfXHjmIynhHjLK3xMsuPL97E1/YJP9Z5ZYUB9wu3Gr4PIvbUKgdPUSb8BfeA==
