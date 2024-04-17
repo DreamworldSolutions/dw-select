@@ -1024,18 +1024,18 @@
     "@dreamworld/web-util" "^1.7.1"
     mark.js "^8.11.1"
 
-"@dreamworld/dw-ripple@3.1.4", "@dreamworld/dw-ripple@^3.1.0", "@dreamworld/dw-ripple@^3.1.4":
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ripple/-/dw-ripple-3.1.4.tgz#2f1c71085e5fb8d533c0483e916d7384a44e00fb"
-  integrity sha512-TSzWitv5pOKujunInudKW/4X6aft/xDZSdji8fudLWpudzIFi1kFQX4Bce2K6oCq2kyD+j6zdijJeOlNa0iMFw==
+"@dreamworld/dw-ripple@3.1.5", "@dreamworld/dw-ripple@^3.1.0", "@dreamworld/dw-ripple@^3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-ripple/-/dw-ripple-3.1.5.tgz#d792100e932608b29fa9c5bb74d0fcbd6fcc27ab"
+  integrity sha512-vapp1egmj6Q9KvJW9HtisIQcnXaVZ3BAP5W8B5P35/yz9mdDiphKqydQVG05azqREwnkN+JTdirNKrgGgyjzeA==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.16.5"
     "@material/mwc-ripple" "0.27.0"
 
-"@dreamworld/dw-tooltip@3.1.1", "@dreamworld/dw-tooltip@^3.1.1", "@dreamworld/dw-tooltip@^3.1.2":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-3.1.1.tgz#ccf7488b79cc08c6edc9f752446a50ba0a3be9c8"
-  integrity sha512-PbOhFO51tjd3ASLRi9wEupA4ClMfXHjmIynhHjLK3xMsuPL97E1/YJP9Z5ZYUB9wu3Gr4PIvbUKgdPUSb8BfeA==
+"@dreamworld/dw-tooltip@3.1.2", "@dreamworld/dw-tooltip@^3.1.1", "@dreamworld/dw-tooltip@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-3.1.2.tgz#d02b1078101bd63c0272619cb2ca392fcb9ddd8c"
+  integrity sha512-N94OTzeGlXeSCQCjZVZYTotLK756QSBGl5M3/c1AakpfblOBrQiTUErIwnmqsY4DVupUSQVy+/fXrqroDfGBLw==
   dependencies:
     "@dreamworld/material-styles" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
