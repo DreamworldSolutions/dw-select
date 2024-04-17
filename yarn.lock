@@ -961,7 +961,7 @@
     lodash-es "^4.17.15"
     tippy.js "^6.2.7"
 
-"@dreamworld/dw-ellipsis@1.2.0", "@dreamworld/dw-ellipsis@^1.2.0":
+"@dreamworld/dw-ellipsis@1.2.0", "@dreamworld/dw-ellipsis@^1.2.7":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-ellipsis/-/dw-ellipsis-1.2.0.tgz#aaf9dd26a84fccb34e5661f3a52e9c899013e5c6"
   integrity sha512-Ey0asWggvZDIuT5iD4K4qeiP2//PciN5byHyayJ83VeZ7aVqoL/SDYtUoLu64t7rjyIBz8NBqycH6ew0pTrJ2A==
@@ -1011,12 +1011,12 @@
     "@material/textfield" "^14.0.0"
     lodash-es "^4.17.21"
 
-"@dreamworld/dw-list-item@^4.3.5":
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.3.5.tgz#cf7972a09818490f756ef955227e26eded79fa76"
-  integrity sha512-v7Rj7soY9BLodAAXUcL+Xw86sqAI9h8OaURC6527kMVC47jcs/P3jQsebSh98rMpDu/0M+LdqlAwulRDxpmTiw==
+"@dreamworld/dw-list-item@^4.3.7":
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-list-item/-/dw-list-item-4.3.7.tgz#9c5e69229ff4d3d446e68b91fde18b8a4b14d599"
+  integrity sha512-yyHZABqsQkUipadhmy4U/BhPh1tcfOZMmINhGXlkwWjEl1+ZlnGvPUH0B0L0LB9rwoWYVIy6ZvYUG9WPMf1YNA==
   dependencies:
-    "@dreamworld/dw-ellipsis" "^1.2.0"
+    "@dreamworld/dw-ellipsis" "^1.2.7"
     "@dreamworld/dw-icon" "^4.1.0"
     "@dreamworld/dw-ripple" "^3.1.0"
     "@dreamworld/material-styles" "^3.0.0"
