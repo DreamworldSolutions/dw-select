@@ -998,7 +998,7 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@^4.1.7":
+"@dreamworld/dw-input@4.1.7", "@dreamworld/dw-input@^4.1.7":
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.7.tgz#832a7cb775143b127cd4fc17fb1ed71c28dcf5f4"
   integrity sha512-bqQyaOATujzrTovzeG6TPIAzn5OkqAzB8pYBiYl29gLj4eXt5ByLBXvKrEtQ8p7r6oPuqb69foLes9t5P8piaQ==
