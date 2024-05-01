@@ -840,7 +840,6 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onTrigger(e) {
-    e.stopPropagation();
     if (!this.readOnly && !this.autoComplete) {
       this._opened = true;
     }
