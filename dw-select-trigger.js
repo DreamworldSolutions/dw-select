@@ -154,9 +154,10 @@ export class DwSelectTrigger extends DwInput {
    */
   get _getSuffixTemplate() {
     return html`
-      ${this.invalid || this._warning || this.hint ? this._tipIconButtons : nothing} 
-      ${this._suffixTemplate}
-      ${this.renderIcon(this.iconTrailing, true)}
+      ${this.invalid || this._warning || this.hint
+        ? html`<span @mousedown=${e => e.stopPropagation()}>${this._tipIconButtons}</span>`
+        : nothing}
+      ${this._suffixTemplate} ${this.renderIcon(this.iconTrailing, true)}
     `;
   }
 
