@@ -998,10 +998,23 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@4.1.7", "@dreamworld/dw-input@^4.1.7":
-  version "4.1.7"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.7.tgz#832a7cb775143b127cd4fc17fb1ed71c28dcf5f4"
-  integrity sha512-bqQyaOATujzrTovzeG6TPIAzn5OkqAzB8pYBiYl29gLj4eXt5ByLBXvKrEtQ8p7r6oPuqb69foLes9t5P8piaQ==
+"@dreamworld/dw-input@^4.1.8":
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.8.tgz#601c167842a8d3efb06858b737596414df854f11"
+  integrity sha512-OJREwiDceBbrAF6lT2XaMzeBvKXXrhSvl5ZPDKTEFz2yyiRwrmH5cABR67SovLuDCQGucscRmKKcAJeNU5H83Q==
+  dependencies:
+    "@dreamworld/dw-button" "^3.0.3"
+    "@dreamworld/dw-form" "^4.0.0"
+    "@dreamworld/dw-icon" "^4.0.0"
+    "@dreamworld/dw-icon-button" "^3.0.0"
+    "@dreamworld/dw-tooltip" "^3.1.1"
+    "@material/textfield" "^14.0.0"
+    lodash-es "^4.17.21"
+
+"@dreamworld/dw-input@^4.1.8-remove-extra-conditions-from-tipIconButtons.1":
+  version "4.1.8-remove-extra-conditions-from-tipIconButtons.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.8-remove-extra-conditions-from-tipIconButtons.1.tgz#cee43eb5f724e0dff9a50d09a5a84986a68aa809"
+  integrity sha512-TI8TwOlgncPo2cy/8W9LushRpIkAqUohFNZwQML14X9udyzRUTZTK8ClgWnh5Ty/cmj3ZGLob+fTSFO1y+etzA==
   dependencies:
     "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"

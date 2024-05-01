@@ -1,5 +1,4 @@
 import { css, html, nothing, unsafeCSS } from '@dreamworld/pwa-helpers/lit.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 // view Elements
 import { DwInput } from '@dreamworld/dw-input/dw-input.js';
@@ -46,6 +45,12 @@ export class DwSelectTrigger extends DwInput {
 
         .up-down-arrow {
           transition: 0.2s ease-in-out;
+        }
+
+        .mdc-text-field--with-trailing-icon .mdc-text-field__icon {
+          position: unset;
+          margin-right: 12px;
+          align-self: center;
         }
 
         :host([opened]) .up-down-arrow {
@@ -114,11 +119,11 @@ export class DwSelectTrigger extends DwInput {
       _focused: { type: Boolean, reflect: true, attribute: 'focused' },
 
       /**
-       * 
+       *
        */
       autoComplete: { type: Boolean },
 
-      suffixTemplate: { type: Object }
+      suffixTemplate: { type: Object },
     };
   }
 
@@ -148,10 +153,19 @@ export class DwSelectTrigger extends DwInput {
    * Returns suffix template based on `iconTrailing` and `suffixText` property
    */
   get _getSuffixTemplate() {
-    if(this.suffixTemplate) {
+    return html`
+      ${this.invalid || this._warning || this.hint
+        ? html`<span @mousedown=${e => e.stopPropagation()}>${this._tipIconButtons}</span>`
+        : nothing}
+      ${this._suffixTemplate} ${this.renderIcon(this.iconTrailing, true)}
+    `;
+  }
+
+  get _suffixTemplate() {
+    if (this.suffixTemplate) {
       return this.suffixTemplate;
     }
-    
+
     if (this.type === 'password' && this._showVisibilityIcon) {
       const icon = this._type === 'text' ? 'visibility' : 'visibility_off';
       return html`
@@ -161,24 +175,24 @@ export class DwSelectTrigger extends DwInput {
           icon="${icon}"
           .iconSize=${this.iconSize}
           tabindex=""
+          .iconFont="${this.iconFont}"
+          .symbol=${this.symbol}
         ></dw-icon-button>
       `;
-    }
-
-    if (this.iconTrailing) {
-      return this.renderIcon(this.iconTrailing, true);
     }
 
     if (this.suffixText) {
       return html` <span class="suffix-text">${this.suffixText}</span> `;
     }
+
+    return nothing;
   }
 
   get inputTemplate() {
     return html`
       <input
         .type="${this._type || this.type}"
-        tabindex=${this.readOnly ? -1 : 0 }
+        tabindex=${this.readOnly ? -1 : 0}
         max=${this.maxNumber}
         min=${this.minNumber}
         id="tf-outlined"
@@ -216,6 +230,7 @@ export class DwSelectTrigger extends DwInput {
     if (this.readOnly) {
       return nothing;
     }
+
     if (this._focused && this.value && this.inputAllowed) {
       return html`
         <dw-icon-button
@@ -229,6 +244,7 @@ export class DwSelectTrigger extends DwInput {
         ></dw-icon-button>
       `;
     }
+
     return html`
       <dw-icon-button
         class="mdc-text-field__icon up-down-arrow"
@@ -257,7 +273,7 @@ export class DwSelectTrigger extends DwInput {
   _onExpandClick(e) {
     e.stopPropagation();
     e.preventDefault();
-    if(this.inputAllowed) {
+    if (this.inputAllowed) {
       this.focus();
     }
     this.dispatchEvent(new CustomEvent('expand-toggle'));
