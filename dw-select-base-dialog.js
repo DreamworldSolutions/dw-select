@@ -895,6 +895,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } = KeyCode;
     const { keyCode } = e;
 
+    if ([ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
+      e.preventDefault();
+    }
+
     switch (keyCode) {
       case ARROW_UP:
         this._moveActivated(Direction.UP);
@@ -915,10 +919,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           }
         }
         break;
-    }
-
-    if ([ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
-      e.preventDefault();
     }
   }
 
