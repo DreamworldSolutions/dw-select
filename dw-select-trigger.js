@@ -25,6 +25,7 @@ export class DwSelectTrigger extends DwInput {
       css`
         :host {
           display: block;
+          --mdc-text-field-padding-right: 12px;
         }
 
         :host([readOnly]) {
