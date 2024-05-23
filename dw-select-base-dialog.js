@@ -936,7 +936,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex -1 ) : Math.min(this._activatedIndex + 1, numberOfItems);
     activatedItem = this._getItem(activatedIndex);
     if(activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
-      activatedIndex = direction === Direction.UP ? Math.max(this._firstItemIndex, this._activatedIndex -1 ) : Math.min(this._activatedIndex + 1, numberOfItems);
+      activatedIndex = direction === Direction.UP ? Math.max(this._firstItemIndex, this._activatedIndex -2 ) : Math.min(this._activatedIndex + 2, numberOfItems);
     }
 
     this._activatedIndex = activatedIndex;
