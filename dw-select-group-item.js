@@ -44,8 +44,8 @@ export class DwSelectGroupItem extends LitElement {
 
         .label {
           flex: 1;
-          color: var(--mdc-theme-text-secondary-on-surface, rgba(0, 0, 0, 0.6));
-          ${unsafeCSS(TypographyLiterals.subtitle1)};
+          color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
+          ${unsafeCSS(TypographyLiterals.subtitle2)};
         }
       `,
     ];
