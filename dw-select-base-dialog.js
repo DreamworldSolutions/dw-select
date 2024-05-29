@@ -531,7 +531,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (this.value && this._groups && this._groups.length > 0) {
       const value = this._getItemUsingValue(this.value);
       this._groups = this._groups.map(group => {
-        if (group.name === value[this.groupExpression]) {
+        if (value && group.name === value[this.groupExpression]) {
           return { ...group, collapsed: false };
         }
         return group;
