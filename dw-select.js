@@ -531,7 +531,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   get _triggerTemplate() {
     return html`
-      <div @mousedown="${this._onTrigger}" @focusin=${this._onFocus}><slot name="trigger-template"></slot></div>
+      <div @click="${this._onTrigger}" @focusin=${this._onFocus}><slot name="trigger-template"></slot></div>
       ${!this._isSlotTemplateAvaible
         ? html` <dw-select-trigger
             id="selectTrigger"
