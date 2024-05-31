@@ -490,6 +490,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           display: block;
           --dw-popover-min-width: 0px;
           --dw-select-highlight-bg-color: #fde293;
+          -webkit-tap-highlight-color: transparent;
         }
 
         :host(:not([inputallowed])) #selectTrigger {
