@@ -307,7 +307,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Whether dialog is opened or not.
        */
-      _opened: { type: Boolean },
+      _opened: { type: Boolean , reflect: true, attribute: 'opened' },
 
       /**
        * search query (as text). used to filter items and highlight matched words.
