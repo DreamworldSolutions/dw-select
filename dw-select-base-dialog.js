@@ -169,6 +169,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           height: var(--dw-fit-dialog-content-action-button-height, 56px);
           padding: var(--dw-fit-dialog-content-action-button-padding, 0 16px);
         }
+
+        :host(:not([input-focused])) .content-action-button {
+          position: sticky;
+          bottom: 0;
+          background-color: var(--mdc-theme-background);
+        }
       `,
     ];
   }
@@ -422,7 +428,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       /**
        * `true` when items count is more than 500.
        */
-      _virtualList: { type: Boolean }
+      _virtualList: { type: Boolean },
+
+      _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' }
     };
   }
 
@@ -560,6 +568,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
             @cancel=${this._onClose}
             @input-change=${this._onUserInteraction}
             @clear-selection="${this._onUserInteraction}"
+            @input-focus="${this._onInputFocus}"
+            @input-blur="${this._onInputBlur}"
           ></dw-select-dialog-input>`
         : nothing}
       ${this.type === 'modal'
@@ -688,6 +698,14 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     return nothing;
+  }
+
+  _onInputFocus() {
+    this._inputFocused = true;
+  }
+
+  _onInputBlur() {
+    this._inputFocused = false;
   }
 
   _getLeadingIcon(item) {
