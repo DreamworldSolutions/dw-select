@@ -182,10 +182,12 @@ export class DwSelectDialogInput extends LitElement {
 
   _onFocus() {
     this._hasFocus = true;
+    this.dispatchEvent(new CustomEvent('input-focus'));
   }
 
   _onBlur() {
     this._hasFocus = false;
+    this.dispatchEvent(new CustomEvent('input-blur'));
   }
 
   _onInput(e) {
