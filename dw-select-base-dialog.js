@@ -602,7 +602,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     return html`
       ${this._items.length === 0 ? this._renderNoRecord : this._renderList}
-      ${this.type === 'fit' ? html`<div class="content-action-button">${this.dialogFooterTemplate}</div>` : ''}
+      ${this.type === 'fit' && !!this.dialogFooterTemplate ? html`<div class="content-action-button">${this.dialogFooterTemplate}</div>` : ''}
     `;
   }
 
