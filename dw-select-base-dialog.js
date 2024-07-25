@@ -544,7 +544,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         }
         return group;
       });
-    }
+    }f
 
     this._isGroupCollapsed = Boolean(this._groups) && this._groups.some(e => e.collapsed);
     this._scrollToSelectedItem();
@@ -1013,7 +1013,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if(index < 0) return;
 
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
-    const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'end' };
+    const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'center' };
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
