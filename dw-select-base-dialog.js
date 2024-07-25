@@ -547,9 +547,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     this._isGroupCollapsed = Boolean(this._groups) && this._groups.some(e => e.collapsed);
-    if (!this.searchable) {
-      this._scrollToSelectedItem();
-    }
+    this._scrollToSelectedItem();
   }
 
   updated(changedProps) {
