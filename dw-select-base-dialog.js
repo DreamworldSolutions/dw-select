@@ -1010,10 +1010,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {String} position
    */
   _scrollToIndex(index) {
-    if(index < 0) return;
+    if(index < 0 || this.searchable) return;
 
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
-    const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'center' };
+    const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'end' };
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
