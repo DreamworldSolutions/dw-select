@@ -500,7 +500,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     super.connectedCallback();
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
-    window.addEventListener('keydown', this.onKeydown.bind(this));
   }
 
   willUpdate(changedProps) {
@@ -844,25 +843,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this.close();
   }
 
-  /**
-   * On TAB, close dialog & prevent close on `ESC` key for searchable dialog.
-   * @override
-   * @param {Object} e Event
-   */
-  __onKeyDown(e) {
-    // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
-    if(!this.searchable) {
-      super.__onKeyDown(e);
-    }
-
-    // On TAB, close always.
-    const keyCode = e.keyCode || e.which;
-    if(keyCode === 9) {
-      const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
-      lastOpenedDialog && lastOpenedDialog.close();
-    }
-  }
-
   _onInput(e) {
     let el = this.renderRoot.querySelector('dw-select-dialog-input');
     this._query = el.value || '';
@@ -904,19 +884,39 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     return '';
   }
 
-  onKeydown(e) {
+  /**
+   * On TAB, close dialog & prevent close on `ESC` key for searchable dialog.
+   * @override
+   * @param {Object} e Event
+   */
+  __onKeyDown(e) {
     if (!this.opened) {
       return;
     }
 
-    e.stopPropagation();
-    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } = KeyCode;
-    const { keyCode } = e;
-
-    if ([ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
-      e.preventDefault();
+    // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
+    if(!this.searchable) {
+      super.__onKeyDown(e);
     }
 
+    const keyCode = e.keyCode || e.which;
+    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, TAB } = KeyCode;
+
+    // On TAB, close always.
+    if(keyCode === TAB) {
+      const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
+      lastOpenedDialog && lastOpenedDialog.close();
+      return;
+    }
+    
+    if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
+      return;
+    }
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    // List navigation & Selection
     switch (keyCode) {
       case ARROW_UP:
         this._moveActivated(Direction.UP);
