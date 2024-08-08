@@ -6,9 +6,13 @@ import DeviceInfo from '@dreamworld/device-info';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
 import './dw-select-base-dialog.js';
 import './dw-select-trigger.js';
+import '@dreamworld/dw-tooltip';
 
 // Lodash Methods
 import { find, debounce } from 'lodash-es';
+
+// Styles
+import { caption, subtitle1, headline6 } from '@dreamworld/material-styles/typography-literals.js';
 
 // Utils
 import { NEW_VALUE_STATUS } from './utils';
@@ -307,7 +311,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Whether dialog is opened or not.
        */
-      _opened: { type: Boolean , reflect: true, attribute: 'opened' },
+      _opened: { type: Boolean, reflect: true, attribute: 'opened' },
 
       /**
        * search query (as text). used to filter items and highlight matched words.
@@ -461,6 +465,21 @@ export class DwSelect extends DwFormElement(LitElement) {
        *
        */
       autoComplete: { type: Boolean },
+
+      /**
+       * Input property.
+       * When it's true, select shows in read only mode with trigger icon.
+       */
+      readOnlyTrigger: { type: Boolean },
+
+      /**
+       * When it's `true`, value shows in highlight style
+       */
+      highlightedValue: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'highlighted-value',
+      },
     };
   }
 
@@ -472,6 +491,10 @@ export class DwSelect extends DwFormElement(LitElement) {
    * Trigger Element Getter
    */
   get _triggerElement() {
+    if (this.readOnlyTrigger) {
+      return this.renderRoot.querySelector('.read-only-trigger-wrapper');
+    }
+
     if (this._isSlotTemplateAvaible) {
       return this.querySelector('#selectTrigger');
     }
@@ -495,6 +518,37 @@ export class DwSelect extends DwFormElement(LitElement) {
 
         :host(:not([inputallowed])) #selectTrigger {
           cursor: pointer;
+        }
+
+        .read-only-trigger-wrapper {
+          width: fit-content;
+        }
+
+        .read-only-trigger-label {
+          ${caption};
+          color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.6));
+        }
+
+        .read-only-trigger-value-wrapper {
+          display: flex;
+          align-items: center;
+          margin-top: -8px;
+        }
+
+        .read-only-trigger-value {
+          ${subtitle1};
+        }
+
+        :host([highlighted-value]) .read-only-trigger-value {
+          ${headline6};
+        }
+
+        .read-only-trigger-icon[error] {
+          --dw-icon-color: var(--mdc-theme-error, #b00020);
+        }
+
+        .read-only-trigger-icon[warning] {
+          --dw-icon-color: var(--mdc-theme-text-warning, #ffa726);
         }
       `,
     ];
@@ -524,6 +578,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     this.helperTextProvider = value => {};
     this.queryFilter = (item, query) => filter(this._getItemValue(item), query);
     this.newItemProvider = query => query;
+    this.tipPlacement = 'bottom';
   }
 
   render() {
@@ -531,6 +586,34 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   get _triggerTemplate() {
+    if (this.readOnlyTrigger) {
+      return html`
+        <div class="read-only-trigger-wrapper" @click="${this._onTrigger}">
+          <div class="read-only-trigger-label">${this.label}</div>
+          <div class="read-only-trigger-value-wrapper">
+            <div class="read-only-trigger-value">${this._selectedValueText}</div>
+            <dw-icon-button
+              id="trigger-icon"
+              class="read-only-trigger-icon"
+              ?error=${this.error && this.errorInTooltip}
+              ?warning=${this.warning && this.warningInTooltip}
+              icon=${this._opened ? 'expand_less' : 'expand_more'}
+              iconFont="OUTLINED"
+            ></dw-icon-button>
+            ${(this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)
+              ? html`<dw-tooltip
+                  for="trigger-icon"
+                  .forEl=${!this._vkb ? this : ``}
+                  .content=${this._readOnlyTrigerTipContent}
+                  .trigger=${this._vkb ? 'click' : 'mouseenter'}
+                  .placement=${this.tipPlacement}
+                ></dw-tooltip>`
+              : ``}
+          </div>
+        </div>
+      `;
+    }
+
     return html`
       <div @click="${this._onTrigger}" @focusin=${this._onFocus}><slot name="trigger-template"></slot></div>
       ${!this._isSlotTemplateAvaible
@@ -565,6 +648,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
             .suffixTemplate=${this._inputSuffixTemplate}
+            .highlightedValue=${this.highlightedValue}
             @focus=${this._onFocus}
             @blur=${this._onBlur}
             @mousedown=${this._onTrigger}
@@ -579,6 +663,20 @@ export class DwSelect extends DwFormElement(LitElement) {
           ></dw-select-trigger>`
         : nothing}
     `;
+  }
+
+  get _readOnlyTrigerTipContent() {
+    if (this.error && this.errorInTooltip) {
+      return this.error;
+    }
+
+    if (this.warning && this.warningInTooltip) {
+      return this.warning;
+    }
+
+    if (this.hint && this.hintInTooltip) {
+      return this.hint;
+    }
   }
 
   get _dialogTemplate() {
@@ -841,8 +939,39 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _onTrigger(e) {
+    let openDialog = true;
+
     if (!this.readOnly && !this.autoComplete) {
-      this._opened = true;
+      if (this.readOnlyTrigger) {
+        const el = this.renderRoot.querySelector('.read-only-trigger-icon');
+        if (el) {
+          el?.__onStart();
+          setTimeout(() => {
+            el?.__fadeOut();
+          }, 250);
+        }
+
+        if (
+          ((this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)) &&
+          this._vkb
+        ) {
+          const paths = (e.composedPath && e.composedPath()) || e.path || [];
+          if (paths && paths.length) {
+            if (openDialog) {
+              paths.forEach(el => {
+                const triggerIcon = el?.id === 'trigger-icon';
+                if (triggerIcon) {
+                  openDialog = false;
+                }
+              });
+            }
+          }
+        }
+      }
+
+      if (openDialog) {
+        this._opened = true;
+      }
     }
   }
 
