@@ -7,6 +7,8 @@ import { DwFormElement } from '@dreamworld/dw-form/dw-form-element.js';
 import './dw-select-base-dialog.js';
 import './dw-select-trigger.js';
 import '@dreamworld/dw-tooltip';
+import '@dreamworld/dw-icon-button';
+import '@dreamworld/dw-icon';
 
 // Lodash Methods
 import { find, debounce } from 'lodash-es';
