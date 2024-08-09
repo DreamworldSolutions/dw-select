@@ -1012,11 +1012,12 @@
     "@material/textfield" "^14.0.0"
     lodash-es "^4.17.21"
 
-"@dreamworld/dw-input@^4.1.8":
-  version "4.1.8"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.8.tgz#601c167842a8d3efb06858b737596414df854f11"
-  integrity sha512-OJREwiDceBbrAF6lT2XaMzeBvKXXrhSvl5ZPDKTEFz2yyiRwrmH5cABR67SovLuDCQGucscRmKKcAJeNU5H83Q==
+"@dreamworld/dw-input@^4.1.20-enhance-error-in-tooltip-logic.3":
+  version "4.1.20-enhance-error-in-tooltip-logic.3"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.20-enhance-error-in-tooltip-logic.3.tgz#b735fdfe997d4efd8ec977138aa0493ac77f4628"
+  integrity sha512-3JttnshR1gzVL2baDWq90auaxr0KJYFpbeVhKzZYxUORUVuh5nAH0ov65P1A0NmKx543kdYXpAcVliQo0npm8Q==
   dependencies:
+    "@dreamworld/device-info" "^1.3.0"
     "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"
     "@dreamworld/dw-icon" "^4.0.0"

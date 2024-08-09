@@ -111,7 +111,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Whether or not to show the `readOnly` state.
        */
-      readOnly: { type: Boolean },
+      readOnly: { type: Boolean, reflect: true, attribute: 'read-only' },
 
       /**
        * Set `true` to apply required validation.
@@ -522,6 +522,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
         .read-only-trigger-wrapper {
           width: fit-content;
+          cursor: pointer;
         }
 
         .read-only-trigger-label {
@@ -532,11 +533,20 @@ export class DwSelect extends DwFormElement(LitElement) {
         .read-only-trigger-value-wrapper {
           display: flex;
           align-items: center;
+          margin-top: 4px;
+        }
+
+        :host(:not([read-only])) .read-only-trigger-value-wrapper {
           margin-top: -8px;
+        }
+
+        :host([read-only]) .read-only-trigger-value-wrapper {
+          gap: 8px;
         }
 
         .read-only-trigger-value {
           ${subtitle1};
+          color: var(--dw-select-read-only-trigger-value-color);
         }
 
         :host([highlighted-value]) .read-only-trigger-value {
@@ -592,23 +602,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           <div class="read-only-trigger-label">${this.label}</div>
           <div class="read-only-trigger-value-wrapper">
             <div class="read-only-trigger-value">${this._selectedValueText}</div>
-            <dw-icon-button
-              id="trigger-icon"
-              class="read-only-trigger-icon"
-              ?error=${this.error && this.errorInTooltip}
-              ?warning=${this.warning && this.warningInTooltip}
-              icon=${this._opened ? 'expand_less' : 'expand_more'}
-              iconFont="OUTLINED"
-            ></dw-icon-button>
-            ${(this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)
-              ? html`<dw-tooltip
-                  for="trigger-icon"
-                  .forEl=${!this._vkb ? this : ``}
-                  .content=${this._readOnlyTrigerTipContent}
-                  .trigger=${this._vkb ? 'click' : 'mouseenter'}
-                  .placement=${this.tipPlacement}
-                ></dw-tooltip>`
-              : ``}
+            ${this._readOnlyTriggerIcon}
           </div>
         </div>
       `;
@@ -663,6 +657,39 @@ export class DwSelect extends DwFormElement(LitElement) {
           ></dw-select-trigger>`
         : nothing}
     `;
+  }
+
+  get _readOnlyTriggerIcon() {
+    if (this.readOnly && !((this.hint && this.hintInTooltip) || (this.warning && this.warningInTooltip))) return;
+
+    return html` ${!this.readOnly
+      ? html`<dw-icon-button
+          id="trigger-icon"
+          class="read-only-trigger-icon"
+          ?error=${this.error && this.errorInTooltip}
+          ?warning=${this.warning && this.warningInTooltip}
+          icon=${this._opened ? 'expand_less' : 'expand_more'}
+          iconFont="OUTLINED"
+          @click=${this._onReadOnlyTriggerIconClick}
+        ></dw-icon-button>`
+      : html`<dw-icon
+          id="trigger-icon"
+          class="read-only-trigger-icon"
+          ?error=${this.error && this.errorInTooltip}
+          ?warning=${this.warning && this.warningInTooltip}
+          name=${'info'}
+          iconFont="OUTLINED"
+        ></dw-icon>`}
+    ${(this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)
+      ? html`<dw-tooltip
+          for="trigger-icon"
+          .forEl=${!this._vkb ? this : ``}
+          .content=${this._readOnlyTrigerTipContent}
+          .trigger=${this._vkb ? 'click' : 'mouseenter'}
+          .placement=${this.tipPlacement}
+          .offset=${this.readOnly ? [0, 8] : [0, 0]}
+        ></dw-tooltip>`
+      : ``}`;
   }
 
   get _readOnlyTrigerTipContent() {
@@ -938,9 +965,16 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
   }
 
-  _onTrigger(e) {
-    let openDialog = true;
+  _onReadOnlyTriggerIconClick(e) {
+    if (
+      ((this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)) &&
+      this._vkb
+    ) {
+      e.stopPropagation();
+    }
+  }
 
+  _onTrigger() {
     if (!this.readOnly && !this.autoComplete) {
       if (this.readOnlyTrigger) {
         const el = this.renderRoot.querySelector('.read-only-trigger-icon');
@@ -950,28 +984,9 @@ export class DwSelect extends DwFormElement(LitElement) {
             el?.__fadeOut();
           }, 250);
         }
-
-        if (
-          ((this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)) &&
-          this._vkb
-        ) {
-          const paths = (e.composedPath && e.composedPath()) || e.path || [];
-          if (paths && paths.length) {
-            if (openDialog) {
-              paths.forEach(el => {
-                const triggerIcon = el?.id === 'trigger-icon';
-                if (triggerIcon) {
-                  openDialog = false;
-                }
-              });
-            }
-          }
-        }
       }
 
-      if (openDialog) {
-        this._opened = true;
-      }
+      this._opened = true;
     }
   }
 
