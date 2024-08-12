@@ -430,7 +430,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        */
       _virtualList: { type: Boolean },
 
-      _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' }
+      _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' },
+
+      interactive: { type: Boolean }
     };
   }
 
@@ -902,8 +904,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     const keyCode = e.keyCode || e.which;
     const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, TAB } = KeyCode;
 
-    // On TAB, close always.
-    if(keyCode === TAB) {
+    // On TAB, close when interactive false.
+    if(keyCode === TAB && !this.interactive) {
       const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
       lastOpenedDialog && lastOpenedDialog.close();
       return;
