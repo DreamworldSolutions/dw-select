@@ -234,6 +234,21 @@ class SelectDemo extends LitElement {
       ></dw-select>
 
       <dw-select
+        .label=${'Highlight'}
+        .heading="${'Country'}"
+        showClose
+        outlined
+        .items=${country_list_with_code}
+        .valueTextProvider=${item => item.name}
+        .valueExpression="${'code'}"
+        .value=${'IN'}
+        .originalValue="${'IN'}"
+        highlightChanged
+        ?readOnlyTrigger=${true}
+        @change=${this._onChange}
+      ></dw-select>
+
+      <dw-select
         .label=${'Filter By'}
         .heading="${'Filter By'}"
         showClose
