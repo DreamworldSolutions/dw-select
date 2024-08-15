@@ -29,7 +29,7 @@
     "@dreamworld/dw-form": "^4.1.1",
     "@dreamworld/dw-icon": "^4.1.1",
     "@dreamworld/dw-icon-button": "^3.2.4",
-    "@dreamworld/dw-input": "^4.1.20-enhance-error-in-tooltip-logic.3",
+    "@dreamworld/dw-input": "^4.1.20",
     "@dreamworld/dw-list-item": "^4.3.7",
     "@dreamworld/dw-ripple": "^3.1.5",
     "@dreamworld/dw-tooltip": "^3.1.2",

@@ -998,10 +998,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@^4.1.20-enhance-error-in-tooltip-logic.2":
-  version "4.1.20-enhance-error-in-tooltip-logic.2"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.20-enhance-error-in-tooltip-logic.2.tgz#f0b218cff5a4b5a383c483934b35e4997b86372c"
-  integrity sha512-IwwseF9M87QbR9YdIzm6MkJsTTyt9b3jI6DAPLVoelBvd5U36vCSv5127VxPhFtdu9iTth/DIp8V19FEZwjBBw==
+"@dreamworld/dw-input@^4.1.20":
+  version "4.1.20"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.20.tgz#1ede797c82db1cc6c37cc909049aef3d8699ca0e"
+  integrity sha512-yPEY70KdESI9EoVhfI1JoDZLhpZhzESbvzaxU7mBHxU20QyG7xDSKDO3JwNgBIxBZp5VsRDDRYLgGdr5uhe4Kw==
   dependencies:
     "@dreamworld/device-info" "^1.3.0"
     "@dreamworld/dw-button" "^3.0.3"
@@ -1012,10 +1012,10 @@
     "@material/textfield" "^14.0.0"
     lodash-es "^4.17.21"
 
-"@dreamworld/dw-input@^4.1.20-enhance-error-in-tooltip-logic.3":
-  version "4.1.20-enhance-error-in-tooltip-logic.3"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.20-enhance-error-in-tooltip-logic.3.tgz#b735fdfe997d4efd8ec977138aa0493ac77f4628"
-  integrity sha512-3JttnshR1gzVL2baDWq90auaxr0KJYFpbeVhKzZYxUORUVuh5nAH0ov65P1A0NmKx543kdYXpAcVliQo0npm8Q==
+"@dreamworld/dw-input@^4.1.20-enhance-error-in-tooltip-logic.2":
+  version "4.1.20-enhance-error-in-tooltip-logic.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-4.1.20-enhance-error-in-tooltip-logic.2.tgz#f0b218cff5a4b5a383c483934b35e4997b86372c"
+  integrity sha512-IwwseF9M87QbR9YdIzm6MkJsTTyt9b3jI6DAPLVoelBvd5U36vCSv5127VxPhFtdu9iTth/DIp8V19FEZwjBBw==
   dependencies:
     "@dreamworld/device-info" "^1.3.0"
     "@dreamworld/dw-button" "^3.0.3"
