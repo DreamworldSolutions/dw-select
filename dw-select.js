@@ -482,6 +482,8 @@ export class DwSelect extends DwFormElement(LitElement) {
         reflect: true,
         attribute: 'highlighted-value',
       },
+
+      interactiveDialog: { type: Boolean }
     };
   }
 
@@ -750,6 +752,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       ._newItem="${this._newItem}"
       .inputSuffixTemplate=${this._inputSuffixTemplate}
       .popoverStyles=${this._popoverStyles}
+      .interactive=${this.interactiveDialog}
       @selected=${this._onSelect}
       @select-new-value=${this._onSelectNewValue}
       @_items-changed=${this._onItemsChanged}
