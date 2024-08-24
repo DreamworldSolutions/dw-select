@@ -37,6 +37,10 @@ export const NEW_VALUE_STATUS = {
  * @returns return true if query string's any word is matched with input string
  */
 export const filter = (value, query = "") => {
+  if (!value) {
+    return;
+  }
+
   value = value.trim().toLowerCase();
   const queryArray = query.trim().toLowerCase().split(" ");
 
