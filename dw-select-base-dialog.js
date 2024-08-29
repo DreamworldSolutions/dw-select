@@ -911,7 +911,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return;
     }
     
-    if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
+    if (([ENTER].includes(keyCode) && this._query) || ![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER ].includes(keyCode)) {
       return;
     }
 
