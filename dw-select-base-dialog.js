@@ -915,8 +915,10 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return;
     }
 
-    e.stopPropagation();
-    e.preventDefault();
+    if ([ARROW_DOWN, ARROW_UP].includes(keyCode) || ([ENTER].includes(keyCode) && this._activatedItem)) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
 
     // List navigation & Selection
     switch (keyCode) {
