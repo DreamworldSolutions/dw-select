@@ -525,7 +525,6 @@ export class DwSelect extends DwFormElement(LitElement) {
         }
 
         .read-only-trigger-wrapper {
-          width: fit-content;
           cursor: pointer;
         }
 
@@ -549,6 +548,9 @@ export class DwSelect extends DwFormElement(LitElement) {
         }
 
         .read-only-trigger-value {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
           ${subtitle1};
           color: var(--dw-select-read-only-trigger-value-color);
         }
