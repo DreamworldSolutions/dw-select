@@ -601,7 +601,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     return html` ${this._triggerTemplate} ${this._opened ? this._dialogTemplate : nothing} `;
   }
 
-  get _triggerTemplate() {
+  get https://github.com/DreamworldSolutions/dw-select/pull/265() {
     if (this.readOnlyTrigger) {
       return html`
         <div class="read-only-trigger-wrapper" @click="${this._onTrigger}">
