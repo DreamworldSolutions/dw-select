@@ -7,6 +7,7 @@ import "../dw-select-dialog-input";
 import "../dw-select-group-item";
 import "../dw-select-trigger";
 import "./dw-select-extension-demo";
+import "../dw-multi-select.js";
 
 import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
 
@@ -261,6 +262,27 @@ class SelectDemo extends LitElement {
       >
         <dw-icon-button slot="trigger-template" id="selectTrigger" icon="edit" @click=${this._onEdit}></dw-icon-button>
       </dw-select>
+
+      <dw-multi-select
+      .items=${this._filterBySelectItems}
+      .valueTextProvider=${item => item.name}
+        .valueExpression="${'value'}"
+        .value=${['CASH', 'BANK']}
+        @change=${this._onChange}
+      ></dw-multi-select>
+      
+      <dw-multi-select
+      searchable
+        outlined
+        .items=${groupList}
+        .groups=${groups}
+        .valueExpression="${'name'}"
+        .valueTextProvider=${item => item.name}
+        .groupSelector=${item => item.label}
+        groupExpression="type"
+        label="Contacts"
+        @change=${this._onChange}
+      ></dw-multi-select>
       
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
