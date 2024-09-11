@@ -189,12 +189,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       items: { type: Array },
 
       /**
-       * Input property.
-       * Items to be prepended on top of the items.
-       */
-      prependItems: { type: Array },
-
-      /**
        * A function `(item) -> value` to indetify value of any item.
        */
       valueProvider: { type: Function },
@@ -564,7 +558,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     this.showClose = false;
     this.searchPlaceholder = '';
     this._selectedValueText = '';
-    this.prependItems = [];
     this.valueTextProvider = () => {};
     this.groupSelector = () => {};
     this._valueProvider = item => item;
@@ -699,7 +692,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .value=${this.value}
       .appendTo=${this.renderRoot}
       .items="${this.items}"
-      .prependItems=${this.prependItems}
       .layout=${this._layout}
       .valueProvider=${this._valueProvider}
       .valueExpression=${this.valueExpression}
@@ -978,7 +970,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     const selectedValue = this._valueProvider(selectedItem);
     const index = findIndex(value, (item) =>  item === selectedValue );
     if (index >= 0) {
-      this.value = this.value.toSpliced(index, 1);
+      this.value = value.toSpliced(index, 1);
     } else {
       this.value = [...value, selectedValue];
     }
@@ -995,8 +987,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     await this.updateComplete;
 
     this.reportValidity();
-
-    this._dispatchSelected(value);
+    this._dispatchSelected(this.value);
   }
 
   _onSelectNewValue(e) {
@@ -1017,10 +1008,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
   }
 
   _getSelectedItem(value) {
-    const prependItem = this.prependItems.find(item => this.valueEquator(this._valueProvider(item), value));
-    if (prependItem) {
-      return prependItem;
-    }
 
     const item = this.items && this.items.find(item => this.valueEquator(this._valueProvider(item), value));
     if (item !== undefined) {
@@ -1154,17 +1141,12 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     return true;
   }
 
+  // required hoy tyare error show karva
   reportValidity() {
     if (this._triggerElement && this._triggerElement.reportValidity && typeof this._triggerElement.reportValidity === 'function') {
       return this._triggerElement.reportValidity();
     }
     return true;
-  }
-
-  focus() {
-    if (this._triggerElement && this._triggerElement.focus && typeof this._triggerElement.focus === 'function') {
-      this._triggerElement && this._triggerElement.focus();
-    }
   }
 }
 

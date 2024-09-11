@@ -14,7 +14,7 @@ import './dw-multi-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, debounce, filter, orderBy, forEach, has } from 'lodash-es';
+import { get, debounce, filter, orderBy, forEach, findIndex, isEmpty } from 'lodash-es';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
@@ -187,9 +187,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       value: { type: Array },
 
-      _valueMap: { type: Object },
+      _valueSet: { type: Object },
 
-      _value: { type: Array }, 
+      _value: { type: Array },
 
       /**
        * Input Element
@@ -241,11 +241,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       items: { type: Array },
 
-      /**
-       * Input property.
-       * Items to be prepended on top of the items.
-       */
-      prependItems: { type: Array },
+      _preSelectedItemsSet: { type: Object },
+
+      _preselectedItems: { type: Array },
 
       /**
        * Represents items to be rendered by lit-virtualizer.
@@ -369,11 +367,6 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       searchPlaceholder: { type: String },
 
       /**
-       * true if any group item has collapsed value is true.
-       */
-      isGroupCollapsed: Boolean,
-
-      /**
        * A function to customize search.
        */
       queryFilter: Function,
@@ -430,26 +423,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' },
 
       interactive: { type: Boolean },
-
     };
-  }
-
-  set _groups(value) {
-    let oldValue = this._type;
-
-    if (value === oldValue) {
-      return;
-    }
-    this._isGroupCollapsed = Boolean(value) && value.some(e => e.collapsed);
-
-    this.__groups = value;
-    this.requestUpdate('_groups', oldValue);
-    // Compute updated `_items`
-    this._getItems();
-  }
-
-  get _groups() {
-    return this.__groups;
   }
 
   /**
@@ -474,24 +448,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this.popoverOffset = [0, 4];
     this._selectedValueText = '';
     this.OPEN_ANIMATION_TIME = 300; //In milliseconds.
-  }
-
-  set messages(newValue) {
-    let oldValue = this._messages;
-
-    if (newValue === oldValue) {
-      return;
-    }
-
-    newValue = { ...oldValue, ...newValue };
-
-    this._messages = newValue;
-
-    this.requestUpdate('messages', oldValue);
-  }
-
-  get messages() {
-    return this._messages;
+    this._valueSet = new Set();
+    this._preSelectedItemsSet = new Set();
   }
 
   connectedCallback() {
@@ -502,43 +460,49 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
   }
 
-  willUpdate(changedProps) {
-    super.willUpdate(changedProps);
-
-    if (changedProps.has('items')) {
+  willUpdate(props) {
+    super.willUpdate(props);
+    if (props.has('items')) {
       this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
     }
 
-    if (changedProps.has('_query')) {
-      this._onQueryChange(this._query);
-      this._getItems();
+    if (props.has('value')) {
+      this._setValue();
+    }
+
+    const hasValueItemsOrQuery = props.has('value') || props.has('items') || props.has('_query');
+    const isValueAndItemsNotEmpty = !isEmpty(this._value) && !isEmpty(this.items);
+    const isPreSelectedItemsEmpty = isEmpty(props.get('_preselectedItems'));
+    const isQueryReset = props.get('_query') && !this._query;
+    
+    if (hasValueItemsOrQuery && isValueAndItemsNotEmpty && (isPreSelectedItemsEmpty || isQueryReset)) {
+        this._setPreselectedItems();
+    }
+ 
+    if (hasValueItemsOrQuery) {
+      this._setItems();
       this._moveActivatedToFirstItem();
     }
 
-    if (changedProps.has('heading') || changedProps.has('showClose')) {
+    if (props.has('heading') || props.has('showClose')) {
       this._showHeader = Boolean(this.heading) || this.showClose;
     }
 
-    if (changedProps.has('_activatedIndex') || changedProps.has('_items')) {
+    if (props.has('_activatedIndex') || props.has('_items')) {
       this._activatedItem = this._getItem(this._activatedIndex);
     }
 
-    if (changedProps.has('value')) {
-      const selectedItem = this._getItemUsingValue(this.value);
-      this._selectedValueText = this._getTextByItem(selectedItem);
+    if (props.has('messages')) {
+      this.messages = { ...props.get('messages'), ...this.messages };
     }
 
-    if (changedProps.has('value')) {
-      this._valueMap = this._createValueMap();
-    }
-
-    // if(this.allowNewValue && changedProps.has('_items') && this.type === 'popover') {
+    // if(this.allowNewValue && props.has('_items') && this.type === 'popover') {
     // this._hidden = !this._items?.length;
     // }
   }
 
-  firstUpdated(changedProps) {
-    super.firstUpdated(changedProps);
+  firstUpdated(props) {
+    super.firstUpdated(props);
     if (this.value && this._groups && this._groups.length > 0) {
       const value = this._getItemUsingValue(this.value);
       this._groups = this._groups.map(group => {
@@ -553,12 +517,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this._scrollToSelectedItem();
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
-    if (changedProps.has('items')) {
-      this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
-      this._getItems();
-    }
+  updated(props) {
+    super.updated(props);
   }
 
   get _headerTemplate() {
@@ -637,7 +597,6 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
     const renderItem = (item, index) => {
       const isSelected = this._isItemSelected(item.value);
-      
       const isActivated = this._isItemActivated(index);
       return this._renderItem(item, isSelected, isActivated, this._query);
     };
@@ -664,7 +623,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           .highlight=${this.highlightQuery ? this._query : ''}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
-          ?selected=${selected}
+          .selected=${selected}
+          .selectionMode=${'none'}
           ?hasLeadingIcon=${true}
           .leadingIcon=${this._getLeadingIcon(item.value, selected)}
           .trailingIcon=${selected ? 'check_box' : 'check_box_outline_blank'}
@@ -728,7 +688,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
    */
   _isItemSelected(item) {
     const itemValue = this.valueProvider(item);
-    return get(this._valueMap,`${itemValue}`);
+
+    return this._valueSet.has(itemValue);
   }
 
   /**
@@ -741,7 +702,18 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onItemClick(item) {
-    this.dispatchEvent(new CustomEvent('selected', { detail: item }));
+    this._setValue(item);
+
+    // this._selectedValueText = this._getValue(selectedItem);
+    // if (!this._vkb && typeof this._triggerElement?.focus === 'function') {
+    //   this._triggerElement.focus();
+    // }
+
+    // if (this._triggerElement) {
+    //   this._triggerElement.value = this._selectedValueText;
+    // }
+
+    // this.dispatchEvent(new CustomEvent('selected', { detail: this._value }));
   }
 
   _onGroupClick(item) {
@@ -754,12 +726,52 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this._groups = groups;
   }
 
-  _getItems() {
-    let sortedArray = filter(this.items, item => {
-      return this.queryFilter(item, this._query);
-    });
+  _setPreselectedItems() {
+    if (this.items.length === this._value.length) {
+      this._preselectedItems = [];
+      this._preSelectedItemsSet = new Set(this._preselectedItems);
+      return;
+    }
 
+    this._preSelectedItemsSet = this._valueSet;
+    this._preselectedItems = filter(this.items, item => {
+      return this._preSelectedItemsSet.has(this.valueProvider(item));
+    });
+  }
+
+  _setValue(item) {
+    if (!item) {
+      this._value = this.value;
+    } else {
+      const value = this._value || [];
+      const selectedValue = this.valueProvider(item);
+
+      const index = findIndex(value, valueItem => valueItem === selectedValue);
+
+      if (index >= 0) {
+        this._value = value.toSpliced(index, 1);
+      } else {
+        this._value = [...value, selectedValue];
+      }
+    }
+    this._valueSet = new Set(this._value);
+  }
+
+  _setItems() {
     let array = [];
+
+    forEach(this._preselectedItems, item => {
+      if (this._query) {
+        if (!this.queryFilter(item, this._query)) return;
+        array.push({ type: ItemTypes.ITEM, value: item });
+      } else {
+        array.push({ type: ItemTypes.ITEM, value: item });
+      }
+    });
+    
+    let filteredList = filter(this.items, item => {
+      return (!this._query || this.queryFilter(item, this._query)) && !this._preSelectedItemsSet.has(this.valueProvider(item));
+    });
 
     if (!Array.isArray(this.items)) {
       return;
@@ -769,37 +781,29 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       let groups = this._groups;
 
       // Sort Items with groupExpression
-      sortedArray = orderBy(sortedArray, [this.groupExpression]);
+      filteredList = orderBy(filteredList, [this.groupExpression]);
       const groupsLength = groups.length;
-
-      if (groupsLength === 1) {
-        groups = groups.map(group => {
-          return { ...group, collapsed: false };
-        });
-      }
 
       groups.forEach(group => {
         // Filter items with group
-        const filteredArray = filter(sortedArray, [this.groupExpression, group.name]);
+        const filteredArray = filter(filteredList, [this.groupExpression, group.name]);
         if (filteredArray.length !== 0) {
           // First push group item
           if (groupsLength !== 1) {
             array.push({ type: ItemTypes.GROUP, value: group });
           }
 
-          if (!group.collapsible || !group.collapsed) {
-            // Push every items
-            filteredArray.forEach(item => {
-              array.push({ type: ItemTypes.ITEM, value: item });
-            });
-          }
+          // Push every items
+          filteredArray.forEach(item => {
+            array.push({ type: ItemTypes.ITEM, value: item });
+          });
         }
       });
     }
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
-      sortedArray.forEach(item => {
+      filteredList.forEach(item => {
         array.push({ type: ItemTypes.ITEM, value: item });
       });
     }
@@ -809,8 +813,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       aPrependItems.push({ type: ItemTypes.ITEM, value: e });
     });
 
-    this._items = [...aPrependItems, ...array];
-    this.dispatchEvent(new CustomEvent('_items-changed', { detail: this._items }));
+    this._items = array;
+    // this.dispatchEvent(new CustomEvent('_items-changed', { detail: this._items }));
   }
 
   _getGroupValue(item) {
@@ -819,6 +823,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     }
     return this.groupSelector(item);
   }
+
+  _onapply() {}
 
   /**
    * Trigger when actual user intract
@@ -839,24 +845,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _onInput(e) {
-    let el = this.renderRoot.querySelector('dw-multi-select-dialog-input');
     this._query = el.value || '';
-    this._selectedValueText = el.value;
-    this.dispatchEvent(new CustomEvent('query-change', { detail: { value: this._query } }));
-  }
-
-  _onQueryChange(value) {
-    if (value && this._isGroupCollapsed) {
-      let groups = this._groups;
-      groups.map(e => (e.collapsed = false));
-      this._groups = groups;
-    }
   }
 
   _createValueMap() {
     let map = {};
-
-    forEach(this.value, item => {
+    forEach(this._value, item => {
       map[item] = true;
     });
     return map;
@@ -997,9 +991,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   _scrollToSelectedItem() {
     if (!this._items) return;
 
-    if (this.value) {
+    if (this._value) {
       this._activatedIndex = this._items.findIndex(item => {
-        return this.valueEquator(this.valueProvider(item.value), this.value);
+        return this.valueEquator(this.valueProvider(item.value), this._value);
       });
     }
 
@@ -1035,11 +1029,6 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _getItemUsingValue(value) {
-    const prependItem = this.prependItems.find(item => this.valueEquator(this.valueProvider(item), value));
-    if (prependItem) {
-      return prependItem;
-    }
-
     const item = this.items && this.items.find(item => this.valueEquator(this.valueProvider(item), value));
     if (item !== undefined || !this._newItem) {
       return item;
