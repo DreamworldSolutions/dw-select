@@ -876,6 +876,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (_changedProperties.has('value') && this.value && this.allowNewValue) {
       this._selectedValueText = this._getValue(this.value);
     }
+
+    if (_changedProperties.has('_newItemStatus')) {
+      this._opened = !this._newItemStatus;
+    }
   }
 
   updated(_changedProperties) {
