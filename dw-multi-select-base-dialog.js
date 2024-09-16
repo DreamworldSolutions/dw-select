@@ -279,16 +279,16 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       items: { type: Array },
 
-      _preSelectedItemsSet: { type: Object },
-
-      _preselectedItems: { type: Array },
-
       /**
        * Represents items to be rendered by lit-virtualizer.
        * { type: GROUP or ITEM, value: Group or Item object }
        * It’s computed from _groups, items & query.
        */
       _items: { type: Array },
+
+      _preSelectedItemsSet: { type: Object },
+
+      _preselectedItems: { type: Array },
 
       /**
        * Provides value that actually represent in list items
