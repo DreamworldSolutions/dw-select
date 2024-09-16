@@ -96,7 +96,7 @@ export class DwMultiSelectDialogInput extends LitElement {
       value: String,
 
       /**
-       * Placeholder for search input
+       * Placeholder for search in
        */
       searchPlaceholder: String,
 

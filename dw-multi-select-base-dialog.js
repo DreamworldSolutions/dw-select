@@ -672,7 +672,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     };
 
     if (!this._virtualList) {
-      return html`${this._selectAllItem}<div id="list">${repeat(this._items, renderItem)}</div>`;
+      return html`${this._selectAllItem}
+        <div id="list">${repeat(this._items, renderItem)}</div>`;
     }
 
     return html`${this._selectAllItem}<lit-virtualizer id="list" .items=${this._items} .renderItem=${renderItem}></lit-virtualizer>`;

@@ -78,7 +78,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
        */
       value: { type: Array },
 
-
       /**
        * Whether or not to show the `outlined` variant.
        */
@@ -718,7 +717,8 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
     if (this._layout === 'small' && this.searchable) return 'fit';
 
-    if ((this._layout === 'small' && !this.popover) || this.searchable && (this._layout === 'medium' || this._layout === 'large')) return 'modal';
+    if ((this._layout === 'small' && !this.popover) || (this.searchable && (this._layout === 'medium' || this._layout === 'large')))
+      return 'modal';
 
     return 'popover';
   }
@@ -754,7 +754,10 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       this._setPopoverDialogWidth();
     }
 
-    if ((_changedProperties.has('_opened') && _changedProperties.get('_opened') && !this._opened) || _changedProperties.has('value') && !this._opened) {
+    if (
+      (_changedProperties.has('_opened') && _changedProperties.get('_opened') && !this._opened) ||
+      (_changedProperties.has('value') && !this._opened)
+    ) {
       this._setValueText();
     }
 
@@ -821,11 +824,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
   }
 
   _computeHelperText() {
-    if (
-      this.helperTextProvider &&
-      typeof this.helperTextProvider === 'function' &&
-      this.helperTextProvider(this.value)
-    ) {
+    if (this.helperTextProvider && typeof this.helperTextProvider === 'function' && this.helperTextProvider(this.value)) {
       return this.helperTextProvider(this.value);
     }
     return this.helper;
@@ -881,7 +880,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     return isEqual(arr1, arr2);
   }
 
-  /** 
+  /**
    * @param (String) value
    */
   _getSelectedItem(value) {
@@ -969,7 +968,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     }
 
     if (this.valueExpression) {
-      this._valueProvider = item =>  item && item[this.valueExpression];
+      this._valueProvider = item => item && item[this.valueExpression];
       return;
     }
 
