@@ -17,7 +17,6 @@ import { find, debounce, isEqual } from 'lodash-es';
 import { caption, subtitle1, headline6 } from '@dreamworld/material-styles/typography-literals.js';
 
 // Utils
-import { NEW_VALUE_STATUS } from './utils';
 import { filter, KeyCode } from './utils.js';
 
 /**
