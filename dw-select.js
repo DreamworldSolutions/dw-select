@@ -843,14 +843,14 @@ export class DwSelect extends DwFormElement(LitElement) {
     super.disconnectedCallback();
   }
 
-  willUpdate(_changedProperties) {
-    super.willUpdate && super.willUpdate(_changedProperties);
+  willUpdate(props) {
+    super.willUpdate && super.willUpdate(props);
 
-    if (_changedProperties.has('_opened')) {
+    if (props.has('_opened')) {
       this._setPopoverDialogWidth();
     }
 
-    if (_changedProperties.has('value') || _changedProperties.has('items')) {
+    if (props.has('value') || props.has('items')) {
       if (this.items && this.items.length > 0) {
         let selectedItem = this._getSelectedItem(this.value);
         if (!selectedItem && this.allowNewValue) {
@@ -863,23 +863,24 @@ export class DwSelect extends DwFormElement(LitElement) {
       }
     }
 
-    if (_changedProperties.has('valueProvider') || _changedProperties.has('valueExpression')) {
+    if (props.has('valueProvider') || props.has('valueExpression')) {
       this._computeValueProvider();
     }
 
-    if (_changedProperties.has('autoComplete')) {
+    if (props.has('autoComplete') && this.autoComplete) {
       this.popover = true;
       this.searchable = true;
       this.allowNewValue = true;
     }
 
-    if (_changedProperties.has('value') && this.value && this.allowNewValue) {
+    if (props.has('value') && this.value && this.allowNewValue) {
       this._selectedValueText = this._getValue(this.value);
     }
   }
 
-  updated(_changedProperties) {
-    if (_changedProperties.has('_opened') && !this._opened) {
+  updated(props) {
+    super.updated(props);
+    if (props.has('_opened') && !this._opened) {
       this.reportValidity();
     }
   }
@@ -1146,7 +1147,9 @@ export class DwSelect extends DwFormElement(LitElement) {
       return;
     }
 
-    if (!this.allowNewValue) {
+    if (this.autoComplete) {
+      this.value = this.query || this.value;
+    } else if (!this.allowNewValue) {
       this._resetToCurValue();
     } else {
       const matchedItem = find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
