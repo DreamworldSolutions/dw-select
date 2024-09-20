@@ -847,7 +847,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       this.allowNewValue = true;
     }
 
-    if (props.has('value') || props.has('items')) {
+    if (props.has('value') || props.has('items') || props.has('prependItems')) {
       this._setSelectedValueText();
       if (!this._selectedValueText) {
         this._newItemStatus = undefined;
