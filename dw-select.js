@@ -395,7 +395,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       },
 
       /**
-       * Whther the trigger element is dense or not
+       * Whether the trigger element is dense or not
        */
       dense: { type: Boolean },
 
@@ -568,11 +568,6 @@ export class DwSelect extends DwFormElement(LitElement) {
         }
       `,
     ];
-  }
-
-  firstUpdated() {
-    const selectedItem = this._getSelectedItem(this.value);
-    this._selectedValueText = this._getValue(selectedItem || this.value);
   }
 
   constructor() {
@@ -839,29 +834,8 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._vkb = DeviceInfo.info().vkb;
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-  }
-
   willUpdate(props) {
-    super.willUpdate && super.willUpdate(props);
-
-    if (props.has('_opened')) {
-      this._setPopoverDialogWidth();
-    }
-
-    if (props.has('value') || props.has('items')) {
-      if (this.items && this.items.length > 0) {
-        let selectedItem = this._getSelectedItem(this.value);
-        if (!selectedItem && this.allowNewValue) {
-          selectedItem = this.value;
-        }
-        this._selectedValueText = this._getValue(selectedItem);
-        if (!this._selectedValueText) {
-          this._newItemStatus = undefined;
-        }
-      }
-    }
+    super.willUpdate(props);
 
     if (props.has('valueProvider') || props.has('valueExpression')) {
       this._computeValueProvider();
@@ -873,16 +847,27 @@ export class DwSelect extends DwFormElement(LitElement) {
       this.allowNewValue = true;
     }
 
-    if (props.has('value') && this.value && this.allowNewValue) {
-      this._selectedValueText = this._getValue(this.value);
+    if (props.has('value') || props.has('items')) {
+      this._setSelectedValueText();
+      if (!this._selectedValueText) {
+        this._newItemStatus = undefined;
+      }
     }
   }
 
   updated(props) {
     super.updated(props);
-    if (props.has('_opened') && !this._opened) {
-      this.reportValidity();
+    if (props.has('_opened')) {
+      if (!this._opened) {
+        this.reportValidity();
+      }
+      this._setPopoverDialogWidth();
     }
+  }
+
+  _setSelectedValueText() {
+    const selectedItem = this._getSelectedItem(this.value);
+    this._selectedValueText = this._getValue(selectedItem || this.value);
   }
 
   /**
@@ -1015,7 +1000,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     const value = this.value;
     const selectedItem = e.detail;
     this.value = this._valueProvider(selectedItem);
-    this._selectedValueText = this._getValue(selectedItem);
+    this._setSelectedValueText();
     if (!this._vkb && typeof this._triggerElement?.focus === 'function') {
       this._triggerElement.focus();
     }
@@ -1117,7 +1102,10 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _onKeydown(e) {
     const { ENTER, ARROW_DOWN, ARROW_UP, TAB, SHIFT, ESC } = KeyCode;
-    const { keyCode } = e;
+    const { keyCode, metaKey, ctrlKey } = e;
+
+    if (ctrlKey || metaKey) return;
+
     if ([ENTER, ARROW_DOWN, ARROW_UP].includes(keyCode) && !this._opened) {
       e.stopPropagation();
       this._onTrigger(e);
@@ -1149,11 +1137,11 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (!this.allowNewValue) {
       this._resetToCurValue();
-    } else if(!this.autoComplete) {
+    } else if (!this.autoComplete) {
       const matchedItem = find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
       if (matchedItem) {
         this.value = this._valueProvider(matchedItem.value);
-        this._selectedValueText = this._getValue(matchedItem.value);
+        this._setSelectedValueText();
         this._query = '';
         this._newItemStatus = undefined;
         this._dispatchSelected();
@@ -1167,8 +1155,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   _resetToCurValue() {
     this._query = '';
-    const selectedItem = this._getSelectedItem(this.value);
-    this._selectedValueText = selectedItem ? this._getValue(selectedItem) : '';
+    this._setSelectedValueText();
   }
 
   _computeValueProvider() {
