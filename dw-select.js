@@ -483,7 +483,7 @@ export class DwSelect extends DwFormElement(LitElement) {
         attribute: 'highlighted-value',
       },
 
-      interactiveDialog: { type: Boolean }
+      interactiveDialog: { type: Boolean },
     };
   }
 
@@ -507,7 +507,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   get _dialogElement() {
-    return this.renderRoot.querySelector('dw-select-base-dialog');
+    return this.renderRoot.querySelector('#selectDialog');
   }
 
   static get styles() {
