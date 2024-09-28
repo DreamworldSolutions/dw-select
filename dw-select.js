@@ -45,7 +45,7 @@ import { filter, KeyCode } from './utils.js';
  * ### Typing:
  *  - Not applicable to non-searchable
  *  - Typing a character when the field is focused also opens the drop-down.
- *  - drop-down shows result matching with any word of the input text. For e.g. if the user types ‘hdfc bank’ it should show a records which contains words ‘hdfc’ or ‘bank’ anywhere (at start, middle or at end)
+ *  - drop-down shows result matching with any word of the input text. For e.g. if the user types HDFC bank’ it should show a records which contains words HDFC or ‘bank’ anywhere (at start, middle or at end)
  *  - Matching text is highlighted
  *  - Shows the most relevant matches in dropdown in sorted order. Sorting order is most matched to least matched.
  *
@@ -247,7 +247,6 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Prototype: `(name, label, collapsible, collapsed, activated) => HTMLTemplate`
        *
        * - Input property.
-       * - It's optional, by default it renders groupItem using //TODO: ????
        * - Template should render only 1 root-level block element. Obviously, it's tree can have multiple
        * children at any depth.
        * - `name` (available as input) should be set to `name` property on the groupItem element.
@@ -272,12 +271,12 @@ export class DwSelect extends DwFormElement(LitElement) {
 
       /**
        * Shows an icon-button with a close icon,
-       * in the `top-right` corner on the bottom-sheet dailog.
+       * in the `top-right` corner on the bottom-sheet dialog.
        */
       showClose: { type: Boolean },
 
       /**
-       * Name of trailing Icon which availble in selected item.
+       * Name of trailing Icon which available in selected item.
        */
       selectedTrailingIcon: { type: String },
 
@@ -345,7 +344,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Input Property
        * Whether error message shows in tooltip or not.
-       * Default erro shows at hint text
+       * Default error shows at hint text
        */
       errorInTooltip: { type: Boolean },
 
@@ -1137,7 +1136,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (!this.allowNewValue) {
       this._resetToCurValue();
-    } else if (!this.autoComplete) {
+    } else {
       const matchedItem = find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
       if (matchedItem) {
         this.value = this._valueProvider(matchedItem.value);
@@ -1205,11 +1204,8 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     try {
       const item = await this._newItemRequest;
-      // const {item, hint} = //TODO: Consider 'hint' too.
-
       this._newItem = item;
-      //TODO: Show hint if available.
-      this._newItemStatus = item ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
+      this._newItemStatus = NEW_VALUE_STATUS.NEW_VALUE;
     } catch (error) {
       this._newItemStatus = NEW_VALUE_STATUS.ERROR;
     } finally {
