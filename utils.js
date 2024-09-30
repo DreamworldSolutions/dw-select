@@ -43,9 +43,9 @@ export const filter = (value, query = "") => {
 
   value = value.trim().toLowerCase();
   const queryArray = query.trim().toLowerCase().split(" ");
-
-  return queryArray.every((e) => {
-    return value.indexOf(e) !== -1;
+  const valueArray = value.split(" ");
+  return queryArray.every((word) => {
+    return valueArray.some(valueWord => valueWord.startsWith(word));
   });
 };
 
