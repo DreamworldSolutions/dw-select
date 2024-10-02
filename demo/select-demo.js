@@ -1,18 +1,19 @@
-import "@dreamworld/dw-form";
-import "@dreamworld/dw-list-item";
-import { ThemeStyle } from "@dreamworld/material-styles/theme";
-import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
-import "../dw-select";
-import "../dw-select-dialog-input";
-import "../dw-select-group-item";
-import "../dw-select-trigger";
-import "./dw-select-extension-demo";
+import '@dreamworld/dw-form';
+import '@dreamworld/dw-list-item';
+import { ThemeStyle } from '@dreamworld/material-styles/theme';
+import { css, html, LitElement } from '@dreamworld/pwa-helpers/lit.js';
+import '../dw-select';
+import '../dw-select-dialog-input';
+import '../dw-select-group-item';
+import '../dw-select-trigger';
+import './dw-select-extension-demo';
+import '../dw-multi-select.js';
 
-import { DwCompositeDialog } from "@dreamworld/dw-dialog/dw-composite-dialog";
+import { DwCompositeDialog } from '@dreamworld/dw-dialog/dw-composite-dialog';
 
-import { DWTooltip, DWTooltipStyle } from "@dreamworld/dw-tooltip";
-import { queryFilterGenerator } from "../utils";
-import { country_list_with_code, groupList, groups, list } from "./utils";
+import { DWTooltip, DWTooltipStyle } from '@dreamworld/dw-tooltip';
+import { queryFilterGenerator } from '../utils';
+import { country_list_with_code, groupList, groups, list } from './utils';
 
 const message = {
   noMatching: 'No matching records found!',
@@ -29,6 +30,7 @@ class SelectDemo extends LitElement {
         }
 
         dw-select,
+        dw-multi-select,
         dw-select-extension-demo {
           margin-bottom: 24px;
         }
@@ -42,13 +44,43 @@ class SelectDemo extends LitElement {
 
   get _tipActions() {
     return [
-      {name: "UPDATE", label: "Update"},
-      {name: "CLEAR", label: "Clear", danger: true}
-    ]
+      { name: 'UPDATE', label: 'Update' },
+      { name: 'CLEAR', label: 'Clear', danger: true },
+    ];
   }
 
   render() {
     return html`
+      <!-- Custom valueExpression & valueTextProvider -->
+      <dw-multi-select
+        .items=${this._filterBySelectItems}
+        .valueTextProvider=${item => item && item.name}
+        .valueExpression="${'value'}"
+        .value=${['CASH', 'BANK']}
+        @change=${this._onChange}
+      ></dw-multi-select>
+
+      <dw-multi-select
+        .items=${list}
+        @change=${this._onChange}
+      ></dw-multi-select>
+
+      <!-- Grouped items -->
+      <dw-multi-select
+        searchable
+        outlined
+        .items=${groupList}
+        .heading=${'Select Contact or Bank'}
+        .groups=${groups}
+        .valueExpression="${'name'}"
+        .value=${this._contactValue}
+        .valueTextProvider=${item => item && item.name}
+        .groupSelector=${item => item.label}
+        groupExpression="type"
+        label="Contacts"
+        @change=${this._onChange}
+      ></dw-multi-select>
+
       <dw-select
         name="country"
         outlined
@@ -83,12 +115,12 @@ class SelectDemo extends LitElement {
           .hintTooltipActions="${this._tipActions}"
           errorInTooltip
           .errorTooltipActions="${this._tipActions}"
-          .warningText="${"Warning"}"
+          .warningText="${'Warning'}"
           warningInTooltip
           .warningTooltipActions="${this._tipActions}"
           autoValidate
           @change=${this._onChange}
-          @action="${(e) => console.log(e.detail)}"
+          @action="${e => console.log(e.detail)}"
           .helper=${'Simple Helper Text'}
           helperPersistent
           .helperTextProvider=${this._helperTextProvider}
@@ -120,8 +152,8 @@ class SelectDemo extends LitElement {
         warningInTooltip
         errorInTooltip
         .tooltipActions=${[
-          { name: "UPDATE", label: "Update" },
-          { name: "CLEAR", label: "Clear", danger: true },
+          { name: 'UPDATE', label: 'Update' },
+          { name: 'CLEAR', label: 'Clear', danger: true },
         ]}
       ></dw-select>
 
@@ -261,7 +293,7 @@ class SelectDemo extends LitElement {
       >
         <dw-icon-button slot="trigger-template" id="selectTrigger" icon="edit" @click=${this._onEdit}></dw-icon-button>
       </dw-select>
-      
+
       <!-- <dw-select-trigger label="Trigger" updatedHighlight></dw-select-trigger> -->
 
       <!-- <dw-select-dialog-input
@@ -295,13 +327,17 @@ class SelectDemo extends LitElement {
   }
 
   _onAction(e) {
-    console.log("_onAction", e.detail);
+    console.log('_onAction', e.detail);
   }
 
   get _filterBySelectItems() {
     return [
-      { name: 'Transaction Date', value: 'TXN_DATE' },
-      { name: 'Due Date', value: 'DUE_DATE' },
+      { name: 'cash', value: 'CASH' },
+      { name: 'Bank', value: 'BANK' },
+      { name: 'CreditCard', value: 'CREDIT_CARD' },
+      { name: 'Wallet', value: 'WALLET' },
+      { name: 'Atm card', value: 'ATM__CARD' },,
+      { name: 'Gpay', value: 'GPAY' },
     ];
   }
 }

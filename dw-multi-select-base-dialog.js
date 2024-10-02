@@ -7,22 +7,19 @@ import { repeat } from 'lit/directives/repeat.js';
 import '@dreamworld/dw-button';
 import '@dreamworld/dw-icon';
 import '@dreamworld/dw-list-item';
-import './dw-select-dialog-input';
-import './dw-select-group-item';
+import './dw-multi-select-dialog-input';
+import './dw-multi-select-group-item';
 
 // Styles
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, debounce, filter, orderBy, forEach } from 'lodash-es';
-import { NEW_VALUE_STATUS } from './utils';
+import { get, debounce, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
-const VIRTUAL_LIST_AUTO_SCROLL_DELAY = 500;
-const REGULAR_LIST_SCROLL_DELAY = 300;
 const defaultMessages = {
   noRecords: 'No Records',
   noMatching: 'No matching records found!',
@@ -35,13 +32,26 @@ const ItemTypes = {
 };
 
 /**
- * Renders the list of choices on temporary Composite Dialog.
- * Using `dw-list-item` or custom template provider `renderItem` to render List of Items
+ * @summary dialog for multi select
  *
- * [`select-dialog-doc`](docs/select-dialog.md)
+ * @behaviors
+ *  - When `searchable`, filters list based on the search query.
+ *  - Integrates `dw-list-item` or uses custom template provider `renderItem` to render List of Items
+ *  - Keyboard accessibility
+ *    - On Esc, when search query is empty, closes the dialog otherwise reset the query.
+ *    - On SPACE-BAR, changes the selection.
+ *    - On UP / DOWN, navigates through the items.
+ *
+ * ## Event
+ * @event _value-change  when user select item from list
+ * @event apply when user close the dialog ( on Ecs key press, on apply button click)
+ *
+ *
+ * @usage
+ *  <dw-multi-select-base-dialog .items=$items .value=$value></dw-multi-select-base-dialog>
  */
 
-export class DwSelectBaseDialog extends DwCompositeDialog {
+export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   static get styles() {
     return [
       super.styles,
@@ -49,11 +59,17 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         :host {
           display: block;
           --dw-dialog-content-padding: 0;
+          --dw-dialog-header-padding: 4px 4px 4px 16px;
+          --dw-dialog-footer-padding: 16px;
           --dw-popover-max-height: calc(50vh - 24px);
         }
 
-        :host([hidden]) #popover_dialog__surface {
-          display: none;
+        :host([type='modal'][placement='center']) {
+          --dw-dialog-min-width: 448px;
+        }
+
+        :host([type='modal']) .mdc-dialog .mdc-dialog__surface {
+          min-width: var(--dw-dialog-min-width, 448px);
         }
 
         :host([type='popover']) .dialog__content {
@@ -73,23 +89,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           padding-bottom: 40px;
         }
 
-        :host([type='popover']) header {
-          padding: 0;
-        }
-
         :host([type='modal']) .mdc-dialog .mdc-dialog__title {
-          max-height: 56px;
-          display: flex;
           ${unsafeCSS(TypographyLiterals.headline6)};
         }
 
-        :host([type='modal'][full-height]) #dialog-header {
-          --dw-dialog-header-padding: 4px;
-          gap: 4px;
+        :host([type='popover']) header {
+          padding: 16px 16px 8px 16px;
         }
 
-        :host([type='modal']) .mdc-dialog--scrollable .mdc-dialog__title {
-          padding: var(--dw-dialog-header-padding, 4px 4px 4px 16px);
+        #dialog-header {
+          z-index: 2;
         }
 
         .heading {
@@ -112,12 +121,48 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         }
 
         :host([type='fit']) #dialog-header.mdc-dialog__title {
-          padding: 8px 16px;
+          padding: 4px 4px 4px 4px;
           z-index: 2;
         }
 
+        :host(:not([type='popover'])) dw-multi-select-dialog-input {
+          margin-right: 12px;
+        }
+
+        :host([type='fit']) dw-multi-select-dialog-input {
+          margin-left: 12px;
+        }
+
+        .header-title {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .heading {
+          display: flex;
+          gap: 12px;
+        }
+
+        .title {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+          color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
+        }
+
+        :host(:not([type='fit'])) .title {
+          justify-content: space-between;
+        }
+
+        .close-button {
+          --dw-icon-color: var(--mdc-theme-text-secondary-on-surface, rgba(0, 0, 0, 0.6));
+        }
+
         dw-list-item,
-        dw-select-group-item,
+        dw-multi-select-group-item,
         .list-item,
         .group-item {
           width: 100%;
@@ -140,6 +185,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
         dw-button {
           --mdc-shape-small: 18px;
+          display: flex;
+          flex: 1;
         }
 
         .shimmer {
@@ -173,7 +220,24 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         :host(:not([input-focused])) .content-action-button {
           position: sticky;
           bottom: 0;
-          background-color: var(--mdc-theme-background);
+          background-color: var(--mdc-theme-background, #ffffff);
+        }
+
+        .select-all {
+          border-bottom: 1px solid var(--mdc-theme-divider-color, rgba(0, 0, 0, 0.12));
+        }
+
+        .select-count {
+          background-color: var(--mdc-theme-primary);
+          border-radius: 50px;
+          width: 24px;
+          height: 24px;
+          ${unsafeCSS(TypographyLiterals.subtitle2)};
+          display: flex;
+          text-align: center;
+          justify-content: center;
+          color: var(--mdc-theme-background, #ffffff);
+          align-items: center;
         }
       `,
     ];
@@ -186,7 +250,15 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * `object` in case of single selection;
        * `object[]` in case multiple selection.
        */
-      value: { type: Object },
+      value: { type: Array },
+
+      /**
+       * Represents the set of selected values.
+       * This is an object that keeps track of the currently selected items.
+       */
+      _valueSet: { type: Object },
+
+      _value: { type: Array },
 
       /**
        * Input Element
@@ -198,7 +270,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       /**
        * Whether or not to show the `searchable` variant.
        */
-      searchable: { type: Boolean },
+      searchable: { type: Boolean, reflect: true },
 
       /**
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
@@ -212,7 +284,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       /**
        * Input Property
-       * A Group has properties: name, label, collapsible, collapsed
+       * A Group has properties: name, label
        */
       groups: { type: Object },
 
@@ -226,7 +298,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       /**
        * A Function `(item) -> groupName` to identify a group from an item.
        */
-      groupSelector: { type: Function },
+      groupSelector: { type: Object },
 
       /**
        * Expression of Group
@@ -239,12 +311,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       items: { type: Array },
 
       /**
-       * Input property.
-       * Items to be prepended on top of the items.
-       */
-      prependItems: { type: Array },
-
-      /**
        * Represents items to be rendered by lit-virtualizer.
        * { type: GROUP or ITEM, value: Group or Item object }
        * It’s computed from _groups, items & query.
@@ -252,9 +318,17 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       _items: { type: Array },
 
       /**
+       * A set of pre-selected items. This is used to keep track of the items that were
+       * pre-selected before the dialog was opened.
+       */
+      _preSelectedItemsSet: { type: Object },
+
+      _preselectedItems: { type: Array },
+
+      /**
        * Provides value that actually represent in list items
        */
-      valueProvider: { type: Function },
+      valueProvider: { type: Object },
 
       /**
        * Expression of the value
@@ -262,16 +336,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        */
       valueExpression: { type: String },
 
-      /**
-       * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
-       * current `value`.
-       * default: `(item) -> item`.
-       */
-      valueTextProvider: { type: Function },
+      itemLabelProvider: { type: Object },
 
       /**
        * Messages of for noRecords and noMatching
-       * Example: {noRecords: "", noMatching: "", loading: ""}
+       * Example: {noRecords: "", noMatching: "", loading: "", allSelected: "", all: "", searchPlaceholder: ""}
        */
       messages: { type: Object },
 
@@ -282,15 +351,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Integrator listens on the ‘click’ event to know whether selection is changed or not.
        * It must not be focusable.
        */
-      renderItem: { type: Function },
+      renderItem: { type: Object },
 
       /**
        * Provides any Block elements to represents group items
        * name property should be set to input name.
-       * Should show hover & ripple effects only if it’s collapsible.
-       * Integrator listens on ‘click’ event to toggle collapsed status.
        */
-      renderGroupItem: { type: Function },
+      renderGroupItem: { type: Object },
 
       /**
        * Set it if you would like to show a heading on the bottom-sheet dialog.
@@ -300,14 +367,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       /**
        * Shows an icon-button with a close icon,
-       * in the `top-right` corner on the bottom-sheet dailog.
+       * in the `top-right` corner on the bottom-sheet dialog.
        */
       showClose: { type: Boolean },
-
-      /**
-       * Name of trailing Icon which availble in selected item.
-       */
-      selectedTrailingIcon: { type: String },
 
       /**
        * true when close button or heading is provided.
@@ -324,7 +386,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Input property. Default value is `true`.
        * When `false`, doesn't highlight matched words.
        */
-      highlightQuery: { type: Boolean},
+      highlightQuery: { type: Boolean },
 
       /**
        * index of activated Item
@@ -349,73 +411,22 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       dialogContentTemplate: { type: Object },
 
       /**
+       * Indicates whether the item should display a leading icon.
+       * Use for `select-all` item icon position
+       */
+      hasItemLeadingIcon: { type: Boolean },
+
+      /**
        * Custom footer template as property
        */
       dialogFooterTemplate: { type: Object },
 
-      /**
-       * Custom header template as property
-       */
-      headerTemplate: { type: Object },
-
       inputSuffixTemplate: { type: Object },
-
-      /**
-       * Placeholder for fit dialog's search input
-       */
-      searchPlaceholder: { type: String },
-
-      /**
-       * true if any group item has collapsed value is true.
-       */
-      isGroupCollapsed: Boolean,
 
       /**
        * A function to customize search.
        */
-      queryFilter: Function,
-
-      /**
-       * Can be used only when “searchable=true”
-       * Whether new value is allowed or not
-       */
-      allowNewValue: { type: Boolean },
-
-      _hidden: { type: Boolean, reflect: true, attribute: 'hidden'},
-
-      /**
-       * Enum property
-       * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
-       */
-      _newItemStatus: { type: String },
-
-      /**
-       * Represents the value of currently typed new item.
-       */
-      _newItem: { type: Object },
-
-      /**
-       * Represents Dialog input value
-       */
-      _selectedValueText: { type: String },
-
-      /**
-       * Input Property
-       * Whether error message shows in tooltip or not.
-       * Default erro shows at hint text
-       */
-      errorInTooltip: { type: Boolean },
-
-      /**
-       * A Custom Error Message to be shown.
-       */
-      errorMessage: { type: String },
-
-      /**
-       * Helper text to display below the input.
-       * Display default only when focused.
-       */
-      helper: { type: String },
+      queryFilter: { type: Object },
 
       /**
        * Set this to configure custom logic to detect whether value is changed or not.
@@ -423,39 +434,23 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * It must return a Boolean.
        * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
        */
-      valueEquator: { type: Function },
+      valueEquator: { type: Object },
 
       /**
        * `true` when items count is more than 500.
        */
       _virtualList: { type: Boolean },
 
+      /**
+       * Set to true when the input element receives focus, and false when it loses focus.
+       * This flag is reflected as an HTML attribute 'input-focused' on the element.
+       */
       _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' },
-
-      interactive: { type: Boolean }
     };
   }
 
-  set _groups(value) {
-    let oldValue = this._type;
-
-    if (value === oldValue) {
-      return;
-    }
-    this._isGroupCollapsed = Boolean(value) && value.some(e => e.collapsed);
-
-    this.__groups = value;
-    this.requestUpdate('_groups', oldValue);
-    // Compute updated `_items`
-    this._getItems();
-  }
-
-  get _groups() {
-    return this.__groups;
-  }
-
   /**
-   * Get lit virtulizer element
+   * Get lit virtualizer element
    */
   get _listEl() {
     return this.renderRoot.querySelector('#list');
@@ -474,115 +469,85 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this._firstItemIndex = 0;
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
-    this._selectedValueText = '';
     this.OPEN_ANIMATION_TIME = 300; //In milliseconds.
+    this._valueSet = new Set();
+    this._preSelectedItemsSet = new Set();
+    this._value = [];
+    this._cancelledByEsc = false;
   }
 
-  set messages(newValue) {
-    let oldValue = this._messages;
-
-    if (newValue === oldValue) {
-      return;
-    }
-
-    newValue = { ...oldValue, ...newValue };
-
-    this._messages = newValue;
-
-    this.requestUpdate('messages', oldValue);
-  }
-
-  get messages() {
-    return this._messages;
-  }
-
-  connectedCallback() {
-    // Set initial _groups value that actually used to compute list of choices
-    this._groups = this.groups;
-
-    super.connectedCallback();
-    this._onUserInteraction = debounce(this._onUserInteraction.bind(this), 100);
-  }
-
-  willUpdate(changedProps) {
-    super.willUpdate(changedProps);
-
-    if (changedProps.has('items')) {
+  willUpdate(props) {
+    super.willUpdate(props);
+    if (props.has('items')) {
       this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
     }
 
-    if (changedProps.has('_query')) {
-      this._onQueryChange(this._query);
-      this._getItems();
+    if (props.has('value')) {
+      this._setValue();
+    }
+
+    if (props.has('_value')) {
+      this._valueSet = new Set(this._value);
+    }
+
+    const hasValueItemsOrQuery = props.has('value') || props.has('items') || props.has('_query');
+    const isValueAndItemsNotEmpty = !isEmpty(this._value) && !isEmpty(this.items);
+    const isPreSelectedItemsEmpty = isEmpty(props.get('_preselectedItems'));
+    const isQueryReset = props.get('_query') && !this._query;
+    if (hasValueItemsOrQuery && isValueAndItemsNotEmpty && (isPreSelectedItemsEmpty || isQueryReset)) {
+      this._setPreselectedItems();
+    }
+
+    if (hasValueItemsOrQuery) {
+      this._setItems();
       this._moveActivatedToFirstItem();
     }
 
-    if (changedProps.has('heading') || changedProps.has('showClose')) {
-      this._showHeader = Boolean(this.heading) || this.showClose;
-    }
-
-    if (changedProps.has('_activatedIndex') || changedProps.has('_items')) {
+    if (props.has('_activatedIndex') || props.has('_items')) {
       this._activatedItem = this._getItem(this._activatedIndex);
     }
 
-    if (changedProps.has('value')) {
-      const selectedItem = this._getItemUsingValue(this.value);
-      this._selectedValueText = this._getTextByItem(selectedItem);
+    if (props.has('messages')) {
+      this.messages = { ...props.get('messages'), ...this.messages };
     }
 
-    if(this.allowNewValue && changedProps.has('_items') && this.type === 'popover') {
-      this._hidden = !this._items?.length;
+    if (props.has('heading') || props.has('showClose')) {
+      this._showHeader = !!this.heading || this.showClose;
     }
-  }
 
-  firstUpdated(changedProps) {
-    super.firstUpdated(changedProps);
-    if (this.value && this._groups && this._groups.length > 0) {
-      const value = this._getItemUsingValue(this.value);
-      this._groups = this._groups.map(group => {
-        if (value && group.name === value[this.groupExpression]) {
-          return { ...group, collapsed: false };
-        }
-        return group;
+    if (props.has('groups')) {
+      this._groups = this.groups;
+      let groupsMap = {};
+      forEach(this.groups, group => {
+        groupsMap[group.name] = group;
       });
-    }
-
-    this._isGroupCollapsed = Boolean(this._groups) && this._groups.some(e => e.collapsed);
-    this._scrollToSelectedItem();
-  }
-
-  updated(changedProps) {
-    super.updated(changedProps);
-    if (changedProps.has('items')) {
-      this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
-      this._getItems();
+      this._groupsMap = groupsMap;
     }
   }
 
   get _headerTemplate() {
     return html`
-      ${this.searchable && this.type === 'fit'
-        ? html`<dw-select-dialog-input
+      ${this.type === 'fit' || this.type === 'modal'
+        ? html`<div class="header-title">
+            <div class="title">
+              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" dismiss></dw-icon-button>` : ''}
+              <div class="heading">
+                ${this.heading}${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
+              </div>
+              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" dismiss></dw-icon-button>` : ''}
+            </div>
+          </div>`
+        : ''}
+      ${this.searchable
+        ? html`<dw-multi-select-dialog-input
             .value=${this._query || ''}
-            .searchPlaceholder="${this.searchPlaceholder}"
+            .messages=${this.messages}
             .suffixTemplate=${this.inputSuffixTemplate}
-            @cancel=${this._onClose}
-            @input-change=${this._onUserInteraction}
-            @clear-selection="${this._onUserInteraction}"
+            @input-change=${this._onInputChange}
+            @clear-selection="${this._onClearSelection}"
             @input-focus="${this._onInputFocus}"
             @input-blur="${this._onInputBlur}"
-          ></dw-select-dialog-input>`
-        : nothing}
-      ${this.type === 'modal'
-        ? html`
-            ${this.showClose && this._fullHeight
-              ? html`<dw-icon-button icon="arrow_back" @click=${() => this.close()}></dw-icon-button>`
-              : nothing}
-            ${this.heading ? html`<div class="heading">${this.heading}</div>` : nothing}
-            ${this.showClose && !this._fullHeight
-              ? html`<dw-icon-button icon="close" @click=${() => this.close()}></dw-icon-button>`
-              : nothing}
-          `
+          ></dw-multi-select-dialog-input>`
         : nothing}
       ${this.dialogHeaderTemplate ? html`<div class="custom-header">${this.dialogHeaderTemplate}</div>` : nothing}
     `;
@@ -593,9 +558,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return this.dialogContentTemplate;
     }
 
-    if (this.allowNewValue && this._items.length === 0) {
-      return nothing;
-    }
     // Render Loading view when _items is `undefined`
     if (!this._items) {
       return this._renderLoading;
@@ -603,18 +565,43 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     return html`
       ${this._items.length === 0 ? this._renderNoRecord : this._renderList}
-      ${this.type === 'fit' && !!this.dialogFooterTemplate ? html`<div class="content-action-button">${this.dialogFooterTemplate}</div>` : ''}
+      ${this.type === 'fit'
+        ? html`<div class="content-action-button">${this.dialogFooterTemplate || this._defaultFooterTemplate}</div>`
+        : ''}
+    `;
+  }
+
+  get _defaultFooterTemplate() {
+    if (this.type === 'popover') return;
+    return html`
+      <dw-button filled ?disabled="${isEqual(this._value, this.value)}" size="small" @click=${this.close}>
+        ${this.messages?.done || 'Done'}
+      </dw-button>
     `;
   }
 
   get _footerTemplate() {
-    if (this.allowNewValue && this._query && this.type === 'fit') {
-      return html`<dw-button label="Select" raised fullwidth @click=${this._onSelectButtonClick}></dw-button>`;
-    }
-
     if (this.type !== 'fit') {
-      return this.dialogFooterTemplate;
+      return this.dialogFooterTemplate || this._defaultFooterTemplate;
     }
+  }
+
+  get _selectAllItem() {
+    if (!this.searchable && this.items.length < 10) return;
+    const value = this._value || this.value;
+    const selected = this._items.length === value.length;
+    return html`<dw-list-item
+      id="select-all"
+      class="select-all"
+      title1=${this.messages?.selectAll || 'Select All'}
+      @click=${() => this._onSelectAll()}
+      .selectionMode=${'none'}
+      .selected=${selected}
+      .trailingIcon=${selected ? 'indeterminate_check_box' : 'check_box_outline_blank'}
+      .leadingIcon=${selected ? 'indeterminate_check_box' : 'check_box_outline_blank'}
+      ?hasLeadingIcon=${!this.hasItemLeadingIcon}
+      ?hasTrailingIcon=${this.hasItemLeadingIcon}
+    ></dw-list-item>`;
   }
 
   get _renderLoading() {
@@ -636,22 +623,19 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (this.type === 'popover' && this._virtualList && !this._openAnimationCompleted) {
       return;
     }
-    const selectedItemIndex = this._items.findIndex(item => this.valueEquator(this.valueProvider(item.value), this.value));
 
     const renderItem = (item, index) => {
-      const isSelected = this._isItemSelected(selectedItemIndex, index);
+      const isSelected = this._isItemSelected(item.value);
       const isActivated = this._isItemActivated(index);
       return this._renderItem(item, isSelected, isActivated, this._query);
-    }
-    if(!this._virtualList) {
-      return html`<div id="list">${repeat(this._items, renderItem)}</div>`;
+    };
+
+    if (!this._virtualList) {
+      return html`${this._selectAllItem}
+        <div id="list">${repeat(this._items, renderItem)}</div>`;
     }
 
-    return html`<lit-virtualizer
-      id="list"
-      .items=${this._items}
-      .renderItem=${renderItem}
-    ></lit-virtualizer>`
+    return html`${this._selectAllItem}<lit-virtualizer id="list" .items=${this._items} .renderItem=${renderItem}></lit-virtualizer>`;
   }
 
   _renderItem(item, selected, activated, query) {
@@ -666,15 +650,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`
         <dw-list-item
           class="list-item"
-          title1=${this._getItemValue(item.value)}
+          title1=${this.itemLabelProvider(item.value)}
           .highlight=${this.highlightQuery ? this._query : ''}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
-          ?selected=${selected}
-          .leadingIcon=${this._getLeadingIcon(item.value)}
-          ?hasLeadingIcon=${this._hasLeadingIcon()}
-          .trailingIcon=${this.selectedTrailingIcon}
-          ?hasTrailingIcon=${this._isTrailingIconAvailable(selected)}
+          .selected=${selected}
+          .selectionMode=${'none'}
+          ?hasLeadingIcon=${true}
+          .leadingIcon=${this._getLeadingIcon(item.value, selected)}
+          .trailingIcon=${selected ? 'check_box' : 'check_box_outline_blank'}
+          ?hasTrailingIcon=${this.hasItemLeadingIcon}
           .focusable=${false}
         ></dw-list-item>
       `;
@@ -682,20 +667,17 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     if (item.type === ItemTypes.GROUP) {
       if (this.renderGroupItem && typeof this.renderGroupItem === 'function') {
-        return this.renderGroupItem(item.value, activated, this._onGroupClick.bind(this));
+        return this.renderGroupItem(item.value, activated);
       }
 
       if (this.renderGroupItem) console.warn('renderGroupItem is not function');
 
-      return html`<dw-select-group-item
+      return html`<dw-multi-select-group-item
         .name="${item.value.name}"
         .label="${this._getGroupValue(item.value)}"
         class="group-item"
         ?activated=${activated}
-        ?collapsible=${item.value.collapsible}
-        ?collapsed=${item.value.collapsed}
-        @click=${() => this._onGroupClick(item.value)}
-      ></dw-select-group-item>`;
+      ></dw-multi-select-group-item>`;
     }
 
     return nothing;
@@ -709,32 +691,28 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     this._inputFocused = false;
   }
 
-  _getLeadingIcon(item) {
-    let group = this.groups && this.groups.find(e => e.name === item[this.groupExpression]);
-    if (group && group.icon) {
-      return group.icon;
-    }
-    return '';
-  }
+  _getLeadingIcon(item, selected) {
+    if (!this._groupsMap) return;
 
-  _hasLeadingIcon() {
-    return Boolean(this.groups && this.groups.some(group => group.icon));
-  }
-
-  _isTrailingIconAvailable(selected) {
-    if (this.selectedTrailingIcon) {
-      return selected;
+    const group = this._groupsMap[item[this.groupExpression]];
+    if (group) {
+      return group?.icon || '';
     }
-    return false;
+
+    if (selected) {
+      return 'check_box';
+    }
+
+    return 'check_box_outline_blank';
   }
 
   /**
-   *
    * @param {Object} item Selected item, one of the `items`
    * @returns {Boolean} whether item is selected or not.
    */
-  _isItemSelected(selectedIndex, index) {
-    return selectedIndex === index;
+  _isItemSelected(item) {
+    const itemValue = this.valueProvider(item);
+    return this._valueSet.has(itemValue);
   }
 
   /**
@@ -743,147 +721,149 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @returns {Boolean}
    */
   _isItemActivated(index) {
-    return index === this._activatedIndex;
+    return index === this._activatedIndex && this._items.length !== this._value.length;
   }
 
+  /**
+   * on item click dispatch event
+   * @param {object} item
+   * @returns {event}
+   */
   _onItemClick(item) {
-    this.dispatchEvent(new CustomEvent('selected', { detail: item }));
-    this.close();
+    this._setValue(item);
+    this.dispatchEvent(new CustomEvent('_value-change', { detail: this._value }));
   }
 
-  _onGroupClick(item) {
-    let groups = this._groups;
-    const index = groups.findIndex(group => group.name === item.name);
-    if (index !== -1 && groups[index].collapsible) {
-      groups[index].collapsed = !groups[index].collapsed;
+  /**
+   * on 'select all' item click
+   * update value
+   */
+  _onSelectAll() {
+    let value = this._value || [];
+
+    if (value.length === this._items.length) {
+      return (this._value = []);
     }
 
-    this._groups = groups;
+    this._value = map(this._items, item => this.valueProvider(item.value));
+    this.dispatchEvent(new CustomEvent('_value-change', { detail: this._value }));
+    return;
   }
 
-  _getItems() {
-    let sortedArray = filter(this.items, item => {
-      return this.queryFilter(item, this._query);
+  /**
+   * Set _preselectedItems and and _preSelectedItemsSet
+   */
+  _setPreselectedItems() {
+    if (this.items.length === this._value.length) {
+      this._preselectedItems = [];
+      this._preSelectedItemsSet = new Set();
+      return;
+    }
+
+    this._preSelectedItemsSet = this._valueSet;
+    this._preselectedItems = filter(this.items, item => {
+      return item && this._preSelectedItemsSet.has(this.valueProvider(item));
     });
+  }
+
+  /**
+   * Its called on item click or on `value` property change
+   * Updates _value and _valueSet
+   */
+  _setValue(item) {
+    if (!item) {
+      this._value = this.value;
+    } else {
+      const value = this._value || [];
+      const selectedValue = this.valueProvider(item);
+
+      const index = findIndex(value, valueItem => valueItem === selectedValue);
+
+      if (index >= 0) {
+        this._value = value.toSpliced(index, 1);
+      } else {
+        this._value = [...value, selectedValue];
+      }
+    }
+  }
+
+  _setItems() {
+    if (!Array.isArray(this.items)) return;
 
     let array = [];
 
-    if (!Array.isArray(this.items)) {
-      return;
-    }
+    forEach(this._preselectedItems, item => {
+      if (!this._query || this.queryFilter(item, this._query)) {
+        array.push({ type: ItemTypes.ITEM, value: item });
+      }
+    });
+
+    let filteredList = filter(this.items, item => {
+      return (!this._query || this.queryFilter(item, this._query)) && !this._preSelectedItemsSet.has(this.valueProvider(item));
+    });
+
     // If group is exist
     if (Array.isArray(this._groups)) {
       let groups = this._groups;
 
       // Sort Items with groupExpression
-      sortedArray = orderBy(sortedArray, [this.groupExpression]);
+      filteredList = orderBy(filteredList, [this.groupExpression]);
       const groupsLength = groups.length;
-
-      if (groupsLength === 1) {
-        groups = groups.map(group => {
-          return { ...group, collapsed: false };
-        });
-      }
 
       groups.forEach(group => {
         // Filter items with group
-        const filteredArray = filter(sortedArray, [this.groupExpression, group.name]);
+        const filteredArray = filter(filteredList, [this.groupExpression, group.name]);
         if (filteredArray.length !== 0) {
           // First push group item
           if (groupsLength !== 1) {
             array.push({ type: ItemTypes.GROUP, value: group });
           }
 
-          if (!group.collapsible || !group.collapsed) {
-            // Push every items
-            filteredArray.forEach(item => {
-              array.push({ type: ItemTypes.ITEM, value: item });
-            });
-          }
+          // Push every items
+          filteredArray.forEach(item => {
+            array.push({ type: ItemTypes.ITEM, value: item });
+          });
         }
       });
     }
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
-      sortedArray.forEach(item => {
+      filteredList.forEach(item => {
         array.push({ type: ItemTypes.ITEM, value: item });
       });
     }
 
-    const aPrependItems = [];
-    forEach(this.prependItems, e => {
-      aPrependItems.push({ type: ItemTypes.ITEM, value: e });
-    });
-
-    this._items = [...aPrependItems, ...array];
-    this.dispatchEvent(new CustomEvent('_items-changed', { detail: this._items }));
+    this._items = array;
   }
 
   _getGroupValue(item) {
-    if (!this.groupSelector(item)) {
-      return item;
-    }
-    return this.groupSelector(item);
+    return this.groupSelector(item) || item;
   }
 
   /**
-   * Trigger when actual user intract
+   * Triggered on input or clear query string.
    * @param {Event} e
    */
-  _onUserInteraction(e) {
-    if (e.type === 'input-change') {
-      this._onInput(e);
-    }
-
-    if (e.type === 'clear-selection') {
-      this._query = '';
-    }
-  }
-
-  _onClose() {
-    this.close();
-  }
-
-  _onInput(e) {
-    let el = this.renderRoot.querySelector('dw-select-dialog-input');
-    this._query = el.value || '';
-    this._selectedValueText = el.value;
-    this.dispatchEvent(new CustomEvent('query-change', { detail: { value: this._query } }));
-  }
-
-  _onQueryChange(value) {
-    if (value && this._isGroupCollapsed) {
-      let groups = this._groups;
-      groups.map(e => (e.collapsed = false));
-      this._groups = groups;
-    }
-  }
-
-  _getItem(index) {
-    return this._items && this._items[index];
+  _onClearSelection(e) {
+    this._query = '';
   }
 
   /**
-   * Returns String that represents current value
+   *
+   * Called when the user types in the search input field ans set in _query
    */
-  _getTextByItem(item) {
-    var text;
-    try {
-      text = this.valueTextProvider(item);
-    } catch (e) {
-      text = '';
-    }
+  _onInputChange(e) {
+    this._query = e?.detail?.value || '';
+  }
 
-    if (text) {
-      return text;
-    }
-
-    if (typeof item === 'string') {
-      return item;
-    }
-
-    return '';
+  /**
+   * This method returns the item base on the given index.
+   * @param (String) index
+   * @returns {Object}
+   */
+  _getItem(index) {
+    return this._items && this._items[index];
   }
 
   /**
@@ -897,21 +877,24 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
-    if(!this.searchable) {
+    if (!this.searchable) {
       super.__onKeyDown(e);
     }
 
     const keyCode = e.keyCode || e.which;
-    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, TAB } = KeyCode;
+    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, ESC, SPACE } = KeyCode;
 
-    // On TAB, close when interactive false.
-    if(keyCode === TAB && !this.interactive) {
-      const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
-      lastOpenedDialog && lastOpenedDialog.close();
+    if (keyCode === ESC) {
+      if (this._query) {
+        this._query = '';
+      } else {
+        this._cancelledByEsc = true;
+        this.close();
+      }
       return;
     }
-    
-    if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
+
+    if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, SPACE].includes(keyCode)) {
       return;
     }
 
@@ -925,18 +908,23 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       case ARROW_UP:
         this._moveActivated(Direction.UP);
         return;
-      case ARROW_DOWN:
-        this._moveActivated(Direction.DOWN);
-        return;
-      case ENTER:
-        if (this._activatedItem ) {
+      case SPACE:
+        if (this.searchable) return;
+        if (this._activatedItem) {
           const item = this._activatedItem;
           if (item.type === ItemTypes.ITEM) {
             this._onItemClick(item.value);
             return;
           }
-          if (item.type === ItemTypes.GROUP && item.value.collapsible) {
-            this._onGroupClick(item.value);
+        }
+      case ARROW_DOWN:
+        this._moveActivated(Direction.DOWN);
+        return;
+      case ENTER:
+        if (this._activatedItem) {
+          const item = this._activatedItem;
+          if (item.type === ItemTypes.ITEM) {
+            this._onItemClick(item.value);
             return;
           }
         }
@@ -948,17 +936,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     const numberOfItems = this._items.length;
     if (numberOfItems === 0) return;
 
-    if(direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
+    if (direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
 
-    if(direction === Direction.DOWN && this._activatedIndex === (numberOfItems - 1) ) return;
+    if (direction === Direction.DOWN && this._activatedIndex === numberOfItems - 1) return;
 
     let activatedIndex = this._activatedIndex;
     let activatedItem = this._activatedItem;
 
-    activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex -1 ) : Math.min(this._activatedIndex + 1, numberOfItems);
+    activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
     activatedItem = this._getItem(activatedIndex);
-    if(activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
-      activatedIndex = direction === Direction.UP ? Math.max(this._firstItemIndex, this._activatedIndex -2 ) : Math.min(this._activatedIndex + 2, numberOfItems);
+    if (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+      activatedIndex =
+        direction === Direction.UP
+          ? Math.max(this._firstItemIndex, this._activatedIndex - 2)
+          : Math.min(this._activatedIndex + 2, numberOfItems);
     }
 
     this._activatedIndex = activatedIndex;
@@ -966,7 +957,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivatedToFirstItem() {
-    if(!this._items?.length) return;
+    if (!this._items?.length) return;
 
     let activatedIndex = -1;
 
@@ -987,59 +978,26 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   /**
-   * Scroll to selected Item and set `_activatedItemIndex`
-   */
-  _scrollToSelectedItem() {
-    if (!this._items) return;
-
-    if (this.value) {
-      this._activatedIndex = this._items.findIndex(item => {
-        return this.valueEquator(this.valueProvider(item.value), this.value);
-      });
-    }
-
-    let activatedItem = this._getItem(this._activatedIndex);
-    while (activatedItem && activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
-      this._activatedIndex++;
-      activatedItem = this._getItem(this._activatedIndex);
-    }
-    setTimeout(() => {
-        this._scrollToIndex(this._activatedIndex);
-      }, this._virtualList ? VIRTUAL_LIST_AUTO_SCROLL_DELAY : REGULAR_LIST_SCROLL_DELAY);
-  }
-
-  /**
    * Scroll to given index and position
    * @param {Number} index
    * @param {String} position
    */
   _scrollToIndex(index) {
-    if(index < 0) return;
+    if (index < 0) return;
 
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
     const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'center' };
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
-  _onSelectButtonClick() {
-    this.dispatchEvent(new CustomEvent('select-new-value', { detail: { value: this._query } }));
-    this.close();
-  }
-
-  _getItemUsingValue(value) {
-    const prependItem = this.prependItems.find(item => this.valueEquator(this.valueProvider(item), value));
-    if (prependItem) {
-      return prependItem;
+  _onDialogClosed(e) {
+    super._onDialogClosed(e);
+    if (this._cancelledByEsc) {
+      return;
     }
-
-    const item = this.items && this.items.find(item => this.valueEquator(this.valueProvider(item), value));
-    if (item !== undefined || !this._newItem) {
-      return item;
-    }
-
-    //search in newItem
-    return this.valueEquator(this.valueProvider(this._newItem), value);
+    this.dispatchEvent(new CustomEvent('apply', { detail: this._value }));
+    this.value = this._value;
   }
 }
 
-window.customElements.define('dw-select-base-dialog', DwSelectBaseDialog);
+window.customElements.define('dw-multi-select-base-dialog', DwMultiSelectBaseDialog);

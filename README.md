@@ -1,10 +1,10 @@
-# `<dw-select>` [![Published on npm](https://img.shields.io/npm/v/@dreamworld/dw-select.svg)](https://www.npmjs.com/package/@dreamworld/dw-select)
+# `<dw-select> / <dw-multi-select>` [![Published on npm](https://img.shields.io/npm/v/@dreamworld/dw-select.svg)](https://www.npmjs.com/package/@dreamworld/dw-select)
 
 A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
 
 Two types of select component: [`default`](docs/non-searchable.md) (searchable=false), and [`searchable`](docs/searchable.md) (searchable=true).
 
-> Note: `dw-select` internally uses [`dw-list-item`](https://github.com/DreamworldSolutions/dw-list-item) to render items. use overide property `renderItem` to override items.
+> Note: `dw-select / dw-multi-select` internally uses [`dw-list-item`](https://github.com/DreamworldSolutions/dw-list-item) to render items. use override property `renderItem` to override items.
 
 ## Installation
 
@@ -34,7 +34,7 @@ npm install @dreamworld/dw-select
 
 ## Behaviour
 
-- Renders [`dw-select-trigger`](docs/select-trigger.md) and [`dw-select-dialog`](docs/select-dialog.md)
+- Renders [`dw-select-trigger`](docs/select-trigger.md) and [dw-select-base-dialog](docs/select-dialog.md) / `dw-multi-select-base-dialog`
 - Triggers internal validation on blur & select.
 - Focus:
   - For searchable types, it shows a cursor. For non searchable type, doesn’t show cursor.
@@ -45,17 +45,12 @@ npm install @dreamworld/dw-select
 
 ## API
 
-### Extension Method
-
-TODO
-
 ### Properties/Attributes
 
 | Name                    | Type                                             | Default                 | Description                                                                                                                                                                                                                                                                                                                                          |
 | ----------------------- | ------------------------------------------------ | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                  | `string`                                         | `""`                    | Sets the `name` attribute on the internal input. The name property should only be used for browser autofill as webcomponent form participation does not currently consider the `name` attribute.                                                                                                                                                     |
-| `value`                 | `object`                                         | `null`                  | Represents current value. Integrator may change this proprty, to change current selected Item. And when User changes selection through mouser/keyboard interaction, it's changed corresponding to the selected item by the User.                                                                                                                     |
-| `item`                  | `object`                                         |                         | A read-only property. Returns an Item corresponding to the current `value`.                                                                                                                                                                                                                                                                          |
+| `name`                  | `string`                                         | `""`                    | Sets the `name` attribute on the internal input. The name property should only be used for browser autofill as web-component form participation does not currently consider the `name` attribute.                                                                                                                                                     |
+| `value`                 | `object`                                         | `null`                  | Represents current value. Integrator may change this property, to change current selected Item. And when User changes selection through mouser/keyboard interaction, it's changed corresponding to the selected item by the User.                                                                                                                     |
 | `highlightChanged`      | `boolean`                                        | `false`                 | Enable highLight textfield when value is changed. It will highLight field when `value` and `originalValue` is not same                                                                                                                                                                                                                               |
 | `originalValue`         | `object`                                         | `null`                  | Input property. **Note:** When `originalValue` is specified (not `undefined`) & its value is different than this; then highlight is shown. (Comparison is done by reference)                                                                                                                                                                         |
 | `outlined`              | `boolean`                                        | `false`                 | Whether or not to show the `outlined` variant.                                                                                                                                                                                                                                                                                                       |
@@ -84,29 +79,29 @@ TODO
 | `renderGroupItem`       | `HTMLTemplate`                                   | `undefined`             | Provides any Block elements to represent group items. name property should be set to input name. Should show hover & ripple effects only if it’s collapsible. Integrator listens on ‘click’ event to toggle collapsed status.                                                                                                                        |
 | `valueEquator`          | `Function`                                       | `(v1, v2) => v1 === v2` | Set this to configure custom logic to detect whether value is changed or not.                                                                                                                                                                                                                                                                        |
 | `heading`               | `String`                                         | `""`                    | Set it if you would like to show a heading on the bottom-sheet dialog. By default no heading.                                                                                                                                                                                                                                                        |
-| `showClose`             | `boolean`                                        | `false`                 | Shows an icon-button with a close icon, in the `top-right` corner on the bottom-sheet dailog.                                                                                                                                                                                                                                                        |
-| `selectedTrailingIcon`  | `string`                                         | `undefined`             | Name of trailing Icon which availble in selected item.                                                                                                                                                                                                                                                                                               |
+| `showClose`             | `boolean`                                        | `false`                 | Shows an icon-button with a close icon, in the `top-right` corner on the bottom-sheet dialog.                                                                                                                                                                                                                                                        |
+| `selectedTrailingIcon`  | `string`                                         | `undefined`             | Name of trailing Icon which avaialble in selected item.                                                                                                                                                                                                                                                                                               |
 | `searchPlaceholder`     | `string`                                         | `""`                    | Placeholder for fit dialog's search input                                                                                                                                                                                                                                                                                                            |
 | `helperTextProvider`    | `fn()`                                           |                         | Helper text provider. parameters: selected item. If this is provided show helper text using this function otherwise get from the `helper` property.                                                                                                                                                                                                  |
 | `queryFilter`           | `function`                                       | `[]`                    | A function to customize search. function has two parameters. 1. item, 2. query. <br>**Note:** returns always boolean                                                                                                                                                                                                                                 |
 | `messages`              | [`Messages`](#messages)                          | [`Messages`](#messages) | Messages of for No Records found, No Matching found, and loading state. It's showing in the dialog. Provide only the message key and value that you want to update. Select will handle it and update the message object.                                                                                                                             |
-| `errorInTooltip`        | `boolean`                                        | `false`                 | Show error meesage in error trailling icon hover tooltip.                                                                                                                                                                                                                                                                                            |
+| `errorInTooltip`        | `boolean`                                        | `false`                 | Show error message in error trailing icon hover tooltip.                                                                                                                                                                                                                                                                                            |
 | `allowNewValue`         | `boolean`                                        | `false`                 | Whether new value is allowed or not. Can be used only when select is `searchable`                                                                                                                                                                                                                                                                    |
 | `newValueProvider`      | `function`                                       | (query) => query        | Value provider function. Used when `allowNewValue` is available, and `query` does not match with any options. Default it returns searched `query`. <br>**Note:** Return value could be any except function. Including `Promise`.                                                                                                                     |
-| `hintInTooltip` | `boolean` | `false` | Allow to show hint text in tooltip and tip trigger on info(grey) icon.
-| `errorInTooltip` | `boolean` | `false` | Allow to show error text in tooltip. It trigger on error(red) icon.
-| `warningInTooltip` | `boolean` | `false` | Allow to show warning text in tooltip. It trigger on warning(orange) icon.
-| `hintTooltipActions` | [`Action[]`](#action) | `undefined` | Allow to add tip action while hint text in tip. on action click event named `action` dispatch.
-| `errorTooltipActions` | [`Action[]`](#action) | `undefined` | Allow to add tip action while error text in tip. on action click event named `action` dispatch.
-| `warningTooltipActions` | [`Action[]`](#action) | `undefined` | Allow to add tip action while warning text in tip. on action click event named `action` dispatch.
-| `tipPlacement` | `string` | `""` | Tooltip placement for more see [tippyJs doc](https://atomiks.github.io/tippyjs/v6/all-props/#placement).
+| `hintInTooltip`         | `boolean`                                        | `false`                 | Allow to show hint text in tooltip and tip trigger on info(grey) icon.                                                                                                                                                                                                                                                                               |
+| `errorInTooltip`        | `boolean`                                        | `false`                 | Allow to show error text in tooltip. It trigger on error(red) icon.                                                                                                                                                                                                                                                                                  |
+| `warningInTooltip`      | `boolean`                                        | `false`                 | Allow to show warning text in tooltip. It trigger on warning(orange) icon.                                                                                                                                                                                                                                                                           |
+| `hintTooltipActions`    | [`Action[]`](#action)                            | `undefined`             | Allow to add tip action while hint text in tip. on action click event named `action` dispatch.                                                                                                                                                                                                                                                       |
+| `errorTooltipActions`   | [`Action[]`](#action)                            | `undefined`             | Allow to add tip action while error text in tip. on action click event named `action` dispatch.                                                                                                                                                                                                                                                      |
+| `warningTooltipActions` | [`Action[]`](#action)                            | `undefined`             | Allow to add tip action while warning text in tip. on action click event named `action` dispatch.                                                                                                                                                                                                                                                    |
+| `tipPlacement`          | `string`                                         | `""`                    | Tooltip placement for more see [tippyJs doc](https://atomiks.github.io/tippyjs/v6/all-props/#placement).                                                                                                                                                                                                                                             |
 
 #### Action
 
 ```js
 {
   name: string,
-  lable: string,
+  label: string,
   danger: boolean
 }
 ```
@@ -118,7 +113,7 @@ TODO
 | Key           | Type      | Description                                    |
 | ------------- | --------- | ---------------------------------------------- |
 | `name`        | `string`  | Name of the group.                             |
-| `title`       | `string`  | Titile of the group.                           |
+| `title`       | `string`  | Title of the group.                           |
 | `collapsible` | `boolean` | Whether group is collapsible or not.           |
 | `collapsed`   | `boolean` | Whether group is collapsed or not.             |
 | `icon`        | `string`  | name of Material icon. It's optional property. |
@@ -128,7 +123,7 @@ TODO
 ```object
 {
   name: "BANKS",
-  titile: "Banks",
+  title: "Banks",
   collapsible: true,
   collapsed: false
 }
@@ -147,13 +142,13 @@ TODO
 
 | key          | Type     | Default                      | Description                                   |
 | ------------ | -------- | ---------------------------- | --------------------------------------------- |
-| `noRecords`  | `string` | `No Records`                 | Show meesage on dialog when no records found. |
+| `noRecords`  | `string` | `No Records`                 | Show message on dialog when no records found. |
 | `noMatching` | `string` | `No matching records found!` | Show when query does not match with any item. |
 | `loading`    | `string` | `Loading...`                 | Show when items is `undefined`.               |
 
 ### Utils Functions
 
-| Name                   | Arguments       | Retuens    | Description              |
+| Name                   | Arguments       | Returns    | Description              |
 | ---------------------- | --------------- | ---------- | ------------------------ |
 | `queryFilterGenerator` | keys (string[]) | `Function` | Query function Generator |
 
@@ -177,7 +172,7 @@ TODO
 
 ### CSS Custom Properties
 
-| Name                                     | Default                                                | Description                                                   |
-| ---------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------- |
-| `--dw-select-item-selected-bg-color`     | `#6200ee`                                              | Background color of the selected item                         |
-| `--dw-select-shimmer-gradient`           | `linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5)` | Shimmer linear gradient when items is being loaded.           |
+| Name                                 | Default                                                | Description                                         |
+| ------------------------------------ | ------------------------------------------------------ | --------------------------------------------------- |
+| `--dw-select-item-selected-bg-color` | `#6200ee`                                              | Background color of the selected item               |
+| `--dw-select-shimmer-gradient`       | `linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5)` | Shimmer linear gradient when items is being loaded. |

@@ -170,21 +170,6 @@ export class DwSelectTrigger extends DwInput {
       return this.suffixTemplate;
     }
 
-    if (this.type === 'password' && this._showVisibilityIcon) {
-      const icon = this._type === 'text' ? 'visibility' : 'visibility_off';
-      return html`
-        <dw-icon-button
-          @click=${this._toggleType}
-          class="mdc-text-field__icon"
-          icon="${icon}"
-          .iconSize=${this.iconSize}
-          tabindex=""
-          .iconFont="${this.iconFont}"
-          .symbol=${this.symbol}
-        ></dw-icon-button>
-      `;
-    }
-
     if (this.suffixText) {
       return html` <span class="suffix-text">${this.suffixText}</span> `;
     }
