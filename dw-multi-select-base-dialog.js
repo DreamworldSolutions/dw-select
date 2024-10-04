@@ -692,11 +692,11 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _getLeadingIcon(item, selected) {
-    if (!this._groupsMap) return;
-
-    const group = this._groupsMap[item[this.groupExpression]];
-    if (group) {
-      return group?.icon || '';
+    if (this._groupsMap) {
+      const group = this._groupsMap[item[this.groupExpression]];
+      if (group) {
+        return group?.icon || '';
+      }
     }
 
     if (selected) {
