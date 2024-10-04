@@ -477,15 +477,15 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     this._vkb = DeviceInfo.info().vkb;
   }
 
-  firstUpdated() {
-    super.firstUpdated();
+  firstUpdated(props) {
+    super.firstUpdated(props);
     this._setValueText();
   }
 
   willUpdate(props) {
     super.willUpdate(props);
 
-    if (props.has('value')) {
+    if (props.has('value') || props.has('items')) {
       this._setValueText();
     }
 

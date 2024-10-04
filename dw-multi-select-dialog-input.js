@@ -160,7 +160,7 @@ export class DwMultiSelectDialogInput extends LitElement {
   focus() {
     setTimeout(() => {
       const input = this.renderRoot.querySelector('input');
-      input && input.focus();
+      input?.focus();
     }, 0);
   }
 
