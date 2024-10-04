@@ -291,6 +291,8 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
        * External styles to be applied on popover dialog
        */
       popoverStyles: { type: Object },
+
+      hasItemLeadingIcon: { type: Boolean },
     };
   }
 
@@ -339,6 +341,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     this._valueProvider = item => item;
     this.valueEquator = (v1, v2) => v1 === v2;
     this.queryFilter = (item, query) => filter(this._itemLabelProvider(item), query);
+    this.hasItemLeadingIcon = false;
   }
 
   render() {
@@ -399,6 +402,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .error=${this.error}
       .errorMessages="${this.errorMessages}"
       ?showClose=${this.showClose}
+      .hasItemLeadingIcon=${this.hasItemLeadingIcon}
       .selectedTrailingIcon="${this.selectedTrailingIcon}"
       .dialogHeaderTemplate="${this._headerTemplate}"
       .dialogContentTemplate="${this._contentTemplate}"
@@ -473,6 +477,11 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     this._vkb = DeviceInfo.info().vkb;
   }
 
+  firstUpdated() {
+    super.firstUpdated();
+    this._setValueText();
+  }
+
   willUpdate(props) {
     super.willUpdate(props);
 
@@ -502,13 +511,15 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
    * @param { Array } e
    * @returns { String }
    */
-  async _setValueText(e) {
-    await this.updateComplete;
+  _setValueText(e) {
+    if (isEmpty(this.items)) return;
+    
     const value = e ? e.detail : this.value || [];
-    if (isEmpty(value) || value.length === this.items.length) {
+    if (isEmpty(value) || value.length === this.items?.length) {
       this._selectedValueText = this.messages?.all || 'All';
       return;
     }
+    
     const firstSelectedItem = this._getSelectedItem(value[0] || value[1]);
     const text = this.valueTextProvider(firstSelectedItem);
     this._selectedValueText = !text ? '' : `${text} ${value.length > 1 ? `(+${value.length - 1} other)` : ''}`;
