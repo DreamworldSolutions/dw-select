@@ -525,6 +525,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     }
   }
 
+  firstUpdated(props) {
+    super.firstUpdated(props);
+      const inputElement = this.renderRoot.querySelector('dw-multi-select-dialog-input');
+      inputElement?.focus();
+  }
+
   get _headerTemplate() {
     return html`
       ${this.type === 'fit' || this.type === 'modal'
@@ -692,11 +698,11 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _getLeadingIcon(item, selected) {
-    if (!this._groupsMap) return;
-
-    const group = this._groupsMap[item[this.groupExpression]];
-    if (group) {
-      return group?.icon || '';
+    if (this._groupsMap) {
+      const group = this._groupsMap[item[this.groupExpression]];
+      if (group) {
+        return group?.icon || '';
+      }
     }
 
     if (selected) {
