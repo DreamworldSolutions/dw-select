@@ -525,6 +525,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     }
   }
 
+  firstUpdated() {
+    super.firstUpdated();
+      const inputElement = this.renderRoot.querySelector('dw-multi-select-dialog-input');
+      inputElement && inputElement.focus();
+  }
+
   get _headerTemplate() {
     return html`
       ${this.type === 'fit' || this.type === 'modal'
