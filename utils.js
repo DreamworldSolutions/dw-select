@@ -45,7 +45,7 @@ export const filter = (value, query = "") => {
   const queryArray = query.trim().toLowerCase().split(" ");
   const valueArray = value.split(" ");
   return queryArray.every((word) => {
-    return valueArray.some(valueWord => valueWord.startsWith(word));
+    return valueArray.some(valueWord => valueWord.includes(word));
   });
 };
 
