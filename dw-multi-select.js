@@ -542,7 +542,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     }
 
     // Trigger element getter
-    let triggerEl = this.renderRoot.querySelector('#selectTrigger');
+    const triggerEl = this.renderRoot.querySelector('#selectTrigger');
 
     // Set Trigger element's offSetWidth to PopOver Dialog
     if (triggerEl) {
@@ -612,7 +612,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   _onDialogClose(e) {
     e.stopPropagation();
-    let triggerEl = this.renderRoot.querySelector('#selectTrigger');
+    const triggerEl = this.renderRoot.querySelector('#selectTrigger');
     triggerEl?.focus();
     if (this._dialogElement) {
       this.dispatchEvent(
