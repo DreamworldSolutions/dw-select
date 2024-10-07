@@ -466,7 +466,6 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this.heading = '';
     this.showClose = false;
     this._activatedIndex = 0;
-    this._firstItemIndex = 0;
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
     this.OPEN_ANIMATION_TIME = 300; //In milliseconds.
@@ -596,7 +595,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   get _selectAllItem() {
     if ((!this.searchable && this.items.length < 10) || this._query) return;
     const value = this._value || this.value;
-    const selected = this._items.length === value.length;
+    const selected = this.items.length === value.length;
     return html`<dw-list-item
       id="select-all"
       class="select-all"
@@ -604,6 +603,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       @click=${() => this._onSelectAll()}
       .selectionMode=${'none'}
       .selected=${selected}
+      ?activated=${this._activatedIndex === -1}
+      .focusable=${false}
       .trailingIcon=${selected ? 'indeterminate_check_box' : 'check_box_outline_blank'}
       .leadingIcon=${selected ? 'indeterminate_check_box' : 'check_box_outline_blank'}
       ?hasLeadingIcon=${!this.hasItemLeadingIcon}
@@ -728,7 +729,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
    * @returns {Boolean}
    */
   _isItemActivated(index) {
-    return index === this._activatedIndex && this._items.length !== this._value.length;
+    return index === this._activatedIndex;
   }
 
   /**
@@ -746,15 +747,18 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
    * update value
    */
   _onSelectAll() {
-    let value = this._value || [];
+    if (!this.items) return;
 
-    if (value.length === this._items.length) {
-      return (this._value = []);
+    this._activatedIndex = -1;
+    let value = this._value || [];
+    
+    if (value.length === this.items.length) {
+       this._value = [];
+    } else {
+      this._value = map(this.items, item => this.valueProvider(item));
     }
 
-    this._value = map(this._items, item => this.valueProvider(item.value));
     this.dispatchEvent(new CustomEvent('_value-change', { detail: this._value }));
-    return;
   }
 
   /**
@@ -915,28 +919,37 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     switch (keyCode) {
       case ARROW_UP:
         this._moveActivated(Direction.UP);
-        return;
+        break;
+
       case SPACE:
         if (this.searchable) return;
-        if (this._activatedItem) {
+        if (this._activatedIndex === -1) {
+          this._onSelectAll();
+        } else if (this._activatedItem) {
           const item = this._activatedItem;
           if (item.type === ItemTypes.ITEM) {
             this._onItemClick(item.value);
             return;
           }
         }
+        break;
+
       case ARROW_DOWN:
         this._moveActivated(Direction.DOWN);
-        return;
+        break;
+
       case TAB:
         this.close();
-        return;
+        break;
+
       case ENTER:
         if ( ctrlKey ) {
           this.close();
           return;
         }
-        if (this._activatedItem) {
+        if (this._activatedIndex === -1) {
+          this._onSelectAll();
+        } else if (this._activatedItem) {
           const item = this._activatedItem;
           if (item.type === ItemTypes.ITEM) {
             this._onItemClick(item.value);
@@ -951,19 +964,19 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     const numberOfItems = this._items.length;
     if (numberOfItems === 0) return;
 
-    if (direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
+    if (direction === Direction.UP && this._activatedIndex === -1) return;
 
     if (direction === Direction.DOWN && this._activatedIndex === numberOfItems - 1) return;
 
     let activatedIndex = this._activatedIndex;
     let activatedItem = this._activatedItem;
 
-    activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
+    activatedIndex = direction === Direction.UP ? Math.max(-1, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
     activatedItem = this._getItem(activatedIndex);
-    if (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+    if (activatedIndex === -1 || activatedItem?.type === ItemTypes.GROUP) {
       activatedIndex =
         direction === Direction.UP
-          ? Math.max(this._firstItemIndex, this._activatedIndex - 2)
+          ? Math.max(-1, this._activatedIndex - 2)
           : Math.min(this._activatedIndex + 2, numberOfItems);
     }
 
@@ -988,7 +1001,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         break;
       }
     }
-    this._firstItemIndex = this._activatedIndex = activatedIndex;
+    this._activatedIndex = activatedIndex;
     this._scrollToIndex(this._activatedIndex);
   }
 
