@@ -1116,6 +1116,10 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     if (this.searchable && keyCode === ESC) {
+      if (!this._query && !this.value) {
+        this._opened = false;
+      }
+
       if (!this._query && this.value) {
         this.value = null;
       }

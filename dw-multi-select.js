@@ -515,7 +515,12 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     if (!this.items) return;
     
     const value = e ? e.detail : this.value || [];
-    if (isEmpty(value) || value.length === this.items?.length) {
+    if (isEmpty(value)) {
+      this._selectedValueText = '';
+      return;
+    }
+    
+    if (value.length === this.items?.length) {
       this._selectedValueText = this.messages?.all || 'All';
       return;
     }
@@ -607,7 +612,8 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   _onDialogClose(e) {
     e.stopPropagation();
-
+    let triggerEl = this.renderRoot.querySelector('#selectTrigger');
+    triggerEl?.focus();
     if (this._dialogElement) {
       this.dispatchEvent(
         new CustomEvent('dw-multi-select-closed', {
