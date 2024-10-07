@@ -14,7 +14,7 @@ import './dw-multi-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, debounce, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
+import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
@@ -473,7 +473,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this._valueSet = new Set();
     this._preSelectedItemsSet = new Set();
     this._value = [];
-    this._cancelledByEsc = false;
+    this._cancelledByUser = false; // True when cancelled by user, (On click cancel or Press esc).
   }
 
   willUpdate(props) {
@@ -536,12 +536,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       ${this.type === 'fit' || this.type === 'modal'
         ? html`<div class="header-title">
             <div class="title">
-              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" dismiss></dw-icon-button>` : ''}
+              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" @click=${this._onCancel}></dw-icon-button>` : ''}
               <div class="heading">
                 ${this.heading}
                 ${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
               </div>
-              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onclose}></dw-icon-button>` : ''}
+              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onCancel}></dw-icon-button>` : ''}
             </div>
           </div>`
         : ''}
@@ -896,7 +896,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       if (this._query) {
         this._query = '';
       } else {
-        this._cancelledByEsc = true;
+        this._cancelledByUser = true;
         this.close();
       }
       return;
@@ -1005,14 +1005,14 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
-  _onclose() {
-    this._cancelledByEsc = true;
+  _onCancel() {
+    this._cancelledByUser = true;
     this.close();
   }
 
   _onDialogClosed(e) {
     super._onDialogClosed(e);
-    if (this._cancelledByEsc) {
+    if (this._cancelledByUser) {
       return;
     }
     this.dispatchEvent(new CustomEvent('apply', { detail: this._value }));
