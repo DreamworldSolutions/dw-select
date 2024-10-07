@@ -515,7 +515,12 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     if (!this.items) return;
     
     const value = e ? e.detail : this.value || [];
-    if (isEmpty(value) || value.length === this.items?.length) {
+    if (isEmpty(value)) {
+      this._selectedValueText = '';
+      return;
+    }
+    
+    if (value.length === this.items?.length) {
       this._selectedValueText = this.messages?.all || 'All';
       return;
     }
@@ -536,12 +541,9 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       return;
     }
 
-    // Trigger element getter
-    let triggerEl = this.renderRoot.querySelector('#selectTrigger');
-
     // Set Trigger element's offSetWidth to PopOver Dialog
-    if (triggerEl) {
-      this.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
+    if (this._triggerElement) {
+      this.style.setProperty('--dw-popover-width', this._triggerElement.offsetWidth + 'px');
     }
   }
 
@@ -607,7 +609,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   _onDialogClose(e) {
     e.stopPropagation();
-
+    this._triggerElement?.focus();
     if (this._dialogElement) {
       this.dispatchEvent(
         new CustomEvent('dw-multi-select-closed', {

@@ -14,7 +14,7 @@ import './dw-multi-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, debounce, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
+import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
@@ -473,13 +473,22 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this._valueSet = new Set();
     this._preSelectedItemsSet = new Set();
     this._value = [];
-    this._cancelledByEsc = false;
+    this._cancelledByUser = false; // True when cancelled by user, (On click cancel or Press esc).
   }
 
   willUpdate(props) {
     super.willUpdate(props);
     if (props.has('items')) {
       this._virtualList = this.items?.length > VIRTUAL_LIST_MIN_LENGTH;
+    }
+
+    if (props.has('groups')) {
+      this._groups = this.groups;
+      let groupsMap = {};
+      forEach(this.groups, group => {
+        groupsMap[group.name] = group;
+      });
+      this._groupsMap = groupsMap;
     }
 
     if (props.has('value')) {
@@ -514,15 +523,6 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     if (props.has('heading') || props.has('showClose')) {
       this._showHeader = !!this.heading || this.showClose;
     }
-
-    if (props.has('groups')) {
-      this._groups = this.groups;
-      let groupsMap = {};
-      forEach(this.groups, group => {
-        groupsMap[group.name] = group;
-      });
-      this._groupsMap = groupsMap;
-    }
   }
 
   firstUpdated(props) {
@@ -536,11 +536,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       ${this.type === 'fit' || this.type === 'modal'
         ? html`<div class="header-title">
             <div class="title">
-              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" dismiss></dw-icon-button>` : ''}
+              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" @click=${this._onCancel}></dw-icon-button>` : ''}
               <div class="heading">
-                ${this.heading}${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
+                ${this.heading}
+                ${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
               </div>
-              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" dismiss></dw-icon-button>` : ''}
+              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onCancel}></dw-icon-button>` : ''}
             </div>
           </div>`
         : ''}
@@ -593,7 +594,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   get _selectAllItem() {
-    if (!this.searchable && this.items.length < 10) return;
+    if ((!this.searchable && this.items.length < 10) || this._query) return;
     const value = this._value || this.value;
     const selected = this._items.length === value.length;
     return html`<dw-list-item
@@ -888,19 +889,20 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     }
 
     const keyCode = e.keyCode || e.which;
-    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, ESC, SPACE } = KeyCode;
+    const ctrlKey = e.ctrlKey || e.metaKey;
+    const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, ESC, SPACE, TAB } = KeyCode;
 
     if (keyCode === ESC) {
       if (this._query) {
         this._query = '';
       } else {
-        this._cancelledByEsc = true;
+        this._cancelledByUser = true;
         this.close();
       }
       return;
     }
 
-    if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, SPACE].includes(keyCode)) {
+    if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, SPACE, TAB].includes(keyCode)) {
       return;
     }
 
@@ -926,7 +928,14 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       case ARROW_DOWN:
         this._moveActivated(Direction.DOWN);
         return;
+      case TAB:
+        this.close();
+        return;
       case ENTER:
+        if ( ctrlKey ) {
+          this.close();
+          return;
+        }
         if (this._activatedItem) {
           const item = this._activatedItem;
           if (item.type === ItemTypes.ITEM) {
@@ -963,7 +972,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivatedToFirstItem() {
-    if (!this._items?.length) return;
+    if (!this._items?.length || this.vkb) return;
 
     let activatedIndex = -1;
 
@@ -996,9 +1005,14 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     itemEl?.scrollIntoView(scrollOptions, scrollOptions);
   }
 
+  _onCancel() {
+    this._cancelledByUser = true;
+    this.close();
+  }
+
   _onDialogClosed(e) {
     super._onDialogClosed(e);
-    if (this._cancelledByEsc) {
+    if (this._cancelledByUser) {
       return;
     }
     this.dispatchEvent(new CustomEvent('apply', { detail: this._value }));
