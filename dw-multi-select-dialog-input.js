@@ -34,6 +34,10 @@ export class DwMultiSelectDialogInput extends LitElement {
           box-sizing: border-box;
         }
 
+        :host(:hover) {
+          border-color: var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.38));
+        }
+
         :host([_hasFocus]) {
           border: 2px solid;
           border-color: var(--mdc-theme-text-secondary-on-surface, rgba(0, 0, 0, 0.6));
