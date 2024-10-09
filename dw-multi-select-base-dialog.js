@@ -526,8 +526,10 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
   firstUpdated(props) {
     super.firstUpdated(props);
-      const inputElement = this.renderRoot.querySelector('dw-multi-select-dialog-input');
-      inputElement?.focus();
+    if (this.vkb) return;
+
+    const inputElement = this.renderRoot.querySelector('dw-multi-select-dialog-input');
+    inputElement?.focus();
   }
 
   get _headerTemplate() {

@@ -609,7 +609,9 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   _onDialogClose(e) {
     e.stopPropagation();
-    this._triggerElement?.focus();
+    if (!this._vkb) {
+      this._triggerElement?.focus();
+    }
     if (this._dialogElement) {
       this.dispatchEvent(
         new CustomEvent('dw-multi-select-closed', {
