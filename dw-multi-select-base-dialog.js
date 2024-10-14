@@ -793,7 +793,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       const index = findIndex(value, valueItem => valueItem === selectedValue);
 
       if (index >= 0) {
-        this._value = value.toSpliced(index, 1);
+        const _value = [...value];
+        _value.splice(index, 1);
+        this._value = _value;
       } else {
         this._value = [...value, selectedValue];
       }
