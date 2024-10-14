@@ -609,6 +609,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   _onDialogClose(e) {
     e.stopPropagation();
+    this._setValueText();
     if (!this._vkb) {
       this._triggerElement?.focus();
     }
