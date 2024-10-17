@@ -381,6 +381,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .opened=${this._opened}
       .type=${this._dialogType}
       .placement=${this._dialogPlacement}
+      .dense=${this.dense}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
       .appendTo=${this.renderRoot}
@@ -395,7 +396,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .queryFilter=${this.queryFilter}
       .highlightQuery=${this.highlightQuery}
       ?vkb=${this._vkb}
-      ?searchable=${this.searchable}
+      .searchable=${this.searchable}
       .renderItem=${this.renderItem}
       .renderGroupItem=${this.renderGroupItem}
       .heading=${this.heading}
@@ -517,11 +518,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     const value = e ? e.detail : this.value || [];
     if (isEmpty(value)) {
       this._selectedValueText = '';
-      return;
-    }
-    
-    if (value.length === this.items?.length) {
-      this._selectedValueText = this.messages?.all || 'All';
       return;
     }
     
