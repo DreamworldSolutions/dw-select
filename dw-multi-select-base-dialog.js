@@ -174,18 +174,18 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
         dw-multi-select-group-item {
           position: sticky;
-          top: 120px;
+          top: 112px;
           background-color: var(--mdc-theme-surface, #fff);
           z-index: 2;
         }
 
         :host(:not([searchable])) dw-multi-select-group-item,
         :host([type='modal']) dw-multi-select-group-item {
-          top: 47px;
+          top: 39px;
         }
 
         :host([type='fit']) dw-multi-select-group-item {
-          top: 156px;
+          top: 148px;
         }
 
         dw-list-item[selected] {
@@ -203,7 +203,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         }
 
         dw-list-item[semi-selected] {
-         --dw-icon-color: var(--mdc-theme-primary);
+          --dw-icon-color: var(--mdc-theme-primary);
         }
 
         dw-button {
@@ -262,8 +262,6 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         :host([type='fit']) .select-all {
           top: 108px;
         }
-
-
 
         .select-count {
           background-color: var(--mdc-theme-primary);
@@ -410,7 +408,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       showClose: { type: Boolean },
 
-      /** For select all item and other item. */
+      /** For seleact all item and other item. */
       dense: { type: Boolean },
 
       /**
@@ -571,12 +569,15 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       ${this.type === 'fit' || this.type === 'modal'
         ? html`<div class="header-title">
             <div class="title">
-              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" @click=${this._onCancel}></dw-icon-button>` : ''}
+              ${this.type === 'fit'
+                ? html`<dw-icon-button class="close-button" icon="arrow_back" @click=${this._onCancel}></dw-icon-button>`
+                : ''}
               <div class="heading">
-                ${this.heading}
-                ${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
+                ${this.heading} ${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
               </div>
-              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onCancel}></dw-icon-button>` : ''}
+              ${this.type !== 'fit'
+                ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onCancel}></dw-icon-button>`
+                : ''}
             </div>
           </div>`
         : ''}
@@ -615,7 +616,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
   get _defaultFooterTemplate() {
     if (this.type === 'popover') return;
-    const value = this.value || []
+    const value = this.value || [];
     return html`
       <dw-button unelevated ?disabled="${isEqual(this._value, value)}" size="small" @click=${this.close}>
         ${this.messages?.done || 'Done'}
@@ -806,9 +807,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     }
 
     let value = this._value || [];
-    
+
     if (value.length === this.items.length) {
-       this._value = [];
+      this._value = [];
     } else {
       this._value = map(this.items, item => this.valueProvider(item));
     }
@@ -1000,7 +1001,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         break;
 
       case ENTER:
-        if ( ctrlKey ) {
+        if (ctrlKey) {
           this.close();
           return;
         }
@@ -1028,13 +1029,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     let activatedIndex = this._activatedIndex;
     let activatedItem = this._activatedItem;
 
-    activatedIndex = direction === Direction.UP ? Math.max(-1, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
+    activatedIndex =
+      direction === Direction.UP ? Math.max(-1, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
     activatedItem = this._getItem(activatedIndex);
     if (activatedIndex === -1 || activatedItem?.type === ItemTypes.GROUP) {
       activatedIndex =
-        direction === Direction.UP
-          ? Math.max(-1, this._activatedIndex - 2)
-          : Math.min(this._activatedIndex + 2, numberOfItems);
+        direction === Direction.UP ? Math.max(-1, this._activatedIndex - 2) : Math.min(this._activatedIndex + 2, numberOfItems);
     }
 
     this._activatedIndex = activatedIndex;
