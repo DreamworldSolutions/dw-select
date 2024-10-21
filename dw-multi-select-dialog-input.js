@@ -161,13 +161,6 @@ export class DwMultiSelectDialogInput extends LitElement {
     this.dispatchEvent(new CustomEvent('input-focus'));
   }
 
-  focus() {
-    setTimeout(() => {
-      const input = this.renderRoot.querySelector('input');
-      input?.focus();
-    }, 0);
-  }
-
   _onBlur() {
     this._hasFocus = false;
     this.dispatchEvent(new CustomEvent('input-blur'));

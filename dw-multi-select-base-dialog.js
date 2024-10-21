@@ -91,6 +91,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
         :host([type='modal']) .mdc-dialog .mdc-dialog__title {
           ${unsafeCSS(TypographyLiterals.headline6)};
+          padding-bottom: 8px;
         }
 
         :host([type='popover']) header {
@@ -105,6 +106,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           flex: 1;
           display: flex;
           align-items: center;
+          gap: 12px;
+          ${unsafeCSS(TypographyLiterals.headline6)};
+        }
+
+        :host(:not([searchable])) header {
+          padding: 0px;
         }
 
         :host([type='modal']) .mdc-dialog__title::before {
@@ -140,17 +147,13 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           gap: 4px;
         }
 
-        .heading {
-          display: flex;
-          gap: 12px;
-        }
-
         .title {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 4px;
           flex: 1;
           color: var(--mdc-theme-text-primary-on-surface, rgba(0, 0, 0, 0.87));
+          padding-bottom: 4px;
         }
 
         :host(:not([type='fit'])) .title {
@@ -169,6 +172,22 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           box-sizing: border-box;
         }
 
+        dw-multi-select-group-item {
+          position: sticky;
+          top: 112px;
+          background-color: var(--mdc-theme-surface, #fff);
+          z-index: 2;
+        }
+
+        :host(:not([searchable])) dw-multi-select-group-item,
+        :host([type='modal']) dw-multi-select-group-item {
+          top: 39px;
+        }
+
+        :host([type='fit']) dw-multi-select-group-item {
+          top: 148px;
+        }
+
         dw-list-item[selected] {
           --mdc-theme-text-primary: var(--mdc-theme-primary, #6200ee);
         }
@@ -181,6 +200,10 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         dw-list-item:not([disabled])[selected][activated]::before {
           background-color: var(--dw-select-item-selected-bg-color, var(--mdc-theme-primary, #6200ee));
           opacity: 0.12;
+        }
+
+        dw-list-item[semi-selected] {
+          --dw-icon-color: var(--mdc-theme-primary);
         }
 
         dw-button {
@@ -214,7 +237,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           display: flex;
           align-items: center;
           height: var(--dw-fit-dialog-content-action-button-height, 56px);
-          padding: var(--dw-fit-dialog-content-action-button-padding, 0 16px);
+          padding: var(--dw-fit-dialog-content-action-button-padding, 8px 16px);
         }
 
         :host(:not([input-focused])) .content-action-button {
@@ -225,12 +248,25 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
         .select-all {
           border-bottom: 1px solid var(--mdc-theme-divider-color, rgba(0, 0, 0, 0.12));
+          position: sticky;
+          top: 72px;
+          z-index: 2;
+          background-color: var(--mdc-theme-surface, #ffffff);
+        }
+
+        :host(:not([searchable])) .select-all,
+        :host([type='modal']) .select-all {
+          top: -1px;
+        }
+
+        :host([type='fit']) .select-all {
+          top: 108px;
         }
 
         .select-count {
           background-color: var(--mdc-theme-primary);
           border-radius: 50px;
-          width: 24px;
+          min-width: 16px;
           height: 24px;
           ${unsafeCSS(TypographyLiterals.subtitle2)};
           display: flex;
@@ -238,6 +274,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           justify-content: center;
           color: var(--mdc-theme-background, #ffffff);
           align-items: center;
+          padding: 0px 4px;
         }
       `,
     ];
@@ -371,6 +408,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       showClose: { type: Boolean },
 
+      /** For seleact all item and other item. */
+      dense: { type: Boolean },
+
       /**
        * true when close button or heading is provided.
        * use for set styles
@@ -390,7 +430,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
       /**
        * index of activated Item
-       * default: -1
+       * default: -2
        */
       _activatedIndex: { type: Number },
 
@@ -465,7 +505,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     this.valueExpression = '_id';
     this.heading = '';
     this.showClose = false;
-    this._activatedIndex = 0;
+    this._activatedIndex = -2;
     this.messages = defaultMessages;
     this.popoverOffset = [0, 4];
     this.OPEN_ANIMATION_TIME = 300; //In milliseconds.
@@ -524,25 +564,20 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     }
   }
 
-  firstUpdated(props) {
-    super.firstUpdated(props);
-    if (this.vkb) return;
-
-    const inputElement = this.renderRoot.querySelector('dw-multi-select-dialog-input');
-    inputElement?.focus();
-  }
-
   get _headerTemplate() {
     return html`
       ${this.type === 'fit' || this.type === 'modal'
         ? html`<div class="header-title">
             <div class="title">
-              ${this.type === 'fit' ? html`<dw-icon-button class="close-button" icon="arrow_back" @click=${this._onCancel}></dw-icon-button>` : ''}
+              ${this.type === 'fit'
+                ? html`<dw-icon-button class="close-button" icon="arrow_back" @click=${this._onCancel}></dw-icon-button>`
+                : ''}
               <div class="heading">
-                ${this.heading}
-                ${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
+                ${this.heading} ${this._value.length > 0 ? html`<span class="select-count">${this._value.length}</span>` : ''}
               </div>
-              ${this.type !== 'fit' ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onCancel}></dw-icon-button>` : ''}
+              ${this.type !== 'fit'
+                ? html`<dw-icon-button class="close-button" icon="close" @click=${this._onCancel}></dw-icon-button>`
+                : ''}
             </div>
           </div>`
         : ''}
@@ -581,8 +616,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
   get _defaultFooterTemplate() {
     if (this.type === 'popover') return;
+    const value = this.value || [];
     return html`
-      <dw-button filled ?disabled="${isEqual(this._value, this.value)}" size="small" @click=${this.close}>
+      <dw-button unelevated ?disabled="${isEqual(this._value, value)}" size="small" @click=${this.close}>
         ${this.messages?.done || 'Done'}
       </dw-button>
     `;
@@ -599,16 +635,18 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     const value = this._value || this.value;
     const selected = this.items.length === value.length;
     return html`<dw-list-item
+      ?dense=${this.dense}
       id="select-all"
       class="select-all"
+      ?semi-selected=${!isEmpty(this._value) && !selected}
       title1=${this.messages?.selectAll || 'Select All'}
       @click=${() => this._onSelectAll()}
       .selectionMode=${'none'}
       .selected=${selected}
       ?activated=${this._activatedIndex === -1}
       .focusable=${false}
-      .trailingIcon=${selected ? 'indeterminate_check_box' : 'check_box_outline_blank'}
-      .leadingIcon=${selected ? 'indeterminate_check_box' : 'check_box_outline_blank'}
+      .trailingIcon=${this._getSelectAllItemIcon(selected)}
+      .leadingIcon=${this._getSelectAllItemIcon(selected)}
       ?hasLeadingIcon=${!this.hasItemLeadingIcon}
       ?hasTrailingIcon=${this.hasItemLeadingIcon}
     ></dw-list-item>`;
@@ -659,6 +697,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
       return html`
         <dw-list-item
+          ?dense=${this.dense}
           class="list-item"
           title1=${this.itemLabelProvider(item.value)}
           .highlight=${this.highlightQuery ? this._query : ''}
@@ -699,6 +738,18 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
   _onInputBlur() {
     this._inputFocused = false;
+  }
+
+  _getSelectAllItemIcon(selected) {
+    if (selected) {
+      return 'check_box';
+    }
+
+    if (!isEmpty(this._value)) {
+      return 'indeterminate_check_box';
+    }
+
+    return 'check_box_outline_blank';
   }
 
   _getLeadingIcon(item, selected) {
@@ -751,11 +802,14 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   _onSelectAll() {
     if (!this.items) return;
 
-    this._activatedIndex = -1;
+    if (!this.vkb) {
+      this._activatedIndex = -1;
+    }
+
     let value = this._value || [];
-    
+
     if (value.length === this.items.length) {
-       this._value = [];
+      this._value = [];
     } else {
       this._value = map(this.items, item => this.valueProvider(item));
     }
@@ -947,7 +1001,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         break;
 
       case ENTER:
-        if ( ctrlKey ) {
+        if (ctrlKey) {
           this.close();
           return;
         }
@@ -975,13 +1029,12 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     let activatedIndex = this._activatedIndex;
     let activatedItem = this._activatedItem;
 
-    activatedIndex = direction === Direction.UP ? Math.max(-1, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
+    activatedIndex =
+      direction === Direction.UP ? Math.max(-1, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
     activatedItem = this._getItem(activatedIndex);
     if (activatedIndex === -1 || activatedItem?.type === ItemTypes.GROUP) {
       activatedIndex =
-        direction === Direction.UP
-          ? Math.max(-1, this._activatedIndex - 2)
-          : Math.min(this._activatedIndex + 2, numberOfItems);
+        direction === Direction.UP ? Math.max(-1, this._activatedIndex - 2) : Math.min(this._activatedIndex + 2, numberOfItems);
     }
 
     this._activatedIndex = activatedIndex;
