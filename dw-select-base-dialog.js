@@ -19,6 +19,7 @@ import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
+import { sortItems } from './sort-items.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
 const VIRTUAL_LIST_AUTO_SCROLL_DELAY = 500;
@@ -201,6 +202,11 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       searchable: { type: Boolean },
 
       /**
+       * Fields to be searched (except valueExpression)
+       */
+      extraSearchFields: { type: Array },
+
+      /**
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       layout: { type: String },
@@ -254,7 +260,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       /**
        * Provides value that actually represent in list items
        */
-      valueProvider: { type: Function },
+      valueProvider: { type: Object },
 
       /**
        * Expression of the value
@@ -267,7 +273,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * current `value`.
        * default: `(item) -> item`.
        */
-      valueTextProvider: { type: Function },
+      valueTextProvider: { type: Object },
+
+      /**
+       * Function to provide the value of the item based on valueTextProvider.
+       */
+      getItemValue: { type: Object },
 
       /**
        * Messages of for noRecords and noMatching
@@ -324,7 +335,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * Input property. Default value is `true`.
        * When `false`, doesn't highlight matched words.
        */
-      highlightQuery: { type: Boolean},
+      highlightQuery: { type: Boolean },
 
       /**
        * index of activated Item
@@ -381,7 +392,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        */
       allowNewValue: { type: Boolean },
 
-      _hidden: { type: Boolean, reflect: true, attribute: 'hidden'},
+      _hidden: { type: Boolean, reflect: true, attribute: 'hidden' },
 
       /**
        * Enum property
@@ -432,7 +443,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' },
 
-      interactive: { type: Boolean }
+      interactive: { type: Boolean },
     };
   }
 
@@ -530,7 +541,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._selectedValueText = this._getTextByItem(selectedItem);
     }
 
-    if(this.allowNewValue && changedProps.has('_items') && this.type === 'popover') {
+    if (this.allowNewValue && changedProps.has('_items') && this.type === 'popover') {
       this._hidden = !this._items?.length;
     }
   }
@@ -603,7 +614,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     return html`
       ${this._items.length === 0 ? this._renderNoRecord : this._renderList}
-      ${this.type === 'fit' && !!this.dialogFooterTemplate ? html`<div class="content-action-button">${this.dialogFooterTemplate}</div>` : ''}
+      ${this.type === 'fit' && !!this.dialogFooterTemplate
+        ? html`<div class="content-action-button">${this.dialogFooterTemplate}</div>`
+        : ''}
     `;
   }
 
@@ -642,16 +655,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       const isSelected = this._isItemSelected(selectedItemIndex, index);
       const isActivated = this._isItemActivated(index);
       return this._renderItem(item, isSelected, isActivated, this._query);
-    }
-    if(!this._virtualList) {
+    };
+    if (!this._virtualList) {
       return html`<div id="list">${repeat(this._items, renderItem)}</div>`;
     }
 
-    return html`<lit-virtualizer
-      id="list"
-      .items=${this._items}
-      .renderItem=${renderItem}
-    ></lit-virtualizer>`
+    return html`<lit-virtualizer id="list" .items=${this._items} .renderItem=${renderItem}></lit-virtualizer>`;
   }
 
   _renderItem(item, selected, activated, query) {
@@ -666,7 +675,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`
         <dw-list-item
           class="list-item"
-          title1=${this._getItemValue(item.value)}
+          title1=${this.getItemValue(item.value)}
           .highlight=${this.highlightQuery ? this._query : ''}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
@@ -796,9 +805,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
           if (!group.collapsible || !group.collapsed) {
             // Push every items
-            filteredArray.forEach(item => {
-              array.push({ type: ItemTypes.ITEM, value: item });
+            let arr = [];
+            forEach(filteredArray, item => {
+              arr.push({ type: ItemTypes.ITEM, value: item });
             });
+
+            if (this._query) {
+              arr = sortItems(arr, this.getItemValue.bind(this), this.extraSearchFields, this._query);
+            }
+
+            array.push(...arr);
           }
         }
       });
@@ -806,9 +822,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
+      let arr = [];
       sortedArray.forEach(item => {
-        array.push({ type: ItemTypes.ITEM, value: item });
+        arr.push({ type: ItemTypes.ITEM, value: item });
       });
+
+      if (this._query) {
+        arr = sortItems(arr, this.getItemValue.bind(this), this.extraSearchFields, this._query);
+      }
+
+      array.push(...arr);
     }
 
     const aPrependItems = [];
@@ -897,7 +920,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
 
     // `dw-popover-dialog` closes itself on `ESC` so calls it only for non-searchable select.
-    if(!this.searchable) {
+    if (!this.searchable) {
       super.__onKeyDown(e);
     }
 
@@ -905,12 +928,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     const { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER, TAB } = KeyCode;
 
     // On TAB, close when interactive false.
-    if(keyCode === TAB && !this.interactive) {
-      const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0]
+    if (keyCode === TAB && !this.interactive) {
+      const lastOpenedDialog = window.__dwPopoverInstances.slice(-1)[0];
       lastOpenedDialog && lastOpenedDialog.close();
       return;
     }
-    
+
     if (![ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER].includes(keyCode)) {
       return;
     }
@@ -929,7 +952,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         this._moveActivated(Direction.DOWN);
         return;
       case ENTER:
-        if (this._activatedItem ) {
+        if (this._activatedItem) {
           const item = this._activatedItem;
           if (item.type === ItemTypes.ITEM) {
             this._onItemClick(item.value);
@@ -948,17 +971,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     const numberOfItems = this._items.length;
     if (numberOfItems === 0) return;
 
-    if(direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
+    if (direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
 
-    if(direction === Direction.DOWN && this._activatedIndex === (numberOfItems - 1) ) return;
+    if (direction === Direction.DOWN && this._activatedIndex === numberOfItems - 1) return;
 
     let activatedIndex = this._activatedIndex;
     let activatedItem = this._activatedItem;
 
-    activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex -1 ) : Math.min(this._activatedIndex + 1, numberOfItems);
+    activatedIndex = direction === Direction.UP ? Math.max(0, this._activatedIndex - 1) : Math.min(this._activatedIndex + 1, numberOfItems);
     activatedItem = this._getItem(activatedIndex);
-    if(activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
-      activatedIndex = direction === Direction.UP ? Math.max(this._firstItemIndex, this._activatedIndex -2 ) : Math.min(this._activatedIndex + 2, numberOfItems);
+    if (activatedItem.type === ItemTypes.GROUP && !activatedItem.value.collapsible) {
+      activatedIndex =
+        direction === Direction.UP
+          ? Math.max(this._firstItemIndex, this._activatedIndex - 2)
+          : Math.min(this._activatedIndex + 2, numberOfItems);
     }
 
     this._activatedIndex = activatedIndex;
@@ -966,7 +992,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivatedToFirstItem() {
-    if(!this._items?.length) return;
+    if (!this._items?.length) return;
 
     let activatedIndex = -1;
 
@@ -1003,9 +1029,12 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       this._activatedIndex++;
       activatedItem = this._getItem(this._activatedIndex);
     }
-    setTimeout(() => {
+    setTimeout(
+      () => {
         this._scrollToIndex(this._activatedIndex);
-      }, this._virtualList ? VIRTUAL_LIST_AUTO_SCROLL_DELAY : REGULAR_LIST_SCROLL_DELAY);
+      },
+      this._virtualList ? VIRTUAL_LIST_AUTO_SCROLL_DELAY : REGULAR_LIST_SCROLL_DELAY
+    );
   }
 
   /**
@@ -1014,7 +1043,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
    * @param {String} position
    */
   _scrollToIndex(index) {
-    if(index < 0) return;
+    if (index < 0) return;
 
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
     const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'center' };
