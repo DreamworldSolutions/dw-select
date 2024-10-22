@@ -14,7 +14,7 @@ import './dw-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, debounce, filter, orderBy, forEach } from 'lodash-es';
+import { get, debounce, filter, orderBy, forEach, sortBy } from 'lodash-es';
 import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
@@ -796,9 +796,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
           if (!group.collapsible || !group.collapsed) {
             // Push every items
+            let arr = [];
             filteredArray.forEach(item => {
-              array.push({ type: ItemTypes.ITEM, value: item });
+              arr.push({ type: ItemTypes.ITEM, value: item });
             });
+
+            if (this._query) {
+              const query = this._query.trim().toLowerCase()
+              const queryWords = query.split(" ");
+              arr = sortBy(arr, (item) => {
+                return this._computeOrder(item, query, queryWords);
+              });
+            }
+
+            array.push(...arr);
           }
         }
       });
@@ -806,9 +817,20 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
+      let arr = [];
       sortedArray.forEach(item => {
-        array.push({ type: ItemTypes.ITEM, value: item });
+        arr.push({ type: ItemTypes.ITEM, value: item });
       });
+
+      if (this._query) {
+        const query = this._query.trim().toLowerCase()
+        const queryWords = query.split(" ");
+        arr = sortBy(arr, (item) => {
+          return this._computeOrder(item, query, queryWords);
+        });
+      }
+
+      array.push(...arr);
     }
 
     const aPrependItems = [];
@@ -826,6 +848,45 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
     return this.groupSelector(item);
   }
+  /**
+   * Computes the order of an item in a filtered list based on the search query.
+   *
+   * @param {Object} item - The item to compute the order for.
+   * @param {string} query - The search query.
+   * @param {string[]} queryWords - The words in the search query.
+   * @returns {number} The computed order of the item.
+   */
+  _computeOrder(item, query, queryWords) {
+    const itemText = this._getItemValue(item.value).toLowerCase();
+    const itemWords = itemText.split(" ");
+    let weight = 5;
+
+    if (itemText.startsWith(query)) {
+      weight -= 1;
+    }
+
+    forEach(queryWords, queryWord => {
+        if (itemText.startsWith(queryWord)) {
+            weight -= 1;
+        }
+       
+        forEach(itemWords, itemWord => {
+          if (queryWord === itemWord) {
+            weight -= 1;
+          }
+
+          if (itemWord.startsWith(queryWord)) {
+            weight -= 1;
+          }
+
+          if (itemWord.includes(queryWord)) {
+            weight -= 1;
+          }
+        } )
+    });
+
+    return weight;
+}
 
   /**
    * Trigger when actual user intract

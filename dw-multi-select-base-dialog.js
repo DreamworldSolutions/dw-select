@@ -14,7 +14,7 @@ import './dw-multi-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
+import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual, sortBy } from 'lodash-es';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
@@ -366,6 +366,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        * Provides value that actually represent in list items
        */
       valueProvider: { type: Object },
+
+      valueTextProvider: { type: Object },
 
       /**
        * Expression of the value
@@ -889,18 +891,40 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           }
 
           // Push every items
+          let arr = [];
           filteredArray.forEach(item => {
-            array.push({ type: ItemTypes.ITEM, value: item });
+            arr.push({ type: ItemTypes.ITEM, value: item });
           });
+
+          if (this._query) {
+            const query = this._query.trim().toLowerCase()
+            const queryWords = query.split(" ");
+            arr = sortBy(arr, (item) => {
+              return this._computeOrder(item, query, queryWords);
+            });
+          }
+
+          array.push(...arr);
         }
       });
     }
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
+      let arr = [];
       filteredList.forEach(item => {
-        array.push({ type: ItemTypes.ITEM, value: item });
+        arr.push({ type: ItemTypes.ITEM, value: item });
       });
+
+      if (this._query) {
+        const query = this._query.trim().toLowerCase()
+        const queryWords = query.split(" ");
+        arr = sortBy(arr, (item) => {
+          return this._computeOrder(item, query, queryWords);
+        });
+      }
+  
+      array.push(...arr);
     }
 
     this._items = array;
@@ -909,6 +933,46 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   _getGroupValue(item) {
     return this.groupSelector(item) || item;
   }
+
+  /**
+   * Computes the order of an item in a filtered list based on the search query.
+   *
+   * @param {Object} item - The item to compute the order for.
+   * @param {string} query - The search query.
+   * @param {string[]} queryWords - The words in the search query.
+   * @returns {number} The computed order of the item.
+   */
+  _computeOrder(item, query, queryWords) {
+    const itemText = this.valueTextProvider(item.value).toLowerCase();
+    const itemWords = itemText.split(" ");
+    let weight = 5;
+
+    if (itemText.startsWith(query)) {
+      weight -= 1;
+    }
+
+    forEach(queryWords, queryWord => {
+        if (itemText.startsWith(queryWord)) {
+            weight -= 1;
+        }
+       
+        forEach(itemWords, itemWord => {
+          if (queryWord === itemWord) {
+            weight -= 1;
+          }
+
+          if (itemWord.startsWith(queryWord)) {
+            weight -= 1;
+          }
+
+          if (itemWord.includes(queryWord)) {
+            weight -= 1;
+          }
+        } )
+    });
+
+    return weight;
+}
 
   /**
    * Triggered on input or clear query string.

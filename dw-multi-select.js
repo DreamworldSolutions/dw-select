@@ -388,6 +388,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .items="${this.items}"
       .layout=${this._layout}
       .valueProvider=${this._valueProvider}
+      .valueTextProvider==${this.valueTextProvider}
       .valueExpression=${this.valueExpression}
       .valueEquator=${this.valueEquator}
       .groups=${this.groups}
