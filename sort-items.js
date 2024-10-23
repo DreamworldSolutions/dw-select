@@ -19,7 +19,10 @@ export const computeOrder = (items, valueTextProvider, extraSearchFileds, query)
 
     if (extraSearchFileds) {
       forEach(extraSearchFileds, key => {
-        itemText = `${itemText} ${get(item, `${key}`)}`;
+        const value = get(item, `${key}`);
+        if (value) {
+          itemText += ` ${value.toLowerCase()}`;
+        }
       });
     }
 
