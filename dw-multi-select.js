@@ -152,6 +152,11 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       valueProvider: { type: Object },
 
       /**
+       * Input property. An array of additional fields to use for search filtering.
+       */
+      extraSearchFileds: { type: Array },
+
+      /**
        * An expression (dot-separated properties) to be applied on Item, to find it's value.
        * When `valueProvider` is specified, this is ignored. When `valueProvider` isn't specified
        * and this is specified, `valueProvider` is built using this.
@@ -387,6 +392,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .appendTo=${this.renderRoot}
       .items="${this.items}"
       .layout=${this._layout}
+      .extraSearchFileds=${this.extraSearchFields}
       .valueProvider=${this._valueProvider}
       .valueTextProvider==${this.valueTextProvider}
       .valueExpression=${this.valueExpression}

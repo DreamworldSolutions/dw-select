@@ -19,6 +19,7 @@ import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
+import { computeOrder } from './sort-items.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
 const VIRTUAL_LIST_AUTO_SCROLL_DELAY = 500;
@@ -254,7 +255,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       /**
        * Provides value that actually represent in list items
        */
-      valueProvider: { type: Function },
+      valueProvider: { type: Object },
 
       /**
        * Expression of the value
@@ -267,7 +268,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * current `value`.
        * default: `(item) -> item`.
        */
-      valueTextProvider: { type: Function },
+      valueTextProvider: { type: Object },
+
+      getItemValue: { type: Object },
 
       /**
        * Messages of for noRecords and noMatching
@@ -374,6 +377,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * A function to customize search.
        */
       queryFilter: Function,
+
+      extraSearchFileds: { type: Array },
 
       /**
        * Can be used only when “searchable=true”
@@ -666,7 +671,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`
         <dw-list-item
           class="list-item"
-          title1=${this._getItemValue(item.value)}
+          title1=${this.getItemValue(item.value)}
           .highlight=${this.highlightQuery ? this._query : ''}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
@@ -802,11 +807,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
             });
 
             if (this._query) {
-              const query = this._query.trim().toLowerCase()
-              const queryWords = query.split(" ");
-              arr = sortBy(arr, (item) => {
-                return this._computeOrder(item, query, queryWords);
-              });
+              arr = computeOrder(arr, this.getItemValue.bind(this), this.extraSearchFileds, this._query);
             }
 
             array.push(...arr);
@@ -823,11 +824,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       });
 
       if (this._query) {
-        const query = this._query.trim().toLowerCase()
-        const queryWords = query.split(" ");
-        arr = sortBy(arr, (item) => {
-          return this._computeOrder(item, query, queryWords);
-        });
+        arr = computeOrder(arr, this.getItemValue.bind(this), this.extraSearchFileds, this._query);
       }
 
       array.push(...arr);
@@ -848,45 +845,6 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     }
     return this.groupSelector(item);
   }
-  /**
-   * Computes the order of an item in a filtered list based on the search query.
-   *
-   * @param {Object} item - The item to compute the order for.
-   * @param {string} query - The search query.
-   * @param {string[]} queryWords - The words in the search query.
-   * @returns {number} The computed order of the item.
-   */
-  _computeOrder(item, query, queryWords) {
-    const itemText = this._getItemValue(item.value).toLowerCase();
-    const itemWords = itemText.split(" ");
-    let weight = 5;
-
-    if (itemText.startsWith(query)) {
-      weight -= 1;
-    }
-
-    forEach(queryWords, queryWord => {
-        if (itemText.startsWith(queryWord)) {
-            weight -= 1;
-        }
-       
-        forEach(itemWords, itemWord => {
-          if (queryWord === itemWord) {
-            weight -= 1;
-          }
-
-          if (itemWord.startsWith(queryWord)) {
-            weight -= 1;
-          }
-
-          if (itemWord.includes(queryWord)) {
-            weight -= 1;
-          }
-        } )
-    });
-
-    return weight;
-}
 
   /**
    * Trigger when actual user intract
