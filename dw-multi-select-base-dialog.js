@@ -14,10 +14,11 @@ import './dw-multi-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 'lodash-es';
+import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual, sortBy } from 'lodash-es';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
+import { computeOrder } from './sort-items.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
 const defaultMessages = {
@@ -367,6 +368,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       valueProvider: { type: Object },
 
+      valueTextProvider: { type: Object },
+
       /**
        * Expression of the value
        * default: _id
@@ -467,6 +470,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        * A function to customize search.
        */
       queryFilter: { type: Object },
+
+      extraSearchFileds: { type: Array },
 
       /**
        * Set this to configure custom logic to detect whether value is changed or not.
@@ -889,18 +894,32 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           }
 
           // Push every items
+          let arr = [];
           filteredArray.forEach(item => {
-            array.push({ type: ItemTypes.ITEM, value: item });
+            arr.push({ type: ItemTypes.ITEM, value: item });
           });
+
+          if (this._query) {
+            arr = computeOrder(arr, this.itemLabelProvider.bind(this), this.extraSearchFileds, this._query);
+          }
+
+          array.push(...arr);
         }
       });
     }
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
+      let arr = [];
       filteredList.forEach(item => {
-        array.push({ type: ItemTypes.ITEM, value: item });
+        arr.push({ type: ItemTypes.ITEM, value: item });
       });
+
+      if (this._query) {
+        arr = computeOrder(arr, this.itemLabelProvider.bind(this), this.extraSearchFileds, this._query);
+      }
+  
+      array.push(...arr);
     }
 
     this._items = array;
@@ -909,6 +928,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   _getGroupValue(item) {
     return this.groupSelector(item) || item;
   }
+
 
   /**
    * Triggered on input or clear query string.

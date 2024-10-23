@@ -14,11 +14,12 @@ import './dw-select-group-item';
 import * as TypographyLiterals from '@dreamworld/material-styles/typography-literals';
 
 // Lodash Methods
-import { get, debounce, filter, orderBy, forEach } from 'lodash-es';
+import { get, debounce, filter, orderBy, forEach, sortBy } from 'lodash-es';
 import { NEW_VALUE_STATUS } from './utils';
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
+import { computeOrder } from './sort-items.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
 const VIRTUAL_LIST_AUTO_SCROLL_DELAY = 500;
@@ -254,7 +255,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       /**
        * Provides value that actually represent in list items
        */
-      valueProvider: { type: Function },
+      valueProvider: { type: Object },
 
       /**
        * Expression of the value
@@ -267,7 +268,9 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * current `value`.
        * default: `(item) -> item`.
        */
-      valueTextProvider: { type: Function },
+      valueTextProvider: { type: Object },
+
+      getItemValue: { type: Object },
 
       /**
        * Messages of for noRecords and noMatching
@@ -374,6 +377,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
        * A function to customize search.
        */
       queryFilter: Function,
+
+      extraSearchFileds: { type: Array },
 
       /**
        * Can be used only when “searchable=true”
@@ -666,7 +671,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       return html`
         <dw-list-item
           class="list-item"
-          title1=${this._getItemValue(item.value)}
+          title1=${this.getItemValue(item.value)}
           .highlight=${this.highlightQuery ? this._query : ''}
           @click=${() => this._onItemClick(item.value)}
           ?activated=${activated}
@@ -796,9 +801,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
           if (!group.collapsible || !group.collapsed) {
             // Push every items
+            let arr = [];
             filteredArray.forEach(item => {
-              array.push({ type: ItemTypes.ITEM, value: item });
+              arr.push({ type: ItemTypes.ITEM, value: item });
             });
+
+            if (this._query) {
+              arr = computeOrder(arr, this.getItemValue.bind(this), this.extraSearchFileds, this._query);
+            }
+
+            array.push(...arr);
           }
         }
       });
@@ -806,9 +818,16 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
+      let arr = [];
       sortedArray.forEach(item => {
-        array.push({ type: ItemTypes.ITEM, value: item });
+        arr.push({ type: ItemTypes.ITEM, value: item });
       });
+
+      if (this._query) {
+        arr = computeOrder(arr, this.getItemValue.bind(this), this.extraSearchFileds, this._query);
+      }
+
+      array.push(...arr);
     }
 
     const aPrependItems = [];
