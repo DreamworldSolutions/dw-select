@@ -241,6 +241,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
         }
 
         :host(:not([input-focused])) .content-action-button {
+          z-index: 2;
           position: sticky;
           bottom: 0;
           background-color: var(--mdc-theme-background, #ffffff);
@@ -1019,8 +1020,8 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivated(direction) {
-    const numberOfItems = this._items.length;
-    if (numberOfItems === 0) return;
+    const numberOfItems = this._items?.length;
+    if (!numberOfItems) return;
 
     if (direction === Direction.UP && this._activatedIndex === -1) return;
 
@@ -1082,7 +1083,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
 
   _onDialogClosed(e) {
     super._onDialogClosed(e);
-    if (this._cancelledByUser) {
+    if (this._cancelledByUser || this.type === 'modal' && e.detail.action === 'close') {
       return;
     }
     this.dispatchEvent(new CustomEvent('apply', { detail: this._value }));
