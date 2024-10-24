@@ -1141,7 +1141,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (!this.allowNewValue) {
       this._resetToCurValue();
     } else {
-      const matchedItem = find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
+      const matchedItem = this._newValueMatchedItemProvider();
       if (matchedItem) {
         this.value = this._valueProvider(matchedItem.value);
         this._setSelectedValueText();
@@ -1154,6 +1154,14 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
     await this.updateComplete;
     this.reportValidity();
+  }
+
+  _newValueMatchedItemProvider() {
+    if (this.newValueMatchedItemProvider) {
+      return this.newValueMatchedItemProvider();
+    }
+
+    return find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
   }
 
   _resetToCurValue() {
