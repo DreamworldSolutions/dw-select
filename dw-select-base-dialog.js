@@ -945,8 +945,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
   }
 
   _moveActivated(direction) {
-    const numberOfItems = this._items.length;
-    if (numberOfItems === 0) return;
+    const numberOfItems = this._items?.length;
+    if (!numberOfItems) return;
 
     if(direction === Direction.UP && this._activatedIndex === this._firstItemIndex) return;
 
