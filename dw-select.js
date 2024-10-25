@@ -158,6 +158,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       searchable: { type: Boolean },
 
       /**
+       * Input property. An array of additional fields to use for search filtering.
+       */
+      extraSearchFields: { type: Array },
+
+      /**
        * `vkb` stands for Virtual KeyBoard.
        * Whether the Device has Virtual KeyBoard.
        */
@@ -195,7 +200,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * A function `(item) -> value` to indetify value of any item.
        */
-      valueProvider: { type: Function },
+      valueProvider: { type: Object },
 
       /**
        * An expression (dot-separated properties) to be applied on Item, to find it's value.
@@ -208,14 +213,14 @@ export class DwSelect extends DwFormElement(LitElement) {
       /**
        * Computed property from valueProvider and valueExpression
        */
-      _valueProvider: { type: Function },
+      _valueProvider: { type: Object },
 
       /**
        * A Function `(item) -> text` to find the Text to be shown (in input), corresonding to the
        * current `value`.
        * default: `(item) -> item`.
        */
-      valueTextProvider: { type: Function },
+      valueTextProvider: { type: Object },
 
       /**
        * By default, the pop-over dialog is rendered in the width of the host element
@@ -261,7 +266,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * It must return a Boolean.
        * Function receives 2 arguments: (v1, v2). Should return `true` when both values are same otherwise `false`.
        */
-      valueEquator: { type: Function },
+      valueEquator: { type: Object },
 
       /**
        * Set it if you would like to show a heading on the bottom-sheet dialog.
@@ -307,7 +312,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        *
        * returns always boolean
        */
-      queryFilter: { type: Function },
+      queryFilter: { type: Object },
 
       /**
        * Whether dialog is opened or not.
@@ -727,6 +732,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .groupExpression=${this.groupExpression}
       .queryFilter=${this.queryFilter}
       ._query=${this._query}
+      .extraSearchFields=${this.extraSearchFields}
       .highlightQuery=${this.highlightQuery}
       ?vkb=${this._vkb}
       ?searchable=${this.searchable}
@@ -759,7 +765,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @clear-selection="${this._onClearSelection}"
       @query-change="${this._onDialogQueryChanged}"
       .messages="${this.messages}"
-      ._getItemValue=${this._getItemValue}
+      .getItemValue=${this._getItemValue}
     ></dw-select-base-dialog>`;
   }
 

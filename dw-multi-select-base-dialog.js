@@ -18,6 +18,7 @@ import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 
 
 // Utils
 import { Direction, KeyCode } from './utils.js';
+import { sortItems } from './sort-items.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
 const defaultMessages = {
@@ -311,6 +312,11 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       searchable: { type: Boolean, reflect: true },
 
       /**
+       * Fields to be searched (except valueExpression)
+       */
+      extraSearchFields: { type: Array },
+
+      /**
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       layout: { type: String },
@@ -409,7 +415,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
        */
       showClose: { type: Boolean },
 
-      /** For seleact all item and other item. */
+      /** For select all item and other item. */
       dense: { type: Boolean },
 
       /**
@@ -890,18 +896,32 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           }
 
           // Push every items
-          filteredArray.forEach(item => {
-            array.push({ type: ItemTypes.ITEM, value: item });
+          let arr = [];
+          forEach(filteredArray, item => {
+            arr.push({ type: ItemTypes.ITEM, value: item });
           });
+
+          if (this._query) {
+            arr = sortItems(arr, this.itemLabelProvider.bind(this), this.extraSearchFields, this._query);
+          }
+
+          array.push(...arr);
         }
       });
     }
 
     // If group does not exist
     if (!Array.isArray(this._groups)) {
+      let arr = [];
       filteredList.forEach(item => {
-        array.push({ type: ItemTypes.ITEM, value: item });
+        arr.push({ type: ItemTypes.ITEM, value: item });
       });
+
+      if (this._query) {
+        arr = sortItems(arr, this.itemLabelProvider.bind(this), this.extraSearchFields, this._query);
+      }
+  
+      array.push(...arr);
     }
 
     this._items = array;
@@ -910,6 +930,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
   _getGroupValue(item) {
     return this.groupSelector(item) || item;
   }
+
 
   /**
    * Triggered on input or clear query string.

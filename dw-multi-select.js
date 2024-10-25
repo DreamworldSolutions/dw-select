@@ -118,6 +118,11 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       searchable: { type: Boolean },
 
       /**
+       * Input property. An array of additional fields to use for search filtering.
+       */
+      extraSearchFields: { type: Array },
+
+      /**
        * `vkb` stands for Virtual KeyBoard.
        * Whether the Device has Virtual KeyBoard.
        */
@@ -387,6 +392,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .appendTo=${this.renderRoot}
       .items="${this.items}"
       .layout=${this._layout}
+      .extraSearchFields=${this.extraSearchFields}
       .valueProvider=${this._valueProvider}
       .valueExpression=${this.valueExpression}
       .valueEquator=${this.valueEquator}
