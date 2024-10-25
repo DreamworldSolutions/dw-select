@@ -10,23 +10,25 @@ import { forEach, get, isEmpty, sortBy } from 'lodash-es';
  * @returns {array} - The sorted items.
  */
 export const sortItems = (items, valueTextProvider, extraSearchFields, query) => {
-  if (isEmpty(items) || !valueTextProvider) return;
+  if (isEmpty(items) || !valueTextProvider) return [];
 
   const queryWords = query.trim().toLowerCase().split(' ');
 
   const array = sortBy(items, item => {
     let itemText = valueTextProvider(item.value).toLowerCase();
 
+    if (!itemText) return;
+
     if (extraSearchFields) {
       forEach(extraSearchFields, key => {
         const value = get(item, `${key}`);
         if (value) {
-          itemText += ` ${value.toLowerCase()}`;
+          itemText += ` ${value}`;
         }
       });
     }
 
-    const itemWords = itemText.split(' ');
+    const itemWords = itemText.trim().toLowerCase().split(' ');
     let weight = 999;
 
     if (itemText.startsWith(query)) {
