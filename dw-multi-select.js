@@ -508,7 +508,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
         this.reportValidity();
       }
 
-      if(this._opened) {
+      if (this._opened) {
         this._setPopoverDialogWidth();
       }
     }
@@ -520,13 +520,13 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
    */
   _setValueText(e) {
     if (!this.items) return;
-    
+
     const value = e ? e.detail : this.value || [];
     if (isEmpty(value)) {
       this._selectedValueText = '';
       return;
     }
-    
+
     const firstSelectedItem = this._getSelectedItem(value[0] || value[1]);
     const text = this.valueTextProvider(firstSelectedItem);
     this._selectedValueText = !text ? '' : `${text} ${value.length > 1 ? `(+${value.length - 1} other)` : ''}`;
