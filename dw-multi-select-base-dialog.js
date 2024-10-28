@@ -180,13 +180,26 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           z-index: 2;
         }
 
+        dw-multi-select-group-item[no-select-all] {
+          top: 72px;
+        }
+
         :host(:not([searchable])) dw-multi-select-group-item,
         :host([type='modal']) dw-multi-select-group-item {
           top: 39px;
         }
 
+        :host(:not([searchable])) dw-multi-select-group-item[no-select-all],
+        :host([type='modal']) dw-multi-select-group-item[no-select-all] {
+          top: 0px
+        }
+
         :host([type='fit']) dw-multi-select-group-item {
           top: 148px;
+        }
+
+        :host([type='fit']) dw-multi-select-group-item[no-select-all] {
+          top: 108px;
         }
 
         dw-list-item[selected] {
@@ -729,6 +742,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       if (this.renderGroupItem) console.warn('renderGroupItem is not function');
 
       return html`<dw-multi-select-group-item
+        ?no-select-all=${(!this.searchable && this.items.length < 10) || this._query}
         .name="${item.value.name}"
         .label="${this._getGroupValue(item.value)}"
         class="group-item"
