@@ -519,7 +519,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
    * @returns { String }
    */
   _setValueText(e) {
-    if (!this.items) return;
+    if (isEmpty(this.items)) return;
 
     const value = e ? e.detail : this.value || [];
     if (isEmpty(value)) {
