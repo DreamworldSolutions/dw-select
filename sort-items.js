@@ -31,25 +31,13 @@ export const sortItems = (items, valueTextProvider, extraSearchFields, query) =>
     const itemWords = itemText.trim().toLowerCase().split(' ');
     let weight = 999;
 
-    if (itemText.startsWith(query)) {
-      weight -= 1;
-    }
-
     forEach(queryWords, queryWord => {
-      if (itemText.startsWith(queryWord)) {
+      if (itemText.includes(queryWord)) {
         weight -= 1;
       }
 
       forEach(itemWords, itemWord => {
         if (queryWord === itemWord) {
-          weight -= 1;
-        }
-
-        if (itemWord.startsWith(queryWord)) {
-          weight -= 1;
-        }
-
-        if (itemWord.includes(queryWord)) {
           weight -= 1;
         }
       });
