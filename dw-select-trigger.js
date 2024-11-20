@@ -27,6 +27,11 @@ export class DwSelectTrigger extends DwInput {
           display: block;
         }
 
+        :host([opened]) {
+          --dw-input-outlined-idle-border-color: var(--mdc-theme-primary);
+          --dw-input-border-width: 2px;
+        }
+
         :host([readOnly]) {
           --dw-input-outlined-readonly-idle-border-color: transparent;
         }
