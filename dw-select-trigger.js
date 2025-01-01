@@ -38,6 +38,7 @@ export class DwSelectTrigger extends DwInput {
 
         :host(:not([inputallowed])) input {
           cursor: pointer;
+          caret-color: transparent;
         }
 
         .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--trailing {
