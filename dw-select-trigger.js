@@ -27,12 +27,18 @@ export class DwSelectTrigger extends DwInput {
           display: block;
         }
 
+        :host([opened]) {
+          --dw-input-outlined-idle-border-color: var(--mdc-theme-primary);
+          --dw-input-border-width: 2px;
+        }
+
         :host([readOnly]) {
           --dw-input-outlined-readonly-idle-border-color: transparent;
         }
 
         :host(:not([inputallowed])) input {
           cursor: pointer;
+          caret-color: transparent;
         }
 
         .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--trailing {
