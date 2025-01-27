@@ -858,6 +858,10 @@ export class DwSelect extends DwFormElement(LitElement) {
         this._newItemStatus = undefined;
       }
     }
+
+    if (_changedProperties.has('_newItemStatus')) {
+      this._opened = !this._newItemStatus;
+    }
   }
 
   updated(props) {
