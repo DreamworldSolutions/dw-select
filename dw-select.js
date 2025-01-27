@@ -11,7 +11,7 @@ import '@dreamworld/dw-icon-button';
 import '@dreamworld/dw-icon';
 
 // Lodash Methods
-import { find, debounce } from 'lodash-es';
+import { find, debounce, isEmpty } from 'lodash-es';
 
 // Styles
 import { caption, subtitle1, headline6 } from '@dreamworld/material-styles/typography-literals.js';
@@ -871,6 +871,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _setSelectedValueText() {
+    if (isEmpty(this.items)) return;
+
     const selectedItem = this._getSelectedItem(this.value);
     this._selectedValueText = this._getValue(selectedItem || this.value);
   }
