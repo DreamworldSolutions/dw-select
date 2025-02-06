@@ -12,8 +12,8 @@ import { forEach, get, isEmpty, sortBy } from 'lodash-es';
 export const sortItems = (items, valueTextProvider, extraSearchFields, query) => {
   if (isEmpty(items) || !valueTextProvider) return [];
 
-  const queryWords = query.trim().toLowerCase().split(' ');
-
+  query = query.trim().toLowerCase();
+  const queryWords = query.split(' ');
   const array = sortBy(items, item => {
     let itemText = valueTextProvider(item.value).toLowerCase();
 
@@ -31,6 +31,10 @@ export const sortItems = (items, valueTextProvider, extraSearchFields, query) =>
     const itemWords = itemText.trim().toLowerCase().split(' ');
     let weight = 999;
 
+    if(itemText.startsWith(query)) {
+      weight -= 1;
+    }
+    
     forEach(queryWords, queryWord => {
       if (itemText.includes(queryWord)) {
         weight -= 1;
