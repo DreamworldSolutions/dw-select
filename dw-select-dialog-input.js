@@ -126,7 +126,7 @@ export class DwSelectDialogInput extends LitElement {
        */
       newValueStatus: { type: String },
 
-      symbol: { type: Boolean }
+      symbol: { type: Boolean },
     };
   }
 
@@ -179,7 +179,9 @@ export class DwSelectDialogInput extends LitElement {
   }
 
   get _showClearButton() {
-    return this._hasCloseButton ? html`<dw-icon-button icon="close" .symbol="${this.symbol}" @click=${this._onClear}></dw-icon-button>` : nothing;
+    return this._hasCloseButton
+      ? html`<dw-icon-button icon="close" .symbol="${this.symbol}" @click=${this._onClear}></dw-icon-button>`
+      : nothing;
   }
 
   _onFocus() {
