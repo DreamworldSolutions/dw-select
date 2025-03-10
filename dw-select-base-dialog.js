@@ -640,7 +640,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
   get _renderNoRecord() {
     return html`<div class="no-record">
-      <dw-icon name="search_off" size="100"></dw-icon>
+      <dw-icon name="search_off" .symbol="${this.symbol}" size="100"></dw-icon>
       <div>${this.items && this.items.length === 0 ? this.messages.noRecords : this.messages.noMatching}</div>
     </div>`;
   }

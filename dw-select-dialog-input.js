@@ -125,6 +125,8 @@ export class DwSelectDialogInput extends LitElement {
        * Possible values: undefined | `IN_PROGRESS` | `NEW_VALUE` | `ERROR`
        */
       newValueStatus: { type: String },
+
+      symbol: { type: Boolean }
     };
   }
 
@@ -145,7 +147,7 @@ export class DwSelectDialogInput extends LitElement {
   render() {
     return html`
       <div class="container">
-        <dw-icon-button icon="arrow_back" @click=${this._onBack}></dw-icon-button>
+        <dw-icon-button icon="arrow_back" @click=${this._onBack} .symbol="${this.symbol}"></dw-icon-button>
         <input
           @focus=${this._onFocus}
           @blur=${this._onBlur}
@@ -177,7 +179,7 @@ export class DwSelectDialogInput extends LitElement {
   }
 
   get _showClearButton() {
-    return this._hasCloseButton ? html`<dw-icon-button icon="close" @click=${this._onClear}></dw-icon-button>` : nothing;
+    return this._hasCloseButton ? html`<dw-icon-button icon="close" .symbol="${this.symbol}" @click=${this._onClear}></dw-icon-button>` : nothing;
   }
 
   _onFocus() {

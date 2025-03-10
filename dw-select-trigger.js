@@ -134,6 +134,8 @@ export class DwSelectTrigger extends DwInput {
       autoComplete: { type: Boolean },
 
       suffixTemplate: { type: Object },
+
+      symbol: { type: Boolean },
     };
   }
 
@@ -235,6 +237,7 @@ export class DwSelectTrigger extends DwInput {
           .buttonSize=${this.iconButtonSize}
           ?disabled="${this.disabled}"
           tabindex="-1"
+          .symbol="${this.symbol}"
           @click=${this._onClose}
         ></dw-icon-button>
       `;
@@ -248,6 +251,7 @@ export class DwSelectTrigger extends DwInput {
         .buttonSize=${this.iconButtonSize}
         ?disabled="${this.disabled}"
         tabindex="-1"
+        .symbol="${this.symbol}"
         @mousedown=${this._onExpandClick}
         @click="${e => e.stopPropagation()}"
       ></dw-icon-button>
