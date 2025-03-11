@@ -444,6 +444,8 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
       _inputFocused: { type: Boolean, reflect: true, attribute: 'input-focused' },
 
       interactive: { type: Boolean },
+
+      symbol: { type: Boolean}
     };
   }
 
