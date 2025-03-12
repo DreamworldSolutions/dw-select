@@ -1225,7 +1225,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     try {
       const item = await this._newItemRequest;
       this._newItem = item;
-      this._newItemStatus = NEW_VALUE_STATUS.NEW_VALUE;
+      this._newItemStatus = item ? NEW_VALUE_STATUS.NEW_VALUE : undefined;
     } catch (error) {
       this._newItemStatus = NEW_VALUE_STATUS.ERROR;
     } finally {
