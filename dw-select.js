@@ -347,13 +347,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       warning: { type: String },
 
       /**
-       * Input Property
-       * Whether error message shows in tooltip or not.
-       * Default error shows at hint text
-       */
-      errorInTooltip: { type: Boolean },
-
-      /**
        * Can be used only when “searchable=true”
        * Whether new value is allowed or not
        */
