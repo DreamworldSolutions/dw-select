@@ -1098,6 +1098,9 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     this._opened = false;
+
+    this._resetToCurValue();
+    this.updateComplete.then(() => this.reportValidity());
   }
 
   _onKeydown(e) {
