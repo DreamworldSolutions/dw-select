@@ -1048,8 +1048,23 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
     if (index < 0) return;
 
     const itemEl = this._virtualList ? this._listEl?.element && this._listEl?.element(index) : get(this._listEl?.children, index);
+    if (!itemEl) return;
+
     const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'nearest' };
-    itemEl?.scrollIntoView(scrollOptions);
+    itemEl.scrollIntoView(scrollOptions);
+
+    // Check if item is hidden behind footer and adjust scroll if needed
+    setTimeout(() => {
+      const footerEl = this.renderRoot.querySelector('#dialog-footer');
+      if (footerEl) {
+        const itemRect = itemEl.getBoundingClientRect();
+        const footerRect = footerEl.getBoundingClientRect();
+        if (itemRect.bottom > footerRect.top) {
+          const scrollingEl = this.renderRoot.querySelector('#popover_dialog__surface');
+          scrollingEl?.scrollBy(0, footerEl?.offsetHeight);
+        }
+      }
+    }, this._virtualList ? 200 : 50); // Small delay to ensure scrollIntoView has finished
   }
 
   _onSelectButtonClick() {
