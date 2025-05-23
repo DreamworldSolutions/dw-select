@@ -1101,8 +1101,8 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     if (!this.allowNewValue) {
       this._resetToCurValue();
+      this.updateComplete.then(() => this.reportValidity());
     }
-    this.updateComplete.then(() => this.reportValidity());
   }
 
   _onKeydown(e) {
