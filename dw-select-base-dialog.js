@@ -1052,11 +1052,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
     const scrollOptions = { behavior: this._virtualList ? 'smooth' : 'instant', block: 'nearest' };
     itemEl.scrollIntoView(scrollOptions);
+    
+    if(this._virtualList) return;
 
     // Check if item is hidden behind footer and adjust scroll if needed
     setTimeout(() => {
       const footerEl = this.renderRoot.querySelector('#dialog-footer');
-      if (footerEl) {
+      if (itemEl && footerEl) {
         const itemRect = itemEl.getBoundingClientRect();
         const footerRect = footerEl.getBoundingClientRect();
         if (itemRect.bottom > footerRect.top) {
@@ -1064,7 +1066,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           scrollingEl?.scrollBy(0, footerEl?.offsetHeight);
         }
       }
-    }, this._virtualList ? 200 : 50); // Small delay to ensure scrollIntoView has finished
+    }, 50); // Small delay to ensure scrollIntoView has finished
   }
 
   _onSelectButtonClick() {
