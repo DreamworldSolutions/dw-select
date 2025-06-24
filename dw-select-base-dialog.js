@@ -79,7 +79,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
         }
 
         :host([type='modal']) .mdc-dialog .mdc-dialog__title {
-          max-height: 56px;
+          max-height: var(--modal-dialog-header-max-height, 56px);
           display: flex;
           ${unsafeCSS(TypographyLiterals.headline6)};
         }
