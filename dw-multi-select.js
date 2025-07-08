@@ -527,8 +527,8 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       return;
     }
 
-    const firstSelectedItem = this._getSelectedItem(value[0] || value[1]);
-    const text = this.valueTextProvider(firstSelectedItem);
+    const firstSelectedItem = this._getSelectedItem(value[0]);
+    const text = firstSelectedItem ? this.valueTextProvider(firstSelectedItem) : '';
     this._selectedValueText = !text ? '' : `${text} ${value.length > 1 ? `(+${value.length - 1} other)` : ''}`;
     return;
   }
