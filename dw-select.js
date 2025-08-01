@@ -851,6 +851,13 @@ export class DwSelect extends DwFormElement(LitElement) {
         this._newItemStatus = undefined;
       }
     }
+
+    if (props.has('value') && this.value && this._selectedValueText) {
+      const matchedItem = this._newValueMatchedItemProvider();
+      if (matchedItem) {
+        this._newItemStatus = undefined;
+      }
+    }
   }
 
   updated(props) {
@@ -1167,7 +1174,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       return this.newValueMatchedItemProvider();
     }
 
-    return find(this._items, item => this._selectedValueText?.toLowerCase() === this._getValue(item.value)?.toLowerCase());
+    const value = find(this.items, item => {
+      const itemVal = this._valueProvider(item);
+      return this._selectedValueText?.toLowerCase()?.trim() === itemVal?.toLowerCase()?.trim();
+    });
+
+    return value ? { value } : undefined;
   }
 
   _resetToCurValue() {
