@@ -89,8 +89,10 @@ export class DwSelectTrigger extends DwInput {
           padding: 4px;
         }
 
-        :host(:not([inputAllowed])) #tf-outlined {
-          pointer-events: none;
+        @media (pointer: coarse) {
+          :host(:not([inputAllowed])) #tf-outlined {
+            pointer-events: none;
+          }
         }
 
         .mdc-text-field--with-trailing-icon.mdc-text-field--outlined .mdc-text-field__input {
