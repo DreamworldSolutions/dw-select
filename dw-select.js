@@ -1175,7 +1175,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     const value = find(this.items, item => {
-      const itemVal = this._valueProvider(item);
+      const itemVal = this.valueTextProvider(item);
       return this._selectedValueText?.toLowerCase()?.trim() === itemVal?.toLowerCase()?.trim();
     });
 
