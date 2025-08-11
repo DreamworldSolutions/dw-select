@@ -871,7 +871,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   _setSelectedValueText() {
-    if (isEmpty(this.items)) return;
+    if (!this.items) return;
 
     const selectedItem = this._getSelectedItem(this.value);
     this._selectedValueText = this._getValue(selectedItem || this.value);
