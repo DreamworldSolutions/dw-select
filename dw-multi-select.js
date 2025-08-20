@@ -301,7 +301,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
       /**
        * Size (px) for the trailing icon button in the trigger.
-       * Forwarded to dw-select-trigger’s dw-icon-button (.buttonSize).
+       * Forwarded to dw-select-multi-trigger’s dw-icon-button (.buttonSize).
        */
       iconButtonSize: { type: Number },
     };
