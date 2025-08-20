@@ -481,6 +481,12 @@ export class DwSelect extends DwFormElement(LitElement) {
       },
 
       interactiveDialog: { type: Boolean },
+
+      /**
+       * Size (px) for the trailing icon button in the trigger.
+       * Forwarded to dw-select-trigger’s dw-icon-button (.buttonSize).
+       */
+      iconButtonSize: { type: Number },
     };
   }
 
@@ -637,6 +643,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .errorTooltipActions="${this.errorTooltipActions}"
             .warningTooltipActions="${this.warningTooltipActions}"
             .tipPlacement="${this.tipPlacement}"
+            .iconButtonSize=${this.iconButtonSize}
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
             .suffixTemplate=${this._inputSuffixTemplate}
@@ -665,6 +672,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           id="trigger-icon"
           class="read-only-trigger-icon"
           ?error=${this.error && this.errorInTooltip}
+          .buttonSize=${this.iconButtonSize}
           ?warning=${this.warning && this.warningInTooltip}
           icon=${this._opened ? 'expand_less' : 'expand_more'}
           iconFont="OUTLINED"

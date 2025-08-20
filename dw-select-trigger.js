@@ -55,7 +55,7 @@ export class DwSelectTrigger extends DwInput {
 
         .mdc-text-field--with-trailing-icon .mdc-text-field__icon {
           position: unset;
-          margin-right: 12px;
+          margin-right: var(--dw-select-trigger-trailing-icon-margin-right, 4px);
           align-self: center;
         }
 
@@ -138,6 +138,11 @@ export class DwSelectTrigger extends DwInput {
       suffixTemplate: { type: Object },
 
       symbol: { type: Boolean },
+
+     /**
+      * Size to pass through to the internal dw-icon-button
+      */
+      iconButtonSize: { type: Number },
     };
   }
 
