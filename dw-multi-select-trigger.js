@@ -43,7 +43,7 @@ export class DwMultiSelectTrigger extends DwInput {
 
         .mdc-text-field--with-trailing-icon .mdc-text-field__icon {
           position: unset;
-          margin-right: 12px;
+          margin-right: var(--dw-multi-select-trigger-trailing-icon-margin-right, 4px);
           align-self: center;
         }
 
@@ -86,6 +86,11 @@ export class DwMultiSelectTrigger extends DwInput {
        * A template for the suffix of the input field. This can be used to display additional content, such as an icon or text, after the input field.
        */
       suffixTemplate: { type: Object },
+
+      /**
+       *  Size to pass through to the internal dw-icon-button
+      */ 
+      iconButtonSize: { type: Number },
     };
   }
 

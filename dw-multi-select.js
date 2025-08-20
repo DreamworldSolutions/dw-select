@@ -298,6 +298,12 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       popoverStyles: { type: Object },
 
       hasItemLeadingIcon: { type: Boolean },
+
+      /**
+       * Size (px) for the trailing icon button in the trigger.
+       * Forwarded to dw-select-trigger’s dw-icon-button (.buttonSize).
+       */
+      iconButtonSize: { type: Number },
     };
   }
 
@@ -368,6 +374,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
             ?autoValidate=${this.autoValidate}
             .error=${this.error}
             .errorMessages="${this.errorMessages}"
+            .iconButtonSize=${this.iconButtonSize}
             .warning="${this.warning}"
             .dense=${this.dense}
             .suffixTemplate=${this._inputSuffixTemplate}

@@ -138,6 +138,11 @@ export class DwSelectTrigger extends DwInput {
       suffixTemplate: { type: Object },
 
       symbol: { type: Boolean },
+
+      /**
+       *  Size to pass through to the internal dw-icon-button
+      */ 
+      iconButtonSize: { type: Number },
     };
   }
 
