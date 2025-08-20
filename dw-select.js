@@ -637,6 +637,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .errorTooltipActions="${this.errorTooltipActions}"
             .warningTooltipActions="${this.warningTooltipActions}"
             .tipPlacement="${this.tipPlacement}"
+            .iconButtonSize=${this.iconButtonSize}
             .dense=${this.dense}
             .autoComplete=${this.autoComplete}
             .suffixTemplate=${this._inputSuffixTemplate}

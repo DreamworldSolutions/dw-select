@@ -55,7 +55,7 @@ export class DwSelectTrigger extends DwInput {
 
         .mdc-text-field--with-trailing-icon .mdc-text-field__icon {
           position: unset;
-          margin-right: 12px;
+          margin-right: 4px;
           align-self: center;
         }
 
