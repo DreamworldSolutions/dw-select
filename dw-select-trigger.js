@@ -49,6 +49,10 @@ export class DwSelectTrigger extends DwInput {
           pointer-events: unset;
         }
 
+        .mdc-notched-outline__notch {
+          padding: var(--dw-select-trigger-label-padding, 0px 38px 0px 0px);
+        }
+
         .up-down-arrow {
           transition: 0.2s ease-in-out;
         }
