@@ -877,7 +877,7 @@ export class DwSelect extends DwFormElement(LitElement) {
     }
 
     // Handle newItems hash - set NEW_VALUE status if current value is marked as new
-    if ((props.has('value') || props.has('newItems')) && this._isNewItem()) {
+    if ((props.has('value') || props.has('newItems')) && this.newItems?.[this.value]) {
       this._newItemStatus = NEW_VALUE_STATUS.NEW_VALUE;
     }
   }
@@ -1128,10 +1128,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this._opened = false;
 
-    // Check if allowNewValue is enabled OR if current value is marked as new in newItems hash
-    const shouldAllowNewValue = this.allowNewValue || this._isNewItem();
-
-    if (!shouldAllowNewValue) {
+    if (!this.allowNewValue) {
       this._resetToCurValue();
       this.updateComplete.then(() => this.reportValidity());
     }
@@ -1248,17 +1245,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (this._triggerElement && this._triggerElement.focus && typeof this._triggerElement.focus === 'function') {
       this._triggerElement && this._triggerElement.focus();
     }
-  }
-
-  /**
-   * Checks if the current value is marked as a new item in the newItems hash
-   * @returns {Boolean} true if the value ID exists in newItems hash with value true
-   */
-  _isNewItem() {
-    if (!this.newItems || isEmpty(this.newItems) || !this.value) {
-      return false;
-    }
-    return this.newItems[this.value];
   }
 
   async _findNewItem() {
