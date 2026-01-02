@@ -353,6 +353,15 @@ export class DwSelect extends DwFormElement(LitElement) {
       allowNewValue: { type: Boolean },
 
       /**
+       * Input property.
+       * A hash object containing IDs of items that should be treated as new items.
+       * When an item's ID matches a key in this hash (with value true), it will show the new value UI.
+       * Example: {id1: true, id2: true}
+       * This works independently of the `allowNewValue` property.
+       */
+      newItems: { type: Object },
+
+      /**
        * An Input property.
        *
        * A function used to compute new value (an Item) from the query string.
@@ -865,6 +874,11 @@ export class DwSelect extends DwFormElement(LitElement) {
       if (matchedItem) {
         this._newItemStatus = undefined;
       }
+    }
+
+    // Handle newItems hash - set NEW_VALUE status if current value is marked as new
+    if ((props.has('value') || props.has('newItems')) && this.newItems?.[this.value]) {
+      this._newItemStatus = NEW_VALUE_STATUS.NEW_VALUE;
     }
   }
 
