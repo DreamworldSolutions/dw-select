@@ -353,6 +353,15 @@ export class DwSelect extends DwFormElement(LitElement) {
       allowNewValue: { type: Boolean },
 
       /**
+       * Input property.
+       * A hash object containing IDs of items that should be treated as new items.
+       * When an item's ID matches a key in this hash (with value true), it will show the new value UI.
+       * Example: {id1: true, id2: true}
+       * This works independently of the `allowNewValue` property.
+       */
+      newItems: { type: Object },
+
+      /**
        * An Input property.
        *
        * A function used to compute new value (an Item) from the query string.
@@ -866,6 +875,11 @@ export class DwSelect extends DwFormElement(LitElement) {
         this._newItemStatus = undefined;
       }
     }
+
+    // Handle newItems hash - set NEW_VALUE status if current value is marked as new
+    if ((props.has('value') || props.has('newItems')) && this._isNewItem()) {
+      this._newItemStatus = NEW_VALUE_STATUS.NEW_VALUE;
+    }
   }
 
   updated(props) {
@@ -1114,7 +1128,10 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     this._opened = false;
 
-    if (!this.allowNewValue) {
+    // Check if allowNewValue is enabled OR if current value is marked as new in newItems hash
+    const shouldAllowNewValue = this.allowNewValue || this._isNewItem();
+
+    if (!shouldAllowNewValue) {
       this._resetToCurValue();
       this.updateComplete.then(() => this.reportValidity());
     }
@@ -1231,6 +1248,17 @@ export class DwSelect extends DwFormElement(LitElement) {
     if (this._triggerElement && this._triggerElement.focus && typeof this._triggerElement.focus === 'function') {
       this._triggerElement && this._triggerElement.focus();
     }
+  }
+
+  /**
+   * Checks if the current value is marked as a new item in the newItems hash
+   * @returns {Boolean} true if the value ID exists in newItems hash with value true
+   */
+  _isNewItem() {
+    if (!this.newItems || isEmpty(this.newItems) || !this.value) {
+      return false;
+    }
+    return this.newItems[this.value];
   }
 
   async _findNewItem() {
