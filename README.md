@@ -1,178 +1,582 @@
-# `<dw-select> / <dw-multi-select>` [![Published on npm](https://img.shields.io/npm/v/@dreamworld/dw-select.svg)](https://www.npmjs.com/package/@dreamworld/dw-select)
+# `<dw-select>` / `<dw-multi-select>` [![Published on npm](https://img.shields.io/npm/v/@dreamworld/dw-select.svg)](https://www.npmjs.com/package/@dreamworld/dw-select)
 
-A Select is an input widget with an associated dropdown that allows users to select a value from a list of possible values.
+A mobile-first, single and multiple select / auto-complete solution in Material Design style, built with LitElement. Supports grouping, virtualization for large lists, keyboard navigation, form validation, and adaptive dialog types (popover, modal, fit, bottom-sheet).
 
-Two types of select component: [`default`](docs/non-searchable.md) (searchable=false), and [`searchable`](docs/searchable.md) (searchable=true).
+---
 
-> Note: `dw-select / dw-multi-select` internally uses [`dw-list-item`](https://github.com/DreamworldSolutions/dw-list-item) to render items. use override property `renderItem` to override items.
+## 1. User Guide
 
-## Installation
+### Installation & Setup
 
 ```sh
 npm install @dreamworld/dw-select
 ```
 
-## Example usage
+```javascript
+// Single select
+import '@dreamworld/dw-select';
 
-### Default
-
-<img src="images/non-searchable-outlined.png" width="300px"><br>
-<img src="images/non-searchable.png" width="300px">
-
-```html
-<dw-select outlined items="${this.items}" label="outlined"></dw-select>
+// Multi-select
+import '@dreamworld/dw-multi-select';
 ```
 
-### Searchable
+---
 
-<img src="images/searchable.png" width="300px"><br>
-<img src="images/searchable-opened.png" width="300px">
+### Basic Usage
+
+#### Single Select (Default)
 
 ```html
-<dw-select outlined items="${this.items}" label="outlined" searchable></dw-select>
+<dw-select
+  label="Country"
+  .items="${this.items}"
+  valueExpression="_id"
+  .valueTextProvider="${(item) => item.name}"
+></dw-select>
 ```
 
-## Behaviour
+#### Single Select (Outlined, Pre-selected)
 
-- Renders [`dw-select-trigger`](docs/select-trigger.md) and [dw-select-base-dialog](docs/select-dialog.md) / `dw-multi-select-base-dialog`
-- Triggers internal validation on blur & select.
-- Focus:
-  - For searchable types, it shows a cursor. For non searchable type, doesn’t show cursor.
-  - The dropdown opens when the user clicks the field using a pointing device.
-- Clear Selection:
-  - Searchable: remove all input text and it will clear the selection and dispatch a `clear-selection` event
-  - Non-Searchable: there is no way to clear the selection for non-searchable. If required, the integrator should provide an empty item for clear selection.
+```html
+<dw-select
+  outlined
+  label="Country"
+  .items="${this.items}"
+  .value="${this.selectedItem}"
+  .valueProvider="${(item) => item.id}"
+  .valueTextProvider="${(item) => item.name}"
+></dw-select>
+```
 
-## API
+#### Single Select (Searchable)
 
-### Properties/Attributes
+```html
+<dw-select
+  outlined
+  searchable
+  label="Bank"
+  .items="${this.items}"
+  .valueTextProvider="${(item) => item.name}"
+></dw-select>
+```
 
-| Name                    | Type                                             | Default                 | Description                                                                                                                                                                                                                                                                                                                                          |
-| ----------------------- | ------------------------------------------------ | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                  | `string`                                         | `""`                    | Sets the `name` attribute on the internal input. The name property should only be used for browser autofill as web-component form participation does not currently consider the `name` attribute.                                                                                                                                                     |
-| `value`                 | `object`                                         | `null`                  | Represents current value. Integrator may change this property, to change current selected Item. And when User changes selection through mouser/keyboard interaction, it's changed corresponding to the selected item by the User.                                                                                                                     |
-| `highlightChanged`      | `boolean`                                        | `false`                 | Enable highLight textfield when value is changed. It will highLight field when `value` and `originalValue` is not same                                                                                                                                                                                                                               |
-| `originalValue`         | `object`                                         | `null`                  | Input property. **Note:** When `originalValue` is specified (not `undefined`) & its value is different than this; then highlight is shown. (Comparison is done by reference)                                                                                                                                                                         |
-| `outlined`              | `boolean`                                        | `false`                 | Whether or not to show the `outlined` variant.                                                                                                                                                                                                                                                                                                       |
-| `label`                 | `string`                                         | `""`                    | Sets floating label value. **Note:** The label will not float if the selected item has a false value property.                                                                                                                                                                                                                                       |
-| `placeholder`           | `string`                                         | `""`                    | Sets disappearing input placeholder.                                                                                                                                                                                                                                                                                                                 |
-| `helper`                | `string`                                         | `""`                    | Helper text to display below the input. Display default only when focused.                                                                                                                                                                                                                                                                           |
-| `readOnly`              | `boolean`                                        | `false`                 | Whether or not to show the `readOnly` state.                                                                                                                                                                                                                                                                                                         |
-| `required`              | `boolean`                                        | `false`                 | Displays error state if value is empty and input is blurred.                                                                                                                                                                                                                                                                                         |
-| `errorMessage`          | `string`                                         | `undefined`             | Message to show in the error color when the textfield is invalid.                                                                                                                                                                                                                                                                                    |
-| `requiredMessage`       | `string`                                         | `undefined`             | Message to show in the error color when the `required`, and `_requiredErrorVisible` are true.                                                                                                                                                                                                                                                        |
-| `_requiredErrorVisible` | `boolean`                                        | `false`                 | Whether or not to show the `required` error message.                                                                                                                                                                                                                                                                                                 |
-| `validity`              | `ValidityState` (readonly)                       | `{}`                    | The [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) of the textfield.                                                                                                                                                                                                                                              |
-| `autoValidate`          | `boolean`                                        | `false`                 | Reports validity on value change rather than only on blur.                                                                                                                                                                                                                                                                                           |
-| `disabled`              | `boolean`                                        | `false`                 | Whether or not to show the `disabled` variant.                                                                                                                                                                                                                                                                                                       |
-| `searchable`            | `boolean`                                        | `false`                 | Whether or not to show the `searchable` variant.                                                                                                                                                                                                                                                                                                     |
-| `groups`                | [`Group[]`](#group)                              | `null`                  | List of groups.                                                                                                                                                                                                                                                                                                                                      |
-| `groupSelector`         | `fn()`                                           |                         | returns GroupName. Group selector provides a path of groupName in Items                                                                                                                                                                                                                                                                              |
-| `groupExpression`       | `string`                                         | `""`                    |
-| `items`                 | `object[]`                                       | `undefined`             | List of selectable items.                                                                                                                                                                                                                                                                                                                            |
-| `prependItems`          | `object[]`                                       | `undefined`             | Items on top of the items. e.g. `All`, `None` etc...                                                                                                                                                                                                                                                                                                 |
-| `valueProvider`         | [`function`](#valueprovider-and-valueexpression) | `undefined`             | Provides Value                                                                                                                                                                                                                                                                                                                                       |
-| `valueExpression`       | [`string`](#valueprovider-and-valueexpression)   | `undefined`             |
-| `valueTextProvider`     | `function`                                       | `undefined`             | returns String. Provides value that represents in list item                                                                                                                                                                                                                                                                                          |
-| `dialogWidth`           | `number`                                         | `undefined`             | By default, the pop-over dialog is rendered in the width of the host element; And the fit dialog is rendered in a fixed-width specified by –dw-select-fit-dialog-width css property. <br>**But:** when this is specified, both dialogs are shown in this width. <br>**Note:** BottomSheet dialog is always in full width, so this doesn’t affect it. |
-| `renderItem`            | `HTMLTemplate`                                   | `undefined`             | Provides any Block element to represent list items. Should show its hover effect, and ripple on click. Highlight text based on `query`. Integrator listens to the ‘click’ event to know whether the selection is changed or not. <br>**Note:** It must not be focusable.                                                                             |
-| `renderGroupItem`       | `HTMLTemplate`                                   | `undefined`             | Provides any Block elements to represent group items. name property should be set to input name. Should show hover & ripple effects only if it’s collapsible. Integrator listens on ‘click’ event to toggle collapsed status.                                                                                                                        |
-| `valueEquator`          | `Function`                                       | `(v1, v2) => v1 === v2` | Set this to configure custom logic to detect whether value is changed or not.                                                                                                                                                                                                                                                                        |
-| `heading`               | `String`                                         | `""`                    | Set it if you would like to show a heading on the bottom-sheet dialog. By default no heading.                                                                                                                                                                                                                                                        |
-| `showClose`             | `boolean`                                        | `false`                 | Shows an icon-button with a close icon, in the `top-right` corner on the bottom-sheet dialog.                                                                                                                                                                                                                                                        |
-| `selectedTrailingIcon`  | `string`                                         | `undefined`             | Name of trailing Icon which avaialble in selected item.                                                                                                                                                                                                                                                                                               |
-| `searchPlaceholder`     | `string`                                         | `""`                    | Placeholder for fit dialog's search input                                                                                                                                                                                                                                                                                                            |
-| `helperTextProvider`    | `fn()`                                           |                         | Helper text provider. parameters: selected item. If this is provided show helper text using this function otherwise get from the `helper` property.                                                                                                                                                                                                  |
-| `queryFilter`           | `function`                                       | `[]`                    | A function to customize search. function has two parameters. 1. item, 2. query. <br>**Note:** returns always boolean                                                                                                                                                                                                                                 |
-| `messages`              | [`Messages`](#messages)                          | [`Messages`](#messages) | Messages of for No Records found, No Matching found, and loading state. It's showing in the dialog. Provide only the message key and value that you want to update. Select will handle it and update the message object.                                                                                                                             |
-| `errorInTooltip`        | `boolean`                                        | `false`                 | Show error message in error trailing icon hover tooltip.                                                                                                                                                                                                                                                                                            |
-| `allowNewValue`         | `boolean`                                        | `false`                 | Whether new value is allowed or not. Can be used only when select is `searchable`                                                                                                                                                                                                                                                                    |
-| `newValueProvider`      | `function`                                       | (query) => query        | Value provider function. Used when `allowNewValue` is available, and `query` does not match with any options. Default it returns searched `query`. <br>**Note:** Return value could be any except function. Including `Promise`.                                                                                                                     |
-| `hintInTooltip`         | `boolean`                                        | `false`                 | Allow to show hint text in tooltip and tip trigger on info(grey) icon.                                                                                                                                                                                                                                                                               |
-| `errorInTooltip`        | `boolean`                                        | `false`                 | Allow to show error text in tooltip. It trigger on error(red) icon.                                                                                                                                                                                                                                                                                  |
-| `warningInTooltip`      | `boolean`                                        | `false`                 | Allow to show warning text in tooltip. It trigger on warning(orange) icon.                                                                                                                                                                                                                                                                           |
-| `hintTooltipActions`    | [`Action[]`](#action)                            | `undefined`             | Allow to add tip action while hint text in tip. on action click event named `action` dispatch.                                                                                                                                                                                                                                                       |
-| `errorTooltipActions`   | [`Action[]`](#action)                            | `undefined`             | Allow to add tip action while error text in tip. on action click event named `action` dispatch.                                                                                                                                                                                                                                                      |
-| `warningTooltipActions` | [`Action[]`](#action)                            | `undefined`             | Allow to add tip action while warning text in tip. on action click event named `action` dispatch.                                                                                                                                                                                                                                                    |
-| `tipPlacement`          | `string`                                         | `""`                    | Tooltip placement for more see [tippyJs doc](https://atomiks.github.io/tippyjs/v6/all-props/#placement).                                                                                                                                                                                                                                             |
+#### Multi-Select
+
+```html
+<dw-multi-select
+  outlined
+  label="Tags"
+  .items="${this.items}"
+  .value="${this.selectedValues}"
+  .valueTextProvider="${(item) => item.label}"
+  @change="${(e) => this.selectedValues = e.target.value}"
+></dw-multi-select>
+```
+
+---
+
+### API Reference — `<dw-select>`
+
+#### Properties / Attributes
+
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | `""` | Sets the `name` attribute on the internal input. Used for browser autofill only. |
+| `value` | `object` | `null` | The currently selected item object. Set programmatically to change selection. |
+| `originalValue` | `object` | `undefined` | When specified and different from `value` (by reference), a highlight is shown. Requires `highlightChanged=true`. |
+| `highlightChanged` | `boolean` | `false` | When `true`, highlights the field when `value !== originalValue` (by reference). |
+| `outlined` | `boolean` | `false` | Shows the outlined Material variant. |
+| `label` | `string` | `""` | Floating label text. |
+| `placeholder` | `string` | `""` | Disappearing input placeholder. |
+| `helper` | `string` | `""` | Helper text displayed below the input (visible on focus by default). |
+| `helperPersistent` | `boolean` | `false` | Always shows helper text regardless of focus state. |
+| `readOnly` | `boolean` | `false` | Read-only display state. Reflects as `read-only` attribute. |
+| `required` | `boolean` | `false` | Applies required validation; shows error on blur if empty. |
+| `error` | `string \| Function` | `undefined` | Custom error message. Can be a string or a function returning a string. |
+| `errorMessages` | `object` | `undefined` | Error state messages object. |
+| `autoValidate` | `boolean` | `false` | Reports validity on value change rather than only on blur. |
+| `disabled` | `boolean` | `false` | Disables the component. |
+| `searchable` | `boolean` | `false` | Enables search/filter input in the dialog. |
+| `extraSearchFields` | `string[]` | `undefined` | Additional item fields to include in search filtering. |
+| `groups` | [`Group[]`](#group) | `null` | List of group definitions for grouping items. |
+| `groupSelector` | `Function` | `undefined` | `(item) => groupName`. Identifies the group of an item. Takes precedence over `groupExpression`. |
+| `groupExpression` | `string` | `""` | Dot-separated property path on item to find its group name. Ignored if `groupSelector` is set. |
+| `items` | `object[]` | `undefined` | Array of selectable items. When `undefined`, shows a loading state. |
+| `prependItems` | `object[]` | `[]` | Items always shown at the top of the list (e.g., "All", "None"). |
+| `valueProvider` | `Function` | `undefined` | `(item) => value`. Extracts the value from an item. Takes precedence over `valueExpression`. |
+| `valueExpression` | `string` | `"_id"` | Dot-separated property path on item to extract its value. Used when `valueProvider` is not set. |
+| `valueTextProvider` | `Function` | `(item) => item` | `(item) => string`. Returns the display text for an item. |
+| `valueEquator` | `Function` | `(v1, v2) => v1 === v2` | Custom equality check for value comparison. |
+| `dialogWidth` | `number` | `undefined` | Override width (px) for popover and fit dialogs. Bottom-sheet is always full-width. |
+| `renderItem` | `Function` | `undefined` | `(item, selected, activated, query) => HTMLTemplate`. Custom item template. Must not be focusable. |
+| `renderGroupItem` | `Function` | `undefined` | `(name, label, collapsible, collapsed, activated) => HTMLTemplate`. Custom group item template. |
+| `heading` | `string` | `""` | Heading shown on the bottom-sheet dialog. |
+| `showClose` | `boolean` | `false` | Shows a close icon-button in the top-right corner of the bottom-sheet dialog. |
+| `selectedTrailingIcon` | `string` | `undefined` | Material icon name shown as trailing icon on the selected item in the list. |
+| `messages` | [`Messages`](#messages) | See [Messages](#messages) | Override dialog state messages. |
+| `searchPlaceholder` | `string` | `""` | Placeholder for the fit dialog's search input. |
+| `helperTextProvider` | `Function` | `undefined` | `(item) => string`. Provides helper text based on the selected item. Overrides `helper` when set. |
+| `queryFilter` | `Function` | `undefined` | `(item, query) => boolean`. Custom search filter function. |
+| `highlightQuery` | `boolean` | `true` | When `false`, disables highlighting of matched words in the list. |
+| `allowNewValue` | `boolean` | `false` | Allows creating a new value from the search query. Only works when `searchable=true`. |
+| `newItemProvider` | `Function` | `undefined` | `(query) => {item, hint} \| Promise`. Builds a new item from the typed query. Return `undefined` or `{item: undefined}` when query is incomplete. |
+| `newItems` | `object` | `undefined` | Hash of item IDs to treat as new: `{id1: true, id2: true}`. Works independently of `allowNewValue`. |
+| `warning` | `string` | `undefined` | Warning message text. |
+| `dense` | `boolean` | `false` | Uses dense styling on the trigger element. |
+| `popover` | `boolean` | `false` | Forces the popover dialog type. |
+| `popoverStyles` | `object` | `undefined` | External styles applied to the popover dialog. |
+| `autoComplete` | `boolean` | `false` | Enables auto-complete mode. |
+| `readOnlyTrigger` | `boolean` | `false` | Shows read-only mode with a trigger icon instead of an input. |
+| `highlightedValue` | `boolean` | `false` | When `true`, shows the value in highlighted (headline6) style. Reflects as `highlighted-value`. |
+| `interactiveDialog` | `boolean` | `false` | Makes the dialog interactive (delegates pointer events). |
+| `iconButtonSize` | `number` | `undefined` | Size (px) for the trailing icon button in the trigger. |
+| `hintInTooltip` | `boolean` | `false` | Shows hint text in a tooltip triggered by an info icon. |
+| `errorInTooltip` | `boolean` | `false` | Shows error text in a tooltip triggered by an error icon. |
+| `warningInTooltip` | `boolean` | `false` | Shows warning text in a tooltip triggered by a warning icon. |
+| `hintTooltipActions` | [`Action[]`](#action) | `undefined` | Actions shown inside the hint tooltip. Dispatches `action` event on click. |
+| `errorTooltipActions` | [`Action[]`](#action) | `undefined` | Actions shown inside the error tooltip. |
+| `warningTooltipActions` | [`Action[]`](#action) | `undefined` | Actions shown inside the warning tooltip. |
+| `tipPlacement` | `string` | `""` | Tooltip placement. See [Tippy.js placement docs](https://atomiks.github.io/tippyjs/v6/all-props/#placement). |
+
+#### Methods
+
+| Name | Signature | Returns | Description |
+|------|-----------|---------|-------------|
+| `checkValidity` | `checkValidity()` | `boolean` | Returns `true` if valid; fires `valid` event. Returns `false` and fires `invalid` event otherwise. |
+| `reportValidity` | `reportValidity()` | `boolean` | Runs `checkValidity()` and reports validation state to the user. |
+| `validate` | `validate()` | `boolean` | Validates input. Returns `false` if value is invalid. |
+| `focus` | `focus()` | `void` | Focuses the trigger element. |
+
+**Getter:**
+
+| Name | Returns | Description |
+|------|---------|-------------|
+| `item` | `object` | The full item object corresponding to the current `value`. |
+
+#### Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `change` | none | Fired when the user changes selection. Not fired when the same value is re-selected. |
+| `selected` | none | **Deprecated.** Use `change` instead. |
+| `valid` | `ValidityState` | Fired when `checkValidity()` passes. |
+| `invalid` | `ValidityState` | Fired when `checkValidity()` fails (also on blur). |
+| `clear-selection` | none | Fired when the user explicitly clears the selection by removing all input text (searchable only). |
+| `dw-dialog-opened` | none | Fired when the dropdown dialog opens. |
+| `dw-dialog-closed` | none | Fired when the dropdown dialog closes. |
+
+#### CSS Custom Properties
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--dw-select-item-selected-bg-color` | `#6200ee` | Background color of the selected item in the list. |
+| `--dw-select-selected-item-bg-opacity` | `0` | Opacity of the selected item background. |
+| `--dw-select-highlight-bg-color` | `#fde293` | Background color for query-match highlights. |
+| `--dw-select-highlight-text-color` | — | Text color for query-match highlights. |
+| `--dw-select-highlight-font-weight` | — | Font weight for query-match highlights. |
+| `--dw-select-shimmer-gradient` | `linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5)` | Shimmer gradient shown while `items` is loading. |
+| `--dw-select-content-padding` | — | Padding inside the dialog content area. |
+| `--dw-select-read-only-trigger-value-color` | — | Text color for the value in `readOnlyTrigger` mode. |
+| `--dw-select-trigger-label-padding` | `0px 38px 0px 0px` | Padding of the trigger's label. |
+| `--dw-select-trigger-trailing-icon-margin-right` | `4px` | Right margin of the trailing icon in the trigger. |
+| `--dw-popover-min-width` | `0px` | Minimum width of the popover dialog. |
+| `--modal-dialog-header-max-height` | `56px` | Maximum height of the modal dialog header. |
+| `--mdc-theme-primary` | `#6200ee` | Primary color (used for selected item, focus ring). |
+| `--mdc-theme-error` | `#b00020` | Error color. |
+
+---
+
+### API Reference — `<dw-multi-select>`
+
+#### Properties / Attributes
+
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | `""` | Sets the `name` attribute on the internal input. |
+| `value` | `object[]` | `[]` | Array of selected item values. |
+| `outlined` | `boolean` | `false` | Shows the outlined Material variant. |
+| `label` | `string` | `""` | Floating label text. |
+| `placeholder` | `string` | `""` | Disappearing input placeholder. |
+| `error` | `string \| Function` | `undefined` | Custom error message. |
+| `errorMessages` | `object` | `undefined` | Error state messages object. |
+| `autoValidate` | `boolean` | `false` | Reports validity on value change rather than only on blur. |
+| `disabled` | `boolean` | `false` | Disables the component. |
+| `searchable` | `boolean` | `false` | Enables search/filter input in the dialog. Shown automatically when items > 10. |
+| `extraSearchFields` | `string[]` | `undefined` | Additional item fields to include in search filtering. |
+| `groups` | [`Group[]`](#group) | `null` | List of group definitions. |
+| `groupSelector` | `Function` | `undefined` | `(item) => groupName`. Takes precedence over `groupExpression`. |
+| `groupExpression` | `string` | `""` | Dot-separated property path to find item's group. |
+| `items` | `object[]` | `undefined` | Array of selectable items. |
+| `valueProvider` | `Function` | `undefined` | `(item) => value`. Extracts value from an item. |
+| `valueExpression` | `string` | `"_id"` | Dot-separated path to extract item value. |
+| `valueTextProvider` | `Function` | `(item) => item` | `(item) => string`. Returns display text for an item. |
+| `valueEquator` | `Function` | `(v1, v2) => v1 === v2` | Custom equality check for value comparison. |
+| `dialogWidth` | `number` | `undefined` | Override width (px) for popover and fit dialogs. |
+| `renderItem` | `Function` | `undefined` | `(item, selected, activated, query) => HTMLTemplate`. Custom item template. |
+| `renderGroupItem` | `Function` | `undefined` | `(name, label, collapsible, collapsed, activated) => HTMLTemplate`. Custom group item template. |
+| `heading` | `string` | `""` | Heading shown on the bottom-sheet dialog. |
+| `showClose` | `boolean` | `false` | Shows a close icon-button on the bottom-sheet dialog. |
+| `selectedTrailingIcon` | `string` | `undefined` | Material icon name on selected item in the list. |
+| `messages` | [`Messages`](#messages-multi) | See [Messages (multi)](#messages-multi) | Override dialog state messages. |
+| `queryFilter` | `Function` | `undefined` | `(item, query) => boolean`. Custom search filter. |
+| `highlightQuery` | `boolean` | `true` | When `false`, disables match highlighting. |
+| `warning` | `string` | `undefined` | Warning message text. |
+| `dense` | `boolean` | `false` | Uses dense styling on the trigger element. |
+| `popover` | `boolean` | `false` | Forces the popover dialog type. |
+| `popoverStyles` | `object` | `undefined` | External styles applied to the popover dialog. |
+| `hasItemLeadingIcon` | `boolean` | `false` | When `true`, moves the checkbox to the right side of items (leading icon is on the left). |
+| `iconButtonSize` | `number` | `undefined` | Size (px) for the trailing icon button in the trigger. |
+
+#### Events
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `change` | none | Fired when the applied selection changes. |
+| `dw-multi-select-opened` | none | Fired when the dropdown dialog opens. |
+| `dw-multi-select-closed` | none | Fired when the dropdown dialog closes. |
+
+#### CSS Custom Properties
+
+Inherits all CSS custom properties from `<dw-select>`, plus:
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--dw-multi-select-trigger-trailing-icon-margin-right` | `4px` | Right margin of the trailing icon in the multi-select trigger. |
+
+---
+
+### Type Reference
+
+#### Group
+
+| Key | Type | Required | Description |
+|-----|------|----------|-------------|
+| `name` | `string` | Yes | Unique identifier for the group. |
+| `title` | `string` | Yes | Display name shown as the group header. |
+| `collapsible` | `boolean` | Yes | Whether the group can be collapsed by the user. |
+| `collapsed` | `boolean` | Yes | Initial collapse state. |
+| `icon` | `string` | No | Material icon name shown alongside the group title. |
+
+```javascript
+// Example
+const group = {
+  name: 'BANKS',
+  title: 'Banks',
+  collapsible: true,
+  collapsed: false,
+  icon: 'account_balance'
+};
+```
 
 #### Action
 
-```js
-{
-  name: string,
-  label: string,
-  danger: boolean
+| Key | Type | Description |
+|-----|------|-------------|
+| `name` | `string` | Action identifier (available in the `action` event). |
+| `label` | `string` | Display label for the action button. |
+| `danger` | `boolean` | When `true`, renders the action in a danger/red style. |
+
+#### Messages (single select) {#messages}
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `noRecords` | `string` | `"No Records"` | Shown when `items` is an empty array. |
+| `noMatching` | `string` | `"No matching records found!"` | Shown when the search query yields no results. |
+| `loading` | `string` | `"Loading..."` | Shown when `items` is `undefined`. |
+
+#### Messages (multi-select) {#messages-multi}
+
+Same keys as single-select, plus:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `selectAll` | `string` | `"Select All"` | Label for the Select All option. |
+| `searchPlaceholder` | `string` | `"Search..."` | Placeholder for the search input inside the dialog. |
+
+#### ValueProvider and ValueExpression
+
+- If **neither** is provided, the entire item object is used as the value.
+- If only `valueExpression` is provided, the value is extracted from that dot-separated path.
+- If only `valueProvider` is provided, the function is called with the item.
+- If **both** are provided, `valueExpression` takes precedence and `valueProvider` is ignored.
+
+---
+
+### Configuration Options
+
+These constants are defined internally in `dw-select-base-dialog.js` and `dw-multi-select-base-dialog.js` and control virtualization and scroll behavior:
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| `VIRTUAL_LIST_MIN_LENGTH` | `500` | Item count threshold above which `@lit-labs/virtualizer` is enabled. |
+| `VIRTUAL_LIST_AUTO_SCROLL_DELAY` | `500` ms | Delay before auto-scrolling to the selected item when the virtualizer is active. |
+| `REGULAR_LIST_SCROLL_DELAY` | `300` ms | Delay before auto-scrolling to the selected item in a regular (non-virtualized) list. |
+
+---
+
+### Advanced Usage
+
+#### Groups with Collapsible Sections
+
+```javascript
+// In your LitElement component
+get groups() {
+  return [
+    { name: 'PUBLIC', title: 'Public Banks', collapsible: true, collapsed: false },
+    { name: 'PRIVATE', title: 'Private Banks', collapsible: true, collapsed: true }
+  ];
+}
+
+get items() {
+  return [
+    { _id: 1, name: 'SBI', group: 'PUBLIC' },
+    { _id: 2, name: 'HDFC', group: 'PRIVATE' }
+  ];
 }
 ```
 
-### Group
+```html
+<dw-select
+  .groups="${this.groups}"
+  .items="${this.items}"
+  groupExpression="group"
+  .valueTextProvider="${(item) => item.name}"
+></dw-select>
+```
 
-#### Object
+#### Allow New Value (Searchable Only)
 
-| Key           | Type      | Description                                    |
-| ------------- | --------- | ---------------------------------------------- |
-| `name`        | `string`  | Name of the group.                             |
-| `title`       | `string`  | Title of the group.                           |
-| `collapsible` | `boolean` | Whether group is collapsible or not.           |
-| `collapsed`   | `boolean` | Whether group is collapsed or not.             |
-| `icon`        | `string`  | name of Material icon. It's optional property. |
+When `allowNewValue=true` and the query does not match any item, a new item can be created via `newItemProvider`.
 
-#### Example
+```html
+<dw-select
+  searchable
+  allowNewValue
+  .items="${this.items}"
+  .newItemProvider="${this._newItemProvider}"
+  .valueTextProvider="${(item) => item.name}"
+></dw-select>
+```
 
-```object
-{
-  name: "BANKS",
-  title: "Banks",
-  collapsible: true,
-  collapsed: false
+```javascript
+// newItemProvider: returns {item, hint} or undefined, or a Promise resolving to either
+_newItemProvider(query) {
+  if (query.length < 2) return undefined;
+  return { item: { _id: query, name: query }, hint: 'Press Enter to add' };
 }
 ```
 
-### ValueProvider and ValueExpression
+The `newItemProvider` function receives the current search query and must return:
+- `{item: Item, hint: string}` — a new item and optional hint text shown on the input
+- `undefined` or `{item: undefined}` — when the query is not yet complete
+- A `Promise` resolving to either of the above
 
-- Provides a value based on the input received from either the `valueProvider` function or the `valueExpression`.
-- If neither of these inputs are provided, the original item will be passed as the default value.
-- If only one of these inputs is provided, the value will be computed based on that input.
-- If both inputs are provided, the value will be computed from the `valueExpression`, and the `valueProvider` function will be ignored.
+#### Custom Item Rendering
 
-### Messages
+```javascript
+// renderItem: (item, selected, activated, query) => HTMLTemplate
+renderItem(item, selected, activated, query) {
+  return html`
+    <dw-list-item
+      .selected="${selected}"
+      .activated="${activated}"
+      title1="${item.name}"
+      title2="${item.code}"
+    ></dw-list-item>
+  `;
+}
+```
 
-#### Object
+```html
+<dw-select .renderItem="${this.renderItem}"></dw-select>
+```
 
-| key          | Type     | Default                      | Description                                   |
-| ------------ | -------- | ---------------------------- | --------------------------------------------- |
-| `noRecords`  | `string` | `No Records`                 | Show message on dialog when no records found. |
-| `noMatching` | `string` | `No matching records found!` | Show when query does not match with any item. |
-| `loading`    | `string` | `Loading...`                 | Show when items is `undefined`.               |
+#### Custom Search Filter
 
-### Utils Functions
+```javascript
+import { queryFilterGenerator } from '@dreamworld/dw-select/utils.js';
 
-| Name                   | Arguments       | Returns    | Description              |
-| ---------------------- | --------------- | ---------- | ------------------------ |
-| `queryFilterGenerator` | keys (string[]) | `Function` | Query function Generator |
+// Search across multiple fields
+const filter = queryFilterGenerator(['name', 'code', 'alias']);
 
-### Events
+// Or provide a fully custom filter
+const customFilter = (item, query) => item.name.toLowerCase().startsWith(query.toLowerCase());
+```
 
-| Event Name        | Target         | Detail   | Description                                                                                                                                       |
-| ----------------- | -------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `selected`        | `dw-list-item` | none     | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current. **DEPRECATED! use `change` instead.** |
-| `change`          | `dw-list-item` | none     | Fired when the user changed selection. It’s NOT dispatched when user selects the same value as the current.                                       |
-| `invalid`         | `dw-select`    | validity | Fired when checkValidity() call and value is does not pass validation, On blur, as checkValidity() is called internally.                          |
-| `valid`           | `dw-select`    | validity | Fired when checkValidity() call and value pass validation, On blur, as checkValidity() is called internally.                                      |
-| `clear-selection` | `dw-select`    |          | It is fired when the user explicitly clears the selection by removing all input text.                                                             |
+```html
+<dw-select searchable .queryFilter="${filter}"></dw-select>
+```
 
-### Methods
+#### Prepend Items
 
-| Name                          | Description                                                                                                                                                                                                                              |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `checkValidity() => boolean`  | Returns `true` if the textfield passes validity checks and fires an `valid`. Returns `false` and fires an [`invalid`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/invalid_event) event on the textfield otherwise. |
-| `reportValidity() => boolean` | Runs checkValidity() method, and if it returns false, then it reports to the user that the input is invalid.                                                                                                                             |
-| `validate() => boolean`       | Call this to validate input. Returns false if value is invalid.                                                                                                                                                                          |
+```javascript
+get prependItems() {
+  return [{ _id: null, name: '— None —' }];
+}
+```
 
-### CSS Custom Properties
+```html
+<dw-select .prependItems="${this.prependItems}" .items="${this.items}"></dw-select>
+```
 
-| Name                                 | Default                                                | Description                                         |
-| ------------------------------------ | ------------------------------------------------------ | --------------------------------------------------- |
-| `--dw-select-item-selected-bg-color` | `#6200ee`                                              | Background color of the selected item               |
-| `--dw-select-shimmer-gradient`       | `linear-gradient(to right, #f1efef, #f9f8f8, #e7e5e5)` | Shimmer linear gradient when items is being loaded. |
+#### Tooltip Variants
+
+```html
+<!-- Show helper text in tooltip on info icon -->
+<dw-select
+  hintInTooltip
+  helper="Start typing to filter results"
+></dw-select>
+
+<!-- Show error in tooltip with an action -->
+<dw-select
+  errorInTooltip
+  .errorTooltipActions="${[{ name: 'fix', label: 'Fix Now', danger: false }]}"
+  @action="${(e) => console.log(e.detail.name)}"
+></dw-select>
+```
+
+#### Form Validation Integration
+
+```javascript
+// Programmatic validation
+const select = document.querySelector('dw-select');
+
+// Check validity without showing UI
+const isValid = select.checkValidity();
+
+// Check validity and show error to user
+const isValid = select.reportValidity();
+
+// Custom validate call
+const isValid = select.validate();
+```
+
+```html
+<dw-select required autoValidate label="Required Field"></dw-select>
+```
+
+---
+
+## 2. Developer Guide / Architecture
+
+### Architecture Overview
+
+```
+<dw-select>                          <dw-multi-select>
+├── DwFormElement(LitElement) mixin  ├── DwFormElement(LitElement) mixin
+├── <dw-select-trigger>              ├── <dw-multi-select-trigger>
+│   └── extends DwInput              │   └── extends DwInput
+└── <dw-select-base-dialog>          └── <dw-multi-select-base-dialog>
+    ├── extends DwCompositeDialog        ├── extends DwCompositeDialog
+    ├── <dw-select-dialog-input>         ├── <dw-multi-select-dialog-input>
+    ├── <dw-select-group-item>           └── <dw-multi-select-group-item>
+    └── @lit-labs/virtualizer
+```
+
+### Design Patterns
+
+| Pattern | Implementation |
+|---------|---------------|
+| **Mixin** | `DwFormElement(LitElement)` injects standard form validation API (`checkValidity`, `reportValidity`, `validate`, `name`) into both components. |
+| **Composite / Delegation** | Each select component is split into a trigger (display) and a dialog (selection logic). The orchestrator (`dw-select.js`) coordinates state between the two. |
+| **Observer (Reactive Properties)** | LitElement's `@property` decorator pattern drives all UI updates declaratively. |
+| **Strategy** | `valueProvider`, `queryFilter`, `renderItem`, and `renderGroupItem` are pluggable function properties, allowing integrators to override behavior without subclassing. |
+| **Virtualizer** | `@lit-labs/virtualizer` is activated automatically when the rendered item count exceeds `VIRTUAL_LIST_MIN_LENGTH` (500), ensuring smooth performance with large datasets. |
+| **Responsive / Adaptive** | `@dreamworld/device-info` provides the current layout (`small`, `medium`, `large`, `hd`, `fullhd`). The dialog type is chosen accordingly — bottom-sheet on mobile, popover/fit on desktop. |
+
+### Module Responsibilities
+
+| Module | Responsibility |
+|--------|---------------|
+| `dw-select.js` | Orchestrator for single select. Manages validation, layout detection, value resolution, and delegates rendering to trigger + dialog. |
+| `dw-multi-select.js` | Orchestrator for multi-select. Adds array-value management, "Select All" logic, and apply/cancel flow. |
+| `dw-select-trigger.js` | The visible input field. Extends `DwInput`. Renders the trailing expand/clear icon and dispatches `expand-toggle` and `clear-selection` events. |
+| `dw-multi-select-trigger.js` | Same as above for multi-select. Extends `DwInput`. |
+| `dw-select-base-dialog.js` | Dialog for single select. Handles item filtering, keyboard navigation, group collapse, highlight, virtualization, and scroll-to-selected. |
+| `dw-multi-select-base-dialog.js` | Dialog for multi-select. Adds checkbox toggle, "Select All" when ≥10 items, and an apply/done button. |
+| `dw-select-dialog-input.js` | Search input component rendered inside the single-select dialog. Dispatches `input-change`, `cancel`, and `clear-selection`. |
+| `dw-multi-select-dialog-input.js` | Search input for the multi-select dialog. |
+| `dw-select-group-item.js` | Renders collapsible group header rows. Shows expand/collapse icon and ripple only when `collapsible=true`. |
+| `dw-multi-select-group-item.js` | Renders non-collapsible group header rows for multi-select. |
+| `utils.js` | Exports `KeyCode`, `Direction`, `Position`, `NEW_VALUE_STATUS`, `filter()`, and `queryFilterGenerator()`. |
+| `sort-items.js` | Exports `sortItems()`. Scores items by relevance to the query (prefix match, word match, exact word match) and returns them sorted. |
+
+### Dialog Types & Adaptive Layout
+
+The dialog type is selected automatically based on device layout and item count:
+
+| Dialog Type | When Used |
+|-------------|-----------|
+| `popover` | Default on desktop. Anchored to the trigger element. |
+| `fit` | Full-height dialog with integrated search input. Used when item list overflows. |
+| `modal` | Centered modal overlay. |
+| `bottom-sheet` | On mobile (`small` layout / virtual keyboard present). |
+
+The `popover` property on both components can force popover mode regardless of layout.
+
+### Utility Functions
+
+#### `filter(value, query)` — `utils.js`
+
+```javascript
+import { filter } from '@dreamworld/dw-select/utils.js';
+filter('HDFC Bank', 'hdfc bank'); // true
+filter('State Bank of India', 'bank india'); // true
+filter('HDFC Bank', 'icici'); // false
+```
+
+Returns `true` if every word in `query` appears (as a substring) in at least one word of `value`. Case-insensitive.
+
+#### `queryFilterGenerator(keys)` — `utils.js`
+
+```javascript
+import { queryFilterGenerator } from '@dreamworld/dw-select/utils.js';
+
+const filter = queryFilterGenerator(['name', 'shortCode', 'alias']);
+// Returns: (item, query) => boolean
+```
+
+Generates a filter function that concatenates the specified `keys` from an item and runs `filter()` against the query.
+
+#### `sortItems(items, valueTextProvider, extraSearchFields, query)` — `sort-items.js`
+
+```javascript
+import { sortItems } from '@dreamworld/dw-select/sort-items.js';
+
+const sorted = sortItems(items, (item) => item.name, ['code'], 'hdfc');
+```
+
+Sorts `items` by relevance to `query`. Scoring (lower = better):
+- `-1` if item text starts with the query
+- `-1` for each query word found anywhere in item text
+- `-1` for each exact word match
+
+#### `NEW_VALUE_STATUS` — `utils.js`
+
+```javascript
+import { NEW_VALUE_STATUS } from '@dreamworld/dw-select/utils.js';
+
+// NEW_VALUE_STATUS.IN_PROGRESS — item is being created (spinner shown)
+// NEW_VALUE_STATUS.NEW_VALUE   — item was created (shows "new" tag)
+// NEW_VALUE_STATUS.ERROR       — creation failed (error shown)
+```
+
+### Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `@dreamworld/device-info` | Detects device layout for adaptive dialog selection |
+| `@dreamworld/dw-button` | Button component used in dialog footers |
+| `@dreamworld/dw-dialog` | Base composite dialog implementation |
+| `@dreamworld/dw-form` | `DwFormElement` mixin for form participation |
+| `@dreamworld/dw-icon` | Icon rendering |
+| `@dreamworld/dw-icon-button` | Trailing icon buttons in triggers |
+| `@dreamworld/dw-input` | Base input element extended by triggers |
+| `@dreamworld/dw-list-item` | Default item renderer inside dialogs |
+| `@dreamworld/dw-ripple` | Ripple interaction effect |
+| `@dreamworld/dw-tooltip` | Hint / error / warning tooltips |
+| `@dreamworld/material-styles` | Material typography and theme tokens |
+| `@lit-labs/virtualizer` | Virtual scroll for large item lists |
+| `@material/mwc-circular-progress` | Loading spinner |
+| `lodash-es` | Utility functions (`find`, `debounce`, `isEmpty`, `sortBy`, etc.) |
