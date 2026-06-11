@@ -285,6 +285,12 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       dense: { type: Boolean },
 
       /**
+       * Whether the trigger renders in compact (24px) mode.
+       * Use `--dw-select-trigger-height` CSS property to set an arbitrary height.
+       */
+      compact: { type: Boolean },
+
+      /**
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       _layout: { type: String },
@@ -377,6 +383,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
             .iconButtonSize=${this.iconButtonSize}
             .warning="${this.warning}"
             .dense=${this.dense}
+            .compact=${this.compact}
             .suffixTemplate=${this._inputSuffixTemplate}
             @mousedown=${this._onTrigger}
             @keydown=${this._onKeydown}
@@ -394,6 +401,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .type=${this._dialogType}
       .placement=${this._dialogPlacement}
       .dense=${this.dense}
+      .compact=${this.compact}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
       .appendTo=${this.renderRoot}
@@ -498,6 +506,10 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   willUpdate(props) {
     super.willUpdate(props);
+
+    if ((props.has('compact') || props.has('dense')) && this.compact && this.dense) {
+      this.dense = false;
+    }
 
     if (props.has('value') || props.has('items')) {
       this._setValueText();
