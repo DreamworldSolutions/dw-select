@@ -673,7 +673,7 @@ export class DwSelect extends DwFormElement(LitElement) {
             .warningTooltipActions="${this.warningTooltipActions}"
             .tipPlacement="${this.tipPlacement}"
             .icon=${this.leadingIcon}
-            .iconSize=${this.compact ? 16 : 24}
+            .iconSize=${this.compact ? 16 : nothing}
             .iconButtonSize=${this.compact ? 16 : this.iconButtonSize}
             .symbol=${this.symbol}
             .dense=${this.dense}
