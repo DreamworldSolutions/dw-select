@@ -431,6 +431,9 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       /** For select all item and other item. */
       dense: { type: Boolean },
 
+      /** When true, list items render in compact mode. */
+      compact: { type: Boolean },
+
       /**
        * true when close button or heading is provided.
        * use for set styles
@@ -656,6 +659,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
     const selected = this.items.length === value.length;
     return html`<dw-list-item
       ?dense=${this.dense}
+      ?compact=${this.compact}
       id="select-all"
       class="select-all"
       ?semi-selected=${!isEmpty(this._value) && !selected}
@@ -718,6 +722,7 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
       return html`
         <dw-list-item
           ?dense=${this.dense}
+          ?compact=${this.compact}
           class="list-item"
           title1=${this.itemLabelProvider(item.value)}
           .highlight=${this.highlightQuery ? this._query : ''}

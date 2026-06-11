@@ -406,6 +406,18 @@ export class DwSelect extends DwFormElement(LitElement) {
       dense: { type: Boolean },
 
       /**
+       * Whether the trigger renders in compact (24px) mode.
+       * Use `--dw-select-trigger-height` CSS property to set an arbitrary height.
+       */
+      compact: { type: Boolean },
+
+      /**
+       * Leading icon for the trigger input.
+       * Material icon name string
+       */
+      leadingIcon: { type: Object },
+
+      /**
        * Represents current layout in String. Possible values: `small`, `medium`, `large`, `hd`, and `fullhd`.
        */
       _layout: { type: String },
@@ -496,6 +508,12 @@ export class DwSelect extends DwFormElement(LitElement) {
        * Forwarded to dw-select-trigger’s dw-icon-button (.buttonSize).
        */
       iconButtonSize: { type: Number },
+
+      /**
+       * When true, uses Material Symbols font instead of Material Icons for the trailing icon button.
+       * Forwarded to dw-select-trigger’s dw-icon-button (.symbol).
+       */
+      symbol: { type: Boolean },
     };
   }
 
@@ -585,6 +603,8 @@ export class DwSelect extends DwFormElement(LitElement) {
   constructor() {
     super();
     this.searchable = false;
+    this.dense = false;
+    this.compact = false;
     this.highlightQuery = true;
     this.label = '';
     this.heading = '';
@@ -652,8 +672,12 @@ export class DwSelect extends DwFormElement(LitElement) {
             .errorTooltipActions="${this.errorTooltipActions}"
             .warningTooltipActions="${this.warningTooltipActions}"
             .tipPlacement="${this.tipPlacement}"
-            .iconButtonSize=${this.iconButtonSize}
+            .icon=${this.leadingIcon}
+            .iconSize=${this.compact ? 16 : 24}
+            .iconButtonSize=${this.compact ? 16 : this.iconButtonSize}
+            .symbol=${this.symbol}
             .dense=${this.dense}
+            .compact=${this.compact}
             .autoComplete=${this.autoComplete}
             .suffixTemplate=${this._inputSuffixTemplate}
             .highlightedValue=${this.highlightedValue}
@@ -776,6 +800,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       @query-change="${this._onDialogQueryChanged}"
       .messages="${this.messages}"
       .getItemValue=${this._getItemValue}
+      .compact=${this.compact}
     ></dw-select-base-dialog>`;
   }
 
@@ -851,6 +876,10 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   willUpdate(props) {
     super.willUpdate(props);
+
+    if ((props.has('compact') || props.has('dense')) && this.compact && this.dense) {
+      this.dense = false;
+    }
 
     if (props.has('valueProvider') || props.has('valueExpression')) {
       this._computeValueProvider();

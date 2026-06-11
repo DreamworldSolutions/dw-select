@@ -445,7 +445,13 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
 
       interactive: { type: Boolean },
 
-      symbol: { type: Boolean}
+      symbol: { type: Boolean},
+
+      /**
+       * Whether list items render in compact (dense) mode.
+       * Automatically set when the parent dw-select has compact=true.
+       */
+      compact: { type: Boolean },
     };
   }
 
@@ -687,6 +693,7 @@ export class DwSelectBaseDialog extends DwCompositeDialog {
           .trailingIcon=${this.selectedTrailingIcon}
           ?hasTrailingIcon=${this._isTrailingIconAvailable(selected)}
           .focusable=${false}
+          ?compact=${this.compact}
         ></dw-list-item>
       `;
     }

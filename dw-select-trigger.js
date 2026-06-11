@@ -25,6 +25,11 @@ export class DwSelectTrigger extends DwInput {
       css`
         :host {
           display: block;
+          --dw-input-height: var(--dw-select-trigger-height, 56px);
+        }
+
+        :host([compact]) {
+          --dw-input-height: var(--dw-select-trigger-height, 24px);
         }
 
         :host([opened]) {
@@ -102,6 +107,20 @@ export class DwSelectTrigger extends DwInput {
         .mdc-text-field--with-trailing-icon.mdc-text-field--outlined .mdc-text-field__input {
           padding-right: 12px;
         }
+
+        :host([compact]) .mdc-text-field {
+          padding: var(--dw-select-trigger-text-field-input, 4px);
+        }
+
+        :host([compact]) .mdc-text-field--outlined .mdc-text-field__input {
+          padding: var(--dw-select-trigger-padding, 0);
+          font-size: 12px;
+        }
+
+        :host([compact]) .mdc-text-field--with-trailing-icon.mdc-text-field--outlined .mdc-text-field__input {
+          padding-left: var(--dw-select-trigger-left-padding, 8px);
+          padding-right: var(--dw-select-trigger-right-padding, 8px);
+        }
       `,
     ];
   }
@@ -147,6 +166,12 @@ export class DwSelectTrigger extends DwInput {
       * Size to pass through to the internal dw-icon-button
       */
       iconButtonSize: { type: Number },
+
+      /**
+       * Whether the trigger renders in compact (24px) mode.
+       * Use `--dw-select-trigger-height` to set an arbitrary height instead.
+       */
+      compact: { type: Boolean, reflect: true },
     };
   }
 

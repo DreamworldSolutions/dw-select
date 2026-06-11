@@ -22,6 +22,11 @@ export class DwMultiSelectTrigger extends DwInput {
       css`
         :host {
           display: block;
+          --dw-input-height: var(--dw-select-trigger-height, 56px);
+        }
+
+        :host([compact]) {
+          --dw-input-height: var(--dw-select-trigger-height, 24px);
         }
 
         :host([opened]) {
@@ -89,8 +94,14 @@ export class DwMultiSelectTrigger extends DwInput {
 
       /**
        *  Size to pass through to the internal dw-icon-button
-      */ 
+      */
       iconButtonSize: { type: Number },
+
+      /**
+       * Whether the trigger renders in compact (24px) mode.
+       * Use `--dw-select-trigger-height` to set an arbitrary height instead.
+       */
+      compact: { type: Boolean, reflect: true },
     };
   }
 
