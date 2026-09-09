@@ -950,10 +950,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-button" "0.27.0"
 
-"@dreamworld/dw-dialog@^5.7.5":
-  version "5.7.5"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.7.5.tgz#634d447474fa676d68ea27a09f21f83259255101"
-  integrity sha512-fFszBzPlEm9GK+U8HLcYrifGxTIDEZP7ZyriByG/mhWv9RETR1YUdSoxcET8hPd8Xo+0LSE3VsRX6HMu/9WZ5A==
+"@dreamworld/dw-dialog@^5.7.15":
+  version "5.7.15"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.7.15.tgz#67b11fd28858474d4111185880db7dcb2ac234ec"
+  integrity sha512-/K0f9dJ41LaJwCZ4QqwwPR68JpPwoMuU0Qj4/nq7uuUCuZv7QbBXjpD9JEBHZ40hsVJtMojzMoTHb1vo6rb/7g==
   dependencies:
     "@dreamworld/material-styles" "^3.1.0"
     "@dreamworld/pwa-helpers" "^1.14.0"

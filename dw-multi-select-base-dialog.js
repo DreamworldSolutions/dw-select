@@ -19,6 +19,7 @@ import { get, filter, orderBy, forEach, findIndex, isEmpty, map, isEqual } from 
 // Utils
 import { Direction, KeyCode } from './utils.js';
 import { sortItems } from './sort-items.js';
+import { PopoverMaxHeightMixin } from './popover-max-height-mixin.js';
 
 const VIRTUAL_LIST_MIN_LENGTH = 500;
 const defaultMessages = {
@@ -52,7 +53,7 @@ const ItemTypes = {
  *  <dw-multi-select-base-dialog .items=$items .value=$value></dw-multi-select-base-dialog>
  */
 
-export class DwMultiSelectBaseDialog extends DwCompositeDialog {
+export class DwMultiSelectBaseDialog extends PopoverMaxHeightMixin(DwCompositeDialog) {
   static get styles() {
     return [
       super.styles,
@@ -62,7 +63,11 @@ export class DwMultiSelectBaseDialog extends DwCompositeDialog {
           --dw-dialog-content-padding: 0;
           --dw-dialog-header-padding: 4px 4px 4px 16px;
           --dw-dialog-footer-padding: 16px;
-          --dw-popover-max-height: calc(50vh - 24px);
+          /* Consumed inside the popover, so declared here: :host is _renderRootEl, the node
+             tippy moves into the popper, whereas the select host is no longer in its ancestry
+             once appendTo points elsewhere. */
+          --dw-popover-min-width: 0px;
+          --dw-select-highlight-bg-color: #fde293;
         }
 
         :host([type='modal'][placement='center']) {

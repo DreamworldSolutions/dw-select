@@ -59,6 +59,12 @@ import { filter, KeyCode } from './utils.js';
  *  TODO - write documentation
  */
 
+/**
+ * Popover custom properties an integrator may set on the select host, forwarded to the dialog so
+ * they survive the popover being appended elsewhere.
+ */
+const FORWARDED_POPOVER_PROPERTIES = ['--dw-popover-max-height'];
+
 export class DwSelect extends DwFormElement(LitElement) {
   static get properties() {
     return {
@@ -477,6 +483,16 @@ export class DwSelect extends DwFormElement(LitElement) {
 
       /**
        * Input property.
+       * Element the popover dialog is appended to. Defaults to `document.body` so the popover is
+       * never clipped by a scrollable ancestor.
+       * Note: custom properties reach the popover through inheritance, so anything an integrator
+       * sets on this host will NOT apply once the popover is appended elsewhere. Popover-scoped
+       * properties belong on the dialog's `:host`.
+       */
+      appendTo: { type: Object },
+
+      /**
+       * Input property.
        * External styles to be applied on popover dialog
        */
       popoverStyles: { type: Object },
@@ -545,8 +561,6 @@ export class DwSelect extends DwFormElement(LitElement) {
       css`
         :host {
           display: block;
-          --dw-popover-min-width: 0px;
-          --dw-select-highlight-bg-color: #fde293;
           -webkit-tap-highlight-color: transparent;
         }
 
@@ -602,6 +616,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
   constructor() {
     super();
+    this.appendTo = document.body;
     this.searchable = false;
     this.dense = false;
     this.compact = false;
@@ -753,7 +768,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       .placement=${this._dialogPlacement}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
-      .appendTo=${this.renderRoot}
+      .appendTo=${this.appendTo}
       .items="${this.items}"
       .prependItems=${this.prependItems}
       .layout=${this._layout}
@@ -917,6 +932,7 @@ export class DwSelect extends DwFormElement(LitElement) {
       if (!this._opened) {
         this.reportValidity();
       }
+      this._forwardPopoverProperties();
       this._setPopoverDialogWidth();
     }
   }
@@ -936,13 +952,45 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._items = e.detail;
   }
 
+
+  /**
+   * Copies popover custom properties that an integrator set on this host onto the dialog's
+   * `_renderRootEl`.
+   *
+   * They would otherwise be lost: custom properties reach the popover through inheritance, and
+   * tippy moves `_renderRootEl` into the popper, which by default is appended to `document.body`
+   * and so is no longer a descendant of this host.
+   */
+  _forwardPopoverProperties() {
+    const renderRootEl = this._dialogElement?._renderRootEl;
+    if (!renderRootEl) {
+      return;
+    }
+
+    const style = getComputedStyle(this);
+    FORWARDED_POPOVER_PROPERTIES.forEach(property => {
+      const value = style.getPropertyValue(property).trim();
+      if (value) {
+        renderRootEl.style.setProperty(property, value);
+      }
+    });
+  }
+
   /**
    * Set dialog width if `dialogWidth` is provided.
    * Otherwise determine trigger element's width and set to dialog
    */
   _setPopoverDialogWidth() {
+    // Written on the dialog's `_renderRootEl`, not on this host: tippy moves that node into the
+    // popper, so with `appendTo` outside this element the host's value would stop resolving and
+    // the popover would fall back to its 280px default.
+    const renderRootEl = this._dialogElement?._renderRootEl;
+    if (!renderRootEl) {
+      return;
+    }
+
     if (this.dialogWidth) {
-      this.style.setProperty('--dw-popover-width', this.dialogWidth + 'px');
+      renderRootEl.style.setProperty('--dw-popover-width', this.dialogWidth + 'px');
       return;
     }
 
@@ -951,7 +999,7 @@ export class DwSelect extends DwFormElement(LitElement) {
 
     // Set Trigger element's offSetWidth to PopOver Dialog
     if (triggerEl) {
-      this.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
+      renderRootEl.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
     }
   }
 

@@ -54,6 +54,12 @@ import { filter, KeyCode } from './utils.js';
  *  - The DwMultiSelect component provides a toggle icon that can be used to open and close the dropdown.
  */
 
+/**
+ * Popover custom properties an integrator may set on the select host, forwarded to the dialog so
+ * they survive the popover being appended elsewhere.
+ */
+const FORWARDED_POPOVER_PROPERTIES = ['--dw-popover-max-height'];
+
 export class DwMultiSelect extends DwFormElement(LitElement) {
   static get properties() {
     return {
@@ -299,6 +305,16 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
       /**
        * Input property.
+       * Element the popover dialog is appended to. Defaults to `document.body` so the popover is
+       * never clipped by a scrollable ancestor.
+       * Note: custom properties reach the popover through inheritance, so anything an integrator
+       * sets on this host will NOT apply once the popover is appended elsewhere. Popover-scoped
+       * properties belong on the dialog's `:host`.
+       */
+      appendTo: { type: Object },
+
+      /**
+       * Input property.
        * External styles to be applied on popover dialog
        */
       popoverStyles: { type: Object },
@@ -333,8 +349,6 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       css`
         :host {
           display: block;
-          --dw-popover-min-width: 0px;
-          --dw-select-highlight-bg-color: #fde293;
           -webkit-tap-highlight-color: transparent;
         }
 
@@ -347,6 +361,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   constructor() {
     super();
+    this.appendTo = document.body;
     this.searchable = false;
     this.highlightQuery = true;
     this.label = '';
@@ -404,7 +419,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       .compact=${this.compact}
       .triggerElement=${this._triggerElement}
       .value=${this.value}
-      .appendTo=${this.renderRoot}
+      .appendTo=${this.appendTo}
       .items="${this.items}"
       .layout=${this._layout}
       .extraSearchFields=${this.extraSearchFields}
@@ -493,6 +508,7 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
+
     this._computeValueProvider();
 
     this._layout = DeviceInfo.info().layout;
@@ -528,7 +544,8 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
       }
 
       if (this._opened) {
-        this._setPopoverDialogWidth();
+        this._forwardPopoverProperties();
+      this._setPopoverDialogWidth();
       }
     }
   }
@@ -552,19 +569,56 @@ export class DwMultiSelect extends DwFormElement(LitElement) {
     return;
   }
 
+
+  /**
+   * Copies popover custom properties that an integrator set on this host onto the dialog's
+   * `_renderRootEl`.
+   *
+   * They would otherwise be lost: custom properties reach the popover through inheritance, and
+   * tippy moves `_renderRootEl` into the popper, which by default is appended to `document.body`
+   * and so is no longer a descendant of this host.
+   */
+  _forwardPopoverProperties() {
+    const renderRootEl = this._dialogElement?._renderRootEl;
+    if (!renderRootEl) {
+      return;
+    }
+
+    const style = getComputedStyle(this);
+    FORWARDED_POPOVER_PROPERTIES.forEach(property => {
+      const value = style.getPropertyValue(property).trim();
+      if (value) {
+        renderRootEl.style.setProperty(property, value);
+      }
+    });
+  }
+
   /**
    * Set dialog width if `dialogWidth` is provided.
    * Otherwise determine trigger element's width and set to dialog
    */
   _setPopoverDialogWidth() {
-    if (this.dialogWidth) {
-      this.style.setProperty('--dw-popover-width', this.dialogWidth + 'px');
+    // Written on the dialog's `_renderRootEl`, not on this host: tippy moves that node into the
+    // popper, so with `appendTo` outside this element the host's value would stop resolving and
+    // the popover would fall back to its 280px default.
+    const renderRootEl = this._dialogElement?._renderRootEl;
+    if (!renderRootEl) {
       return;
     }
 
+    if (this.dialogWidth) {
+      renderRootEl.style.setProperty('--dw-popover-width', this.dialogWidth + 'px');
+      return;
+    }
+
+    // Deliberately the built-in trigger only, matching `dw-select`. With a `trigger-template` slot
+    // the trigger is often an icon button, and sizing the popover to it would leave it unusably
+    // narrow - leaving the width unset lets `--dw-popover-width` fall back to its 280px default.
+    const triggerEl = this.renderRoot.querySelector('#selectTrigger');
+
     // Set Trigger element's offSetWidth to PopOver Dialog
-    if (this._triggerElement) {
-      this.style.setProperty('--dw-popover-width', this._triggerElement.offsetWidth + 'px');
+    if (triggerEl) {
+      renderRootEl.style.setProperty('--dw-popover-width', triggerEl.offsetWidth + 'px');
     }
   }
 
