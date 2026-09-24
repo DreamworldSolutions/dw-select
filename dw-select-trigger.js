@@ -121,6 +121,10 @@ export class DwSelectTrigger extends DwInput {
           padding-left: var(--dw-select-trigger-left-padding, 8px);
           padding-right: var(--dw-select-trigger-right-padding, 8px);
         }
+
+        .mdc-text-field__input {
+          font-family: var(--dw-input-font-family, 'Roboto, sans-serif');
+        }
       `,
     ];
   }
