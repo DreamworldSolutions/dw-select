@@ -952,7 +952,6 @@ export class DwSelect extends DwFormElement(LitElement) {
     this._items = e.detail;
   }
 
-
   /**
    * Copies popover custom properties that an integrator set on this host onto the dialog's
    * `_renderRootEl`.
@@ -1185,7 +1184,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           bubbles: true,
           composed: true,
           detail: { ...e.detail, dialogType: this._dialogElement.type },
-        })
+        }),
       );
     }
   }
@@ -1199,7 +1198,7 @@ export class DwSelect extends DwFormElement(LitElement) {
           bubbles: true,
           composed: true,
           detail: { ...e.detail, dialogType: this._dialogElement.type },
-        })
+        }),
       );
     }
 
