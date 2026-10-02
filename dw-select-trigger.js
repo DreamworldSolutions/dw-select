@@ -123,7 +123,7 @@ export class DwSelectTrigger extends DwInput {
         }
 
         .mdc-text-field__input {
-          font-family: var(--dw-input-font-family, 'Roboto, sans-serif');
+          font-family: var(--dw-input-font-family, Roboto, sans-serif);
         }
       `,
     ];
