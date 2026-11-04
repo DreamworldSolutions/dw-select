@@ -1,7 +1,7 @@
 
-import { html, css } from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat';
-import { cache } from 'lit-html/directives/cache.js';
+import { html, css } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import { cache } from 'lit/directives/cache.js';
 import { DwSelectBaseDialog } from './dw-select-base-dialog';
 
 import { Typography } from '@dreamworld/material-styles/typography'
@@ -754,7 +754,7 @@ export class DwSelectDialog extends DwSelectBaseDialog {
         .icon=${model.item.icon}
         ?has-divider=${model.item.hasDivider}
         .trailIcon=${model.item.trailIcon || ((model.item.type === "expandable") ? 'keyboard_arrow_down' : '')}
-        .iconSize=${this.listItemIconSize}
+        .iconSize=${model.item.iconSize || this.listItemIconSize}
         @click=${(e) => this._itemClicked(e, model)}>
       </dw-select-item>
 

@@ -1,4 +1,4 @@
-import { css } from "lit-element";
+import { css } from "lit";
 
 export const dwSelectStyle = css`
   :host {
@@ -142,7 +142,7 @@ export const dwSelectStyle = css`
   }
 
   #select-dialog {
-    border-radius: 4px;
+    border-radius: var(--dw-select-dialog-border-radius, 4px);
   }
 
   [data-tippy-root] {
@@ -153,7 +153,7 @@ export const dwSelectStyle = css`
 export const externalStyle = css`
   #select-dialog,
   .tippy-box {
-    border-radius: 4px;
+    border-radius: var(--dw-select-dialog-border-radius, 4px);;
   }
 
   .tippy-box {

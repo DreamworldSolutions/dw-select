@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import { html } from 'lit';
 import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
 import { Typography } from '@dreamworld/material-styles/typography';
 import './dw-select-dialog';
@@ -259,6 +259,7 @@ export class DwSelect extends DwFormElement(LitElement) {
        * The element that should be used to position the element
        */
       _positionTarget: { type: Object },
+
        /**
        * By default, Show all/Reset buttons are not sticky
        * When true, Show all/Reset button are sticky when user scroll items
@@ -485,7 +486,7 @@ export class DwSelect extends DwFormElement(LitElement) {
   }
 
   firstUpdated(changedProps){
-    super.updated(changedProps);
+    super.firstUpdated && super.firstUpdated(changedProps);
     this._positionTarget = this.renderRoot.querySelector('.main-container');
   }
 

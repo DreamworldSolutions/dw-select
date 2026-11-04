@@ -1,6 +1,7 @@
-import { html, css } from 'lit-element';
+import { html, css } from 'lit';
 import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
-import { styleMap } from 'lit-html/directives/style-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import '@dreamworld/dw-icon';
 import '@dreamworld/dw-tooltip/dw-tooltip';
 
@@ -59,10 +60,13 @@ export class DwSelectItem extends LitElement {
         background: var(--dw-select-item-hover-color, rgba(0,0,0,0.06));
       }
 
-      :host([disabled]) {
-        pointer-events: none;
+      :host([item-disabled]) {
         opacity: var(--dw-select-item-disabled-opacity, 0.3);
         cursor: default;
+      }
+
+      :host([item-disabled]) .container {
+        pointer-events: none;
       }
 
       .content {
@@ -79,6 +83,9 @@ export class DwSelectItem extends LitElement {
       }
 
       .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         -ms-flex: none;
         -webkit-flex: none;
         flex: none;
@@ -88,7 +95,11 @@ export class DwSelectItem extends LitElement {
         --dw-icon-color: var(--dw-select-item-icon-color);
       }
 
-      :host([disabled]) .icon{
+      :host([hidden]), [hidden], *[hidden], .icon[hidden] {
+        display: none !important;
+      }
+
+      :host([item-disabled]) .icon{
         --dw-icon-color: var(--dw-select-item-disabled-icon-color);
       } 
  
@@ -107,6 +118,10 @@ export class DwSelectItem extends LitElement {
 
       .check-icon dw-icon {
         --dw-icon-color: var(--dw-select-check-icon, var(--primary-color));
+      }
+
+      .content span.disable-text {
+        color: var(--dw-select-item-disabled-text-color, var(--disabled-text-color));
       }
     `;
   } 
@@ -135,7 +150,7 @@ export class DwSelectItem extends LitElement {
       /**
        * Input property. True when item is disabled
        */
-      disabled: { type: Boolean, reflect: true },
+      disabled: { type: Boolean, reflect: true, attribute: 'item-disabled' },
 
       /**
        * Input property. Show tooltip if item is disabled.
@@ -177,13 +192,24 @@ export class DwSelectItem extends LitElement {
   constructor() {
     super();
     this.selected = false;
+    this._onHostClick = this._onHostClick.bind(this);
   }
 
-  update(changedProps) {
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', this._onHostClick, true);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('click', this._onHostClick, true);
+  }
+
+  willUpdate(changedProps) {
     if (changedProps.has('item')) {
       this._title = this._getName(this.item, this.itemLabel);
     }
-    super.update(changedProps);
+    super.willUpdate(changedProps);
   }
 
   updated(changedProps) {
@@ -197,9 +223,9 @@ export class DwSelectItem extends LitElement {
     return html`
       <div class="container">
         <div class="icon" ?hidden="${!this.icon}">
-          <dw-icon style="${styleMap(this._setIconColor(this.item))}" name="${this.icon}" size="${this.iconSize}"></dw-icon>
+          <dw-icon style="${styleMap(this._setIconColor(this.item))}" name="${this.icon}" size="${this.iconSize}" .iconFont=${(this.item && this.item.iconfont) || 'FILLED'}></dw-icon>
         </div>
-        <div class="content" style="${styleMap(this._setTextColor(this.item))}">${this._title}</div>
+        <div class="content" style="${styleMap(this._setTextColor(this.item))}">${unsafeHTML(this._title == null ? '' : String(this._title))}</div>
         ${this.selected ? html`<div class="check-icon">${this._getCheckIcon()}</div>` : ''}
         ${this.trailIcon ? html`
         <dw-icon class="trail-icon" style="${styleMap(this._setIconColor(this.item))}" name="${this.trailIcon}" size="${this.iconSize}"></dw-icon>
@@ -209,6 +235,12 @@ export class DwSelectItem extends LitElement {
         <dw-tooltip .forEl=${this} .content=${this._tooltipText} .extraOptions=${{delay: [500, 0]}}></dw-tooltip>
       ` : ''}
     `;
+  }
+
+  _onHostClick(e) {
+    if (this.disabled) {
+      e.stopPropagation();
+    }
   }
 
   /**
